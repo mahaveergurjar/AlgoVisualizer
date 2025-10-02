@@ -18,43 +18,7 @@ const AlgorithmCategories = ({ navigate }) => {
       name: "Max Consecutive Ones III",
       icon: <VenetianMask className="h-8 w-8 text-amber-400" />,
       description: "Find the longest subarray of 1s with at most K flips.",
-      page: "max_consecutive_ones",
-    },
-    {
-      name: "Arrays",
-      icon: <SquareStack className="h-8 w-8 text-amber-400" />,
-      description: "Visualizers for array-based problems.",
-      page: "arrays",
-    },
-    {
-      name: "Binary Search",
-      icon: <SearchCode className="h-8 w-8 text-teal-400" />,
-      description: "Step-by-step binary search algorithms.",
-      page: "placeholder",
-    },
-    {
-      name: "Sliding Window",
-      icon: <RectangleHorizontal className="h-8 w-8 text-cyan-400" />,
-      description: "Explore the sliding window technique.",
-      page: "SlidingWindows",
-    },
-    {
-      name: "Linked List",
-      icon: <GitBranch className="h-8 w-8 text-sky-400" />,
-      description: "Animate linked list operations.",
-      page: "LinkedList",
-    },
-    {
-      name: "Queue",
-      icon: <ArrowRightLeft className="h-8 w-8 text-rose-400" />,
-      description: "Explore queue data structures.",
-      page: "placeholder",
-    },
-    {
-      name: "Stack",
-      icon: <Layers className="h-8 w-8 text-violet-400" />,
-      description: "Understand stack operations visually.",
-      page: "placeholder",
+      page: "MaxConsecutiveOnesIII",
     },
   ];
 
@@ -96,14 +60,8 @@ const SlidingWindowsPage = () => {
   // This function decides which component to render based on the 'page' state.
   const renderPage = () => {
     switch (page) {
-      case "max_consecutive_ones":
+      case "MaxConsecutiveOnesIII":
         return <MaxConsecutiveOnesIII navigate={navigate} />;
-      case "SlidingWindows":
-        return <SlidingWindowsPage navigate={navigate} />;
-      case "LinkedList":
-        return <LinkedListPage navigate={navigate} />;
-      case "placeholder":
-        return <ComingSoonPage />;
       case "home":
       default:
         return <AlgorithmCategories navigate={navigate} />;
