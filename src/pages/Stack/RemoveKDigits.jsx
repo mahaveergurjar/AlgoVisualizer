@@ -534,7 +534,7 @@ const RemoveKDigitsVisualizer = () => {
   };
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
+    <div className="p-4 max-w-fit mx-auto">
       <header className="text-center mb-6">
         <h1 className="text-4xl font-bold text-violet-400">Remove K Digits</h1>
         <p className="text-lg text-gray-400 mt-2">Visualizing LeetCode 402</p>

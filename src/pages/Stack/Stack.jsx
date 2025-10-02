@@ -1,32 +1,29 @@
 import React, { useState } from "react";
-import {
-  VenetianMask,
-  SquareStack,
-  SearchCode,
-  GitBranch,
-  ArrowRightLeft,
-  Layers,
-  Home,
-  RectangleHorizontal,
-  ArrowLeft,
-} from "lucide-react";
+import { Scissors, ArrowUpDown, ArrowLeft, BarChart4 } from "lucide-react";
 
 import SubarrayRanges from "./SubarrayRanges.jsx";
 import RemoveKDigits from "./RemoveKDigits.jsx";
+import LargestRectangleHistogram from "./LargestRectangleHistogram.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const algorithms = [
     {
       name: "2104. Sum Of Subarray Ranges",
-      icon: <SquareStack className="h-8 w-8 text-amber-400" />,
+      icon: <ArrowUpDown className="h-8 w-8 text-amber-400" />,
       description: "Visualizers for array-based problems.",
       page: "SubarrayRanges",
     },
     {
       name: "402. Remove K Digits",
-      icon: <SquareStack className="h-8 w-8 text-amber-400" />,
+      icon: <Scissors className="h-8 w-8 text-amber-400" />,
       description: "Visualizers for stack-based problems.",
       page: "RemoveKDigits",
+    },
+    {
+      name: "84. Largest Rectangle in Histogram",
+      icon: <BarChart4 className="h-8 w-8 text-red-600" />,
+      description: "Visualizers for stack-based problems.",
+      page: "LargestRectangleHistogram",
     },
   ];
 
@@ -72,8 +69,8 @@ const StackPage = () => {
         return <SubarrayRanges navigate={navigate} />;
       case "RemoveKDigits":
         return <RemoveKDigits navigate={navigate} />;
-      case "placeholder":
-        return <ComingSoonPage />;
+      case "LargestRectangleHistogram":
+        return <LargestRectangleHistogram />;
       case "home":
         return <AlgorithmCategories navigate={navigate} />;
       default:
