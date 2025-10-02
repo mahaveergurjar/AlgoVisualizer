@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256" aria-hidden="true" role="img">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f43f5e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="256" height="256" fill="#0f172a" rx="40"/>
+  
+  <!-- Binary tree structure -->
+  <g stroke-width="4" stroke-linecap="round" fill="none">
+    <!-- Connecting lines with glow effect -->
+    <line x1="128" y1="70" x2="85" y2="120" stroke="url(#grad1)" opacity="0.8" stroke-width="5"/>
+    <line x1="128" y1="70" x2="171" y2="120" stroke="url(#grad2)" opacity="0.8" stroke-width="5"/>
+    <line x1="85" y1="120" x2="55" y2="170" stroke="url(#grad3)" opacity="0.7" stroke-width="4"/>
+    <line x1="85" y1="120" x2="115" y2="170" stroke="url(#grad1)" opacity="0.7" stroke-width="4"/>
+    <line x1="171" y1="120" x2="141" y2="170" stroke="url(#grad2)" opacity="0.7" stroke-width="4"/>
+    <line x1="171" y1="120" x2="201" y2="170" stroke="url(#grad3)" opacity="0.7" stroke-width="4"/>
+  </g>
+  
+  <!-- Tree Nodes with better visibility -->
+  <g>
+    <!-- Top node - largest -->
+    <circle cx="128" cy="70" r="22" fill="url(#grad1)"/>
+    <circle cx="128" cy="70" r="22" fill="url(#grad1)" opacity="0.3" filter="blur(4)"/>
+    
+    <!-- Middle nodes -->
+    <circle cx="85" cy="120" r="20" fill="url(#grad2)"/>
+    <circle cx="85" cy="120" r="20" fill="url(#grad2)" opacity="0.3" filter="blur(4)"/>
+    
+    <circle cx="171" cy="120" r="20" fill="url(#grad3)"/>
+    <circle cx="171" cy="120" r="20" fill="url(#grad3)" opacity="0.3" filter="blur(4)"/>
+    
+    <!-- Bottom nodes -->
+    <circle cx="55" cy="170" r="16" fill="url(#grad1)"/>
+    <circle cx="115" cy="170" r="16" fill="url(#grad2)"/>
+    <circle cx="141" cy="170" r="16" fill="url(#grad3)"/>
+    <circle cx="201" cy="170" r="16" fill="url(#grad1)"/>
+  </g>
+  
+  <!-- Sorting bars at bottom - larger and more visible -->
+  <g>
+    <rect x="30" y="210" width="16" height="35" fill="url(#grad1)" rx="3">
+      <animate attributeName="height" values="35;25;35" dur="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="210;220;210" dur="1.5s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="54" y="200" width="16" height="45" fill="url(#grad2)" rx="3">
+      <animate attributeName="height" values="45;30;45" dur="1.5s" repeatCount="indefinite" begin="0.2s"/>
+      <animate attributeName="y" values="200;215;200" dur="1.5s" repeatCount="indefinite" begin="0.2s"/>
+    </rect>
+    <rect x="78" y="205" width="16" height="40" fill="url(#grad3)" rx="3">
+      <animate attributeName="height" values="40;35;40" dur="1.5s" repeatCount="indefinite" begin="0.4s"/>
+      <animate attributeName="y" values="205;210;205" dur="1.5s" repeatCount="indefinite" begin="0.4s"/>
+    </rect>
+    <rect x="102" y="195" width="16" height="50" fill="url(#grad1)" rx="3">
+      <animate attributeName="height" values="50;40;50" dur="1.5s" repeatCount="indefinite" begin="0.6s"/>
+      <animate attributeName="y" values="195;205;195" dur="1.5s" repeatCount="indefinite" begin="0.6s"/>
+    </rect>
+    
+    <rect x="138" y="208" width="16" height="37" fill="url(#grad2)" rx="3">
+      <animate attributeName="height" values="37;27;37" dur="1.5s" repeatCount="indefinite" begin="0.8s"/>
+      <animate attributeName="y" values="208;218;208" dur="1.5s" repeatCount="indefinite" begin="0.8s"/>
+    </rect>
+    <rect x="162" y="198" width="16" height="47" fill="url(#grad3)" rx="3">
+      <animate attributeName="height" values="47;37;47" dur="1.5s" repeatCount="indefinite" begin="1s"/>
+      <animate attributeName="y" values="198;208;198" dur="1.5s" repeatCount="indefinite" begin="1s"/>
+    </rect>
+    <rect x="186" y="203" width="16" height="42" fill="url(#grad1)" rx="3">
+      <animate attributeName="height" values="42;32;42" dur="1.5s" repeatCount="indefinite" begin="1.2s"/>
+      <animate attributeName="y" values="203;213;203" dur="1.5s" repeatCount="indefinite" begin="1.2s"/>
+    </rect>
+    <rect x="210" y="212" width="16" height="33" fill="url(#grad2)" rx="3">
+      <animate attributeName="height" values="33;23;33" dur="1.5s" repeatCount="indefinite" begin="1.4s"/>
+      <animate attributeName="y" values="212;222;212" dur="1.5s" repeatCount="indefinite" begin="1.4s"/>
+    </rect>
+  </g>
+</svg>
