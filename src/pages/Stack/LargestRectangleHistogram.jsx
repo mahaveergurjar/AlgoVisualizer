@@ -53,6 +53,8 @@ const LargestRectangleHistogram = () => {
   const [heightsInput, setHeightsInput] = useState("2,1,5,6,2,3");
   const [isLoaded, setIsLoaded] = useState(false);
   const [maxHeight, setMaxHeight] = useState(1);
+  const [highlightStyle, setHighlightStyle] = useState({ opacity: 0 });
+  const [maxHighlightStyle, setMaxHighlightStyle] = useState({ opacity: 0 });
 
   const generateBruteForceHistory = useCallback((heights) => {
     const newHistory = [];
@@ -130,8 +132,8 @@ const LargestRectangleHistogram = () => {
     const n = heights.length;
     const newHistory = [];
     let stack = [];
-    let leftSmall = new Array(n).fill(0);
-    let rightSmall = new Array(n).fill(n - 1);
+    let leftSmall = new Array(n).fill(null);
+    let rightSmall = new Array(n).fill(null);
     let maxA = 0;
 
     const addState = (props) =>
@@ -167,20 +169,18 @@ const LargestRectangleHistogram = () => {
         addState({ line: 9, i, explanation: "Re-check while loop." });
       }
       if (stack.length === 0) {
-        leftSmall[i] = 0;
+        leftSmall[i] = -1;
         addState({
           line: 12,
           i,
-          explanation: `Stack empty. Left boundary for index ${i} is 0.`,
+          explanation: `Stack empty. Left boundary for index ${i} is -1.`,
         });
       } else {
-        leftSmall[i] = stack[stack.length - 1] + 1;
+        leftSmall[i] = stack[stack.length - 1];
         addState({
           line: 14,
           i,
-          explanation: `Stack not empty. Left boundary for ${i} is ${
-            stack[stack.length - 1]
-          } + 1 = ${leftSmall[i]}.`,
+          explanation: `Stack not empty. Left boundary for ${i} is stack top: ${leftSmall[i]}.`,
         });
       }
       stack.push(i);
@@ -213,22 +213,18 @@ const LargestRectangleHistogram = () => {
         addState({ line: 22, i, explanation: "Re-check while loop." });
       }
       if (stack.length === 0) {
-        rightSmall[i] = n - 1;
+        rightSmall[i] = n;
         addState({
           line: 25,
           i,
-          explanation: `Stack empty. Right boundary for index ${i} is ${
-            n - 1
-          }.`,
+          explanation: `Stack empty. Right boundary for index ${i} is n (${n}).`,
         });
       } else {
-        rightSmall[i] = stack[stack.length - 1] - 1;
+        rightSmall[i] = stack[stack.length - 1];
         addState({
           line: 27,
           i,
-          explanation: `Stack not empty. Right boundary for ${i} is ${
-            stack[stack.length - 1]
-          } - 1 = ${rightSmall[i]}.`,
+          explanation: `Stack not empty. Right boundary for ${i} is stack top: ${rightSmall[i]}.`,
         });
       }
       stack.push(i);
@@ -242,12 +238,13 @@ const LargestRectangleHistogram = () => {
         "Pass 3: Calculate max area using left and right boundaries.",
     });
     for (let i = 0; i < n; i++) {
-      const currentArea = heights[i] * (rightSmall[i] - leftSmall[i] + 1);
+      const width = rightSmall[i] - leftSmall[i] - 1;
+      const currentArea = heights[i] * width;
       if (currentArea > maxA) {
         maxA = currentArea;
         maxHighlight = {
-          start: leftSmall[i],
-          end: rightSmall[i],
+          start: leftSmall[i] + 1,
+          end: rightSmall[i] - 1,
           h: heights[i],
         };
       }
@@ -255,13 +252,17 @@ const LargestRectangleHistogram = () => {
         line: 34,
         i,
         maxA,
-        highlight: { start: leftSmall[i], end: rightSmall[i], h: heights[i] },
+        highlight: {
+          start: leftSmall[i] + 1,
+          end: rightSmall[i] - 1,
+          h: heights[i],
+        },
         maxHighlight,
-        explanation: `For index ${i}, area = ${heights[i]} * (${rightSmall[i]} - ${leftSmall[i]} + 1) = ${currentArea}. Max Area = ${maxA}`,
+        explanation: `For index ${i}, width = ${rightSmall[i]} - ${leftSmall[i]} - 1 = ${width}. Area = ${heights[i]} * ${width} = ${currentArea}. Max Area = ${maxA}`,
       });
     }
     addState({
-      line: 36,
+      line: 37,
       finished: true,
       maxHighlight,
       explanation: "All bars processed. Final answer found.",
@@ -302,6 +303,8 @@ const LargestRectangleHistogram = () => {
     []
   );
 
+  const state = history[currentStep] || {};
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (isLoaded) {
@@ -313,7 +316,49 @@ const LargestRectangleHistogram = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLoaded, stepForward, stepBackward]);
 
-  const state = history[currentStep] || {};
+  const calculateRectStyle = useCallback(
+    (highlight) => {
+      if (!isLoaded || !highlight || highlight.start < 0 || highlight.end < 0)
+        return { opacity: 0 };
+
+      const startEl = document.getElementById(
+        `histogram-container-element-${highlight.start}`
+      );
+      const endEl = document.getElementById(
+        `histogram-container-element-${highlight.end}`
+      );
+
+      if (startEl && endEl) {
+        return {
+          position: "absolute",
+          bottom: "1.75rem", // Adjust for label height
+          height: `${(highlight.h / maxHeight) * 85}%`, // Match bar height %
+          left: `${startEl.offsetLeft}px`,
+          width: `${
+            endEl.offsetLeft + endEl.offsetWidth - startEl.offsetLeft
+          }px`,
+          transition: "all 300ms ease-out",
+          pointerEvents: "none",
+          opacity: 1,
+        };
+      }
+      return { opacity: 0 };
+    },
+    [isLoaded, maxHeight]
+  );
+
+  useEffect(() => {
+    setHighlightStyle({
+      ...calculateRectStyle(state.highlight),
+      backgroundColor: "rgba(239, 68, 68, 0.3)",
+      border: "2px solid rgba(239, 68, 68, 0.8)",
+    });
+    setMaxHighlightStyle({
+      ...calculateRectStyle(state.maxHighlight),
+      backgroundColor: "rgba(52, 211, 153, 0.25)",
+      border: "2px solid rgba(16, 185, 129, 0.8)",
+    });
+  }, [state.highlight, state.maxHighlight, calculateRectStyle]);
 
   const colorMapping = {
     purple: "text-purple-400",
@@ -321,7 +366,7 @@ const LargestRectangleHistogram = () => {
     "light-blue": "text-sky-300",
     yellow: "text-yellow-300",
     orange: "text-orange-400",
-    green: "text-green-500",
+    green: "text-green-400",
     red: "text-red-400",
     "light-gray": "text-gray-400",
     "": "text-gray-200",
@@ -425,43 +470,6 @@ const LargestRectangleHistogram = () => {
   ];
 
   const optimalCode = [
-    {
-      l: 2,
-      c: [
-        { t: "int", c: "cyan" },
-        { t: " largestRectangleArea(", c: "yellow" },
-        { t: "vector<", c: "yellow" },
-        { t: "int", c: "cyan" },
-        { t: ">&", c: "yellow" },
-        { t: " heights) {", c: "" },
-      ],
-    },
-    {
-      l: 3,
-      c: [
-        { t: "  int", c: "cyan" },
-        { t: " n ", c: "" },
-        { t: "=", c: "red" },
-        { t: " heights.", c: "" },
-        { t: "size", c: "yellow" },
-        { t: "();", c: "" },
-      ],
-    },
-    {
-      l: 4,
-      c: [
-        { t: "  stack<", c: "yellow" },
-        { t: "int", c: "cyan" },
-        { t: "> st;", c: "" },
-      ],
-    },
-    {
-      l: 5,
-      c: [
-        { t: "  int", c: "cyan" },
-        { t: " leftsmall[n], rightsmall[n];", c: "" },
-      ],
-    },
     { l: 7, c: [{ t: "  // Find previous smaller element", c: "green" }] },
     {
       l: 8,
@@ -502,10 +510,10 @@ const LargestRectangleHistogram = () => {
         { t: "    if", c: "purple" },
         { t: " (st.", c: "" },
         { t: "empty", c: "yellow" },
-        { t: "()) leftsmall[i] ", c: "" },
+        { t: "()) leftSmall[i] ", c: "" },
         { t: "=", c: "red" },
         { t: " ", c: "" },
-        { t: "0", c: "orange" },
+        { t: "-1", c: "orange" },
         { t: ";", c: "light-gray" },
       ],
     },
@@ -513,13 +521,11 @@ const LargestRectangleHistogram = () => {
       l: 14,
       c: [
         { t: "    else", c: "purple" },
-        { t: " leftsmall[i] ", c: "" },
+        { t: " leftSmall[i] ", c: "" },
         { t: "=", c: "red" },
         { t: " st.", c: "" },
         { t: "top", c: "yellow" },
-        { t: "() + ", c: "" },
-        { t: "1", c: "orange" },
-        { t: ";", c: "light-gray" },
+        { t: "();", c: "" },
       ],
     },
     {
@@ -582,24 +588,20 @@ const LargestRectangleHistogram = () => {
         { t: "    if", c: "purple" },
         { t: " (st.", c: "" },
         { t: "empty", c: "yellow" },
-        { t: "()) rightsmall[i] ", c: "" },
+        { t: "()) rightSmall[i] ", c: "" },
         { t: "=", c: "red" },
-        { t: " n - ", c: "" },
-        { t: "1", c: "orange" },
-        { t: ";", c: "light-gray" },
+        { t: " n;", c: "" },
       ],
     },
     {
       l: 27,
       c: [
         { t: "    else", c: "purple" },
-        { t: " rightsmall[i] ", c: "" },
+        { t: " rightSmall[i] ", c: "" },
         { t: "=", c: "red" },
         { t: " st.", c: "" },
         { t: "top", c: "yellow" },
-        { t: "() - ", c: "" },
-        { t: "1", c: "orange" },
-        { t: ";", c: "light-gray" },
+        { t: "();", c: "" },
       ],
     },
     {
@@ -638,28 +640,36 @@ const LargestRectangleHistogram = () => {
     {
       l: 34,
       c: [
+        { t: "    int", c: "cyan" },
+        { t: " width ", c: "light-blue" },
+        { t: "=", c: "red" },
+        { t: " rightSmall[i] - leftSmall[i] - ", c: "" },
+        { t: "1", c: "orange" },
+        { t: ";", c: "light-gray" },
+      ],
+    },
+    {
+      l: 35,
+      c: [
         { t: "    maxA ", c: "light-blue" },
         { t: "=", c: "red" },
         { t: " max(maxA, heights[i] ", c: "" },
         { t: "*", c: "red" },
-        { t: " (rightsmall[i] - leftsmall[i] + ", c: "" },
-        { t: "1", c: "orange" },
-        { t: "));", c: "" },
+        { t: " width);", c: "" },
       ],
     },
-    { l: 35, c: [{ t: "  }", c: "light-gray" }] },
+    { l: 36, c: [{ t: "  }", c: "light-gray" }] },
     {
-      l: 36,
+      l: 37,
       c: [
         { t: "  return", c: "purple" },
         { t: " maxA;", c: "" },
       ],
     },
-    { l: 37, c: [{ t: "}", c: "light-gray" }] },
   ];
 
   return (
-    <div className="p-4 max-w-fit mx-auto">
+    <div className="p-4 max-w-7xl mx-auto">
       <header className="text-center mb-6">
         <h1 className="text-4xl font-bold text-green-400">
           Largest Rectangle in Histogram
@@ -788,90 +798,54 @@ const LargestRectangleHistogram = () => {
           </div>
 
           <div className="lg:col-span-2 space-y-6">
-            <div className="relative bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl min-h-[340px]">
+            <div className="relative bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl min-h-[400px]">
               <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
                 <BarChart3 size={20} />
                 Histogram
               </h3>
               <div
                 id="histogram-container"
-                className="flex justify-center items-end gap-1 h-64 border-b-2 border-gray-600 pb-2"
+                className="relative flex justify-center items-end gap-2 h-80 border-b-2 border-gray-600 pb-2"
               >
                 {state.heights?.map((h, index) => (
                   <div
                     key={index}
                     id={`histogram-container-element-${index}`}
-                    className="flex-1 flex flex-col justify-end items-center h-full"
+                    className="flex-1 flex flex-col justify-end items-center h-full relative group"
                   >
                     <div
-                      className={`w-full rounded-t-md transition-all duration-300 ${
+                      className={`w-full rounded-t-md transition-all duration-300 flex items-end justify-center pb-1 ${
                         state.i === index
-                          ? "bg-amber-400"
-                          : "bg-gradient-to-t from-gray-700 to-gray-600"
+                          ? "bg-amber-400 shadow-lg shadow-amber-400/50"
+                          : "bg-gradient-to-t from-blue-600 to-blue-400"
                       }`}
-                      style={{ height: `${(h / maxHeight) * 100}%` }}
-                    ></div>
-                    <span className="text-xs text-gray-400 mt-1">{index}</span>
+                      style={{ height: `${(h / maxHeight) * 85}%` }}
+                    >
+                      <span className="text-xs font-bold text-white">{h}</span>
+                    </div>
+                    <span className="text-xs text-gray-400 mt-1 font-mono">
+                      {index}
+                    </span>
                   </div>
                 ))}
-                <div
-                  className="absolute bottom-[4.5rem] left-0 right-0 mx-auto transition-all duration-300 pointer-events-none"
-                  style={{
-                    height: `${(state.highlight?.h / maxHeight) * 70}%`,
-                    width: `${
-                      state.highlight
-                        ? (state.highlight.end - state.highlight.start + 1) *
-                          (100 / (state.heights?.length || 1))
-                        : 0
-                    }%`,
-                    left: `${
-                      state.highlight
-                        ? state.highlight.start *
-                          (100 / (state.heights?.length || 1))
-                        : 0
-                    }%`,
-                    backgroundColor: "rgba(239, 68, 68, 0.3)",
-                    border: "1px solid rgba(239, 68, 68, 0.7)",
-                  }}
-                />
-                <div
-                  className="absolute bottom-[4.5rem] left-0 right-0 mx-auto transition-all duration-300 pointer-events-none"
-                  style={{
-                    height: `${(state.maxHighlight?.h / maxHeight) * 70}%`,
-                    width: `${
-                      state.maxHighlight
-                        ? (state.maxHighlight.end -
-                            state.maxHighlight.start +
-                            1) *
-                          (100 / (state.heights?.length || 1))
-                        : 0
-                    }%`,
-                    left: `${
-                      state.maxHighlight
-                        ? state.maxHighlight.start *
-                          (100 / (state.heights?.length || 1))
-                        : 0
-                    }%`,
-                    backgroundColor: "rgba(52, 211, 153, 0.2)",
-                    border: "1px solid rgba(16, 185, 129, 0.6)",
-                  }}
-                />
+                <div style={highlightStyle} />
+                <div style={maxHighlightStyle} />
               </div>
               {isLoaded && mode === "brute-force" && (
-                <VisualizerPointer
-                  index={state.i}
-                  containerId="histogram-container"
-                  color="amber"
-                  label="i"
-                />
-              )}
-              {isLoaded && mode === "brute-force" && (
-                <VisualizerPointer
-                  index={state.j}
-                  containerId="histogram-container"
-                  color="cyan"
-                  label="j"
-                />
+                <>
+                  <VisualizerPointer
+                    index={state.i}
+                    containerId="histogram-container"
+                    color="amber"
+                    label="i"
+                  />
+                  <VisualizerPointer
+                    index={state.j}
+                    containerId="histogram-container"
+                    color="cyan"
+                    label="j"
+                  />
+                </>
               )}
               {isLoaded && mode === "optimal" && (
                 <VisualizerPointer
@@ -883,73 +857,112 @@ const LargestRectangleHistogram = () => {
               )}
             </div>
 
-            {mode === "brute-force" ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
-                    <h3 className="text-gray-400 text-sm flex items-center gap-2">
-                      <List size={16} />
-                      Min Height
-                    </h3>
-                    <p className="font-mono text-3xl mt-2">{state.minHeight}</p>
+            {mode === "optimal" && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl">
+                <div className="space-y-4">
+                  <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-600">
+                    <h4 className="font-mono text-sm text-purple-300 mb-3">
+                      Left Boundaries
+                    </h4>
+                    <div className="flex gap-1 flex-wrap">
+                      {state.leftSmall?.map((val, index) => (
+                        <div
+                          key={index}
+                          className={`w-12 h-12 flex items-center justify-center rounded-lg font-mono font-bold text-sm transition-all duration-300 ${
+                            state.i === index && val !== null
+                              ? "bg-purple-500 text-white scale-110 shadow-lg shadow-purple-500/50"
+                              : "bg-gray-700 text-gray-300"
+                          }`}
+                        >
+                          {val ?? "-"}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
-                    <h3 className="text-gray-400 text-sm flex items-center gap-2">
-                      <Calculator size={16} />
-                      Current Area
-                    </h3>
-                    <p className="font-mono text-3xl mt-2">
-                      {state.currentArea}
-                    </p>
+                  <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-600">
+                    <h4 className="font-mono text-sm text-orange-300 mb-3">
+                      Right Boundaries
+                    </h4>
+                    <div className="flex gap-1 flex-wrap">
+                      {state.rightSmall?.map((val, index) => (
+                        <div
+                          key={index}
+                          className={`w-12 h-12 flex items-center justify-center rounded-lg font-mono font-bold text-sm transition-all duration-300 ${
+                            state.i === index && val !== null
+                              ? "bg-orange-500 text-white scale-110 shadow-lg shadow-orange-500/50"
+                              : "bg-gray-700 text-gray-300"
+                          }`}
+                        >
+                          {val ?? "n"}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="bg-green-800/30 p-4 rounded-xl border border-green-700/50">
-                  <h3 className="text-green-300 text-sm flex items-center gap-2">
-                    <CheckCircle size={16} />
-                    Max Area Found
-                  </h3>
-                  <p className="font-mono text-4xl text-green-400 mt-2">
-                    {state.maxArea ?? 0}
-                  </p>
-                </div>
-              </>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 md:h-60">
-                  <h3 className="text-gray-400 text-sm mb-2 flex items-center gap-2">
+
+                <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-600">
+                  <h4 className="font-mono text-sm text-cyan-300 mb-3 flex items-center gap-2">
                     <Layers size={16} />
-                    Stack
-                  </h3>
-                  <div className="flex flex-col-reverse gap-1 h-full pb-4 overflow-y-auto">
-                    {state.stack?.map((s, idx) => (
-                      <div
-                        key={idx}
-                        className="bg-gray-700 text-center font-mono rounded-md py-1"
-                      >
-                        {s}
-                      </div>
-                    ))}
-                    {state.stack?.length === 0 && (
-                      <span className="text-gray-500 text-xs text-center">
-                        Stack is empty
+                    Stack (Top → Bottom)
+                  </h4>
+                  <div className="flex flex-col-reverse gap-2 min-h-[10rem]">
+                    {state.stack?.length > 0 ? (
+                      state.stack
+                        .slice()
+                        .reverse()
+                        .map((s, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-gradient-to-br from-cyan-600 to-cyan-500 text-center font-mono rounded-lg py-2 px-3 shadow-lg text-white font-bold text-lg"
+                          >
+                            {s}
+                          </div>
+                        ))
+                    ) : (
+                      <span className="text-gray-500 text-xs italic m-auto">
+                        Empty
                       </span>
                     )}
                   </div>
                 </div>
-                <div className="bg-green-800/30 p-4 rounded-xl border border-green-700/50 md:h-60 flex flex-col justify-center">
-                  <h3 className="text-green-300 text-sm flex items-center gap-2">
-                    <CheckCircle size={16} />
-                    Max Area Found
+              </div>
+            )}
+
+            {mode === "brute-force" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
+                  <h3 className="text-gray-400 text-sm flex items-center gap-2">
+                    <List size={16} />
+                    Min Height
                   </h3>
-                  <p className="font-mono text-5xl text-green-400 mt-2">
-                    {state.maxA ?? 0}
-                  </p>
+                  <p className="font-mono text-3xl mt-2">{state.minHeight}</p>
+                </div>
+                <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
+                  <h3 className="text-gray-400 text-sm flex items-center gap-2">
+                    <Calculator size={16} />
+                    Current Area
+                  </h3>
+                  <p className="font-mono text-3xl mt-2">{state.currentArea}</p>
                 </div>
               </div>
             )}
-            <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem]">
-              <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
-              <p className="text-gray-300">{state.explanation}</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem] md:col-span-2">
+                <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
+                <p className="text-gray-300">{state.explanation}</p>
+              </div>
+              <div className="bg-green-800/30 p-4 rounded-xl border border-green-700/50">
+                <h3 className="text-green-300 text-sm flex items-center gap-2">
+                  <CheckCircle size={16} />
+                  Max Area Found
+                </h3>
+                <p className="font-mono text-5xl text-green-400 mt-2 font-bold">
+                  {mode === "brute-force"
+                    ? state.maxArea ?? 0
+                    : state.maxA ?? 0}
+                </p>
+              </div>
             </div>
           </div>
           <div className="lg:col-span-3 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
