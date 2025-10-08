@@ -17,6 +17,7 @@ import {
   Sparkles,
   Zap,
   Trophy,
+  Wrench,
 } from "lucide-react";
 
 // --- Import your page components ---
@@ -25,6 +26,7 @@ import SlidingWindowsPage from "./SlidingWindows/SlidingWindows.jsx";
 import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
+import DesignPage from "./Design/Design.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -152,6 +154,17 @@ const AlgorithmCategories = ({ navigate }) => {
       iconBg: "bg-fuchsia-500/20",
       borderColor: "border-fuchsia-500/30",
       iconColor: "text-fuchsia-400",
+    },
+    {
+      name: "Design",
+      icon: Wrench,
+      description:
+        "Implement complex data structures combining HashMap, Linked List, and advanced design patterns.",
+      page: "Design", // change to "Design" once you create DesignPage.jsx
+      gradient: "from-teal-500 to-emerald-600",
+      iconBg: "bg-teal-500/20",
+      borderColor: "border-teal-500/30",
+      iconColor: "text-teal-400",
     },
   ];
 
@@ -355,6 +368,9 @@ const HomePage = () => {
         return <StackPage navigate={navigate} />;
       case "Trees":
         return <TreesPage navigate={navigate} />;
+      case "Design":
+        return <DesignPage navigate={navigate} />;
+
       case "home":
       default:
         return <AlgorithmCategories navigate={navigate} />;

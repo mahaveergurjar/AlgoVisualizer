@@ -1,51 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  ArrowUp,
-  Code,
-  CheckCircle,
-  Clock,
-  Layers,
-  List,
-  Maximize2,
-  TrendingUp,
-} from "lucide-react";
+import { Code, Clock, Maximize2, TrendingUp, Layers } from "lucide-react";
 
-// Pointer Component
-const VisualizerPointer = ({ index, containerId, color, label }) => {
-  const [position, setPosition] = useState({ opacity: 0, left: 0 });
-
-  useEffect(() => {
-    if (index === null || index < 0) {
-      setPosition({ opacity: 0 });
-      return;
-    }
-    const container = document.getElementById(containerId);
-    const element = document.getElementById(`${containerId}-element-${index}`);
-    if (container && element) {
-      const containerRect = container.getBoundingClientRect();
-      const elementRect = element.getBoundingClientRect();
-      const offset =
-        elementRect.left - containerRect.left + elementRect.width / 2 - 12;
-      setPosition({ opacity: 1, left: offset });
-    } else {
-      setPosition({ opacity: 0 });
-    }
-  }, [index, containerId]);
-
-  return (
-    <div
-      className="absolute top-full text-center transition-all duration-300 ease-out"
-      style={position}
-    >
-      <ArrowUp className={`w-6 h-6 mx-auto text-${color}-400`} />
-      <span className={`font-bold text-lg font-mono text-${color}-400`}>
-        {label}
-      </span>
-    </div>
-  );
-};
-
-// Main Visualizer Component
 const SlidingWindowMaximum = () => {
   const [mode, setMode] = useState("optimal");
   const [history, setHistory] = useState([]);
@@ -53,6 +8,7 @@ const SlidingWindowMaximum = () => {
   const [numsInput, setNumsInput] = useState("1,3,-1,-3,5,3,6,7");
   const [kInput, setKInput] = useState("3");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [windowStyle, setWindowStyle] = useState({});
 
   const generateBruteForceHistory = useCallback((nums, k) => {
     const newHistory = [];
@@ -84,14 +40,14 @@ const SlidingWindowMaximum = () => {
         explanation: `Checking window from index ${i} to ${i + k - 1}`,
       });
 
-      let maxVal = nums[i];
+      let maxVal = -Infinity;
       addState({
         line: 5,
         windowStart: i,
         windowEnd: i + k - 1,
-        currentMax: maxVal,
+        currentMax: null,
         comparingIndex: i,
-        explanation: `Initialize max with first element: ${maxVal}`,
+        explanation: `Initialize max for this window.`,
       });
 
       for (let j = i; j < i + k; j++) {
@@ -99,9 +55,11 @@ const SlidingWindowMaximum = () => {
           line: 6,
           windowStart: i,
           windowEnd: i + k - 1,
-          currentMax: maxVal,
+          currentMax: maxVal === -Infinity ? null : maxVal,
           comparingIndex: j,
-          explanation: `Comparing: current max = ${maxVal}, nums[${j}] = ${nums[j]}`,
+          explanation: `Comparing: current max = ${
+            maxVal === -Infinity ? "-∞" : maxVal
+          }, nums[${j}] = ${nums[j]}`,
         });
 
         if (nums[j] > maxVal) {
@@ -165,13 +123,16 @@ const SlidingWindowMaximum = () => {
       addState({
         line: 5,
         currentIndex: i,
+        windowStart: Math.max(0, i - k + 1),
+        windowEnd: i,
         explanation: `Processing index ${i}, value = ${nums[i]}`,
       });
 
-      // Remove elements outside current window
       addState({
         line: 7,
         currentIndex: i,
+        windowStart: Math.max(0, i - k + 1),
+        windowEnd: i,
         explanation: `Check if deque front is outside window (i - k + 1 = ${
           i - k + 1
         })`,
@@ -182,25 +143,30 @@ const SlidingWindowMaximum = () => {
         addState({
           line: 8,
           currentIndex: i,
+          windowStart: Math.max(0, i - k + 1),
+          windowEnd: i,
           removedFromFront: removed,
           explanation: `Removed index ${removed} from deque front (outside window)`,
         });
       }
 
-      // Remove smaller elements from back
       addState({
         line: 11,
         currentIndex: i,
-        explanation: `Remove elements smaller than ${nums[i]} from deque back`,
+        windowStart: Math.max(0, i - k + 1),
+        windowEnd: i,
+        explanation: `Remove elements smaller than or equal to ${nums[i]} from deque back`,
       });
 
-      while (deque.length > 0 && nums[deque[deque.length - 1]] < nums[i]) {
+      while (deque.length > 0 && nums[deque[deque.length - 1]] <= nums[i]) {
         const removed = deque.pop();
         addState({
           line: 12,
           currentIndex: i,
+          windowStart: Math.max(0, i - k + 1),
+          windowEnd: i,
           removedFromBack: removed,
-          explanation: `Removed index ${removed} (value ${nums[removed]}) from back because ${nums[i]} is larger`,
+          explanation: `Removed index ${removed} (value ${nums[removed]}) from back because ${nums[i]} is larger or equal`,
         });
       }
 
@@ -208,13 +174,14 @@ const SlidingWindowMaximum = () => {
       addState({
         line: 15,
         currentIndex: i,
+        windowStart: Math.max(0, i - k + 1),
+        windowEnd: i,
         justAddedToDeque: i,
         explanation: `Added index ${i} to deque back. Deque now: [${deque.join(
           ", "
         )}]`,
       });
 
-      // Add to result if window is complete
       if (i >= k - 1) {
         const maxVal = nums[deque[0]];
         result.push(maxVal);
@@ -282,6 +249,8 @@ const SlidingWindowMaximum = () => {
     []
   );
 
+  const state = history[currentStep] || {};
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (isLoaded) {
@@ -293,8 +262,38 @@ const SlidingWindowMaximum = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLoaded, stepForward, stepBackward]);
 
-  const state = history[currentStep] || {};
-  const maxValue = state.nums ? Math.max(...state.nums) : 1;
+  useEffect(() => {
+    if (isLoaded && state.windowStart !== null) {
+      const container = document.getElementById("array-container");
+      const startEl = document.getElementById(
+        `array-container-element-${state.windowStart}`
+      );
+      const endEl = document.getElementById(
+        `array-container-element-${state.windowEnd}`
+      );
+
+      if (container && startEl && endEl) {
+        const containerRect = container.getBoundingClientRect();
+        const startRect = startEl.getBoundingClientRect();
+        const endRect = endEl.getBoundingClientRect();
+
+        setWindowStyle({
+          position: "absolute",
+          top: "-8px",
+          bottom: "-8px",
+          left: `${startRect.left - containerRect.left - 8}px`,
+          width: `${endRect.right - startRect.left + 16}px`,
+          backgroundColor: "rgba(56, 189, 248, 0.1)",
+          border: "2px solid rgba(56, 189, 248, 0.5)",
+          borderRadius: "12px",
+          transition: "all 300ms ease-out",
+          opacity: 1,
+        });
+      }
+    } else {
+      setWindowStyle({ opacity: 0 });
+    }
+  }, [currentStep, isLoaded, state.windowStart, state.windowEnd]);
 
   const colorMapping = {
     purple: "text-purple-400",
@@ -401,7 +400,7 @@ const SlidingWindowMaximum = () => {
       l: 11,
       c: [
         { t: "  while", c: "purple" },
-        { t: " (!dq.empty() && nums[dq.back()] < nums[i])", c: "" },
+        { t: " (!dq.empty() && nums[dq.back()] <= nums[i])", c: "" },
       ],
     },
     { l: 12, c: [{ t: "    dq.pop_back();", c: "" }] },
@@ -582,17 +581,15 @@ const SlidingWindowMaximum = () => {
                 <TrendingUp size={22} />
                 Array Visualization
               </h3>
-              <div className="bg-gray-900/50 p-4 rounded-xl">
-                <div className="flex gap-2 justify-center items-end h-64">
+              <div className="bg-gray-900/50 p-4 rounded-xl min-h-[12rem] flex items-center">
+                <div
+                  id="array-container"
+                  className="relative flex gap-2 justify-center w-full"
+                >
                   {state.nums?.map((num, index) => {
-                    const isInWindow =
-                      state.windowStart !== null &&
-                      index >= state.windowStart &&
-                      index <= state.windowEnd;
                     const isComparing = state.comparingIndex === index;
                     const isCurrentMax =
                       mode === "brute-force" &&
-                      isInWindow &&
                       num === state.currentMax &&
                       index <= state.comparingIndex;
                     const isDequeIndex =
@@ -600,33 +597,27 @@ const SlidingWindowMaximum = () => {
                     const isDequeFront =
                       mode === "optimal" && state.deque?.[0] === index;
                     const isCurrentIndex = state.currentIndex === index;
-                    const height = (Math.abs(num) / maxValue) * 80 + 10;
 
                     return (
                       <div
                         key={index}
-                        className="flex flex-col items-center flex-1"
+                        id={`array-container-element-${index}`}
+                        className="flex flex-col items-center"
                       >
-                        <div className="relative w-full flex flex-col items-center justify-end h-56">
-                          <div className="absolute -top-6 text-xs font-bold text-white">
-                            {num}
-                          </div>
-                          <div
-                            className={`w-full rounded-t-lg transition-all duration-300 flex items-end justify-center pb-1 shadow-lg ${
-                              isCurrentIndex
-                                ? "bg-gradient-to-t from-yellow-500 to-amber-400 border-2 border-yellow-300"
-                                : isDequeFront
-                                ? "bg-gradient-to-t from-green-500 to-emerald-400 border-2 border-green-300 animate-pulse"
-                                : isDequeIndex
-                                ? "bg-gradient-to-t from-cyan-500 to-blue-400 border-2 border-cyan-300"
-                                : isCurrentMax || isComparing
-                                ? "bg-gradient-to-t from-pink-500 to-rose-400 border-2 border-pink-300"
-                                : isInWindow
-                                ? "bg-gradient-to-t from-blue-500 to-indigo-400 border-2 border-blue-300"
-                                : "bg-gradient-to-t from-gray-600 to-gray-500 border-2 border-gray-500"
-                            }`}
-                            style={{ height: `${height}%` }}
-                          />
+                        <div
+                          className={`w-16 h-16 flex items-center justify-center font-bold text-xl rounded-lg shadow-lg border-2 transition-all duration-300 ${
+                            isCurrentIndex
+                              ? "bg-yellow-500/80 border-yellow-300"
+                              : isDequeFront
+                              ? "bg-green-500/80 border-green-300"
+                              : isDequeIndex
+                              ? "bg-cyan-500/80 border-cyan-300"
+                              : isCurrentMax || isComparing
+                              ? "bg-pink-500/80 border-pink-300"
+                              : "bg-gray-600/80 border-gray-500"
+                          }`}
+                        >
+                          {num}
                         </div>
                         <span className="text-xs text-gray-400 mt-2 font-mono">
                           [{index}]
@@ -634,45 +625,36 @@ const SlidingWindowMaximum = () => {
                       </div>
                     );
                   })}
+                  <div style={windowStyle} />
                 </div>
-                {state.windowStart !== null && (
-                  <div className="mt-4 text-center">
-                    <div className="inline-block bg-blue-500/20 border-2 border-blue-400 rounded-lg px-4 py-2">
-                      <span className="text-blue-300 font-mono text-sm">
-                        Window: [{state.windowStart}, {state.windowEnd}] | Size:{" "}
-                        {state.k}
-                      </span>
-                    </div>
-                  </div>
-                )}
               </div>
 
               <div className="mt-4 bg-gray-900/50 p-3 rounded-lg border border-gray-600">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-gradient-to-t from-blue-500 to-indigo-400 rounded border-2 border-blue-300"></div>
-                    <span>In Window</span>
+                    <div className="w-6 h-6 rounded border-2 border-blue-400 bg-blue-500/10"></div>
+                    <span>Window</span>
                   </div>
                   {mode === "brute-force" && (
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-gradient-to-t from-pink-500 to-rose-400 rounded border-2 border-pink-300"></div>
+                      <div className="w-6 h-6 bg-pink-500/80 rounded border-2 border-pink-300"></div>
                       <span>Current Max</span>
                     </div>
                   )}
                   {mode === "optimal" && (
                     <>
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-gradient-to-t from-cyan-500 to-blue-400 rounded border-2 border-cyan-300"></div>
+                        <div className="w-6 h-6 bg-cyan-500/80 rounded border-2 border-cyan-300"></div>
                         <span>In Deque</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-gradient-to-t from-green-500 to-emerald-400 rounded border-2 border-green-300"></div>
+                        <div className="w-6 h-6 bg-green-500/80 rounded border-2 border-green-300"></div>
                         <span>Deque Front (Max)</span>
                       </div>
                     </>
                   )}
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-gradient-to-t from-yellow-500 to-amber-400 rounded border-2 border-yellow-300"></div>
+                    <div className="w-6 h-6 bg-yellow-500/80 rounded border-2 border-yellow-300"></div>
                     <span>Current Index</span>
                   </div>
                 </div>
