@@ -30,7 +30,7 @@ const AlgorithmList = ({ navigate }) => {
   const algorithms = [
     {
       name: "Bubble Sort",
-      number: "N/A",
+      number: "912",
       icon: ArrowDownUp,
       description:
         "A simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.",
