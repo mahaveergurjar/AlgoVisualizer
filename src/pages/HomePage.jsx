@@ -18,6 +18,7 @@ import {
   Zap,
   Trophy,
   Wrench,
+  ArrowDownUp,
 } from "lucide-react";
 
 // --- Import your page components ---
@@ -27,6 +28,7 @@ import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
 import DesignPage from "./Design/Design.jsx";
+import SortingPage from "./Sorting/Sorting.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -115,6 +117,17 @@ const AlgorithmCategories = ({ navigate }) => {
       iconColor: "text-slate-400",
     },
     {
+      name: "Sorting",
+      icon: ArrowDownUp,
+      description:
+        "Arrange data efficiently using algorithms like QuickSort, MergeSort, and BubbleSort.",
+      page: "Sorting",
+      gradient: "from-amber-500 to-yellow-600",
+      iconBg: "bg-amber-500/20",
+      borderColor: "border-amber-500/30",
+      iconColor: "text-amber-400",
+    },
+    {
       name: "Trees",
       icon: Network,
       description:
@@ -160,7 +173,7 @@ const AlgorithmCategories = ({ navigate }) => {
       icon: Wrench,
       description:
         "Implement complex data structures combining HashMap, Linked List, and advanced design patterns.",
-      page: "Design", // change to "Design" once you create DesignPage.jsx
+      page: "Design",
       gradient: "from-teal-500 to-emerald-600",
       iconBg: "bg-teal-500/20",
       borderColor: "border-teal-500/30",
@@ -366,6 +379,8 @@ const HomePage = () => {
         return <LinkedListPage navigate={navigate} />;
       case "Stack":
         return <StackPage navigate={navigate} />;
+      case "Sorting":
+        return <SortingPage navigate={navigate} />;
       case "Trees":
         return <TreesPage navigate={navigate} />;
       case "Design":
