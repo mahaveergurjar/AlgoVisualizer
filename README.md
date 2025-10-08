@@ -87,7 +87,7 @@ We welcome contributions from everyone! To get started:
 3. Make your changes and commit them:
 
    ```bash
-   git commit -am 'Add new feature'
+   git commit -m 'Add new feature'
    ```
 
 4. Push to your forked repository:
