@@ -20,7 +20,7 @@ const PlaceholderVisualizer = ({ name }) => (
   </div>
 );
 
-const BubbleSortVisualizer = () => <PlaceholderVisualizer name="Bubble Sort" />;
+import BubbleSortVisualizer from "./BubbleSort";
 const MergeSortVisualizer = () => <PlaceholderVisualizer name="Merge Sort" />;
 const QuickSortVisualizer = () => <PlaceholderVisualizer name="Quick Sort" />;
 
