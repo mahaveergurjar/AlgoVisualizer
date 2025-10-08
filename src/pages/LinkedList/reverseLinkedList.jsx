@@ -538,7 +538,11 @@ const AlgorithmList = ({ navigate }) => {
                       </div>
                     </div>
                   </div>
-                  <p className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"}`}>{algo.description}</p>
+                  <p className={`h-14 text-sm leading-relaxed mb-5 transition-colors duration-300 ${
+                    isHovered ? "text-gray-300" : "text-gray-400"
+                  }`}>
+                    {algo.description}
+                  </p>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-800">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-1.5"><Star className="h-4 w-4 text-blue-400" /><span className="text-xs font-medium text-gray-400">{algo.technique}</span></div>
@@ -562,7 +566,7 @@ const PageWrapper = ({ children }) => (
     <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
         <div className="fixed inset-0 z-0 pointer-events-none">
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-float-delayed" />
+            <div className="absolute bottom-0 right-1/farthest-corner w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-float-delayed" />
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse-slow" />
         </div>
         <style>{`.animated-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; } @keyframes gradient-animation { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } } .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; } @keyframes fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } } .animated-icon { animation: float-rotate 8s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.6)); } @keyframes float-rotate { 0%, 100% { transform: translateY(0) rotate(0deg); } 33% { transform: translateY(-8px) rotate(120deg); } 66% { transform: translateY(-4px) rotate(240deg); } } .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; } .animate-pulse-slow-delayed { animation: pulse-slow 4s ease-in-out infinite; animation-delay: 2s; } @keyframes pulse-slow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } } .animate-float { animation: float 20s ease-in-out infinite; } .animate-float-delayed { animation: float 20s ease-in-out infinite; animation-delay: 10s; } @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.1); } }`}</style>
