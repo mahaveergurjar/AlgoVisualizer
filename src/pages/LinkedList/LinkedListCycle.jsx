@@ -425,7 +425,7 @@ const LinkedListCycle = () => {
   ];
 
   return (
-    <div className="p-4 max-w-7xl mx-auto bg-gray-800 min-h-screen">
+    <div className="p-4 max-w-7xl mx-auto">
       <header className="text-center mb-8">
         <h1 className="text-5xl font-bold bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
           Linked List Cycle Detection

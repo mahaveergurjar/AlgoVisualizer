@@ -257,11 +257,10 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const ArrayPage = () => {
+const ArrayPage = ({ navigate: parentNavigate }) => {
   const [page, setPage] = useState("home");
   const navigate = (newPage) => setPage(newPage);
 
-  // This function decides which component to render based on the 'page' state.
   const renderPage = () => {
     switch (page) {
       case "TrappingRainWater":
@@ -278,7 +277,7 @@ const ArrayPage = () => {
     }
   };
 
-  return (
+  const PageWrapper = ({ children }) => (
     <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-float" />
@@ -295,22 +294,14 @@ const ArrayPage = () => {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
         }
-
         .animate-fade-in-up {
           animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           opacity: 0;
         }
         @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        
         .animated-icon {
           animation: float-rotate 8s ease-in-out infinite;
           filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6));
@@ -320,62 +311,67 @@ const ArrayPage = () => {
           33% { transform: translateY(-8px) rotate(120deg); }
           66% { transform: translateY(-4px) rotate(240deg); }
         }
-
-        .animate-pulse-slow {
+        .animate-pulse-slow, .animate-pulse-slow-delayed {
           animation: pulse-slow 4s ease-in-out infinite;
-        }
-        .animate-pulse-slow-delayed {
-          animation: pulse-slow 4s ease-in-out infinite;
-          animation-delay: 2s;
+          animation-delay: var(--animation-delay, 0s);
         }
         @keyframes pulse-slow {
           0%, 100% { opacity: 0.3; }
           50% { opacity: 0.6; }
         }
-
-        .animate-float {
+        .animate-float, .animate-float-delayed {
           animation: float 20s ease-in-out infinite;
-        }
-        .animate-float-delayed {
-          animation: float 20s ease-in-out infinite;
-          animation-delay: 10s;
+          animation-delay: var(--animation-delay, 0s);
         }
         @keyframes float {
           0%, 100% { transform: translate(0, 0) scale(1); }
           50% { transform: translate(30px, -30px) scale(1.1); }
         }
       `}</style>
+      <div className="relative z-10">{children}</div>
+    </div>
+  );
 
-      <div className="relative z-10">
+  return (
+    <PageWrapper>
+      {/* Navigation to go back to the problem list within this category */}
+      {page !== "home" && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
-          {/* Changed justify-between to justify-start and added a gap */}
-          <div className="max-w-7xl px-6 w-full flex items-center justify-start gap-8">
-            {/* This button will appear first on the left when not on the home page */}
-            {page !== "home" && (
-              <button
-                onClick={() => navigate("home")}
-                className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back to Problems
-              </button>
-            )}
-
-            {/* The title now sits on the left side */}
+          <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
+            <button
+              onClick={() => navigate("home")}
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Problems
+            </button>
             <div className="flex items-center gap-2">
               <Brackets className="h-5 w-5 text-amber-400" />
               <span className="text-sm font-semibold text-gray-300">
                 Array Algorithms
               </span>
             </div>
-
-            {/* The spacers used for centering have been removed. */}
           </div>
         </nav>
+      )}
 
-        {renderPage()}
-      </div>
-    </div>
+      {/* Navigation to go back to the main category homepage */}
+      {page === "home" && parentNavigate && (
+        <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
+          <div className="max-w-7xl px-6 w-full mx-auto">
+            <button
+              onClick={() => parentNavigate("home")}
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Home
+            </button>
+          </div>
+        </nav>
+      )}
+
+      {renderPage()}
+    </PageWrapper>
   );
 };
 

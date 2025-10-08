@@ -24,6 +24,7 @@ import ArrayPage from "./Arrays/Arrays.jsx";
 import SlidingWindowsPage from "./SlidingWindows/SlidingWindows.jsx";
 import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
+import TreesPage from "./Trees/Trees.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -116,7 +117,7 @@ const AlgorithmCategories = ({ navigate }) => {
       icon: Network,
       description:
         "Hierarchical data, traversals (BFS, DFS), and binary trees.",
-      page: "placeholder",
+      page: "Trees",
       gradient: "from-emerald-500 to-green-600",
       iconBg: "bg-emerald-500/20",
       borderColor: "border-emerald-500/30",
@@ -352,6 +353,8 @@ const HomePage = () => {
         return <LinkedListPage navigate={navigate} />;
       case "Stack":
         return <StackPage navigate={navigate} />;
+      case "Trees":
+        return <TreesPage navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmCategories navigate={navigate} />;
@@ -463,24 +466,7 @@ const HomePage = () => {
     </div>
   );
 
-  return (
-    <PageWrapper>
-      {page !== "home" && (
-        <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
-          <div className="max-w-7xl px-6 w-full ">
-            <button
-              onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Home
-            </button>
-          </div>
-        </nav>
-      )}
-      {renderPage()}
-    </PageWrapper>
-  );
+  return <PageWrapper>{renderPage()}</PageWrapper>;
 };
 
 export default HomePage;

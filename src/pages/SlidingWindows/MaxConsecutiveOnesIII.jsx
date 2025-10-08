@@ -158,7 +158,7 @@ const MaxConsecutiveOnes = () => {
   } = state;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
+    <div className="p-4 max-w-7xl mx-auto">
       <div className="p-4 max-w-fit mx-auto">
         <header className="text-center mb-8 pt-6">
           <h1 className="text-5xl font-bold bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent mb-3">

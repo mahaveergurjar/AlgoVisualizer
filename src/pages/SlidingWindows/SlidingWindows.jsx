@@ -8,21 +8,42 @@ import {
   TrendingUp,
   Star,
   Zap,
+  BarChart3,
 } from "lucide-react";
 
 import MaxConsecutiveOnesIII from "./MaxConsecutiveOnesIII.jsx";
+import SlidingWindowMaximum from "./SlidingWindowMaximum.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const algorithms = [
     {
-      name: "Max Consecutive Ones III",
-      number: "1004",
+      name: "Sliding Window Maximum",
+      number: "239",
+      icon: BarChart3,
+      description:
+        "Find the maximum value in each sliding window of size k as it moves through the array.",
+      page: "SlidingWindowMaximum",
+      difficulty: "Hard",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Deque / Sliding Window",
+      timeComplexity: "O(n)",
+    },
+
+    {
+      name: "Sliding Window Maximum",
+      number: "239",
       icon: ToggleRight,
       description:
         "Find the longest subarray of 1s after flipping at most K zeros to ones.",
-      page: "MaxConsecutiveOnesIII",
+      page: "SlidingWindowMaximum",
       difficulty: "Medium",
       difficultyColor: "text-yellow-400",
       difficultyBg: "bg-yellow-400/10",
@@ -204,6 +225,8 @@ const SlidingWindowsPage = ({ navigate: parentNavigate }) => {
     switch (page) {
       case "MaxConsecutiveOnesIII":
         return <MaxConsecutiveOnesIII navigate={navigate} />;
+      case "SlidingWindowMaximum":
+        return <SlidingWindowMaximum navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

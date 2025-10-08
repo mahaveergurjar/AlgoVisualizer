@@ -230,7 +230,7 @@ const ContainerWithMostWater = () => {
   }, [isLoaded, stepForward, stepBackward]);
 
   const state = history[currentStep] || {};
-  const { heights = [], line } = state;
+  const { heights = [] } = state;
 
   const colorMapping = {
     purple: "text-purple-400",
