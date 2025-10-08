@@ -15,6 +15,7 @@ import {
 
 // --- Import your specific design problems here ---
 import LRUCache from "./LRUCache.jsx";
+import LFUCache from "./LFUCache.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -37,6 +38,24 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-teal-500/30",
       technique: "Design (HashMap + Linked List)",
       timeComplexity: "O(1)",
+    },
+    {
+      name: "LFU Cache",
+      number: "460",
+      icon: Settings, // you can replace with any suitable icon
+      description:
+        "Implement an LFU (Least Frequently Used) cache supporting get and put operations. When capacity is reached, it evicts the least frequently used key. Ties are broken by least recently used key.",
+      page: "LFUCache",
+      difficulty: "Hard",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-pink-500 to-rose-500",
+      iconColor: "text-pink-400",
+      iconBg: "bg-pink-500/20",
+      borderColor: "border-pink-500/30",
+      technique: "Design (HashMap + Doubly Linked List + Frequency Map)",
+      timeComplexity: "O(1) average per operation",
     },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
@@ -211,6 +230,8 @@ const DesignPage = ({ navigate: parentNavigate }) => {
     switch (page) {
       case "LRUCache":
         return <LRUCache navigate={navigate} />;
+      case "LFUCache":
+        return <LFUCache navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
