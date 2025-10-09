@@ -367,28 +367,6 @@ Before submitting your visualization, ensure:
 This project participates in [Hacktoberfest](https://hacktoberfest.com/)! We encourage quality contributions during October and throughout the year.
 
 
-
-## 📸 Screenshots
-
-### Example: Trapping Rain Water Visualization
-
-The visualization follows our standard layout with:
-- Input controls at the top
-- Code visualization on the left
-- Interactive elevation map on the right
-- Data structure displays (lmax, rmax arrays)
-- Real-time output and step explanations
-- Complexity analysis at the bottom
-
-<div align="center">
-  <img src="path/to/screenshot1.png" alt="Trapping Rain Water Visualization" width="800"/>
-  <p><i>Standard layout showing all required components</i></p>
-</div>
-
-> Add more screenshots of your visualizations here
-
----
-
 ## 🎓 Learning Resources
 
 Want to learn more about the algorithms visualized in this project?
