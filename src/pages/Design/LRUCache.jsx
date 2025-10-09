@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
   Code,
   Clock,
@@ -339,6 +340,23 @@ const LRUCacheVisualizer = () => {
     setHistory([]);
     setCurrentStep(-1);
   };
+  const parseInput = useCallback(() => {
+    const { capacity, commands } = parseOperations(operationsInput);
+    if (capacity <= 0 || commands.length === 0) throw new Error("Invalid operations");
+    return { capacity, commands };
+  }, [operationsInput]);
+  const handleModeChange = useModeHistorySwitch({
+    mode,
+    setMode,
+    isLoaded,
+    parseInput,
+    generators: {
+      "brute-force": ({ capacity, commands }) => generateBruteForceHistory(capacity, commands),
+      optimal: ({ capacity, commands }) => generateOptimalHistory(capacity, commands),
+    },
+    setCurrentStep,
+    onError: () => {},
+  });
   const stepForward = useCallback(
     () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
     [history.length]
@@ -360,7 +378,7 @@ const LRUCacheVisualizer = () => {
   }, [isLoaded, stepForward, stepBackward]);
 
   const state = history[currentStep] || {};
-  const { commands } = parseOperations(operationsInput);
+  // Commands parsed on demand; avoid unused destructuring here.
 
   const colorMapping = {
     purple: "text-purple-400",
@@ -582,10 +600,7 @@ const LRUCacheVisualizer = () => {
 
       <div className="flex border-b-2 border-gray-700 mb-6">
         <div
-          onClick={() => {
-            setMode("brute-force");
-            reset();
-          }}
+          onClick={() => handleModeChange("brute-force")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "brute-force"
               ? "border-orange-400 text-orange-400"
@@ -595,10 +610,7 @@ const LRUCacheVisualizer = () => {
           Brute Force O(N)
         </div>
         <div
-          onClick={() => {
-            setMode("optimal");
-            reset();
-          }}
+          onClick={() => handleModeChange("optimal")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "optimal"
               ? "border-orange-400 text-orange-400"
