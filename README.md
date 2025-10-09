@@ -18,7 +18,14 @@
 
 ---
 
-## 📖 About The Project
+  - ✅ Bubble Sort (Implemented)
+  - ✅ Merge Sort (Implemented)
+  - ✅ Quick Sort (Implemented)
+  - 🔄 Selection Sort (Coming Soon)
+  - 🔄 Insertion Sort (Coming Soon)
+  - 🔄 Heap Sort (Coming Soon)
+  - 🔄 Counting Sort (Coming Soon)
+  - 🔄 Radix Sort (Coming Soon)
 
 **AlgoVisualizer** is a modern, interactive web application designed to help students, developers, and algorithm enthusiasts understand complex Data Structures and Algorithms (DSA) through visual, step-by-step execution. Whether you're preparing for technical interviews, studying for exams, or simply curious about how algorithms work under the hood, AlgoVisualizer makes learning engaging and intuitive.
 
@@ -33,34 +40,13 @@
 
 ---
 
-## 🎯 Features
-
-### 🔢 Sorting Algorithms
-Visualize how different sorting techniques organize data:
-- **Bubble Sort** - Simple comparison-based algorithm
-- **Selection Sort** - Minimum element selection approach
-- **Insertion Sort** - Building sorted array incrementally
-- **Merge Sort** - Divide and conquer strategy
-- **Quick Sort** - Efficient partition-based sorting
-- **Heap Sort** - Binary heap data structure sorting
-- **Counting Sort** - Non-comparison integer sorting
-- **Radix Sort** - Digit-by-digit sorting
-
-### 🗺️ Pathfinding Algorithms
-Find the shortest path with intelligent search:
-- **Dijkstra's Algorithm** - Single-source shortest path
-- **A* Search Algorithm** - Heuristic-based pathfinding
-
-### 📊 Graph Algorithms
-Explore graph traversal techniques:
-- **Depth-First Search (DFS)** - Explore as far as possible along each branch
-- **Breadth-First Search (BFS)** - Level-by-level exploration
-
-### 🎮 Interactive Controls
-- ⚡ **Adjustable Speed**: Control visualization speed from slow to fast
-- ⏯️ **Real-time Updates**: Watch algorithms execute step-by-step
-- 🎨 **Visual Feedback**: Color-coded elements for better understanding
-- 📊 **Algorithm Comparison**: See different approaches side-by-side
+- **Interactive Controls**:
+  - Step-by-step algorithm visualization
+  - Interactive forward/backward navigation
+  - Real-time complexity metrics (comparisons, swaps, merges)
+  - Educational explanations for each step
+  - Keyboard navigation support (arrow keys)
+  - Visual representation of algorithm steps
 
 ---
 
