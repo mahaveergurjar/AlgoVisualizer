@@ -258,7 +258,7 @@ const AlgorithmCategories = ({ navigate }) => {
               onClick={() => !isPlaceholder && navigate(cat.page)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className={`group relative rounded-2xl p-6 transition-all duration-500 transform animate-fade-in-up ${
+              className={`group relative rounded-2xl p-4 md:p-6 transition-all duration-500 transform animate-fade-in-up ${
                 isPlaceholder
                   ? "opacity-40 cursor-not-allowed"
                   : "cursor-pointer hover:-translate-y-2 hover:scale-105"
