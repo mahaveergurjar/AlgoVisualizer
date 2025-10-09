@@ -12,14 +12,14 @@
 
 - **Sorting Algorithms**:
 
-  - Bubble Sort
-  - Selection Sort
-  - Insertion Sort
-  - Merge Sort
-  - Quick Sort
-  - Heap Sort
-  - Counting Sort
-  - Radix Sort
+  - ✅ Bubble Sort (Implemented)
+  - ✅ Merge Sort (Implemented)
+  - ✅ Quick Sort (Implemented)
+  - 🔄 Selection Sort (Coming Soon)
+  - 🔄 Insertion Sort (Coming Soon)
+  - 🔄 Heap Sort (Coming Soon)
+  - 🔄 Counting Sort (Coming Soon)
+  - 🔄 Radix Sort (Coming Soon)
 
 - **Pathfinding Algorithms**:
 
@@ -32,8 +32,11 @@
   - Breadth-First Search (BFS)
 
 - **Interactive Controls**:
-  - Adjustable speed for algorithm visualization
-  - Real-time updates during algorithm execution
+  - Step-by-step algorithm visualization
+  - Interactive forward/backward navigation
+  - Real-time complexity metrics (comparisons, swaps, merges)
+  - Educational explanations for each step
+  - Keyboard navigation support (arrow keys)
   - Visual representation of algorithm steps
 
 ---
