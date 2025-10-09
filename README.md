@@ -18,7 +18,14 @@
 
 ---
 
-## 📖 About The Project
+- ✅ Bubble Sort (Implemented)
+- ✅ Merge Sort (Implemented)
+- ✅ Quick Sort (Implemented)
+- 🔄 Selection Sort (Coming Soon)
+- 🔄 Insertion Sort (Coming Soon)
+- 🔄 Heap Sort (Coming Soon)
+- 🔄 Counting Sort (Coming Soon)
+- 🔄 Radix Sort (Coming Soon)
 
 **AlgoVisualizer** is a modern, interactive web application designed to help students, developers, and algorithm enthusiasts understand complex Data Structures and Algorithms (DSA) through visual, step-by-step execution. Whether you're preparing for technical interviews, studying for exams, or simply curious about how algorithms work under the hood, AlgoVisualizer makes learning engaging and intuitive.
 
@@ -33,34 +40,13 @@
 
 ---
 
-## 🎯 Features
-
-### 🔢 Sorting Algorithms
-Visualize how different sorting techniques organize data:
-- **Bubble Sort** - Simple comparison-based algorithm
-- **Selection Sort** - Minimum element selection approach
-- **Insertion Sort** - Building sorted array incrementally
-- **Merge Sort** - Divide and conquer strategy
-- **Quick Sort** - Efficient partition-based sorting
-- **Heap Sort** - Binary heap data structure sorting
-- **Counting Sort** - Non-comparison integer sorting
-- **Radix Sort** - Digit-by-digit sorting
-
-### 🗺️ Pathfinding Algorithms
-Find the shortest path with intelligent search:
-- **Dijkstra's Algorithm** - Single-source shortest path
-- **A* Search Algorithm** - Heuristic-based pathfinding
-
-### 📊 Graph Algorithms
-Explore graph traversal techniques:
-- **Depth-First Search (DFS)** - Explore as far as possible along each branch
-- **Breadth-First Search (BFS)** - Level-by-level exploration
-
-### 🎮 Interactive Controls
-- ⚡ **Adjustable Speed**: Control visualization speed from slow to fast
-- ⏯️ **Real-time Updates**: Watch algorithms execute step-by-step
-- 🎨 **Visual Feedback**: Color-coded elements for better understanding
-- 📊 **Algorithm Comparison**: See different approaches side-by-side
+- **Interactive Controls**:
+  - Step-by-step algorithm visualization
+  - Interactive forward/backward navigation
+  - Real-time complexity metrics (comparisons, swaps, merges)
+  - Educational explanations for each step
+  - Keyboard navigation support (arrow keys)
+  - Visual representation of algorithm steps
 
 ---
 
@@ -68,13 +54,13 @@ Explore graph traversal techniques:
 
 <div align="center">
 
-| Technology | Description |
-|------------|-------------|
-| ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black) | Frontend framework for building UI |
-| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) | Fast build tool and dev server |
-| ![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) | Utility-first CSS framework |
-| ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) | Programming language |
-| ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white) | Deployment platform |
+| Technology                                                                                                        | Description                        |
+| ----------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)                  | Frontend framework for building UI |
+| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)                     | Fast build tool and dev server     |
+| ![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) | Utility-first CSS framework        |
+| ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)   | Programming language               |
+| ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white)               | Deployment platform                |
 
 </div>
 
@@ -119,18 +105,21 @@ AlgoVisualizer/
 ### Prerequisites
 
 Before you begin, ensure you have the following installed:
+
 - **Node.js** (v14.0 or higher)
 - **npm** (v6.0 or higher) or **yarn**
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/mahaveergurjar/AlgoVisualizer.git
    cd AlgoVisualizer
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -138,6 +127,7 @@ Before you begin, ensure you have the following installed:
    ```
 
 3. **Start the development server**
+
    ```bash
    npm run dev
    # or
@@ -145,7 +135,7 @@ Before you begin, ensure you have the following installed:
    ```
 
 4. **Open your browser**
-   
+
    Navigate to [http://localhost:5173](http://localhost:5173) to view the application.
 
 ### Build for Production
@@ -163,6 +153,7 @@ The optimized production build will be generated in the `dist/` folder.
 ## 💡 Usage
 
 ### Sorting Visualizer
+
 1. Select a sorting algorithm from the dropdown menu
 2. Adjust the array size and speed using the sliders
 3. Click "Generate New Array" to create random data
@@ -171,13 +162,15 @@ The optimized production build will be generated in the `dist/` folder.
 6. Click "Reset" to return to the initial state
 
 ### Pathfinding Visualizer
-1. Choose between Dijkstra's or A* algorithm
+
+1. Choose between Dijkstra's or A\* algorithm
 2. Click on the grid to set walls/obstacles
 3. Set start and end points
 4. Adjust visualization speed
 5. Click "Visualize" to see the algorithm in action
 
 ### Graph Algorithms
+
 1. Select DFS or BFS
 2. Click nodes to create a graph structure
 3. Choose a starting node
@@ -192,27 +185,32 @@ We welcome contributions from developers of all skill levels! Whether it's fixin
 ### How to Contribute
 
 1. **Fork the repository**
+
    ```bash
    git clone https://github.com/YOUR-USERNAME/AlgoVisualizer.git
    ```
 
 2. **Create a feature branch**
+
    ```bash
    git checkout -b feature/AmazingFeature
    ```
 
 3. **Make your changes**
+
    - Write clean, readable code
    - Follow the existing code style
    - Add comments where necessary
    - Test your changes thoroughly
 
 4. **Commit your changes**
+
    ```bash
    git commit -m 'Add some AmazingFeature'
    ```
 
 5. **Push to your branch**
+
    ```bash
    git push origin feature/AmazingFeature
    ```
@@ -307,11 +305,13 @@ We welcome contributions from developers of all skill levels! Whether it's fixin
 When creating a new visualization, ensure you include:
 
 1. **Header Section**
+
    - Clear problem title
    - Subtitle with problem number or description
    - Navigation back to problem list
 
 2. **Input Controls**
+
    - Input field for custom data entry
    - Play/Pause button for animation
    - Step forward/backward buttons (◄ ►)
@@ -320,12 +320,14 @@ When creating a new visualization, ensure you include:
    - Step counter showing progress
 
 3. **Code Display** (Left Panel)
+
    - Syntax-highlighted code
    - Line numbers
    - Current executing line highlighted
    - Support for multiple language tabs (C++, Java, Python)
 
 4. **Visualization Area** (Right Panel)
+
    - Main visual representation (bars, nodes, grid, etc.)
    - Smooth animations between states
    - Color coding:
@@ -337,17 +339,20 @@ When creating a new visualization, ensure you include:
    - Clear labels and indices
 
 5. **Data Structure Display**
+
    - Show auxiliary arrays/stacks/queues if used
    - Display current values
    - Highlight active elements
    - Update in sync with main visualization
 
 6. **Output Section**
+
    - Large, clear display of final result
    - Use success color (green) for completion
    - Include units or context
 
 7. **Explanation Panel**
+
    - Dynamic text explaining current step
    - Show formulas or calculations
    - Update with each step
@@ -380,13 +385,14 @@ Before submitting your visualization, ensure:
 
 This project participates in [Hacktoberfest](https://hacktoberfest.com/)! We encourage quality contributions during October and throughout the year.
 
-
+---
 
 ## 📸 Screenshots
 
 ### Example: Trapping Rain Water Visualization
 
 The visualization follows our standard layout with:
+
 - Input controls at the top
 - Code visualization on the left
 - Interactive elevation map on the right
@@ -395,7 +401,7 @@ The visualization follows our standard layout with:
 - Complexity analysis at the bottom
 
 <div align="center">
-  <img src="path/to/screenshot1.png" alt="Trapping Rain Water Visualization" width="800"/>
+  <img src="screenshot/screenshot1.png" alt="Trapping Rain Water Visualization" width="800"/>
   <p><i>Standard layout showing all required components</i></p>
 </div>
 

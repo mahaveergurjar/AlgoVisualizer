@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
   ArrowUp,
   Code,
@@ -307,10 +308,27 @@ const SubarrayRangesVisualizer = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLoaded, stepBackward, stepForward]);
 
-  const switchTab = (newMode) => {
-    setMode(newMode);
-    reset();
-  };
+  const parseInput = useCallback(() => {
+    const nums = numsInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map(Number);
+    if (nums.some(isNaN) || nums.length === 0) throw new Error("Invalid input");
+    return nums;
+  }, [numsInput]);
+  const handleModeChange = useModeHistorySwitch({
+    mode,
+    setMode,
+    isLoaded,
+    parseInput,
+    generators: {
+      "brute-force": (n) => generateBruteForceHistory(n),
+      optimal: (n) => generateOptimalHistory(n),
+    },
+    setCurrentStep,
+    onError: () => {},
+  });
 
   const state = history[currentStep] || {};
   const { nums = [], line } = state;
@@ -743,7 +761,7 @@ const SubarrayRangesVisualizer = () => {
 
       <div className="flex border-b border-gray-700 mb-6">
         <div
-          onClick={() => switchTab("brute-force")}
+          onClick={() => handleModeChange("brute-force")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "brute-force"
               ? "border-teal-400 text-teal-400"
@@ -753,7 +771,7 @@ const SubarrayRangesVisualizer = () => {
           Brute Force O(n²)
         </div>
         <div
-          onClick={() => switchTab("optimal")}
+          onClick={() => handleModeChange("optimal")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "optimal"
               ? "border-teal-400 text-teal-400"

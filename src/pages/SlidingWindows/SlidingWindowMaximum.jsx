@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import { Code, Clock, Maximize2, TrendingUp, Layers } from "lucide-react";
 
 const SlidingWindowMaximum = () => {
@@ -239,6 +240,28 @@ const SlidingWindowMaximum = () => {
     setHistory([]);
     setCurrentStep(-1);
   };
+  const parseInput = useCallback(() => {
+    const nums = numsInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map(Number);
+    const k = parseInt(kInput, 10);
+    if (nums.some(isNaN) || isNaN(k) || k <= 0) throw new Error("Invalid input");
+    return { nums, k };
+  }, [numsInput, kInput]);
+  const handleModeChange = useModeHistorySwitch({
+    mode,
+    setMode,
+    isLoaded,
+    parseInput,
+    generators: {
+      "brute-force": ({ nums, k }) => generateBruteForceHistory(nums, k),
+      optimal: ({ nums, k }) => generateOptimalHistory(nums, k),
+    },
+    setCurrentStep,
+    onError: () => {},
+  });
 
   const stepForward = useCallback(
     () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
@@ -528,10 +551,7 @@ const SlidingWindowMaximum = () => {
 
       <div className="flex border-b-2 border-gray-700 mb-6">
         <div
-          onClick={() => {
-            setMode("brute-force");
-            reset();
-          }}
+          onClick={() => handleModeChange("brute-force")}
           className={`cursor-pointer p-4 px-8 border-b-4 transition-all font-semibold ${
             mode === "brute-force"
               ? "border-blue-400 text-blue-400 bg-blue-500/10"
@@ -541,10 +561,7 @@ const SlidingWindowMaximum = () => {
           Brute Force O(n·k)
         </div>
         <div
-          onClick={() => {
-            setMode("optimal");
-            reset();
-          }}
+          onClick={() => handleModeChange("optimal")}
           className={`cursor-pointer p-4 px-8 border-b-4 transition-all font-semibold ${
             mode === "optimal"
               ? "border-blue-400 text-blue-400 bg-blue-500/10"
