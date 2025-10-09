@@ -237,12 +237,12 @@ const AlgorithmCategories = ({ navigate }) => {
         <div className="absolute top-20 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow-delayed" />
 
         <div className="relative z-10">
-          <div className="flex justify-center items-center gap-x-6 mb-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-x-6 mb-8">
             <div className="relative">
               <Shapes className="h-20 w-20 text-blue-500 animated-icon" />
               <Sparkles className="h-6 w-6 text-yellow-400 absolute -top-2 -right-2 animate-spin-slow" />
             </div>
-            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animated-gradient">
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animated-gradient">
               AlgoVisualizer
             </h1>
           </div>
@@ -388,7 +388,7 @@ const AlgorithmCategories = ({ navigate }) => {
               onClick={() => !isPlaceholder && navigate(cat.page)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className={`group relative rounded-2xl p-6 transition-all duration-500 transform animate-fade-in-up ${
+              className={`group relative rounded-2xl p-4 md:p-6 transition-all duration-500 transform animate-fade-in-up ${
                 isPlaceholder
                   ? "opacity-40 cursor-not-allowed"
                   : "cursor-pointer hover:-translate-y-2 hover:scale-105"
@@ -406,10 +406,10 @@ const AlgorithmCategories = ({ navigate }) => {
               />
 
               <div
-                className={`relative bg-gray-900/90 backdrop-blur-sm rounded-xl p-5 border ${cat.borderColor} transition-all duration-300`}
+                className={`relative bg-gray-900/90 backdrop-blur-sm rounded-xl p-5 border ${cat.borderColor} transition-all duration-300 flex flex-col justify-between h-full`}
               >
                 {isPlaceholder && (
-                  <div className="absolute top-3 right-3 z-10">
+                  <div className="absolute -top-3 right-3 z-10">
                     <div className="px-3 py-1 bg-gradient-to-r from-gray-700 to-gray-800 text-gray-300 text-xs font-bold rounded-full border border-gray-600 animate-pulse-subtle">
                       COMING SOON
                     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
   ArrowUp,
   Code,
@@ -267,6 +268,27 @@ const TrappingRainWater = () => {
     setHistory([]);
     setCurrentStep(-1);
   };
+  const parseInput = useCallback(() => {
+    const localHeights = heightsInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map(Number);
+    if (localHeights.some(isNaN) || localHeights.length < 2) throw new Error("Invalid input");
+    return localHeights;
+  }, [heightsInput]);
+  const handleModeChange = useModeHistorySwitch({
+    mode,
+    setMode,
+    isLoaded,
+    parseInput,
+    generators: {
+      "brute-force": (h) => generateBruteForceHistory(h),
+      optimal: (h) => generateOptimalHistory(h),
+    },
+    setCurrentStep,
+    onError: () => {},
+  });
   const stepForward = useCallback(
     () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
     [history.length]
@@ -539,10 +561,7 @@ const TrappingRainWater = () => {
 
       <div className="flex border-b border-gray-700 mb-6">
         <div
-          onClick={() => {
-            setMode("brute-force");
-            reset();
-          }}
+          onClick={() => handleModeChange("brute-force")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "brute-force"
               ? "border-blue-400 text-blue-400"
@@ -552,10 +571,7 @@ const TrappingRainWater = () => {
           Brute Force O(n²)
         </div>
         <div
-          onClick={() => {
-            setMode("optimal");
-            reset();
-          }}
+          onClick={() => handleModeChange("optimal")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "optimal"
               ? "border-blue-400 text-blue-400"

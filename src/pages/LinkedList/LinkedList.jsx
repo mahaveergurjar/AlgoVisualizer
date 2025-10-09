@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import {
   GitBranch,
   ArrowLeft,
-  Infinity,
+  Infinity as InfinityIcon,
   Code2,
   Clock,
   TrendingUp,
   Star,
   Zap,
   RefreshCw,
+  GitMerge,
 } from "lucide-react";
 
 import LinkedListCycle from "./LinkedListCycle.jsx";
 import ReverseLinkedList from "./ReverseLinkedList.jsx";
+import MergeTwoSortedLists from "./MergeTwoSortedLists.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -21,7 +23,7 @@ const AlgorithmList = ({ navigate }) => {
     {
       name: "Linked List Cycle",
       number: "141",
-      icon: Infinity,
+      icon: InfinityIcon,
       description:
         "Determine if a given linked list contains a cycle or a loop.",
       page: "LinkedListCycle",
@@ -52,6 +54,23 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-lime-500/30",
       technique: "Iterative & Recursive Reversal",
       timeComplexity: "O(n)",
+    },
+    {
+      name: "Merge Two Sorted Lists",
+      number: "21",
+      icon: GitMerge,
+      description: "Merge two sorted linked lists and return as a sorted list.",
+      page: "MergeTwoSortedLists",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-blue-500 to-purple-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Two Pointers & Dummy Node",
+      timeComplexity: "O(m + n)",
     },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
@@ -218,6 +237,22 @@ const AlgorithmList = ({ navigate }) => {
 const LinkedListPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
+const LinkedListPage = ({ navigate: parentNavigate }) => {
+  const [page, setPage] = useState("home");
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [slideDirection, setSlideDirection] = useState('right');
+
+  const navigate = (newPage) => {
+    setIsTransitioning(true);
+    setSlideDirection(newPage === "home" ? "left" : "right");
+    
+    setTimeout(() => {
+      setPage(newPage);
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 50);
+    }, 150);
+  };
 
   const renderPage = () => {
     switch (page) {
@@ -225,6 +260,8 @@ const LinkedListPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <LinkedListCycle navigate={navigate} />;
       case "ReverseLinkedList":
         return <ReverseLinkedList navigate={navigate} />;
+      case "MergeTwoSortedLists":
+        return <MergeTwoSortedLists navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -240,6 +277,35 @@ const LinkedListPage = ({ navigate: parentNavigate, initialPage = null }) => {
       </div>
 
       <style>{`
+        .slide-transition {
+          transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .slide-enter-right {
+          transform: translateX(100%) scale(0.95);
+          opacity: 0;
+        }
+        
+        .slide-enter-left {
+          transform: translateX(-100%) scale(0.95);
+          opacity: 0;
+        }
+        
+        .slide-enter-active {
+          transform: translateX(0) scale(1);
+          opacity: 1;
+        }
+        
+        .slide-exit-right {
+          transform: translateX(-100%) scale(0.95);
+          opacity: 0;
+        }
+        
+        .slide-exit-left {
+          transform: translateX(100%) scale(0.95);
+          opacity: 0;
+        }
+
         .animated-gradient {
           background-size: 200% auto;
           animation: gradient-animation 4s ease-in-out infinite;
@@ -334,7 +400,19 @@ const LinkedListPage = ({ navigate: parentNavigate, initialPage = null }) => {
         </nav>
       )}
 
-      {renderPage()}
+      <div className="relative w-full h-full overflow-hidden">
+        <div 
+          className={`
+            slide-transition w-full h-full
+            ${isTransitioning 
+              ? (slideDirection === 'right' ? 'slide-exit-left' : 'slide-exit-right')
+              : 'slide-enter-active'
+            }
+          `}
+        >
+          {renderPage()}
+        </div>
+      </div>
     </PageWrapper>
   );
 };
