@@ -276,7 +276,7 @@ const AlgorithmCategories = ({ navigate }) => {
               />
 
               <div
-                className={`relative bg-gray-900/90 backdrop-blur-sm rounded-xl p-5 border ${cat.borderColor} transition-all duration-300`}
+                className={`relative bg-gray-900/90 backdrop-blur-sm rounded-xl p-5 border ${cat.borderColor} transition-all duration-300 flex flex-col justify-between h-full`}
               >
                 {isPlaceholder && (
                   <div className="absolute top-3 right-3 z-10">
