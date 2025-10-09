@@ -1,43 +1,31 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Code, ArrowUp, Clock } from "lucide-react";
 
-// Pointer Component (reused pattern)
-const Pointer = ({ index, containerId, color, label }) => {
-  const [position, setPosition] = useState({ left: 0, top: 0 });
+// Visualizer pointer (mirrors TrappingRainWater style)
+const VisualizerPointer = ({ index, containerId, color, label }) => {
+  const [position, setPosition] = useState({ opacity: 0, left: 0 });
 
   useEffect(() => {
+    if (index === null || index === undefined || index < 0) {
+      setPosition({ opacity: 0 });
+      return;
+    }
     const container = document.getElementById(containerId);
     const element = document.getElementById(`${containerId}-element-${index}`);
-
     if (container && element) {
       const containerRect = container.getBoundingClientRect();
       const elementRect = element.getBoundingClientRect();
-
-      setPosition({
-        left: elementRect.left - containerRect.left + elementRect.width / 2,
-        top: elementRect.top - containerRect.top - 24,
-      });
+      const offset = elementRect.left - containerRect.left + elementRect.width / 2 - 12;
+      setPosition({ opacity: 1, left: offset });
+    } else {
+      setPosition({ opacity: 0 });
     }
   }, [index, containerId]);
 
-  const colors = {
-    buy: { bg: "bg-green-500", text: "text-green-400" },
-    sell: { bg: "bg-red-500", text: "text-red-400" },
-    current: { bg: "bg-yellow-500", text: "text-yellow-400" },
-    min: { bg: "bg-indigo-500", text: "text-indigo-300" },
-  };
-
-  if (index === null || index === undefined) return null;
-
   return (
-    <div
-      className="absolute transition-all duration-500 ease-out pointer-events-none"
-      style={{ left: `${position.left}px`, top: `${position.top}px`, transform: "translateX(-50%)" }}
-    >
-      <div
-        className={`px-2 py-1 rounded-md text-xs font-bold ${colors[color].bg} text-white`}
-      >
-        {label}
-      </div>
+    <div className="absolute top-full text-center transition-all duration-300 ease-out" style={position}>
+      <ArrowUp className={`w-6 h-6 mx-auto text-${color}-400`} />
+      <span className={`font-bold text-lg font-mono text-${color}-400`}>{label}</span>
     </div>
   );
 };
@@ -105,9 +93,11 @@ const BestTimeToBuyAndSellStock = ({ navigate }) => {
   const [currentStep, setCurrentStep] = useState(-1);
   const [isLoaded, setIsLoaded] = useState(false);
   const [lang, setLang] = useState("js");
+  const [algo, setAlgo] = useState("optimal");
 
   const snippets = {
-  js: `let minPrice = Infinity;
+    optimal: {
+      js: `let minPrice = Infinity;
 let maxProfit = 0;
 for (let i = 0; i < prices.length; i++) {
   if (prices[i] < minPrice) minPrice = prices[i];
@@ -115,43 +105,139 @@ for (let i = 0; i < prices.length; i++) {
   if (profit > maxProfit) maxProfit = profit;
 }
 return maxProfit;`,
-  python: `def max_profit(prices):
-  min_price = float('inf')
-  max_profit = 0
-  for p in prices:
-    if p < min_price:
-      min_price = p
-    profit = p - min_price
-    if profit > max_profit:
-      max_profit = profit
-  return max_profit`,
-  cpp: `int maxProfit(vector<int>& prices) {
-  int minPrice = INT_MAX, maxProfit = 0;
-  for (int p : prices) {
-    minPrice = min(minPrice, p);
-    maxProfit = max(maxProfit, p - minPrice);
-  }
-  return maxProfit;
+      python: `def max_profit(prices):
+    min_price = float('inf')
+    max_profit = 0
+    for p in prices:
+        if p < min_price:
+            min_price = p
+        profit = p - min_price
+        if profit > max_profit:
+            max_profit = profit
+    return max_profit`,
+      cpp: `int maxProfit(vector<int>& prices) {
+    int minPrice = INT_MAX, maxProfit = 0;
+    for (int p : prices) {
+        minPrice = min(minPrice, p);
+        maxProfit = max(maxProfit, p - minPrice);
+    }
+    return maxProfit;
 }`,
-  c: `int maxProfit(int* prices, int n) {
-  int minPrice = INT_MAX, maxProfit = 0;
-  for (int i = 0; i < n; ++i) {
-    if (prices[i] < minPrice) minPrice = prices[i];
-    int profit = prices[i] - minPrice;
-    if (profit > maxProfit) maxProfit = profit;
-  }
-  return maxProfit;
+      c: `int maxProfit(int* prices, int n) {
+    int minPrice = INT_MAX, maxProfit = 0;
+    for (int i = 0; i < n; ++i) {
+        if (prices[i] < minPrice) minPrice = prices[i];
+        int profit = prices[i] - minPrice;
+        if (profit > maxProfit) maxProfit = profit;
+    }
+    return maxProfit;
 }`,
-  java: `public int maxProfit(int[] prices) {
-  int minPrice = Integer.MAX_VALUE, maxProfit = 0;
-  for (int p : prices) {
-    if (p < minPrice) minPrice = p;
-    int profit = p - minPrice;
-    if (profit > maxProfit) maxProfit = profit;
-  }
-  return maxProfit;
+      java: `public int maxProfit(int[] prices) {
+    int minPrice = Integer.MAX_VALUE, maxProfit = 0;
+    for (int p : prices) {
+        if (p < minPrice) minPrice = p;
+        int profit = p - minPrice;
+        if (profit > maxProfit) maxProfit = profit;
+    }
+    return maxProfit;
 }`,
+    },
+    brute: {
+      js: `let maxProfit = 0;
+for (let i = 0; i < prices.length; i++) {
+  for (let j = i + 1; j < prices.length; j++) {
+    maxProfit = Math.max(maxProfit, prices[j] - prices[i]);
+  }
+}
+return maxProfit;`,
+      python: `def max_profit_bruteforce(prices):
+    max_profit = 0
+    n = len(prices)
+    for i in range(n):
+        for j in range(i+1, n):
+            max_profit = max(max_profit, prices[j] - prices[i])
+    return max_profit`,
+      cpp: `int maxProfitBrute(vector<int>& prices) {
+    int maxProfit = 0;
+    for (int i = 0; i < prices.size(); ++i) {
+        for (int j = i+1; j < prices.size(); ++j) {
+            maxProfit = max(maxProfit, prices[j] - prices[i]);
+        }
+    }
+    return maxProfit;
+}`,
+      c: `int maxProfitBrute(int* prices, int n) {
+    int maxProfit = 0;
+    for (int i = 0; i < n; ++i) {
+        for (int j = i+1; j < n; ++j) {
+            int profit = prices[j] - prices[i];
+            if (profit > maxProfit) maxProfit = profit;
+        }
+    }
+    return maxProfit;
+}`,
+      java: `public int maxProfitBrute(int[] prices) {
+    int maxProfit = 0;
+    for (int i = 0; i < prices.length; i++) {
+        for (int j = i+1; j < prices.length; j++) {
+            maxProfit = Math.max(maxProfit, prices[j] - prices[i]);
+        }
+    }
+    return maxProfit;
+}`,
+    },
   };
+
+  const complexities = {
+    optimal: { time: "O(n)", space: "O(1)" },
+    brute: { time: "O(n²)", space: "O(1)" },
+  };
+
+  // Token rendering helpers (copied style from TrappingRainWater)
+  const colorMapping = {
+    purple: "text-purple-400",
+    cyan: "text-cyan-400",
+    "light-blue": "text-sky-300",
+    yellow: "text-yellow-300",
+    orange: "text-orange-400",
+    "light-gray": "text-gray-400",
+    green: "text-green-400",
+    "": "text-gray-200",
+  };
+
+  const CodeLine = ({ line, content }) => (
+    <div className={`block rounded-md transition-colors ${state.line === line ? "bg-blue-500/20" : ""}`}>
+      <span className="text-gray-600 w-8 inline-block text-right pr-4 select-none">{line}</span>
+      {content.map((token, index) => (
+        <span key={index} className={colorMapping[token.c]}>
+          {token.t}
+        </span>
+      ))}
+    </div>
+  );
+
+  const optimalCodeTokens = [
+    { l: 1, c: [{ t: "int", c: "cyan" }, { t: " maxProfit(vector<int>& prices) {", c: "" }] },
+    { l: 2, c: [{ t: "  int", c: "cyan" }, { t: " minPrice = INT_MAX, maxProfit = 0;", c: "" }] },
+    { l: 3, c: [{ t: "  for", c: "purple" }, { t: " (int i = 0; i < prices.size(); i++) {", c: "" }] },
+    { l: 4, c: [{ t: "    minPrice = min(minPrice, prices[i]);", c: "" }] },
+    { l: 5, c: [{ t: "    maxProfit = max(maxProfit, prices[i] - minPrice);", c: "" }] },
+    { l: 6, c: [{ t: "  }", c: "light-gray" }] },
+    { l: 7, c: [{ t: "  return", c: "purple" }, { t: " maxProfit;", c: "" }] },
+    { l: 8, c: [{ t: "}", c: "light-gray" }] },
+  ];
+
+  const bruteCodeTokens = [
+    { l: 1, c: [{ t: "int", c: "cyan" }, { t: " maxProfitBrute(vector<int>& prices) {", c: "" }] },
+    { l: 2, c: [{ t: "  int", c: "cyan" }, { t: " maxProfit = 0;", c: "" }] },
+    { l: 3, c: [{ t: "  for", c: "purple" }, { t: " (int i = 0; i < prices.size(); ++i) {", c: "" }] },
+    { l: 4, c: [{ t: "    for", c: "purple" }, { t: " (int j = i+1; j < prices.size(); ++j) {", c: "" }] },
+    { l: 5, c: [{ t: "      maxProfit = max(maxProfit, prices[j] - prices[i]);", c: "" }] },
+    { l: 6, c: [{ t: "    }", c: "light-gray" }] },
+    { l: 7, c: [{ t: "  }", c: "light-gray" }] },
+    { l: 8, c: [{ t: "  return", c: "purple" }, { t: " maxProfit;", c: "" }] },
+    { l: 9, c: [{ t: "}", c: "light-gray" }] },
+  ];
 
   const run = useCallback(() => {
     const arr = parseInput(input);
@@ -251,24 +337,48 @@ return maxProfit;`,
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50 overflow-hidden">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-xl text-emerald-400 border-b border-gray-600/50 pb-3 flex items-center gap-2">Solution</h3>
-              <div className="flex gap-2">
-                {['js','python','cpp','c','java'].map((l) => (
-                  <button
-                    key={l}
-                    onClick={() => setLang(l)}
-                    className={`px-2 py-1 text-xs rounded ${lang===l ? 'bg-emerald-600 text-white' : 'bg-gray-700 text-gray-200'}`}
-                  >
-                    {l.toUpperCase()}
-                  </button>
-                ))}
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
+                    <Code size={20} />
+                    {lang === 'cpp' ? 'C++' : lang.toUpperCase()} {algo === 'brute' ? 'Brute Force' : 'Optimal'} Solution
+                  </h3>
+                  <div className="mt-2 text-xs text-gray-400">Variant:</div>
+                  <div className="mt-1 flex gap-2">
+                    <button onClick={() => setAlgo('optimal')} className={`px-2 py-1 text-xs rounded ${algo==='optimal' ? 'bg-emerald-600 text-white' : 'bg-gray-700 text-gray-200'}`}>Optimal</button>
+                    <button onClick={() => setAlgo('brute')} className={`px-2 py-1 text-xs rounded ${algo==='brute' ? 'bg-rose-600 text-white' : 'bg-gray-700 text-gray-200'}`}>Brute-force</button>
+                  </div>
+                </div>
+                <div className="flex gap-2 items-center">
+                  {['js','python','cpp','c','java'].map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => setLang(l)}
+                      className={`px-2 py-1 text-xs rounded ${lang===l ? (algo==='optimal' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white') : 'bg-gray-700 text-gray-200'}`}
+                    >
+                      {l.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="overflow-x-auto max-h-[420px] scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-              <pre className="text-sm font-mono leading-relaxed whitespace-pre-wrap">
-                {snippets[lang]}
-              </pre>
+              <div className={`overflow-x-auto max-h-[420px] scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 ${algo==='optimal' ? 'bg-gray-900/40' : 'bg-gray-900/20'} p-3 rounded`}>
+              {lang === 'cpp' ? (
+                <pre className="text-sm font-mono leading-relaxed">
+                  <code>
+                    {(algo === 'optimal' ? optimalCodeTokens : bruteCodeTokens).map((line) => (
+                      <CodeLine key={line.l} line={line.l} content={line.c} />
+                    ))}
+                  </code>
+                </pre>
+              ) : (
+                <pre className="text-sm font-mono leading-relaxed whitespace-pre-wrap">
+                  {snippets[algo][lang]}
+                </pre>
+              )}
+              <div className="mt-3 text-sm text-gray-300 flex items-center justify-between">
+                <div>Time: <span className="font-mono text-amber-300">{complexities[algo].time}</span></div>
+                <div>Space: <span className="font-mono text-emerald-300">{complexities[algo].space}</span></div>
+              </div>
             </div>
           </div>
 
@@ -280,7 +390,7 @@ return maxProfit;`,
                   prices.map((p, idx) => {
                     const highlight = idx === buyIndex || idx === sellIndex;
                     return (
-                      <div key={idx} id={`prices-container-element-${idx}`} className={`flex flex-col items-center mx-1`}> 
+                      <div key={idx} id={`prices-container-element-${idx}`} className={`flex flex-col items-center mx-1`}>
                         <div className={`w-12 rounded-t ${highlight ? (idx===buyIndex? 'bg-green-400':'bg-red-400') : 'bg-gray-600'}`} style={{ height: `${max>0? Math.round((p/max)*140):0 }px` }} />
                         <div className="text-xs text-gray-300 mt-2">{p}</div>
                       </div>
@@ -290,16 +400,16 @@ return maxProfit;`,
                   <div className="text-gray-500 text-center py-8 w-full">Load prices to start visualizing</div>
                 )}
                 {isLoaded && buyIndex !== null && (
-                  <Pointer index={buyIndex} containerId="prices-container" color="buy" label={`Buy (${buyIndex})`} />
+                  <VisualizerPointer index={buyIndex} containerId="prices-container" color="green" label={`Buy (${buyIndex})`} />
                 )}
                 {isLoaded && sellIndex !== null && (
-                  <Pointer index={sellIndex} containerId="prices-container" color="sell" label={`Sell (${sellIndex})`} />
+                  <VisualizerPointer index={sellIndex} containerId="prices-container" color="red" label={`Sell (${sellIndex})`} />
                 )}
                 {isLoaded && state.currentIndex !== undefined && (
-                  <Pointer index={state.currentIndex} containerId="prices-container" color="current" label={`Curr (${state.currentIndex})`} />
+                  <VisualizerPointer index={state.currentIndex} containerId="prices-container" color="yellow" label={`Curr (${state.currentIndex})`} />
                 )}
                 {isLoaded && state.minIndex !== undefined && state.minIndex !== -1 && (
-                  <Pointer index={state.minIndex} containerId="prices-container" color="min" label={`Min (${state.minIndex})`} />
+                  <VisualizerPointer index={state.minIndex} containerId="prices-container" color="indigo" label={`Min (${state.minIndex})`} />
                 )}
               </div>
               {/* Status bar showing comparisons */}
@@ -310,6 +420,8 @@ return maxProfit;`,
                 <div className={`${state.profitUpdated ? 'text-emerald-400 font-bold' : 'text-gray-400'}`}>{state.profitUpdated ? 'Profit Updated' : 'No Update'}</div>
               </div>
             </div>
+
+            {/* removed small complexity card to match TrappingRainWater layout; full-width complexity panel added below */}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-blue-700/50">
@@ -329,8 +441,37 @@ return maxProfit;`,
             </div>
           </div>
         </div>
+        <div className="lg:col-span-3 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50 mt-6">
+          <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
+            <Clock size={20} />
+            Complexity Analysis
+          </h3>
+          {algo === 'brute' ? (
+            <div className="space-y-4 text-sm">
+              <div>
+                <h4 className="font-semibold text-blue-300">Time Complexity: <span className="font-mono text-teal-300">O(n²)</span></h4>
+                <p className="text-gray-400 mt-1">For each price, we try every later sell price to compute profit which leads to nested loops and quadratic time.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-blue-300">Space Complexity: <span className="font-mono text-teal-300">O(1)</span></h4>
+                <p className="text-gray-400 mt-1">Only a few variables are used to track indices and profits; space does not scale with input.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4 text-sm">
+              <div>
+                <h4 className="font-semibold text-blue-300">Time Complexity: <span className="font-mono text-teal-300">O(n)</span></h4>
+                <p className="text-gray-400 mt-1">Track minimum price seen so far and update max profit in a single pass through the prices array.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-blue-300">Space Complexity: <span className="font-mono text-teal-300">O(1)</span></h4>
+                <p className="text-gray-400 mt-1">Only a constant number of variables are used (minPrice, maxProfit, indices).</p>
+              </div>
+            </div>
+          )}
+        </div>
 
-        <footer className="text-center mt-12 pb-6 text-gray-500 text-sm">Use arrow keys ← → to navigate through steps</footer>
+        <footer className="text-center mt-6 pb-6 text-gray-500 text-sm">Use arrow keys ← → to navigate through steps</footer>
       </div>
     </div>
   );
