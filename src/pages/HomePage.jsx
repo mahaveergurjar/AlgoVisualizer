@@ -188,12 +188,12 @@ const AlgorithmCategories = ({ navigate }) => {
         <div className="absolute top-20 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow-delayed" />
 
         <div className="relative z-10">
-          <div className="flex justify-center items-center gap-x-6 mb-8">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-x-6 mb-8">
             <div className="relative">
               <Shapes className="h-20 w-20 text-blue-500 animated-icon" />
               <Sparkles className="h-6 w-6 text-yellow-400 absolute -top-2 -right-2 animate-spin-slow" />
             </div>
-            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animated-gradient">
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animated-gradient">
               AlgoVisualizer
             </h1>
           </div>
