@@ -18,6 +18,7 @@ import TrappingRainWater from "./TrappingRainWater.jsx";
 import ContainerWithMostWater from "./ContainerWithMostWater.jsx";
 import MaxConsecutiveOnesIII from "./MaxConsecutiveOnesIII.jsx";
 import SubarrayRanges from "./SubarrayRanges.jsx";
+import BestTimeToBuyAndSellStock from "./BestTimeToBuyAndSellStock.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -95,6 +96,25 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Array",
       timeComplexity: "O(n²)",
     },
+    {
+      name: "Best Time to Buy and Sell Stock",
+      number: "121",
+      icon: TrendingUp,
+      description:
+        "Given an array of prices where prices[i] is the price of a given stock on the i-th day, find the maximum profit you can achieve by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.",
+      page: "BestTimeToBuyAndSellStock",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-green-400 to-emerald-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Greedy",
+      timeComplexity: "O(n)",
+    },
+    
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
   return (
@@ -271,6 +291,8 @@ const ArrayPage = ({ navigate: parentNavigate }) => {
         return <MaxConsecutiveOnesIII navigate={navigate} />;
       case "SubarrayRanges":
         return <SubarrayRanges navigate={navigate} />;
+      case "BestTimeToBuyAndSellStock":
+        return <BestTimeToBuyAndSellStock navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

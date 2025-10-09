@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
   ArrowUp,
   Code,
@@ -86,6 +87,29 @@ const ReverseLinkedList = () => {
     }
     setIsLoaded(true);
   };
+
+  const parseInput = useCallback(() => {
+    const data = listInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map(Number);
+    if (data.some(isNaN) || data.length === 0) throw new Error("Invalid list input");
+    return data;
+  }, [listInput]);
+
+  const handleModeChange = useModeHistorySwitch({
+    mode,
+    setMode,
+    isLoaded,
+    parseInput,
+    generators: {
+      iterative: (d) => generateIterativeHistory(d),
+      recursive: (d) => generateRecursiveHistory(d),
+    },
+    setCurrentStep,
+    onError: (m) => console.warn(m),
+  });
 
   const generateIterativeHistory = useCallback((data) => {
     const newHistory = [];
@@ -422,10 +446,7 @@ const ReverseLinkedList = () => {
       </div>
       <div className="flex border-b-2 border-gray-700 mb-6">
         <div
-          onClick={() => {
-            setMode("iterative");
-            reset();
-          }}
+          onClick={() => handleModeChange("iterative")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "iterative"
               ? "border-sky-400 text-sky-400"
@@ -435,10 +456,7 @@ const ReverseLinkedList = () => {
           Iterative
         </div>
         <div
-          onClick={() => {
-            setMode("recursive");
-            reset();
-          }}
+          onClick={() => handleModeChange("recursive")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "recursive"
               ? "border-sky-400 text-sky-400"

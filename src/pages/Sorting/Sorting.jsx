@@ -20,9 +20,9 @@ const PlaceholderVisualizer = ({ name }) => (
   </div>
 );
 
-const BubbleSortVisualizer = () => <PlaceholderVisualizer name="Bubble Sort" />;
-const MergeSortVisualizer = () => <PlaceholderVisualizer name="Merge Sort" />;
-const QuickSortVisualizer = () => <PlaceholderVisualizer name="Quick Sort" />;
+import BubbleSortVisualizer from "./BubbleSort";
+import MergeSortVisualizer from "./MergeSort";
+import QuickSortVisualizer from "./QuickSort";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
