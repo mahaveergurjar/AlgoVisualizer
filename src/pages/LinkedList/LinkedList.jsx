@@ -234,6 +234,9 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
+const LinkedListPage = ({ navigate: parentNavigate, initialPage = null }) => {
+  const [page, setPage] = useState(initialPage || "home");
+  const navigate = (newPage) => setPage(newPage);
 const LinkedListPage = ({ navigate: parentNavigate }) => {
   const [page, setPage] = useState("home");
   const [isTransitioning, setIsTransitioning] = useState(false);
