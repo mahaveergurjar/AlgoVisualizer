@@ -37,7 +37,7 @@ const AlgorithmCategories = ({ navigate }) => {
   const [open, setOpen] = useState(false);
   const inputRef = useRef(null);
 
-  const categories = [
+  const categories = useMemo(() => ([
     {
       name: "Arrays",
       icon: Brackets,
@@ -183,7 +183,7 @@ const AlgorithmCategories = ({ navigate }) => {
       borderColor: "border-teal-500/30",
       iconColor: "text-teal-400",
     },
-  ];
+  ]), []);
 
   // Build a lightweight search index for categories and problems
   const SEARCH_INDEX = useMemo(() => {
@@ -231,34 +231,39 @@ const AlgorithmCategories = ({ navigate }) => {
   };
 
   return (
-    <div className="px-6 py-8 max-w-7xl mx-auto">
-      <header className="text-center mb-24 mt-16 relative">
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute top-20 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow-delayed" />
+    <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-7xl mx-auto">
+      <header className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24 mt-8 sm:mt-12 md:mt-16 relative">
+        <div className="hidden md:block absolute top-0 left-1/4 w-56 h-56 lg:w-72 lg:h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="hidden md:block absolute top-20 right-1/4 w-72 h-72 lg:w-96 lg:h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow-delayed" />
 
         <div className="relative z-10">
           {/* Main Logo and Title */}
-          <div className="flex justify-center items-center gap-x-8 mb-12">
+          <div className="flex justify-center items-center gap-x-4 sm:gap-x-6 md:gap-x-8 mb-8 sm:mb-10 md:mb-12">
             <div className="relative">
-              <Shapes className="h-24 w-24 text-blue-500 animated-icon" />
-              <Sparkles className="h-8 w-8 text-yellow-400 absolute -top-3 -right-3 animate-spin-slow" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 text-blue-500"
+              >
+                <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" color="currentColor">
+                  <path d="M11.5 6C7.022 6 4.782 6 3.391 7.172S2 10.229 2 14s0 5.657 1.391 6.828S7.021 22 11.5 22c4.478 0 6.718 0 8.109-1.172S21 17.771 21 14c0-1.17 0-2.158-.041-3M18.5 2l.258.697c.338.914.507 1.371.84 1.704c.334.334.791.503 1.705.841L22 5.5l-.697.258c-.914.338-1.371.507-1.704.84c-.334.334-.503.791-.841 1.705L18.5 9l-.258-.697c-.338-.914-.507-1.371-.84-1.704c-.334-.334-.791-.503-1.705-.841L15 5.5l.697-.258c.914-.338 1.371-.507 1.704-.84c.334-.334.503-.791.841-1.705z" />
+                  <path d="m15.5 12l1.227 1.057c.515.445.773.667.773.943s-.258.498-.773.943L15.5 16m-8-4l-1.227 1.057c-.515.445-.773.667-.773.943s.258.498.773.943L7.5 16m5-5l-2 6" />
+                </g>
+              </svg>
+              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 text-white absolute -top-2 -right-2 sm:-top-3 sm:-right-3" />
             </div>
-            <h1 className="text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animated-gradient">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.15] md:leading-[1.1] pb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animated-gradient">
               AlgoVisualizer
             </h1>
           </div>
 
           {/* Hero Description */}
-          <div className="space-y-6 mb-12">
-            <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-gray-100 max-w-5xl mx-auto leading-tight px-4">
+          <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-10 md:mb-12">
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-gray-100 max-w-5xl mx-auto leading-tight px-4">
               Master algorithms through{" "}
               <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 animate-text-shimmer">
                 interactive visualizations
               </span>
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto px-4 leading-relaxed">
-              See complex algorithms come to life with stunning step-by-step
-              demonstrations
             </p>
             {/* Global Search */}
             <div className="max-w-2xl mx-auto px-4">
@@ -341,10 +346,13 @@ const AlgorithmCategories = ({ navigate }) => {
                 )}
               </form>
             </div>
+            <p className="text-xs sm:text-sm text-gray-400 max-w-3xl mx-auto px-4 leading-relaxed">
+              Clear, step-by-step demonstrations that bring algorithms to life.
+            </p>
           </div>
 
           {/* Feature Badges */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12 px-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8 sm:mb-10 md:mb-12 px-4">
             <div className="group px-6 py-3 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-2xl border border-blue-500/40 backdrop-blur-sm hover:scale-110 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 cursor-default">
               <div className="flex items-center gap-3">
                 <Zap className="h-5 w-5 text-blue-400" />
@@ -383,7 +391,7 @@ const AlgorithmCategories = ({ navigate }) => {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
         {categories.map((cat, index) => {
           const isPlaceholder = cat.page === "placeholder";
           const isHovered = hoveredIndex === index;
@@ -395,7 +403,7 @@ const AlgorithmCategories = ({ navigate }) => {
               onClick={() => !isPlaceholder && navigate(cat.page)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className={`group relative h-48 transition-all duration-500 transform animate-fade-in-up ${
+              className={`group relative h-40 sm:h-48 transition-all duration-500 transform animate-fade-in-up ${
                 isPlaceholder
                   ? "opacity-40 cursor-not-allowed"
                   : "cursor-pointer hover:-translate-y-4 hover:scale-[1.03]"
@@ -411,7 +419,7 @@ const AlgorithmCategories = ({ navigate }) => {
               
               {/* Main card container */}
               <div
-                className={`relative h-full bg-gray-900/95 backdrop-blur-sm rounded-3xl p-6 border ${cat.borderColor} transition-all duration-500 ${
+                className={`relative h-full bg-gray-900/95 backdrop-blur-sm rounded-3xl p-5 sm:p-6 border ${cat.borderColor} transition-all duration-500 ${
                   isHovered && !isPlaceholder 
                     ? "shadow-2xl shadow-gray-900/60" 
                     : "shadow-xl shadow-gray-900/40"
@@ -419,7 +427,7 @@ const AlgorithmCategories = ({ navigate }) => {
               >
                 <div className="h-full flex flex-col justify-between">
                   {/* Header section with icon and title */}
-                  <div className="flex items-start gap-4 mb-4">
+                  <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div
                       className={`p-4 ${
                         cat.iconBg
@@ -429,7 +437,7 @@ const AlgorithmCategories = ({ navigate }) => {
                       }`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${
+                        className={`h-8 w-8 sm:h-10 sm:w-10 ${
                           isHovered && !isPlaceholder
                             ? "text-white"
                             : cat.iconColor
@@ -438,7 +446,7 @@ const AlgorithmCategories = ({ navigate }) => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 leading-tight ${
+                        className={`text-lg sm:text-xl font-bold transition-colors duration-300 leading-tight ${
                           isHovered && !isPlaceholder
                             ? "text-white"
                             : "text-gray-200"
@@ -628,6 +636,17 @@ const HomePage = () => {
         @keyframes pulse-subtle {
           0%, 100% { opacity: 0.8; }
           50% { opacity: 1; }
+        }
+
+        /* Animate icon color through heading gradient hues */
+        .animate-color-shift {
+          animation: color-shift 6s linear infinite;
+        }
+        @keyframes color-shift {
+          0% { color: #60a5fa; } /* blue-400 */
+          33% { color: #a78bfa; } /* purple-400 */
+          66% { color: #f472b6; } /* pink-400 */
+          100% { color: #60a5fa; }
         }
 
         .animate-bounce-subtle {
