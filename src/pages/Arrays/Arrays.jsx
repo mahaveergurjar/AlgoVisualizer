@@ -277,8 +277,8 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const ArrayPage = ({ navigate: parentNavigate }) => {
-  const [page, setPage] = useState("home");
+const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
+  const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {

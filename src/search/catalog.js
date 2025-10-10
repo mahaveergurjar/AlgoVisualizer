@@ -1,0 +1,43 @@
+// Centralized catalog for problems across the site
+// Add new entries here as you build new visualizers.
+
+/**
+ * Problem catalog entry contract
+ * - label: User-facing problem name
+ * - category: One of: Arrays | SlidingWindows | LinkedList | Stack | Sorting | Trees | Design
+ * - subpage: The string used by the category page switch to render the visualizer
+ * - keywords: Inclusive keywords/synonyms/IDs for search matching
+ */
+export const problems = [
+  // Arrays
+  { label: "Container With Most Water", category: "Arrays", subpage: "ContainerWithMostWater", keywords: ["array", "two pointers", "container", "water", "11"] },
+  { label: "Trapping Rain Water", category: "Arrays", subpage: "TrappingRainWater", keywords: ["array", "two pointers", "rain", "water", "42"] },
+  { label: "Max Consecutive Ones III", category: "Arrays", subpage: "MaxConsecutiveOnesIII", keywords: ["array", "sliding window", "ones", "1004"] },
+  { label: "Sum of Subarray Ranges", category: "Arrays", subpage: "SubarrayRanges", keywords: ["array", "ranges", "subarray", "2104"] },
+  { label: "Best Time to Buy and Sell Stock", category: "Arrays", subpage: "BestTimeToBuyAndSellStock", keywords: ["array", "stock", "profit", "buy", "sell", "121"] },
+
+  // Sliding Window
+  { label: "Max Consecutive Ones III", category: "SlidingWindows", subpage: "MaxConsecutiveOnesIII", keywords: ["sliding window", "ones", "1004"] },
+  { label: "Sliding Window Maximum", category: "SlidingWindows", subpage: "SlidingWindowMaximum", keywords: ["sliding window", "deque", "maximum", "239"] },
+
+  // Linked List
+  { label: "Linked List Cycle", category: "LinkedList", subpage: "LinkedListCycle", keywords: ["linked list", "cycle", "floyd", "141"] },
+  { label: "Reverse Linked List", category: "LinkedList", subpage: "ReverseLinkedList", keywords: ["linked list", "reverse", "206"] },
+
+  // Stack
+  { label: "Largest Rectangle in Histogram", category: "Stack", subpage: "LargestRectangleHistogram", keywords: ["stack", "monotonic", "histogram", "84"] },
+  { label: "Remove K Digits", category: "Stack", subpage: "RemoveKDigits", keywords: ["stack", "greedy", "402"] },
+  { label: "Sum of Subarray Ranges", category: "Stack", subpage: "SubarrayRanges", keywords: ["stack", "monotonic", "ranges", "2104"] },
+
+  // Sorting
+  { label: "Bubble Sort", category: "Sorting", subpage: "BubbleSort", keywords: ["sorting", "bubble sort", "swap"] },
+  { label: "Merge Sort", category: "Sorting", subpage: "MergeSort", keywords: ["sorting", "merge sort", "divide and conquer"] },
+  { label: "Quick Sort", category: "Sorting", subpage: "QuickSort", keywords: ["sorting", "quick sort", "partition"] },
+
+  // Trees
+  { label: "Construct Tree from Traversal", category: "Trees", subpage: "ConstructBinaryTree", keywords: ["tree", "binary tree", "preorder", "inorder", "105"] },
+
+  // Design
+  { label: "LRU Cache", category: "Design", subpage: "LRUCache", keywords: ["design", "cache", "lru", "146", "hashmap", "linked list"] },
+  { label: "LFU Cache", category: "Design", subpage: "LFUCache", keywords: ["design", "cache", "lfu", "460", "frequency", "linked list"] },
+];
