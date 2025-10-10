@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   Shapes,
@@ -29,9 +29,13 @@ import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
 import DesignPage from "./Design/Design.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
+import { problems as PROBLEM_CATALOG } from "../search/catalog";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const inputRef = useRef(null);
 
   const categories = [
     {
@@ -181,6 +185,51 @@ const AlgorithmCategories = ({ navigate }) => {
     },
   ];
 
+  // Build a lightweight search index for categories and problems
+  const SEARCH_INDEX = useMemo(() => {
+    const categoryItems = categories.map((c) => ({
+      type: "category",
+      label: c.name,
+      category: c.page,
+      keywords: [c.name.toLowerCase()],
+    }));
+    const problemItems = PROBLEM_CATALOG.map((p) => ({ type: "problem", ...p }));
+    return [...categoryItems, ...problemItems];
+  }, [categories]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    const tokens = q.split(/\s+/);
+    const match = (item) => {
+      const hay = [item.label.toLowerCase(), item.category?.toLowerCase(), ...(item.keywords || [])].join(" ");
+      return tokens.every((t) => hay.includes(t));
+    };
+    const results = SEARCH_INDEX.filter(match);
+    // Sort: exact prefix matches first, then by type (problem over category), then alphabetically
+    results.sort((a, b) => {
+      const ap = a.label.toLowerCase().startsWith(query.toLowerCase()) ? 0 : 1;
+      const bp = b.label.toLowerCase().startsWith(query.toLowerCase()) ? 0 : 1;
+      if (ap !== bp) return ap - bp;
+      if (a.type !== b.type) return a.type === "problem" ? -1 : 1;
+      return a.label.localeCompare(b.label);
+    });
+    return results.slice(0, 10);
+  }, [SEARCH_INDEX, query]);
+
+  const handleSubmit = (e) => {
+    e?.preventDefault?.();
+    const target = filtered[0];
+    if (!target) return;
+    if (target.type === "category") {
+      navigate(target.category);
+    } else {
+      navigate({ page: target.category, subpage: target.subpage });
+    }
+    setOpen(false);
+    setQuery("");
+  };
+
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
       <header className="text-center mb-24 mt-16 relative">
@@ -211,6 +260,87 @@ const AlgorithmCategories = ({ navigate }) => {
               See complex algorithms come to life with stunning step-by-step
               demonstrations
             </p>
+            {/* Global Search */}
+            <div className="max-w-2xl mx-auto px-4">
+              <form onSubmit={handleSubmit} className="relative z-50">
+                <div className="flex items-center gap-2 bg-gray-900/80 border border-gray-800 rounded-2xl px-4 py-3 shadow-lg focus-within:border-blue-500/50">
+                  <SearchCode className="h-5 w-5 text-gray-400" />
+                  <input
+                    ref={inputRef}
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setOpen(true);
+                    }}
+                    onFocus={() => setOpen(true)}
+                    placeholder="Search problems or topics (e.g., LRU Cache, sliding window)"
+                    className="w-full bg-transparent outline-none text-gray-200 placeholder:text-gray-500"
+                    aria-label="Search problems or topics"
+                  />
+                  <button
+                    type="submit"
+                    className="px-3 py-1.5 text-sm rounded-lg bg-blue-600/80 hover:bg-blue-600 text-white transition"
+                    aria-label="Search"
+                  >
+                    Search
+                  </button>
+                </div>
+
+                {open && query && (
+                  <>
+                    {/* screen overlay to block background interactions */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setOpen(false)}
+                    />
+                    <div
+                      className="absolute left-0 right-0 mt-2 bg-gray-900/95 border border-gray-800 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl z-50"
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
+                    {filtered.length === 0 ? (
+                      <div className="px-4 py-3 text-sm text-gray-500">No matches</div>
+                    ) : (
+                      <ul className="max-h-72 overflow-auto divide-y divide-gray-800">
+                        {filtered.map((item, idx) => (
+                          <li key={`${item.type}-${item.label}-${idx}`}>
+                            <button
+                              type="button"
+                              className="w-full text-left px-4 py-3 hover:bg-gray-800/80 transition flex items-center gap-3"
+                              onClick={() => {
+                                if (item.type === "category") {
+                                  navigate(item.category);
+                                } else {
+                                  navigate({ page: item.category, subpage: item.subpage });
+                                }
+                                setOpen(false);
+                                setQuery("");
+                              }}
+                            >
+                              <span
+                                className={`text-xs font-medium px-2 py-0.5 rounded-md border ${
+                                  item.type === "problem"
+                                    ? "text-purple-300 bg-purple-400/10 border-purple-400/30"
+                                    : "text-blue-300 bg-blue-400/10 border-blue-400/30"
+                                }`}
+                              >
+                                {item.type === "problem" ? "Problem" : "Topic"}
+                              </span>
+                              <span className="text-gray-200">
+                                {item.label}
+                                {item.type === "problem" && (
+                                  <span className="text-gray-500"> — {item.category}</span>
+                                )}
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    </div>
+                  </>
+                )}
+              </form>
+            </div>
           </div>
 
           {/* Feature Badges */}
@@ -382,24 +512,37 @@ const AlgorithmCategories = ({ navigate }) => {
 
 const HomePage = () => {
   const [page, setPage] = useState("home");
-  const navigate = (newPage) => setPage(newPage);
+  const [initialSubPage, setInitialSubPage] = useState(null);
+  const navigate = (newPage) => {
+    if (typeof newPage === "string") {
+      setPage(newPage);
+      setInitialSubPage(null);
+      return;
+    }
+    if (newPage && typeof newPage === "object" && newPage.page) {
+      setPage(newPage.page);
+      setInitialSubPage(newPage.subpage || null);
+    }
+  };
 
   const renderPage = () => {
     switch (page) {
       case "Arrays":
-        return <ArrayPage navigate={navigate} />;
+        return <ArrayPage navigate={navigate} initialPage={initialSubPage} />;
       case "SlidingWindows":
-        return <SlidingWindowsPage navigate={navigate} />;
+        return (
+          <SlidingWindowsPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "LinkedList":
-        return <LinkedListPage navigate={navigate} />;
+        return <LinkedListPage navigate={navigate} initialPage={initialSubPage} />;
       case "Stack":
-        return <StackPage navigate={navigate} />;
+        return <StackPage navigate={navigate} initialPage={initialSubPage} />;
       case "Sorting":
-        return <SortingPage navigate={navigate} />;
+        return <SortingPage navigate={navigate} initialPage={initialSubPage} />;
       case "Trees":
-        return <TreesPage navigate={navigate} />;
+        return <TreesPage navigate={navigate} initialPage={initialSubPage} />;
       case "Design":
-        return <DesignPage navigate={navigate} />;
+        return <DesignPage navigate={navigate} initialPage={initialSubPage} />;
 
       case "home":
       default:

@@ -237,23 +237,23 @@ We welcome contributions from developers of all skill levels! Whether it's fixin
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  HEADER SECTION                                             │
-│  - Problem Title (e.g., "Trapping Rain Water")             │
+│  - Problem Title (e.g., "Trapping Rain Water")              │
 │  - Problem Description/LeetCode Number                      │
 │  - Back to Problems Button                                  │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  INPUT CONTROLS ROW                                         │
-│  - Input Field (for array/data input)                      │
+│  - Input Field (for array/data input)                       │
 │  - Navigation Controls (Previous/Next Step)                 │
-│  - Step Counter (e.g., "31/39")                            │
+│  - Step Counter (e.g., "31/39")                             │
 │  - Reset Button                                             │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  ALGORITHM TABS (if multiple approaches)                    │
-│  - Brute Force O(n²)                                       │
-│  - Optimal O(n)                                            │
+│  - Brute Force O(n²)                                        │
+│  - Optimal O(n)                                             │
 └─────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────┬──────────────────────────────────┐
@@ -269,33 +269,33 @@ We welcome contributions from developers of all skill levels! Whether it's fixin
 
 ┌─────────────────────────────────────────────────────────────┐
 │  DATA STRUCTURE DISPLAY (if applicable)                     │
-│  - Arrays/Stacks/Queues being used                         │
+│  - Arrays/Stacks/Queues being used                          │
 │  - Show values at each step                                 │
 │  - Highlight active elements                                │
 │  Example:                                                   │
-│    Left Max Array (lmax):  [0, 1, 1, 2, 2, 2, ...]        │
-│    Right Max Array (rmax): [3, 3, 3, 3, 3, 2, ...]        │
+│    Left Max Array (lmax):  [0, 1, 1, 2, 2, 2, ...]          │
+│    Right Max Array (rmax): [3, 3, 3, 3, 3, 2, ...]          │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  OUTPUT SECTION                                             │
 │  - Final result display                                     │
 │  - Clear visual indicator                                   │
-│  Example: "Total Trapped Water: 6"                         │
+│  Example: "Total Trapped Water: 6"                          │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  EXPLANATION SECTION                                        │
-│  - Step-by-step explanation of current operation           │
+│  - Step-by-step explanation of current operation            │
 │  - Formula/logic being applied                              │
-│  Example: "Water at index 4 = min(max[4], rmax[4])        │
-│            - height[4] = min(2, 3) - 1 = 1"               │
+│  Example: "Water at index 4 = min(max[4], rmax[4])          │
+│            - height[4] = min(2, 3) - 1 = 1"                 │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  COMPLEXITY ANALYSIS                                        │
-│  - Time Complexity: O(n) with explanation                  │
-│  - Space Complexity: O(n) with explanation                 │
+│  - Time Complexity: O(n) with explanation                   │
+│  - Space Complexity: O(n) with explanation                  │
 │  - Brief description of approach                            │
 └─────────────────────────────────────────────────────────────┘
 ```
