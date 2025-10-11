@@ -19,6 +19,7 @@ import {
   Trophy,
   Wrench,
   ArrowDownUp,
+  Navigation,
 } from "lucide-react";
 
 // --- Import your page components ----
@@ -29,6 +30,7 @@ import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
 import DesignPage from "./Design/Design.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
+import PathfindingPage from "./Pathfinding/Pathfinding.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
 import QueuePage from "./Queue/Queue.jsx";
 import BinarySearchPage from "./BinarySearch/BinarySearch.jsx"
@@ -163,6 +165,16 @@ const AlgorithmCategories = ({ navigate }) => {
       iconBg: "bg-lime-500/20",
       borderColor: "border-lime-500/30",
       iconColor: "text-lime-400",
+    },
+    {
+      name: "Pathfinding",
+      icon: Navigation,
+      description: "Navigate through mazes using BFS, DFS, and advanced pathfinding algorithms.",
+      page: "Pathfinding",
+      gradient: "from-purple-500 to-pink-600",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      iconColor: "text-purple-400",
     },
     {
       name: "Dynamic Programming",
@@ -557,6 +569,8 @@ const HomePage = () => {
         return <QueuePage navigate={navigate} initialPage={initialSubPage} />;
       case "BinarySearch":
         return <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />;
+      case "Pathfinding":
+        return <PathfindingPage navigate={navigate} initialPage={initialSubPage} />;
 
       case "home":
       default:
