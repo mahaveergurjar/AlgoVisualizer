@@ -30,7 +30,7 @@ import TreesPage from "./Trees/Trees.jsx";
 import DesignPage from "./Design/Design.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
-import QueuePage from "./Queues/Queue.jsx";
+import QueuePage from "./Queue/Queue.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
