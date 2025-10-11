@@ -525,7 +525,7 @@ const AlgorithmCategories = ({ navigate }) => {
 
                   {!isPlaceholder && (
                     <div
-                      className={`pt-4 mt-4 border-t border-gray-800/50 flex items-center justify-between transition-all duration-300 ${
+                      className={`pt-4 mt-6 border-t border-gray-800/50 flex items-center justify-between transition-all duration-300 ${
                         isHovered
                           ? "opacity-100 translate-y-0"
                           : "opacity-0 translate-y-2"
