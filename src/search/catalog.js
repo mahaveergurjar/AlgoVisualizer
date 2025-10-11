@@ -52,9 +52,21 @@ export const problems = [
   { label: "Rat in Maze", category: "Pathfinding", subpage: "RatInMaze", keywords: ["pathfinding", "maze", "rat", "bfs", "dfs", "backtracking", "graph traversal"]},
   
   { 
-  label: "Min Speed to Arrive on Time", 
-  category: "BinarySearch", 
-  subpage: "MinSpeedToArriveOnTime", 
-  keywords: ["binary search", "binary search on answer", "speed", "time", "optimization", "monotonic", "arrive on time", "1870"]
-}
+    label: "Min Speed to Arrive on Time", 
+    category: "BinarySearch", 
+    subpage: "MinSpeedToArriveOnTime", 
+    keywords: ["binary search", "binary search on answer", "speed", "time", "optimization", "monotonic", "arrive on time", "1870"]
+  },
+  { 
+    label: "Search a 2D Matrix", 
+    category: "BinarySearch", 
+    subpage: "Search2DMatrix", 
+    keywords: ["binary search", "2d matrix", "sorted matrix", "staircase search", "logarithmic", "74"]
+  },
+  { 
+    label: "Peak Index in a Mountain Array", 
+    category: "BinarySearch", 
+    subpage: "PeakIndexInMountainArray", 
+    keywords: ["binary search", "peak", "mountain array", "logarithmic", "852"]
+  }
 ];

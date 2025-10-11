@@ -63,7 +63,7 @@ const PeakIndexInMountainArray = () => {
         10: `        else`,
         11: `            low = mid + 1;`,
         12: `    }`,
-        13: `    return 0; // Should not be reached`,
+        13: `    return 0;`,
         14: `}`,
     };
     
