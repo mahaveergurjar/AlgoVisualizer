@@ -28,6 +28,9 @@ export const problems = [
   { label: "Largest Rectangle in Histogram", category: "Stack", subpage: "LargestRectangleHistogram", keywords: ["stack", "monotonic", "histogram", "84"] },
   { label: "Remove K Digits", category: "Stack", subpage: "RemoveKDigits", keywords: ["stack", "greedy", "402"] },
   { label: "Sum of Subarray Ranges", category: "Stack", subpage: "SubarrayRanges", keywords: ["stack", "monotonic", "ranges", "2104"] },
+  
+  // Queue
+  { label: "Implement Queue using Stacks", category: "Queue", subpage: "QueuePage", keywords: ["queue", "stack", "design", "232"] },
 
   // Sorting
   { label: "Bubble Sort", category: "Sorting", subpage: "BubbleSort", keywords: ["sorting", "bubble sort", "swap"] },
