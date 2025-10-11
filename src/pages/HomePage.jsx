@@ -255,7 +255,7 @@ const AlgorithmCategories = ({ navigate }) => {
               <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 md:h-7 md:w-7 text-white absolute -top-2 -right-2 sm:-top-3 sm:-right-3" />
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[1.15] md:leading-[1.1] pb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animated-gradient">
-              Algo Visualizer
+              AlgoVisualizer
             </h1>
           </div>
 
