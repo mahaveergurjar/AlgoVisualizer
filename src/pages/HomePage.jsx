@@ -21,7 +21,7 @@ import {
   ArrowDownUp,
 } from "lucide-react";
 
-// --- Import your page components ---
+// --- Import your page components 
 import ArrayPage from "./Arrays/Arrays.jsx";
 import SlidingWindowsPage from "./SlidingWindows/SlidingWindows.jsx";
 import LinkedListPage from "./LinkedList/LinkedList.jsx";
