@@ -31,7 +31,7 @@ import DesignPage from "./Design/Design.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
 import QueuePage from "./Queue/Queue.jsx";
-import BinarySearchPage from "./BinarySearch/BinarySearch.jsx"
+import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -39,153 +39,157 @@ const AlgorithmCategories = ({ navigate }) => {
   const [open, setOpen] = useState(false);
   const inputRef = useRef(null);
 
-  const categories = useMemo(() => ([
-    {
-      name: "Arrays",
-      icon: Brackets,
-      description: "Contiguous data, two-pointers, and traversals.",
-      page: "Arrays",
-      gradient: "from-sky-500 to-blue-600",
-      iconBg: "bg-sky-500/20",
-      borderColor: "border-sky-500/30",
-      iconColor: "text-sky-400",
-    },
-    {
-      name: "Linked List",
-      icon: GitBranch,
-      description: "Nodes, pointers, cycle detection, and list manipulation.",
-      page: "LinkedList",
-      gradient: "from-blue-500 to-indigo-600",
-      iconBg: "bg-blue-500/20",
-      borderColor: "border-blue-500/30",
-      iconColor: "text-blue-400",
-    },
-    {
-      name: "Stack",
-      icon: Layers,
-      description:
-        "LIFO-based problems, expression evaluation, and histograms.",
-      page: "Stack",
-      gradient: "from-violet-500 to-purple-600",
-      iconBg: "bg-violet-500/20",
-      borderColor: "border-violet-500/30",
-      iconColor: "text-violet-400",
-    },
-    {
-      name: "Queue",
-      icon: ArrowRightLeft,
-      description: "FIFO principle, breadth-first search, and schedulers.",
-      page: "Queue",
-      gradient: "from-rose-500 to-pink-600",
-      iconBg: "bg-rose-500/20",
-      borderColor: "border-rose-500/30",
-      iconColor: "text-rose-400",
-    },
-    {
-      name: "Sliding Window",
-      icon: RectangleHorizontal,
-      description: "Efficiently process subarrays, substrings, and ranges.",
-      page: "SlidingWindows",
-      gradient: "from-cyan-500 to-teal-600",
-      iconBg: "bg-cyan-500/20",
-      borderColor: "border-cyan-500/30",
-      iconColor: "text-cyan-400",
-    },
-    {
-      name: "BinarySearch",
-      icon: SearchCode,
-      description: "Logarithmic time search in sorted data.",
-      page: "BinarySearch",
-      gradient: "from-teal-500 to-emerald-600",
-      iconBg: "bg-teal-500/20",
-      borderColor: "border-teal-500/30",
-      iconColor: "text-teal-400",
-    },
-    {
-      name: "Recursion",
-      icon: Repeat,
-      description: "Solve problems by breaking them into smaller instances.",
-      page: "placeholder",
-      gradient: "from-indigo-500 to-blue-600",
-      iconBg: "bg-indigo-500/20",
-      borderColor: "border-indigo-500/30",
-      iconColor: "text-indigo-400",
-    },
-    {
-      name: "Bit Manipulation",
-      icon: Binary,
-      description:
-        "Work with data at the binary level for ultimate efficiency.",
-      page: "placeholder",
-      gradient: "from-slate-500 to-gray-600",
-      iconBg: "bg-slate-500/20",
-      borderColor: "border-slate-500/30",
-      iconColor: "text-slate-400",
-    },
-    {
-      name: "Sorting",
-      icon: ArrowDownUp,
-      description:
-        "Arrange data efficiently using algorithms like QuickSort, MergeSort, and BubbleSort.",
-      page: "Sorting",
-      gradient: "from-amber-500 to-yellow-600",
-      iconBg: "bg-amber-500/20",
-      borderColor: "border-amber-500/30",
-      iconColor: "text-amber-400",
-    },
-    {
-      name: "Trees",
-      icon: Network,
-      description:
-        "Hierarchical data, traversals (BFS, DFS), and binary trees.",
-      page: "Trees",
-      gradient: "from-emerald-500 to-green-600",
-      iconBg: "bg-emerald-500/20",
-      borderColor: "border-emerald-500/30",
-      iconColor: "text-emerald-400",
-    },
-    {
-      name: "Heaps",
-      icon: Filter,
-      description: "Priority queues and finding min/max elements efficiently.",
-      page: "placeholder",
-      gradient: "from-orange-500 to-amber-600",
-      iconBg: "bg-orange-500/20",
-      borderColor: "border-orange-500/30",
-      iconColor: "text-orange-400",
-    },
-    {
-      name: "Graphs",
-      icon: Share2,
-      description: "Networks of nodes, pathfinding, and connectivity.",
-      page: "placeholder",
-      gradient: "from-lime-500 to-green-600",
-      iconBg: "bg-lime-500/20",
-      borderColor: "border-lime-500/30",
-      iconColor: "text-lime-400",
-    },
-    {
-      name: "Dynamic Programming",
-      icon: Workflow,
-      description: "Optimization by solving and caching sub-problems.",
-      page: "placeholder",
-      gradient: "from-fuchsia-500 to-purple-600",
-      iconBg: "bg-fuchsia-500/20",
-      borderColor: "border-fuchsia-500/30",
-      iconColor: "text-fuchsia-400",
-    },
-    {
-      name: "Design",
-      icon: Wrench,
-      description:
-        "Implement complex data structures combining HashMap, Linked List, and advanced design patterns.",
-      page: "Design",
-      gradient: "from-teal-500 to-emerald-600",
-      iconBg: "bg-teal-500/20",
-      borderColor: "border-teal-500/30",
-      iconColor: "text-teal-400",
-    },
-  ]), []);
+  const categories = useMemo(
+    () => [
+      {
+        name: "Arrays",
+        icon: Brackets,
+        description: "Contiguous data, two-pointers, and traversals.",
+        page: "Arrays",
+        gradient: "from-sky-500 to-blue-600",
+        iconBg: "bg-sky-500/20",
+        borderColor: "border-sky-500/30",
+        iconColor: "text-sky-400",
+      },
+      {
+        name: "Linked List",
+        icon: GitBranch,
+        description: "Nodes, pointers, cycle detection, and list manipulation.",
+        page: "LinkedList",
+        gradient: "from-blue-500 to-indigo-600",
+        iconBg: "bg-blue-500/20",
+        borderColor: "border-blue-500/30",
+        iconColor: "text-blue-400",
+      },
+      {
+        name: "Stack",
+        icon: Layers,
+        description:
+          "LIFO-based problems, expression evaluation, and histograms.",
+        page: "Stack",
+        gradient: "from-violet-500 to-purple-600",
+        iconBg: "bg-violet-500/20",
+        borderColor: "border-violet-500/30",
+        iconColor: "text-violet-400",
+      },
+      {
+        name: "Queue",
+        icon: ArrowRightLeft,
+        description: "FIFO principle, breadth-first search, and schedulers.",
+        page: "Queue",
+        gradient: "from-rose-500 to-pink-600",
+        iconBg: "bg-rose-500/20",
+        borderColor: "border-rose-500/30",
+        iconColor: "text-rose-400",
+      },
+      {
+        name: "Sliding Window",
+        icon: RectangleHorizontal,
+        description: "Efficiently process subarrays, substrings, and ranges.",
+        page: "SlidingWindows",
+        gradient: "from-cyan-500 to-teal-600",
+        iconBg: "bg-cyan-500/20",
+        borderColor: "border-cyan-500/30",
+        iconColor: "text-cyan-400",
+      },
+      {
+        name: "BinarySearch",
+        icon: SearchCode,
+        description: "Logarithmic time search in sorted data.",
+        page: "BinarySearch",
+        gradient: "from-teal-500 to-emerald-600",
+        iconBg: "bg-teal-500/20",
+        borderColor: "border-teal-500/30",
+        iconColor: "text-teal-400",
+      },
+      {
+        name: "Recursion",
+        icon: Repeat,
+        description: "Solve problems by breaking them into smaller instances.",
+        page: "placeholder",
+        gradient: "from-indigo-500 to-blue-600",
+        iconBg: "bg-indigo-500/20",
+        borderColor: "border-indigo-500/30",
+        iconColor: "text-indigo-400",
+      },
+      {
+        name: "Bit Manipulation",
+        icon: Binary,
+        description:
+          "Work with data at the binary level for ultimate efficiency.",
+        page: "placeholder",
+        gradient: "from-slate-500 to-gray-600",
+        iconBg: "bg-slate-500/20",
+        borderColor: "border-slate-500/30",
+        iconColor: "text-slate-400",
+      },
+      {
+        name: "Sorting",
+        icon: ArrowDownUp,
+        description:
+          "Arrange data efficiently using algorithms like QuickSort, MergeSort, and BubbleSort.",
+        page: "Sorting",
+        gradient: "from-amber-500 to-yellow-600",
+        iconBg: "bg-amber-500/20",
+        borderColor: "border-amber-500/30",
+        iconColor: "text-amber-400",
+      },
+      {
+        name: "Trees",
+        icon: Network,
+        description:
+          "Hierarchical data, traversals (BFS, DFS), and binary trees.",
+        page: "Trees",
+        gradient: "from-emerald-500 to-green-600",
+        iconBg: "bg-emerald-500/20",
+        borderColor: "border-emerald-500/30",
+        iconColor: "text-emerald-400",
+      },
+      {
+        name: "Heaps",
+        icon: Filter,
+        description:
+          "Priority queues and finding min/max elements efficiently.",
+        page: "placeholder",
+        gradient: "from-orange-500 to-amber-600",
+        iconBg: "bg-orange-500/20",
+        borderColor: "border-orange-500/30",
+        iconColor: "text-orange-400",
+      },
+      {
+        name: "Graphs",
+        icon: Share2,
+        description: "Networks of nodes, pathfinding, and connectivity.",
+        page: "placeholder",
+        gradient: "from-lime-500 to-green-600",
+        iconBg: "bg-lime-500/20",
+        borderColor: "border-lime-500/30",
+        iconColor: "text-lime-400",
+      },
+      {
+        name: "Dynamic Programming",
+        icon: Workflow,
+        description: "Optimization by solving and caching sub-problems.",
+        page: "placeholder",
+        gradient: "from-fuchsia-500 to-purple-600",
+        iconBg: "bg-fuchsia-500/20",
+        borderColor: "border-fuchsia-500/30",
+        iconColor: "text-fuchsia-400",
+      },
+      {
+        name: "Design",
+        icon: Wrench,
+        description:
+          "Implement complex data structures combining HashMap, Linked List, and advanced design patterns.",
+        page: "Design",
+        gradient: "from-teal-500 to-emerald-600",
+        iconBg: "bg-teal-500/20",
+        borderColor: "border-teal-500/30",
+        iconColor: "text-teal-400",
+      },
+    ],
+    []
+  );
 
   // Build a lightweight search index for categories and problems
   const SEARCH_INDEX = useMemo(() => {
@@ -195,7 +199,10 @@ const AlgorithmCategories = ({ navigate }) => {
       category: c.page,
       keywords: [c.name.toLowerCase()],
     }));
-    const problemItems = PROBLEM_CATALOG.map((p) => ({ type: "problem", ...p }));
+    const problemItems = PROBLEM_CATALOG.map((p) => ({
+      type: "problem",
+      ...p,
+    }));
     return [...categoryItems, ...problemItems];
   }, [categories]);
 
@@ -204,7 +211,11 @@ const AlgorithmCategories = ({ navigate }) => {
     if (!q) return [];
     const tokens = q.split(/\s+/);
     const match = (item) => {
-      const hay = [item.label.toLowerCase(), item.category?.toLowerCase(), ...(item.keywords || [])].join(" ");
+      const hay = [
+        item.label.toLowerCase(),
+        item.category?.toLowerCase(),
+        ...(item.keywords || []),
+      ].join(" ");
       return tokens.every((t) => hay.includes(t));
     };
     const results = SEARCH_INDEX.filter(match);
@@ -247,7 +258,14 @@ const AlgorithmCategories = ({ navigate }) => {
                 viewBox="0 0 24 24"
                 className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 text-blue-500"
               >
-                <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" color="currentColor">
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                  color="currentColor"
+                >
                   <path d="M11.5 6C7.022 6 4.782 6 3.391 7.172S2 10.229 2 14s0 5.657 1.391 6.828S7.021 22 11.5 22c4.478 0 6.718 0 8.109-1.172S21 17.771 21 14c0-1.17 0-2.158-.041-3M18.5 2l.258.697c.338.914.507 1.371.84 1.704c.334.334.791.503 1.705.841L22 5.5l-.697.258c-.914.338-1.371.507-1.704.84c-.334.334-.503.791-.841 1.705L18.5 9l-.258-.697c-.338-.914-.507-1.371-.84-1.704c-.334-.334-.791-.503-1.705-.841L15 5.5l.697-.258c.914-.338 1.371-.507 1.704-.84c.334-.334.503-.791.841-1.705z" />
                   <path d="m15.5 12l1.227 1.057c.515.445.773.667.773.943s-.258.498-.773.943L15.5 16m-8-4l-1.227 1.057c-.515.445-.773.667-.773.943s.258.498.773.943L7.5 16m5-5l-2 6" />
                 </g>
@@ -304,45 +322,55 @@ const AlgorithmCategories = ({ navigate }) => {
                       className="absolute left-0 right-0 mt-2 bg-gray-900/95 border border-gray-800 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl z-50"
                       onMouseDown={(e) => e.preventDefault()}
                     >
-                    {filtered.length === 0 ? (
-                      <div className="px-4 py-3 text-sm text-gray-500">No matches</div>
-                    ) : (
-                      <ul className="max-h-72 overflow-auto divide-y divide-gray-800">
-                        {filtered.map((item, idx) => (
-                          <li key={`${item.type}-${item.label}-${idx}`}>
-                            <button
-                              type="button"
-                              className="w-full text-left px-4 py-3 hover:bg-gray-800/80 transition flex items-center gap-3"
-                              onClick={() => {
-                                if (item.type === "category") {
-                                  navigate(item.category);
-                                } else {
-                                  navigate({ page: item.category, subpage: item.subpage });
-                                }
-                                setOpen(false);
-                                setQuery("");
-                              }}
-                            >
-                              <span
-                                className={`text-xs font-medium px-2 py-0.5 rounded-md border ${
-                                  item.type === "problem"
-                                    ? "text-purple-300 bg-purple-400/10 border-purple-400/30"
-                                    : "text-blue-300 bg-blue-400/10 border-blue-400/30"
-                                }`}
+                      {filtered.length === 0 ? (
+                        <div className="px-4 py-3 text-sm text-gray-500">
+                          No matches
+                        </div>
+                      ) : (
+                        <ul className="max-h-72 overflow-auto divide-y divide-gray-800">
+                          {filtered.map((item, idx) => (
+                            <li key={`${item.type}-${item.label}-${idx}`}>
+                              <button
+                                type="button"
+                                className="w-full text-left px-4 py-3 hover:bg-gray-800/80 transition flex items-center gap-3"
+                                onClick={() => {
+                                  if (item.type === "category") {
+                                    navigate(item.category);
+                                  } else {
+                                    navigate({
+                                      page: item.category,
+                                      subpage: item.subpage,
+                                    });
+                                  }
+                                  setOpen(false);
+                                  setQuery("");
+                                }}
                               >
-                                {item.type === "problem" ? "Problem" : "Topic"}
-                              </span>
-                              <span className="text-gray-200">
-                                {item.label}
-                                {item.type === "problem" && (
-                                  <span className="text-gray-500"> — {item.category}</span>
-                                )}
-                              </span>
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                                <span
+                                  className={`text-xs font-medium px-2 py-0.5 rounded-md border ${
+                                    item.type === "problem"
+                                      ? "text-purple-300 bg-purple-400/10 border-purple-400/30"
+                                      : "text-blue-300 bg-blue-400/10 border-blue-400/30"
+                                  }`}
+                                >
+                                  {item.type === "problem"
+                                    ? "Problem"
+                                    : "Topic"}
+                                </span>
+                                <span className="text-gray-200">
+                                  {item.label}
+                                  {item.type === "problem" && (
+                                    <span className="text-gray-500">
+                                      {" "}
+                                      — {item.category}
+                                    </span>
+                                  )}
+                                </span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   </>
                 )}
@@ -418,92 +446,105 @@ const AlgorithmCategories = ({ navigate }) => {
               <div
                 className={`absolute -inset-2 rounded-3xl bg-gradient-to-br ${cat.gradient} opacity-0 group-hover:opacity-25 transition-all duration-500 blur-md`}
               />
-              
+
               {/* Main card container */}
               <div
-                className={`relative h-full bg-gray-900/95 backdrop-blur-sm rounded-3xl p-5 sm:p-6 border ${cat.borderColor} transition-all duration-500 ${
-                  isHovered && !isPlaceholder 
-                    ? "shadow-2xl shadow-gray-900/60" 
+                className={`relative bg-gray-900/95 backdrop-blur-sm rounded-3xl p-5 sm:p-6 border ${
+                  cat.borderColor
+                } transition-all duration-500 ${
+                  isHovered && !isPlaceholder
+                    ? "shadow-2xl shadow-gray-900/60"
                     : "shadow-xl shadow-gray-900/40"
-                }`}
+                } w-full h-53 flex flex-col justify-between`} // <-- fixed height for uniformity
               >
-                <div className="h-full flex flex-col justify-between">
-                  {/* Header section with icon and title */}
-                  <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
-                    <div
-                      className={`p-4 ${
-                        cat.iconBg
-                      } rounded-2xl transition-all duration-300 ${
-                        !isPlaceholder &&
-                        "group-hover:scale-110 group-hover:rotate-6"
+                {/* Header */}
+                <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
+                  <div
+                    className={`p-3 ${
+                      cat.iconBg
+                    } rounded-2xl transition-all duration-300 ${
+                      !isPlaceholder &&
+                      "group-hover:scale-110 group-hover:rotate-6"
+                    }`}
+                  >
+                    <Icon
+                      className={`h-8 w-8 sm:h-10 sm:w-10 ${
+                        isHovered && !isPlaceholder
+                          ? "text-white"
+                          : cat.iconColor
+                      } transition-colors duration-300`}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h2
+                      className={`text-lg sm:text-xl font-bold transition-colors duration-300 leading-tight ${
+                        isHovered && !isPlaceholder
+                          ? "text-white"
+                          : "text-gray-200"
                       }`}
                     >
-                      <Icon
-                        className={`h-8 w-8 sm:h-10 sm:w-10 ${
-                          isHovered && !isPlaceholder
-                            ? "text-white"
-                            : cat.iconColor
-                        } transition-colors duration-300`}
-                      />
+                      {cat.name}
+                    </h2>
+                  </div>
+                </div>
+
+                {/* COMING SOON badge */}
+                {isPlaceholder && (
+                  <div className="absolute -top-1 -right-1 z-20">
+                    <div className="px-2 py-1 bg-gradient-to-r from-gray-700 to-gray-800 text-gray-300 text-xs font-bold rounded-full border border-gray-600 animate-pulse-subtle shadow-lg">
+                      COMING SOON
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h2
-                        className={`text-lg sm:text-xl font-bold transition-colors duration-300 leading-tight ${
-                          isHovered && !isPlaceholder
-                            ? "text-white"
-                            : "text-gray-200"
-                        }`}
-                      >
-                        {cat.name}
-                      </h2>
+                  </div>
+                )}
+
+                {/* Description + Footer */}
+                <div className="flex flex-col flex-grow justify-between overflow-hidden">
+                  <div
+                    className={`text-sm leading-relaxed transition-colors duration-300 ${
+                      isHovered && !isPlaceholder
+                        ? "text-gray-300"
+                        : "text-gray-500"
+                    } overflow-y-auto pr-1`}
+                    style={{
+                      maxHeight: "3.2rem", // show ~2 lines
+                      scrollbarWidth: "none", // Firefox
+                      msOverflowStyle: "none", // IE/Edge
+                    }}
+                    onWheel={(e) => e.stopPropagation()} // optional (prevents parent scroll)
+                  >
+                    <div
+                      style={{
+                        overflow: "hidden",
+                      }}
+                    >
+                      {cat.description}
                     </div>
                   </div>
 
-                  {/* COMING SOON badge positioned in corner */}
-                  {isPlaceholder && (
-                    <div className="absolute -top-1 -right-1 z-20">
-                      <div className="px-2 py-1 bg-gradient-to-r from-gray-700 to-gray-800 text-gray-300 text-xs font-bold rounded-full border border-gray-600 animate-pulse-subtle shadow-lg">
-                        COMING SOON
+                  {!isPlaceholder && (
+                    <div
+                      className={`pt-4 mt-4 border-t border-gray-800/50 flex items-center justify-between transition-all duration-300 ${
+                        isHovered
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 translate-y-2"
+                      }`}
+                    >
+                      <span className="text-xs text-gray-400 font-medium">
+                        Click to explore
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-pulse" />
+                        <div
+                          className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 animate-pulse"
+                          style={{ animationDelay: "0.2s" }}
+                        />
+                        <div
+                          className="w-2 h-2 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 animate-pulse"
+                          style={{ animationDelay: "0.4s" }}
+                        />
                       </div>
                     </div>
                   )}
-
-                  {/* Description section */}
-                  <div className="flex-1 flex flex-col justify-between">
-                    <p
-                      className={`text-sm leading-relaxed transition-colors duration-300 line-clamp-3 ${
-                        isHovered && !isPlaceholder
-                          ? "text-gray-300"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {cat.description}
-                    </p>
-
-                    {/* Interactive footer */}
-                    {!isPlaceholder && (
-                      <div
-                        className={`pt-4 mt-4 border-t border-gray-800/50 flex items-center justify-between transition-all duration-300 ${
-                          isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-                        }`}
-                      >
-                        <span className="text-xs text-gray-400 font-medium">
-                          Click to explore
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 animate-pulse" />
-                          <div
-                            className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 animate-pulse"
-                            style={{ animationDelay: "0.2s" }}
-                          />
-                          <div
-                            className="w-2 h-2 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 animate-pulse"
-                            style={{ animationDelay: "0.4s" }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
                 </div>
               </div>
             </div>
@@ -541,10 +582,15 @@ const HomePage = () => {
         return <ArrayPage navigate={navigate} initialPage={initialSubPage} />;
       case "SlidingWindows":
         return (
-          <SlidingWindowsPage navigate={navigate} initialPage={initialSubPage} />
+          <SlidingWindowsPage
+            navigate={navigate}
+            initialPage={initialSubPage}
+          />
         );
       case "LinkedList":
-        return <LinkedListPage navigate={navigate} initialPage={initialSubPage} />;
+        return (
+          <LinkedListPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "Stack":
         return <StackPage navigate={navigate} initialPage={initialSubPage} />;
       case "Sorting":
@@ -556,7 +602,9 @@ const HomePage = () => {
       case "Queue":
         return <QueuePage navigate={navigate} initialPage={initialSubPage} />;
       case "BinarySearch":
-        return <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />;
+        return (
+          <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />
+        );
 
       case "home":
       default:
