@@ -8,16 +8,21 @@ import {
   Zap,
   Code2,
   TrendingUp,
+  Container,
+  Star,
+  Clock,
 } from "lucide-react";
 
-// Import queue algorithm visualizers
+// Import all queue visualizers
 import BasicQueueVisualizer from "./BasicQueue";
 import CircularQueueVisualizer from "./CircularQueue";
+import QueueUsingStacks from "./QueueUsingStacks";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const algorithms = [
+    // EDUCATIONAL VISUALIZATIONS
     {
       name: "Basic Queue (FIFO)",
       number: "N/A",
@@ -35,6 +40,7 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-rose-500/30",
       technique: "Linear Structure",
       operations: "Enqueue, Dequeue",
+      category: "Data Structure",
     },
     {
       name: "Circular Queue",
@@ -53,8 +59,146 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-pink-500/30",
       technique: "Circular Array",
       operations: "Enqueue, Dequeue",
+      category: "Data Structure",
+    },
+    // LEETCODE PROBLEMS
+    {
+      name: "Implement Queue using Stacks",
+      number: "232",
+      icon: Container,
+      description:
+        "Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue.",
+      page: "QueueUsingStacks",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-blue-500 to-indigo-600",
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/20",
+      borderColor: "border-blue-500/30",
+      technique: "Stack",
+      timeComplexity: "O(n)",
+      category: "LeetCode Problem",
     },
   ];
+
+  // Group algorithms by category
+  const dataStructures = algorithms.filter(a => a.category === "Data Structure");
+  const leetCodeProblems = algorithms.filter(a => a.category === "LeetCode Problem");
+
+  const AlgorithmCard = ({ algo, index }) => {
+    const isHovered = hoveredIndex === index;
+    const Icon = algo.icon;
+
+    return (
+      <div
+        key={algo.name}
+        onClick={() => navigate(algo.page)}
+        onMouseEnter={() => setHoveredIndex(index)}
+        onMouseLeave={() => setHoveredIndex(null)}
+        className="group relative cursor-pointer animate-fade-in-up"
+        style={{ animationDelay: `${index * 80}ms` }}
+      >
+        <div
+          className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+        />
+
+        <div
+          className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <div
+                className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+              >
+                <Icon
+                  className={`h-10 w-10 ${
+                    isHovered ? "text-white" : algo.iconColor
+                  } transition-colors duration-300`}
+                />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  {algo.number !== "N/A" && (
+                    <span className="text-xs font-mono text-gray-500">
+                      #{algo.number}
+                    </span>
+                  )}
+                  <div
+                    className={`px-2 py-0.5 rounded-md text-xs font-bold ${algo.difficultyBg} ${algo.difficultyColor} border ${algo.difficultyBorder}`}
+                  >
+                    {algo.difficulty}
+                  </div>
+                </div>
+                <h2
+                  className={`text-xl font-bold transition-colors duration-300 ${
+                    isHovered ? "text-white" : "text-gray-200"
+                  }`}
+                >
+                  {algo.name}
+                </h2>
+              </div>
+            </div>
+          </div>
+
+          <p
+            className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
+              isHovered ? "text-gray-300" : "text-gray-400"
+            }`}
+          >
+            {algo.description}
+          </p>
+
+          <div className="flex items-center justify-between pt-4 border-t border-gray-800">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1.5">
+                {algo.operations ? (
+                  <>
+                    <Plus className="h-4 w-4 text-green-400" />
+                    <Minus className="h-4 w-4 text-red-400" />
+                    <span className="text-xs font-medium text-gray-400">
+                      {algo.operations}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Star className="h-4 w-4 text-violet-400" />
+                    <span className="text-xs font-medium text-gray-400">
+                      {algo.technique}
+                    </span>
+                  </>
+                )}
+              </div>
+              {algo.timeComplexity && (
+                <div className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4 text-blue-400" />
+                  <span className="text-xs font-mono text-gray-400">
+                    {algo.timeComplexity}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div
+              className={`transition-all duration-300 ${
+                isHovered
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 -translate-x-2"
+              }`}
+            >
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-medium text-gray-400">
+                  {algo.category === "LeetCode Problem" ? "Solve" : "Visualize"}
+                </span>
+                <ArrowLeft className="h-4 w-4 text-gray-400 rotate-180" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -75,7 +219,7 @@ const AlgorithmList = ({ navigate }) => {
 
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
             Master the First-In-First-Out principle through interactive
-            visualizations. Watch elements flow through the queue structure.
+            visualizations and solve real-world problems.
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
@@ -83,7 +227,7 @@ const AlgorithmList = ({ navigate }) => {
               <div className="flex items-center gap-2">
                 <Code2 className="h-3.5 w-3.5 text-rose-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  {algorithms.length} Implementations
+                  {algorithms.length} Algorithms
                 </span>
               </div>
             </div>
@@ -91,7 +235,7 @@ const AlgorithmList = ({ navigate }) => {
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-3.5 w-3.5 text-pink-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  O(1) Operations
+                  Data Structures & Problems
                 </span>
               </div>
             </div>
@@ -99,95 +243,41 @@ const AlgorithmList = ({ navigate }) => {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {algorithms.map((algo, index) => {
-          const isHovered = hoveredIndex === index;
-          const Icon = algo.icon;
+      {/* Data Structures Section */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-gray-200 mb-6 flex items-center gap-3">
+          <div className="h-1 w-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded"></div>
+          Queue Data Structures
+          <div className="h-1 flex-1 bg-gradient-to-r from-pink-500/50 to-transparent rounded"></div>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {dataStructures.map((algo, index) => (
+            <AlgorithmCard key={algo.name} algo={algo} index={index} />
+          ))}
+        </div>
+      </div>
 
-          return (
-            <div
-              key={algo.name}
-              onClick={() => navigate(algo.page)}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              className="group relative cursor-pointer animate-fade-in-up"
-              style={{ animationDelay: `${index * 80}ms` }}
-            >
-              <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
-              />
+      {/* LeetCode Problems Section */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-200 mb-6 flex items-center gap-3">
+          <div className="h-1 w-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded"></div>
+          Problems
+          <div className="h-1 flex-1 bg-gradient-to-r from-indigo-500/50 to-transparent rounded"></div>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {leetCodeProblems.map((algo, index) => (
+            <AlgorithmCard key={algo.name} algo={algo} index={index + dataStructures.length} />
+          ))}
+        </div>
+      </div>
 
-              <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
-                    >
-                      <Icon
-                        className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
-                        } transition-colors duration-300`}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <div
-                          className={`px-2 py-0.5 rounded-md text-xs font-bold ${algo.difficultyBg} ${algo.difficultyColor} border ${algo.difficultyBorder}`}
-                        >
-                          {algo.difficulty}
-                        </div>
-                      </div>
-                      <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${
-                          isHovered ? "text-white" : "text-gray-200"
-                        }`}
-                      >
-                        {algo.name}
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-
-                <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
-                    isHovered ? "text-gray-300" : "text-gray-400"
-                  }`}
-                >
-                  {algo.description}
-                </p>
-
-                <div className="flex items-center justify-between pt-4 border-t border-gray-800">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1.5">
-                      <Plus className="h-4 w-4 text-green-400" />
-                      <Minus className="h-4 w-4 text-red-400" />
-                      <span className="text-xs font-medium text-gray-400">
-                        {algo.operations}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div
-                    className={`transition-all duration-300 ${
-                      isHovered
-                        ? "opacity-100 translate-x-0"
-                        : "opacity-0 -translate-x-2"
-                    }`}
-                  >
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs font-medium text-gray-400">
-                        Visualize
-                      </span>
-                      <ArrowLeft className="h-4 w-4 text-gray-400 rotate-180" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      <div className="mt-12 text-center">
+        <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-full border border-gray-700 backdrop-blur-sm">
+          <TrendingUp className="h-4 w-4 text-green-400" />
+          <span className="text-sm text-gray-400">
+            More queue problems coming soon
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -203,6 +293,8 @@ const QueuePage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <BasicQueueVisualizer navigate={navigate} />;
       case "CircularQueue":
         return <CircularQueueVisualizer navigate={navigate} />;
+      case "QueueUsingStacks":
+        return <QueueUsingStacks navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
