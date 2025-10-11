@@ -31,6 +31,7 @@ import DesignPage from "./Design/Design.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
 import QueuePage from "./Queue/Queue.jsx";
+import BinarySearchPage from "./BinarySearch/BinarySearch.jsx"
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -91,10 +92,10 @@ const AlgorithmCategories = ({ navigate }) => {
       iconColor: "text-cyan-400",
     },
     {
-      name: "Binary Search",
+      name: "BinarySearch",
       icon: SearchCode,
       description: "Logarithmic time search in sorted data.",
-      page: "placeholder",
+      page: "BinarySearch",
       gradient: "from-teal-500 to-emerald-600",
       iconBg: "bg-teal-500/20",
       borderColor: "border-teal-500/30",
@@ -554,6 +555,8 @@ const HomePage = () => {
         return <DesignPage navigate={navigate} initialPage={initialSubPage} />;
       case "Queue":
         return <QueuePage navigate={navigate} initialPage={initialSubPage} />;
+      case "BinarySearch":
+        return <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />;
 
       case "home":
       default:

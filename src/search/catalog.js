@@ -47,4 +47,11 @@ export const problems = [
   // Queue problems
   { label: "Basic Queue (FIFO)", category: "Queue", subpage: "BasicQueue", keywords: ["queue", "fifo", "first in first out", "enqueue", "dequeue", "linear queue", "basic queue"]},
   { label: "Circular Queue", category: "Queue", subpage: "CircularQueue", keywords: ["circular queue", "ring buffer", "circular array", "queue optimization", "wrap around", "modulo"]},
+  
+  { 
+  label: "Min Speed to Arrive on Time", 
+  category: "BinarySearch", 
+  subpage: "MinSpeedToArriveOnTime", 
+  keywords: ["binary search", "binary search on answer", "speed", "time", "optimization", "monotonic", "arrive on time", "1870"]
+}
 ];
