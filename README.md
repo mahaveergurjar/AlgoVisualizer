@@ -4,7 +4,7 @@
 
 ![AlgoVisualizer Banner](https://img.shields.io/badge/AlgoVisualizer-Interactive%20Learning-blue?style=for-the-badge)
 
-**An Interactive Web Platform for Visualizing Algorithms and Data S tructures**
+**An Interactive Web Platform for Visualizing Algorithms and Data Structures**
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=flat-square)](https://algo-visualizer-green.vercel.app/)
 [![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
