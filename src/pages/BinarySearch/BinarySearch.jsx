@@ -6,6 +6,7 @@ import {
     Grid, // New icon for the 2D Matrix problem
     Clock,
     Star,
+    Mountain,
     Zap,
     Code2,
     TrendingUp
@@ -14,6 +15,7 @@ import {
 // --- Import your specific algorithm visualizer components ---
 import MinSpeedToArriveOnTime from "./MinSpeedToArriveOnTime";
 import Search2DMatrix from './Search2DMatrix';
+import PeakIndexInMountainArray from './PeakIndexInMountainArray';
 
 
 const BinarySearchAlgorithmList = ({ navigate }) => {
@@ -55,6 +57,23 @@ const BinarySearchAlgorithmList = ({ navigate }) => {
             technique: "Binary Search",
             timeComplexity: "O(n log k)",
         },
+        {
+          name: "Peak Index in a Mountain Array",
+          number: "852",
+          icon: Mountain, // Assuming Mountain icon is imported from lucide-react
+          description: "Find the index of the highest element in an array that first increases and then decreases, using binary search to achieve logarithmic time.",
+          page: "PeakIndexInMountainArray",
+          difficulty: "Medium",
+          difficultyColor: "text-yellow-400",
+          difficultyBg: "bg-yellow-400/10",
+          difficultyBorder: "border-yellow-400/30",
+          gradient: "from-green-500 to-teal-500",
+          iconColor: "text-green-400",
+          iconBg: "bg-green-500/20",
+          borderColor: "border-green-500/30",
+          technique: "Binary Search",
+          timeComplexity: "O(log n)",
+      },
     ].sort((a, b) => parseInt(a.number) - parseInt(b.number)), []);
 
     return (
@@ -220,6 +239,8 @@ const BinarySearchPage = ({ navigate: parentNavigate, initialPage = null }) => {
                 return <MinSpeedToArriveOnTime navigate={navigate} />;
             case "Search2DMatrix":
                 return <Search2DMatrix navigate={navigate} />;
+            case "PeakIndexInMountainArray":
+                return <PeakIndexInMountainArray navigate={navigate} />;
             case "home":
             default:
                 return <BinarySearchAlgorithmList navigate={navigate} />;
