@@ -199,7 +199,7 @@ const QueueUsingStacks = () => {
               j: adjustedIndex,
               explanation: 'Check if the stack "s1" is empty or not',
             });
-            result.push(stack1.length === 0 ? 'true' : 'false');
+            result.push('false');
             addState({
               line: 27,
               i: adjustedIndex,
