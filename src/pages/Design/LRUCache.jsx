@@ -262,7 +262,7 @@ const LRUCacheVisualizer = () => {
     <div className="min-h-screen bg-gray-900 text-gray-200 p-4">
       <div className="max-w-7xl mx-auto flex flex-col gap-6">
         <header className="text-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent mb-1">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent mb-1">
             LRU Cache Visualizer
           </h1>
           <p className="text-sm text-gray-400">
