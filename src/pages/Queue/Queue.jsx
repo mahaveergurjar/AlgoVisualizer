@@ -278,6 +278,7 @@ const AlgorithmList = ({ navigate }) => {
             More queue problems coming soon
           </span>
         </div>
+
       </div>
     </div>
   );

@@ -459,6 +459,30 @@ Distributed under the MIT License. See `LICENSE` file for more information.
 
 ---
 
+## 🧑‍💻 Run the Project Locally (Beginner Friendly)
+
+If you're contributing for the first time (like during Hacktoberfest 🎃), follow these simple steps to set up **AlgoVisualizer** locally:
+
+```bash
+# 1️⃣ Fork this repository (click 'Fork' on GitHub)
+# 2️⃣ Clone your fork
+git clone https://github.com/<your-username>/AlgoVisualizer.git
+
+# 3️⃣ Navigate into the project folder
+cd AlgoVisualizer
+
+# 4️⃣ Install required dependencies
+npm install
+
+# 5️⃣ Start the local development server
+npm run dev
+
+Now open your browser and go to 👉 http://localhost:5173
+
+to explore the app locally!
+```
+---
+
 <div align="center">
 
 **If you find this project helpful, please consider giving it a ⭐!**
