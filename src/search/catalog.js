@@ -40,4 +40,8 @@ export const problems = [
   // Design
   { label: "LRU Cache", category: "Design", subpage: "LRUCache", keywords: ["design", "cache", "lru", "146", "hashmap", "linked list"] },
   { label: "LFU Cache", category: "Design", subpage: "LFUCache", keywords: ["design", "cache", "lfu", "460", "frequency", "linked list"] },
+
+  // Queue problems
+  { label: "Basic Queue (FIFO)", category: "Queue", subpage: "BasicQueue", keywords: ["queue", "fifo", "first in first out", "enqueue", "dequeue", "linear queue", "basic queue"]},
+  { label: "Circular Queue", category: "Queue", subpage: "CircularQueue", keywords: ["circular queue", "ring buffer", "circular array", "queue optimization", "wrap around", "modulo"]},
 ];

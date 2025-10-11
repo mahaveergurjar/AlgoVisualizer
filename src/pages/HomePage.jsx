@@ -30,6 +30,7 @@ import TreesPage from "./Trees/Trees.jsx";
 import DesignPage from "./Design/Design.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
+import QueuePage from "./Queue/Queue.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -73,7 +74,7 @@ const AlgorithmCategories = ({ navigate }) => {
       name: "Queue",
       icon: ArrowRightLeft,
       description: "FIFO principle, breadth-first search, and schedulers.",
-      page: "placeholder",
+      page: "Queue",
       gradient: "from-rose-500 to-pink-600",
       iconBg: "bg-rose-500/20",
       borderColor: "border-rose-500/30",
@@ -543,6 +544,8 @@ const HomePage = () => {
         return <TreesPage navigate={navigate} initialPage={initialSubPage} />;
       case "Design":
         return <DesignPage navigate={navigate} initialPage={initialSubPage} />;
+      case "Queue":
+        return <QueuePage navigate={navigate} initialPage={initialSubPage} />;
 
       case "home":
       default:
