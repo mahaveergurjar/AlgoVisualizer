@@ -31,7 +31,10 @@ import DesignPage from "./Design/Design.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
 import QueuePage from "./Queue/Queue.jsx";
-import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
+import BinarySearchPage from "./BinarySearch/BinarySearch.jsx"
+import ScrollToTop from "../components/ScrollToTop";
+
+
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -612,13 +615,17 @@ const HomePage = () => {
     }
   };
 
-  const PageWrapper = ({ children }) => (
-    <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
-      <div className="fixed inset-0 z-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float-delayed" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" />
-      </div>
+ const PageWrapper = ({ children }) => (
+<>
+  <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
+    <div className="fixed inset-0 z-0">
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float-delayed" />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" />
+    </div>
+
+    <div className="relative z-10">{children}</div>
+<ScrollToTop />
 
       <style>{`
         .animated-gradient {
@@ -747,12 +754,11 @@ const HomePage = () => {
           box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
         }
       `}</style>
-
-      <div className="relative z-10">{children}</div>
     </div>
-  );
-
+</>
+);
   return <PageWrapper>{renderPage()}</PageWrapper>;
+
 };
 
 export default HomePage;
