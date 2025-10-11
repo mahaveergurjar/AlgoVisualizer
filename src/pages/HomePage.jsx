@@ -33,10 +33,8 @@ import SortingPage from "./Sorting/Sorting.jsx";
 import PathfindingPage from "./Pathfinding/Pathfinding.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
 import QueuePage from "./Queue/Queue.jsx";
-import BinarySearchPage from "./BinarySearch/BinarySearch.jsx"
+import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
 import ScrollToTop from "../components/ScrollToTop";
-
-
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -44,163 +42,168 @@ const AlgorithmCategories = ({ navigate }) => {
   const [open, setOpen] = useState(false);
   const inputRef = useRef(null);
 
-  const categories = useMemo(() => ([
-    {
-      name: "Arrays",
-      icon: Brackets,
-      description: "Contiguous data, two-pointers, and traversals.",
-      page: "Arrays",
-      gradient: "from-sky-500 to-blue-600",
-      iconBg: "bg-sky-500/20",
-      borderColor: "border-sky-500/30",
-      iconColor: "text-sky-400",
-    },
-    {
-      name: "Linked List",
-      icon: GitBranch,
-      description: "Nodes, pointers, cycle detection, and list manipulation.",
-      page: "LinkedList",
-      gradient: "from-blue-500 to-indigo-600",
-      iconBg: "bg-blue-500/20",
-      borderColor: "border-blue-500/30",
-      iconColor: "text-blue-400",
-    },
-    {
-      name: "Stack",
-      icon: Layers,
-      description:
-        "LIFO-based problems, expression evaluation, and histograms.",
-      page: "Stack",
-      gradient: "from-violet-500 to-purple-600",
-      iconBg: "bg-violet-500/20",
-      borderColor: "border-violet-500/30",
-      iconColor: "text-violet-400",
-    },
-    {
-      name: "Queue",
-      icon: ArrowRightLeft,
-      description: "FIFO principle, breadth-first search, and schedulers.",
-      page: "Queue",
-      gradient: "from-rose-500 to-pink-600",
-      iconBg: "bg-rose-500/20",
-      borderColor: "border-rose-500/30",
-      iconColor: "text-rose-400",
-    },
-    {
-      name: "Sliding Window",
-      icon: RectangleHorizontal,
-      description: "Efficiently process subarrays, substrings, and ranges.",
-      page: "SlidingWindows",
-      gradient: "from-cyan-500 to-teal-600",
-      iconBg: "bg-cyan-500/20",
-      borderColor: "border-cyan-500/30",
-      iconColor: "text-cyan-400",
-    },
-    {
-      name: "BinarySearch",
-      icon: SearchCode,
-      description: "Logarithmic time search in sorted data.",
-      page: "BinarySearch",
-      gradient: "from-teal-500 to-emerald-600",
-      iconBg: "bg-teal-500/20",
-      borderColor: "border-teal-500/30",
-      iconColor: "text-teal-400",
-    },
-    {
-      name: "Recursion",
-      icon: Repeat,
-      description: "Solve problems by breaking them into smaller instances.",
-      page: "placeholder",
-      gradient: "from-indigo-500 to-blue-600",
-      iconBg: "bg-indigo-500/20",
-      borderColor: "border-indigo-500/30",
-      iconColor: "text-indigo-400",
-    },
-    {
-      name: "Bit Manipulation",
-      icon: Binary,
-      description:
-        "Work with data at the binary level for ultimate efficiency.",
-      page: "placeholder",
-      gradient: "from-slate-500 to-gray-600",
-      iconBg: "bg-slate-500/20",
-      borderColor: "border-slate-500/30",
-      iconColor: "text-slate-400",
-    },
-    {
-      name: "Sorting",
-      icon: ArrowDownUp,
-      description:
-        "Arrange data efficiently using algorithms like QuickSort, MergeSort, and BubbleSort.",
-      page: "Sorting",
-      gradient: "from-amber-500 to-yellow-600",
-      iconBg: "bg-amber-500/20",
-      borderColor: "border-amber-500/30",
-      iconColor: "text-amber-400",
-    },
-    {
-      name: "Trees",
-      icon: Network,
-      description:
-        "Hierarchical data, traversals (BFS, DFS), and binary trees.",
-      page: "Trees",
-      gradient: "from-emerald-500 to-green-600",
-      iconBg: "bg-emerald-500/20",
-      borderColor: "border-emerald-500/30",
-      iconColor: "text-emerald-400",
-    },
-    {
-      name: "Heaps",
-      icon: Filter,
-      description: "Priority queues and finding min/max elements efficiently.",
-      page: "placeholder",
-      gradient: "from-orange-500 to-amber-600",
-      iconBg: "bg-orange-500/20",
-      borderColor: "border-orange-500/30",
-      iconColor: "text-orange-400",
-    },
-    {
-      name: "Graphs",
-      icon: Share2,
-      description: "Networks of nodes, pathfinding, and connectivity.",
-      page: "placeholder",
-      gradient: "from-lime-500 to-green-600",
-      iconBg: "bg-lime-500/20",
-      borderColor: "border-lime-500/30",
-      iconColor: "text-lime-400",
-    },
-    {
-      name: "Pathfinding",
-      icon: Navigation,
-      description: "Navigate through mazes using BFS, DFS, and advanced pathfinding algorithms.",
-      page: "Pathfinding",
-      gradient: "from-purple-500 to-pink-600",
-      iconBg: "bg-purple-500/20",
-      borderColor: "border-purple-500/30",
-      iconColor: "text-purple-400",
-    },
-    {
-      name: "Dynamic Programming",
-      icon: Workflow,
-      description: "Optimization by solving and caching sub-problems.",
-      page: "placeholder",
-      gradient: "from-fuchsia-500 to-purple-600",
-      iconBg: "bg-fuchsia-500/20",
-      borderColor: "border-fuchsia-500/30",
-      iconColor: "text-fuchsia-400",
-    },
-    {
-      name: "Design",
-      icon: Wrench,
-      description:
-        "Implement complex data structures combining HashMap, Linked List, and advanced design patterns.",
-      page: "Design",
-      gradient: "from-teal-500 to-emerald-600",
-      iconBg: "bg-teal-500/20",
-      borderColor: "border-teal-500/30",
-      iconColor: "text-teal-400",
-    },
-  ]), []);
+  const categories = useMemo(
+    () => [
+      {
+        name: "Arrays",
+        icon: Brackets,
+        description: "Contiguous data, two-pointers, and traversals.",
+        page: "Arrays",
+        gradient: "from-sky-500 to-blue-600",
+        iconBg: "bg-sky-500/20",
+        borderColor: "border-sky-500/30",
+        iconColor: "text-sky-400",
+      },
+      {
+        name: "Linked List",
+        icon: GitBranch,
+        description: "Nodes, pointers, cycle detection, and list manipulation.",
+        page: "LinkedList",
+        gradient: "from-blue-500 to-indigo-600",
+        iconBg: "bg-blue-500/20",
+        borderColor: "border-blue-500/30",
+        iconColor: "text-blue-400",
+      },
+      {
+        name: "Stack",
+        icon: Layers,
+        description:
+          "LIFO-based problems, expression evaluation, and histograms.",
+        page: "Stack",
+        gradient: "from-violet-500 to-purple-600",
+        iconBg: "bg-violet-500/20",
+        borderColor: "border-violet-500/30",
+        iconColor: "text-violet-400",
+      },
+      {
+        name: "Queue",
+        icon: ArrowRightLeft,
+        description: "FIFO principle, breadth-first search, and schedulers.",
+        page: "Queue",
+        gradient: "from-rose-500 to-pink-600",
+        iconBg: "bg-rose-500/20",
+        borderColor: "border-rose-500/30",
+        iconColor: "text-rose-400",
+      },
+      {
+        name: "Sliding Window",
+        icon: RectangleHorizontal,
+        description: "Efficiently process subarrays, substrings, and ranges.",
+        page: "SlidingWindows",
+        gradient: "from-cyan-500 to-teal-600",
+        iconBg: "bg-cyan-500/20",
+        borderColor: "border-cyan-500/30",
+        iconColor: "text-cyan-400",
+      },
+      {
+        name: "BinarySearch",
+        icon: SearchCode,
+        description: "Logarithmic time search in sorted data.",
+        page: "BinarySearch",
+        gradient: "from-teal-500 to-emerald-600",
+        iconBg: "bg-teal-500/20",
+        borderColor: "border-teal-500/30",
+        iconColor: "text-teal-400",
+      },
+      {
+        name: "Recursion",
+        icon: Repeat,
+        description: "Solve problems by breaking them into smaller instances.",
+        page: "placeholder",
+        gradient: "from-indigo-500 to-blue-600",
+        iconBg: "bg-indigo-500/20",
+        borderColor: "border-indigo-500/30",
+        iconColor: "text-indigo-400",
+      },
+      {
+        name: "Bit Manipulation",
+        icon: Binary,
+        description:
+          "Work with data at the binary level for ultimate efficiency.",
+        page: "placeholder",
+        gradient: "from-slate-500 to-gray-600",
+        iconBg: "bg-slate-500/20",
+        borderColor: "border-slate-500/30",
+        iconColor: "text-slate-400",
+      },
+      {
+        name: "Sorting",
+        icon: ArrowDownUp,
+        description:
+          "Arrange data efficiently using algorithms like QuickSort, MergeSort, and BubbleSort.",
+        page: "Sorting",
+        gradient: "from-amber-500 to-yellow-600",
+        iconBg: "bg-amber-500/20",
+        borderColor: "border-amber-500/30",
+        iconColor: "text-amber-400",
+      },
+      {
+        name: "Trees",
+        icon: Network,
+        description:
+          "Hierarchical data, traversals (BFS, DFS), and binary trees.",
+        page: "Trees",
+        gradient: "from-emerald-500 to-green-600",
+        iconBg: "bg-emerald-500/20",
+        borderColor: "border-emerald-500/30",
+        iconColor: "text-emerald-400",
+      },
+      {
+        name: "Heaps",
+        icon: Filter,
+        description:
+          "Priority queues and finding min/max elements efficiently.",
+        page: "placeholder",
+        gradient: "from-orange-500 to-amber-600",
+        iconBg: "bg-orange-500/20",
+        borderColor: "border-orange-500/30",
+        iconColor: "text-orange-400",
+      },
+      {
+        name: "Graphs",
+        icon: Share2,
+        description: "Networks of nodes, pathfinding, and connectivity.",
+        page: "placeholder",
+        gradient: "from-lime-500 to-green-600",
+        iconBg: "bg-lime-500/20",
+        borderColor: "border-lime-500/30",
+        iconColor: "text-lime-400",
+      },
+      {
+        name: "Pathfinding",
+        icon: Navigation,
+        description:
+          "Navigate through mazes using BFS, DFS, and advanced pathfinding algorithms.",
+        page: "Pathfinding",
+        gradient: "from-purple-500 to-pink-600",
+        iconBg: "bg-purple-500/20",
+        borderColor: "border-purple-500/30",
+        iconColor: "text-purple-400",
+      },
+      {
+        name: "Dynamic Programming",
+        icon: Workflow,
+        description: "Optimization by solving and caching sub-problems.",
+        page: "placeholder",
+        gradient: "from-fuchsia-500 to-purple-600",
+        iconBg: "bg-fuchsia-500/20",
+        borderColor: "border-fuchsia-500/30",
+        iconColor: "text-fuchsia-400",
+      },
+      {
+        name: "Design",
+        icon: Wrench,
+        description:
+          "Implement complex data structures combining HashMap, Linked List, and advanced design patterns.",
+        page: "Design",
+        gradient: "from-teal-500 to-emerald-600",
+        iconBg: "bg-teal-500/20",
+        borderColor: "border-teal-500/30",
+        iconColor: "text-teal-400",
+      },
+    ],
+    []
+  );
 
   // Build a lightweight search index for categories and problems
   const SEARCH_INDEX = useMemo(() => {
@@ -267,7 +270,7 @@ const AlgorithmCategories = ({ navigate }) => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 text-blue-500"
+                className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 animated-icon animate-color-shift"
               >
                 <g
                   fill="none"
@@ -466,7 +469,7 @@ const AlgorithmCategories = ({ navigate }) => {
                   isHovered && !isPlaceholder
                     ? "shadow-2xl shadow-gray-900/60"
                     : "shadow-xl shadow-gray-900/40"
-                } w-full h-53 flex flex-col justify-between`} // <-- fixed height for uniformity
+                } w-full h-full flex flex-col justify-between card-shadow card-glow`}
               >
                 {/* Header */}
                 <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -509,28 +512,16 @@ const AlgorithmCategories = ({ navigate }) => {
                 )}
 
                 {/* Description + Footer */}
-                <div className="flex flex-col flex-grow justify-between overflow-hidden">
-                  <div
+                <div className="flex flex-col flex-grow justify-between">
+                  <p
                     className={`text-sm leading-relaxed transition-colors duration-300 ${
                       isHovered && !isPlaceholder
                         ? "text-gray-300"
                         : "text-gray-500"
-                    } overflow-y-auto pr-1`}
-                    style={{
-                      maxHeight: "3.2rem", // show ~2 lines
-                      scrollbarWidth: "none", // Firefox
-                      msOverflowStyle: "none", // IE/Edge
-                    }}
-                    onWheel={(e) => e.stopPropagation()} // optional (prevents parent scroll)
+                    }`}
                   >
-                    <div
-                      style={{
-                        overflow: "hidden",
-                      }}
-                    >
-                      {cat.description}
-                    </div>
-                  </div>
+                    {cat.description}
+                  </p>
 
                   {!isPlaceholder && (
                     <div
@@ -613,9 +604,13 @@ const HomePage = () => {
       case "Queue":
         return <QueuePage navigate={navigate} initialPage={initialSubPage} />;
       case "BinarySearch":
-        return <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />;
+        return (
+          <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "Pathfinding":
-        return <PathfindingPage navigate={navigate} initialPage={initialSubPage} />;
+        return (
+          <PathfindingPage navigate={navigate} initialPage={initialSubPage} />
+        );
 
       case "home":
       default:
@@ -623,19 +618,19 @@ const HomePage = () => {
     }
   };
 
- const PageWrapper = ({ children }) => (
-<>
-  <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
-    <div className="fixed inset-0 z-0">
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float-delayed" />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" />
-    </div>
+  const PageWrapper = ({ children }) => (
+    <>
+      <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
+        <div className="fixed inset-0 z-0">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float-delayed" />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" />
+        </div>
 
-    <div className="relative z-10">{children}</div>
-<ScrollToTop />
+        <div className="relative z-10">{children}</div>
+        <ScrollToTop />
 
-      <style>{`
+        <style>{`
         .animated-gradient {
           background-size: 200% auto;
           animation: gradient-animation 4s ease-in-out infinite;
@@ -743,18 +738,10 @@ const HomePage = () => {
           transform: translateY(-8px) scale(1.02);
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-
+        
         /* Smooth transitions for all interactive elements */
         * {
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Line clamp utility for text truncation */
-        .line-clamp-3 {
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
         }
 
         /* Enhanced card hover glow effect */
@@ -762,11 +749,10 @@ const HomePage = () => {
           box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
         }
       `}</style>
-    </div>
-</>
-);
+      </div>
+    </>
+  );
   return <PageWrapper>{renderPage()}</PageWrapper>;
-
 };
 
 export default HomePage;
