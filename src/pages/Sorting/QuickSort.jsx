@@ -608,6 +608,58 @@ const QuickSortVisualizer = () => {
               )}
             </div>
           </div>
+          {/* Complexity Analysis (added as requested) */}
+          <div className="lg:col-span-3 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
+            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
+              <Clock size={20} /> Complexity Analysis
+            </h3>
+            <div className="grid md:grid-cols-2 gap-6 text-sm">
+              <div className="space-y-4">
+                <h4 className="font-semibold text-blue-300">Time Complexity</h4>
+                <p className="text-gray-400">
+                  <strong className="text-teal-300 font-mono">
+                    Worst Case: O(N²)
+                  </strong>
+                  <br />
+                  Occurs when the pivot is always the smallest or largest
+                  element, creating unbalanced partitions. This happens with
+                  already sorted or reverse-sorted arrays.
+                </p>
+                <p className="text-gray-400">
+                  <strong className="text-teal-300 font-mono">
+                    Average Case: O(N log N)
+                  </strong>
+                  <br />
+                  With good pivot selection, the array is divided roughly in
+                  half at each step, leading to log N levels of recursion and
+                  O(N) work per level.
+                </p>
+                <p className="text-gray-400">
+                  <strong className="text-teal-300 font-mono">
+                    Best Case: O(N log N)
+                  </strong>
+                  <br />
+                  Occurs when the pivot always divides the array into equal
+                  halves, creating a balanced recursion tree.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <h4 className="font-semibold text-blue-300">
+                  Space Complexity
+                </h4>
+                <p className="text-gray-400">
+                  <strong className="text-teal-300 font-mono">O(log N)</strong>
+                  <br />
+                  The space complexity is determined by the recursion depth. In
+                  the best case, the recursion tree is balanced with depth log
+                  N. In the worst case, it can be O(N) for very unbalanced
+                  partitions. (Note: Our visualizer's history adds O(N log N)
+                  space for demonstration, but the algorithm itself is O(log
+                  N)).
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <p className="text-center text-gray-500 py-10">
