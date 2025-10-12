@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
-  ArrowUp,
   Code,
   Sigma,
   CheckCircle,
@@ -9,73 +8,7 @@ import {
   Calculator,
   Layers,
 } from "lucide-react";
-
-// A specialized Pointer component for this visualizer using Lucide icons
-const VisualizerPointer = ({
-  index,
-  containerId,
-  color,
-  label,
-  isEnd = false,
-}) => {
-  const [position, setPosition] = useState({ opacity: 0, left: 0 });
-
-  useEffect(() => {
-    if (index === null || index < -1) {
-      setPosition({ opacity: 0 });
-      return;
-    }
-
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    let offset = 0;
-
-    if (isEnd) {
-      const lastEl = container.lastChild;
-      if (lastEl) {
-        const containerRect = container.getBoundingClientRect();
-        const lastElRect = lastEl.getBoundingClientRect();
-        offset = lastElRect.right - containerRect.left + 16;
-      }
-    } else if (index === -1) {
-      // Position for 'k' when stack is empty
-      const firstEl = container.firstChild;
-      if (firstEl) {
-        const containerRect = container.getBoundingClientRect();
-        const firstElRect = firstEl.getBoundingClientRect();
-        offset = firstElRect.left - containerRect.left - 80;
-      }
-    } else {
-      const element = document.getElementById(
-        `${containerId}-element-${index}`
-      );
-      if (element) {
-        const containerRect = container.getBoundingClientRect();
-        const elementRect = element.getBoundingClientRect();
-        offset =
-          elementRect.left - containerRect.left + elementRect.width / 2 - 12; // 12 is half of pointer width
-      } else {
-        setPosition({ opacity: 0 });
-        return;
-      }
-    }
-
-    setPosition({ opacity: 1, left: offset });
-  }, [index, containerId, isEnd]);
-
-  return (
-    <div
-      className="absolute top-full mt-0 text-center transition-all duration-500 ease-out"
-      style={position}
-    >
-      <ArrowUp className={`w-6 h-6 mx-auto text-${color}-400`} />
-      <span className={`font-bold text-lg font-mono text-${color}-400`}>
-        {label}
-      </span>
-    </div>
-  );
-};
+import VisualizerPointer from "../../components/VisualizerPointer";
 
 const SubarrayRangesVisualizer = () => {
   const [mode, setMode] = useState("brute-force");
@@ -428,6 +361,7 @@ const SubarrayRangesVisualizer = () => {
                 containerId="bf-array-container"
                 color="amber"
                 label="i"
+                direction="up"
               />
             )}
             {isLoaded && (
@@ -436,6 +370,7 @@ const SubarrayRangesVisualizer = () => {
                 containerId="bf-array-container"
                 color="cyan"
                 label="j"
+                direction="up"
               />
             )}
           </div>
@@ -590,6 +525,7 @@ const SubarrayRangesVisualizer = () => {
                 color="amber"
                 label="i"
                 isEnd={i === nums.length}
+                direction="up"
               />
             )}
             {isLoaded && (
@@ -598,6 +534,7 @@ const SubarrayRangesVisualizer = () => {
                 containerId="opt-array-container"
                 color="cyan"
                 label="j"
+                direction="up"
               />
             )}
             {isLoaded && (
@@ -606,6 +543,7 @@ const SubarrayRangesVisualizer = () => {
                 containerId="opt-array-container"
                 color="violet"
                 label="k"
+                direction="up"
               />
             )}
           </div>

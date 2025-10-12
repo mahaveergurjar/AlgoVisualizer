@@ -234,15 +234,18 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
+// const LinkedListPage = ({ navigate: parentNavigate, initialPage = null }) => {
+// const [page, setPage] = useState(initialPage || "home");
+// const navigate = (newPage) => setPage(newPage);
 const LinkedListPage = ({ navigate: parentNavigate }) => {
   const [page, setPage] = useState("home");
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [slideDirection, setSlideDirection] = useState('right');
+  const [slideDirection, setSlideDirection] = useState("right");
 
   const navigate = (newPage) => {
     setIsTransitioning(true);
     setSlideDirection(newPage === "home" ? "left" : "right");
-    
+
     setTimeout(() => {
       setPage(newPage);
       setTimeout(() => {
@@ -398,12 +401,15 @@ const LinkedListPage = ({ navigate: parentNavigate }) => {
       )}
 
       <div className="relative w-full h-full overflow-hidden">
-        <div 
+        <div
           className={`
             slide-transition w-full h-full
-            ${isTransitioning 
-              ? (slideDirection === 'right' ? 'slide-exit-left' : 'slide-exit-right')
-              : 'slide-enter-active'
+            ${
+              isTransitioning
+                ? slideDirection === "right"
+                  ? "slide-exit-left"
+                  : "slide-exit-right"
+                : "slide-enter-active"
             }
           `}
         >

@@ -1,34 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Code, ArrowUp, Clock } from "lucide-react";
-
-// Visualizer pointer (mirrors TrappingRainWater style)
-const VisualizerPointer = ({ index, containerId, color, label }) => {
-  const [position, setPosition] = useState({ opacity: 0, left: 0 });
-
-  useEffect(() => {
-    if (index === null || index === undefined || index < 0) {
-      setPosition({ opacity: 0 });
-      return;
-    }
-    const container = document.getElementById(containerId);
-    const element = document.getElementById(`${containerId}-element-${index}`);
-    if (container && element) {
-      const containerRect = container.getBoundingClientRect();
-      const elementRect = element.getBoundingClientRect();
-      const offset = elementRect.left - containerRect.left + elementRect.width / 2 - 12;
-      setPosition({ opacity: 1, left: offset });
-    } else {
-      setPosition({ opacity: 0 });
-    }
-  }, [index, containerId]);
-
-  return (
-    <div className="absolute top-full text-center transition-all duration-300 ease-out" style={position}>
-      <ArrowUp className={`w-6 h-6 mx-auto text-${color}-400`} />
-      <span className={`font-bold text-lg font-mono text-${color}-400`}>{label}</span>
-    </div>
-  );
-};
+import { Code, Clock } from "lucide-react";
+import VisualizerPointer from "../../components/VisualizerPointer";
 
 const parseInput = (str) =>
   str
@@ -400,16 +372,16 @@ return maxProfit;`,
                   <div className="text-gray-500 text-center py-8 w-full">Load prices to start visualizing</div>
                 )}
                 {isLoaded && buyIndex !== null && (
-                  <VisualizerPointer index={buyIndex} containerId="prices-container" color="green" label={`Buy (${buyIndex})`} />
+                  <VisualizerPointer index={buyIndex} containerId="prices-container" color="green" label={`Buy (${buyIndex})`} direction="up" />
                 )}
                 {isLoaded && sellIndex !== null && (
-                  <VisualizerPointer index={sellIndex} containerId="prices-container" color="red" label={`Sell (${sellIndex})`} />
+                  <VisualizerPointer index={sellIndex} containerId="prices-container" color="red" label={`Sell (${sellIndex})`} direction="up" />
                 )}
                 {isLoaded && state.currentIndex !== undefined && (
-                  <VisualizerPointer index={state.currentIndex} containerId="prices-container" color="yellow" label={`Curr (${state.currentIndex})`} />
+                  <VisualizerPointer index={state.currentIndex} containerId="prices-container" color="yellow" label={`Curr (${state.currentIndex})`} direction="up" />
                 )}
                 {isLoaded && state.minIndex !== undefined && state.minIndex !== -1 && (
-                  <VisualizerPointer index={state.minIndex} containerId="prices-container" color="indigo" label={`Min (${state.minIndex})`} />
+                  <VisualizerPointer index={state.minIndex} containerId="prices-container" color="indigo" label={`Min (${state.minIndex})`} direction="up" />
                 )}
               </div>
               {/* Status bar showing comparisons */}
