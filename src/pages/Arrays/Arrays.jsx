@@ -519,8 +519,8 @@ function AlgorithmList({ navigate }) {
   );
 }
 
-const ArrayPage = ({ navigate: parentNavigate }) => {
-  const [page, setPage] = useState("home");
+const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
+  const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
@@ -554,6 +554,8 @@ const ArrayPage = ({ navigate: parentNavigate }) => {
         return <MaxConsecutiveOnesIII navigate={navigate} />;
       case "SubarrayRanges":
         return <SubarrayRanges navigate={navigate} />;
+      case "BestTimeToBuyAndSellStock":
+        return <BestTimeToBuyAndSellStock navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
