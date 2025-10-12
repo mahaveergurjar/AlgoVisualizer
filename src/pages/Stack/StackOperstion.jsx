@@ -37,7 +37,6 @@ const CodeLine = ({ line, content, activeLine }) => {
     </div>
   );
 };
-stackoperation.jsx;
 
 // ====================================================================================
 // MAIN VISUALIZER COMPONENT
