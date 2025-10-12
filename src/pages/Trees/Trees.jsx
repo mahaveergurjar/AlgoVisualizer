@@ -11,6 +11,7 @@ import {
 
 // --- Import your specific tree algorithm visualizer components here ---
 import ConstructBinaryTree from "./ConstructBinaryTree.jsx";
+import LCAofDeepestLeaves from "./LCAofDeepestLeaves";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -34,6 +35,25 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Recursion & Hashing",
       timeComplexity: "O(n)",
     },
+    {
+      name: "LCA of Deepest Leaves",
+      number: "1123",
+      icon: GitMerge,
+      description:
+        "Find the lowest common ancestor node of a binary tree's deepest leaves.",
+      page: "LCAofDeepestLeaves",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Depth-First Search (DFS)",
+      timeComplexity: "O(n)",
+    }
+
     // Add more tree algorithms here as you build them
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
@@ -207,6 +227,8 @@ const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
     switch (page) {
       case "ConstructBinaryTree":
         return <ConstructBinaryTree navigate={navigate} />;
+      case "LCAofDeepestLeaves":
+        return <LCAofDeepestLeaves navigate={navigate} />
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
