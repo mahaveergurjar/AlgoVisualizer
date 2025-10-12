@@ -17,7 +17,7 @@ import {
 import SubarrayRanges from "./SubarrayRanges.jsx";
 import RemoveKDigits from "./RemoveKDigits.jsx";
 import LargestRectangleHistogram from "./LargestRectangleHistogram.jsx";
-import StackOperations from "./Stackoperation.jsx";
+import StackOperations from "./StackOperstion.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
