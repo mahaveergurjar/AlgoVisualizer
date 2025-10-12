@@ -36,6 +36,12 @@ export const problems = [
   { label: "Bubble Sort", category: "Sorting", subpage: "BubbleSort", keywords: ["sorting", "bubble sort", "swap"] },
   { label: "Merge Sort", category: "Sorting", subpage: "MergeSort", keywords: ["sorting", "merge sort", "divide and conquer"] },
   { label: "Quick Sort", category: "Sorting", subpage: "QuickSort", keywords: ["sorting", "quick sort", "partition"] },
+  { label: "Heap Sort", category: "Sorting", subpage: "HeapSort", keywords: ["sorting", "heap sort", "binary heap", "priority queue"] },
+  { label: "Counting Sort", category: "Sorting", subpage: "CountingSort", keywords: ["sorting", "counting sort", "frequency", "non-comparative"] },
+  { label: "Radix Sort", category: "Sorting", subpage: "RadixSort", keywords: ["sorting", "radix sort", "digit-wise", "LSD", "MSD"] }, 
+  { label: "Insertion Sort", category: "Sorting", subpage: "InsertionSort", keywords: ["sorting", "insertion sort", "insert", "stable"] },
+  { label: "Selection Sort", category: "Sorting", subpage: "SelectionSort", keywords: ["sorting", "selection sort", "select min", "in-place"] },
+
 
   // Trees
   { label: "Construct Tree from Traversal", category: "Trees", subpage: "ConstructBinaryTree", keywords: ["tree", "binary tree", "preorder", "inorder", "105"] },
