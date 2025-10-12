@@ -16,6 +16,8 @@ import {
 import MinSpeedToArriveOnTime from "./MinSpeedToArriveOnTime";
 import Search2DMatrix from './Search2DMatrix';
 import PeakIndexInMountainArray from './PeakIndexInMountainArray';
+import FindFirstAndLastPosition from './FindFirstAndLastPosition';
+import FindMinimumInRotatedSortedArray from './FindMinimumInRotatedSortedArray';
 
 
 const BinarySearchAlgorithmList = ({ navigate }) => {
@@ -74,6 +76,40 @@ const BinarySearchAlgorithmList = ({ navigate }) => {
           technique: "Binary Search",
           timeComplexity: "O(log n)",
       },
+        {
+            name: "Find First and Last Position",
+            number: "34",
+            icon: Code2,
+            description: "Given a sorted array and a target value, find the starting and ending position of the target using binary search.",
+            page: "FindFirstAndLastPosition",
+            difficulty: "Medium",
+            difficultyColor: "text-yellow-400",
+            difficultyBg: "bg-yellow-400/10",
+            difficultyBorder: "border-yellow-400/30",
+            gradient: "from-indigo-500 to-violet-500",
+            iconColor: "text-indigo-400",
+            iconBg: "bg-indigo-500/20",
+            borderColor: "border-indigo-500/30",
+            technique: "Binary Search",
+            timeComplexity: "O(log n)",
+        },
+        {
+            name: "Find Minimum in Rotated Sorted Array",
+            number: "153",
+            icon: Clock,
+            description: "Find the minimum element in a rotated sorted array using binary search on the monotonic halves.",
+            page: "FindMinimumInRotatedSortedArray",
+            difficulty: "Medium",
+            difficultyColor: "text-yellow-400",
+            difficultyBg: "bg-yellow-400/10",
+            difficultyBorder: "border-yellow-400/30",
+            gradient: "from-emerald-500 to-teal-500",
+            iconColor: "text-emerald-400",
+            iconBg: "bg-emerald-500/20",
+            borderColor: "border-emerald-500/30",
+            technique: "Binary Search",
+            timeComplexity: "O(log n)",
+        },
     ].sort((a, b) => parseInt(a.number) - parseInt(b.number)), []);
 
     return (
@@ -241,6 +277,10 @@ const BinarySearchPage = ({ navigate: parentNavigate, initialPage = null }) => {
                 return <Search2DMatrix navigate={navigate} />;
             case "PeakIndexInMountainArray":
                 return <PeakIndexInMountainArray navigate={navigate} />;
+            case "FindFirstAndLastPosition":
+                return <FindFirstAndLastPosition navigate={navigate} />;
+            case "FindMinimumInRotatedSortedArray":
+                return <FindMinimumInRotatedSortedArray navigate={navigate} />;
             case "home":
             default:
                 return <BinarySearchAlgorithmList navigate={navigate} />;
