@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
-  ArrowUp,
   Code,
   CheckCircle,
   Calculator,
@@ -8,41 +8,7 @@ import {
   Clock,
   Droplets,
 } from "lucide-react";
-
-// Pointer Component
-const VisualizerPointer = ({ index, containerId, color, label }) => {
-  const [position, setPosition] = useState({ opacity: 0, left: 0 });
-
-  useEffect(() => {
-    if (index === null || index < 0) {
-      setPosition({ opacity: 0 });
-      return;
-    }
-    const container = document.getElementById(containerId);
-    const element = document.getElementById(`${containerId}-element-${index}`);
-    if (container && element) {
-      const containerRect = container.getBoundingClientRect();
-      const elementRect = element.getBoundingClientRect();
-      const offset =
-        elementRect.left - containerRect.left + elementRect.width / 2 - 12;
-      setPosition({ opacity: 1, left: offset });
-    } else {
-      setPosition({ opacity: 0 });
-    }
-  }, [index, containerId]);
-
-  return (
-    <div
-      className="absolute top-full text-center transition-all duration-300 ease-out"
-      style={position}
-    >
-      <ArrowUp className={`w-6 h-6 mx-auto text-${color}-400`} />
-      <span className={`font-bold text-lg font-mono text-${color}-400`}>
-        {label}
-      </span>
-    </div>
-  );
-};
+import VisualizerPointer from "../../components/VisualizerPointer";
 
 // Main Visualizer Component
 const ContainerWithMostWater = () => {
@@ -209,6 +175,28 @@ const ContainerWithMostWater = () => {
     setHistory([]);
     setCurrentStep(-1);
   };
+  // Provide parsed input & generator mapping for generic mode switching
+  const parseInput = useCallback(() => {
+    const localHeights = heightsInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map(Number);
+    if (localHeights.some(isNaN) || localHeights.length < 2) throw new Error("Invalid input");
+    return localHeights;
+  }, [heightsInput]);
+  const handleModeChange = useModeHistorySwitch({
+    mode,
+    setMode,
+    isLoaded,
+    parseInput,
+    generators: {
+      "brute-force": (h) => generateBruteForceHistory(h),
+      optimal: (h) => generateOptimalHistory(h),
+    },
+    setCurrentStep,
+    onError: () => {},
+  });
   const stepForward = useCallback(
     () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
     [history.length]
@@ -477,10 +465,7 @@ const ContainerWithMostWater = () => {
 
       <div className="flex border-b border-gray-700 mb-6">
         <div
-          onClick={() => {
-            setMode("brute-force");
-            reset();
-          }}
+          onClick={() => handleModeChange("brute-force")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "brute-force"
               ? "border-sky-400 text-sky-400"
@@ -490,10 +475,7 @@ const ContainerWithMostWater = () => {
           Brute Force O(n²)
         </div>
         <div
-          onClick={() => {
-            setMode("optimal");
-            reset();
-          }}
+          onClick={() => handleModeChange("optimal")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "optimal"
               ? "border-sky-400 text-sky-400"
@@ -569,6 +551,7 @@ const ContainerWithMostWater = () => {
                   containerId="container-lines"
                   color="amber"
                   label="i"
+                  direction="up"
                 />
               )}
               {isLoaded && mode === "brute-force" && (
@@ -577,6 +560,7 @@ const ContainerWithMostWater = () => {
                   containerId="container-lines"
                   color="cyan"
                   label="j"
+                  direction="up"
                 />
               )}
               {isLoaded && mode === "optimal" && (
@@ -585,6 +569,7 @@ const ContainerWithMostWater = () => {
                   containerId="container-lines"
                   color="amber"
                   label="left"
+                  direction="up"
                 />
               )}
               {isLoaded && mode === "optimal" && (
@@ -593,6 +578,7 @@ const ContainerWithMostWater = () => {
                   containerId="container-lines"
                   color="cyan"
                   label="right"
+                  direction="up"
                 />
               )}
             </div>

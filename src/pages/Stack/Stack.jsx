@@ -359,6 +359,8 @@ const PageWrapper = ({ children }) => (
 // ====================================================================================
 const StackPage = ({ navigate: parentNavigate }) => {
   const [page, setPage] = useState("home");
+const StackPage = ({ navigate: parentNavigate, initialPage = null }) => {
+  const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
