@@ -197,7 +197,7 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const Recursion = ({ navigate: parentNavigate, initialPage = null }) => {
+const RecursionPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
@@ -309,4 +309,4 @@ const Recursion = ({ navigate: parentNavigate, initialPage = null }) => {
   );
 };
 
-export default Recursion;
+export default RecursionPage;
