@@ -29,6 +29,7 @@ import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
 import DesignPage from "./Design/Design.jsx";
+import RecursionPage from "./Recursion/Recursion.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
 import PathfindingPage from "./Pathfinding/Pathfinding.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
@@ -109,7 +110,7 @@ const AlgorithmCategories = ({ navigate }) => {
         name: "Recursion",
         icon: Repeat,
         description: "Solve problems by breaking them into smaller instances.",
-        page: "placeholder",
+        page: "Recursion",
         gradient: "from-indigo-500 to-blue-600",
         iconBg: "bg-indigo-500/20",
         borderColor: "border-indigo-500/30",
@@ -606,6 +607,10 @@ const HomePage = () => {
       case "BinarySearch":
         return (
           <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />
+        );
+      case "Recursion":
+        return (
+          <RecursionPage navigate={navigate} initialPage={initialSubPage} />
         );
       case "Pathfinding":
         return (
