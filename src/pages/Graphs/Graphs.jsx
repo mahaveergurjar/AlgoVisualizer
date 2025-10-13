@@ -16,6 +16,8 @@ import {
 // For now, these are placeholders. Replace with actual components when built.
 import BFS from "./BFS.jsx";
 import DFS from "./DFS.jsx";
+import Dijkstra from "./Dijkstra.jsx";
+import TopologicalSort from "./TopologicalSort.jsx";
 const PlaceholderVisualizer = ({ name, navigate }) => (
   <div className="bg-gray-950 text-white min-h-screen flex flex-col">
     <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
@@ -121,42 +123,7 @@ const AlgorithmList = ({ navigate }) => {
       technique: "DFS & Indegree",
       timeComplexity: "O(V + E)",
     },
-    {
-      name: "Union-Find (Disjoint Set)",
-      number: "N/A",
-      icon: GitBranch,
-      description:
-        "Efficiently track connected components and detect cycles in graphs.",
-      page: "UnionFind",
-      difficulty: "Medium",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-pink-500 to-rose-500",
-      iconColor: "text-pink-400",
-      iconBg: "bg-pink-500/20",
-      borderColor: "border-pink-500/30",
-      technique: "Path Compression",
-      timeComplexity: "O(α(n))",
-    },
-    {
-      name: "Minimum Spanning Tree",
-      number: "N/A",
-      icon: Network,
-      description:
-        "Find the minimum cost tree that connects all vertices (Kruskal's & Prim's).",
-      page: "MST",
-      difficulty: "Medium",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-violet-500 to-purple-500",
-      iconColor: "text-violet-400",
-      iconBg: "bg-violet-500/20",
-      borderColor: "border-violet-500/30",
-      technique: "Greedy & Union-Find",
-      timeComplexity: "O(E log E)",
-    }
+    // Removed Union-Find and Minimum Spanning Tree
 
     // Add more graph algorithms here as you build them
   ].sort((a, b) => {
@@ -342,9 +309,9 @@ const GraphsPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "DFS":
         return <DFS navigate={navigate} />;
       case "Dijkstra":
-        return <PlaceholderVisualizer name="Dijkstra's Algorithm" navigate={navigate} />;
+        return <Dijkstra navigate={navigate} />;
       case "TopologicalSort":
-        return <PlaceholderVisualizer name="Topological Sort" navigate={navigate} />;
+        return <TopologicalSort navigate={navigate} />;
       case "UnionFind":
         return <PlaceholderVisualizer name="Union-Find" navigate={navigate} />;
       case "MST":
