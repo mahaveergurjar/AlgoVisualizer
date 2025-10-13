@@ -15,6 +15,7 @@ import {
 // --- Import your specific graph algorithm visualizer components here ---
 // For now, these are placeholders. Replace with actual components when built.
 import BFS from "./BFS.jsx";
+import DFS from "./DFS.jsx";
 const PlaceholderVisualizer = ({ name, navigate }) => (
   <div className="bg-gray-950 text-white min-h-screen flex flex-col">
     <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
@@ -339,7 +340,7 @@ const GraphsPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "BFS":
         return <BFS navigate={navigate} />;
       case "DFS":
-        return <PlaceholderVisualizer name="Depth-First Search" navigate={navigate} />;
+        return <DFS navigate={navigate} />;
       case "Dijkstra":
         return <PlaceholderVisualizer name="Dijkstra's Algorithm" navigate={navigate} />;
       case "TopologicalSort":
