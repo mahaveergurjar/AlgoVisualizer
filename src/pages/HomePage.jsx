@@ -35,6 +35,8 @@ import { problems as PROBLEM_CATALOG } from "../search/catalog";
 import QueuePage from "./Queue/Queue.jsx";
 import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
 import ScrollToTop from "../components/ScrollToTop";
+import GraphsPage from "./Graphs/Graphs.jsx";
+
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -161,13 +163,13 @@ const AlgorithmCategories = ({ navigate }) => {
       },
       {
         name: "Graphs",
-        icon: Share2,
-        description: "Networks of nodes, pathfinding, and connectivity.",
-        page: "placeholder",
-        gradient: "from-lime-500 to-green-600",
-        iconBg: "bg-lime-500/20",
-        borderColor: "border-lime-500/30",
-        iconColor: "text-lime-400",
+        icon: Network,
+        description: "Networks of nodes, traversal algorithms, and pathfinding.",
+        page: "Graphs",
+        gradient: "from-blue-500 to-cyan-600",
+        iconBg: "bg-blue-500/20",
+        borderColor: "border-blue-500/30",
+        iconColor: "text-blue-400",
       },
       {
         name: "Pathfinding",
@@ -611,6 +613,8 @@ const HomePage = () => {
         return (
           <PathfindingPage navigate={navigate} initialPage={initialSubPage} />
         );
+      case "Graphs":
+        return <GraphsPage navigate={navigate} initialPage={initialSubPage} />;
 
       case "home":
       default:
