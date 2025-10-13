@@ -35,6 +35,7 @@ import PathfindingPage from "./Pathfinding/Pathfinding.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
 import QueuePage from "./Queue/Queue.jsx";
 import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
+import DPPage from "./DynamicProgramming/DynamicProgramming.jsx";
 import ScrollToTop from "../components/ScrollToTop";
 
 const AlgorithmCategories = ({ navigate }) => {
@@ -185,7 +186,7 @@ const AlgorithmCategories = ({ navigate }) => {
         name: "Dynamic Programming",
         icon: Workflow,
         description: "Optimization by solving and caching sub-problems.",
-        page: "placeholder",
+        page: "DynamicProgramming",
         gradient: "from-fuchsia-500 to-purple-600",
         iconBg: "bg-fuchsia-500/20",
         borderColor: "border-fuchsia-500/30",
@@ -616,7 +617,10 @@ const HomePage = () => {
         return (
           <PathfindingPage navigate={navigate} initialPage={initialSubPage} />
         );
-
+      case "DynamicProgramming":
+        return (
+          <DPPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "home":
       default:
         return <AlgorithmCategories navigate={navigate} />;
