@@ -78,13 +78,12 @@ This Code of Conduct applies within all community spaces, including:
 
 ## 🚨Reporting Issue
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at:
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project maintainers through discord or Tag maintainer.
 
-📩 **[ abhinav.hfs@gmail.com]**
 
 All complaints will be reviewed and investigated promptly and fairly.
 
-Project maintainers are obligated to maintain confidentiality regarding the reporter of an incident.
+Project maintainer are obligated to maintain confidentiality regarding the reporter of an incident.
 
 ---
 
