@@ -29,11 +29,13 @@ import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
 import DesignPage from "./Design/Design.jsx";
+import RecursionPage from "./Recursion/Recursion.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
 import PathfindingPage from "./Pathfinding/Pathfinding.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
 import QueuePage from "./Queue/Queue.jsx";
 import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
+import DPPage from "./DynamicProgramming/DynamicProgramming.jsx";
 import ScrollToTop from "../components/ScrollToTop";
 import GraphsPage from "./Graphs/Graphs.jsx";
 
@@ -111,7 +113,7 @@ const AlgorithmCategories = ({ navigate }) => {
         name: "Recursion",
         icon: Repeat,
         description: "Solve problems by breaking them into smaller instances.",
-        page: "placeholder",
+        page: "Recursion",
         gradient: "from-indigo-500 to-blue-600",
         iconBg: "bg-indigo-500/20",
         borderColor: "border-indigo-500/30",
@@ -186,7 +188,7 @@ const AlgorithmCategories = ({ navigate }) => {
         name: "Dynamic Programming",
         icon: Workflow,
         description: "Optimization by solving and caching sub-problems.",
-        page: "placeholder",
+        page: "DynamicProgramming",
         gradient: "from-fuchsia-500 to-purple-600",
         iconBg: "bg-fuchsia-500/20",
         borderColor: "border-fuchsia-500/30",
@@ -608,6 +610,10 @@ const HomePage = () => {
       case "BinarySearch":
         return (
           <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />
+        );
+      case "Recursion":
+        return (
+          <RecursionPage navigate={navigate} initialPage={initialSubPage} />
         );
       case "Pathfinding":
         return (
