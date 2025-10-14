@@ -22,12 +22,12 @@ import {
   Navigation,
 } from "lucide-react";
 
-// --- Import your page components ----
 import ArrayPage from "./Arrays/Arrays.jsx";
 import SlidingWindowsPage from "./SlidingWindows/SlidingWindows.jsx";
 import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
+import HeapsPage from "./Heaps/Heaps.jsx";
 import DesignPage from "./Design/Design.jsx";
 import RecursionPage from "./Recursion/Recursion.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
@@ -155,7 +155,7 @@ const AlgorithmCategories = ({ navigate }) => {
         icon: Filter,
         description:
           "Priority queues and finding min/max elements efficiently.",
-        page: "placeholder",
+        page: "Heaps",
         gradient: "from-orange-500 to-amber-600",
         iconBg: "bg-orange-500/20",
         borderColor: "border-orange-500/30",
@@ -609,6 +609,8 @@ const HomePage = () => {
         return (
           <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />
         );
+      case "Heaps":
+        return <HeapsPage navigate={navigate} initialPage={initialSubPage} />;
       case "Recursion":
         return (
           <RecursionPage navigate={navigate} initialPage={initialSubPage} />
@@ -621,6 +623,8 @@ const HomePage = () => {
         return (
           <DPPage navigate={navigate} initialPage={initialSubPage} />
         );
+      case "Graphs":
+        return <GraphPage navigate={navigate} initialPage={initialSubPage} />;
       case "home":
       default:
         return <AlgorithmCategories navigate={navigate} />;
