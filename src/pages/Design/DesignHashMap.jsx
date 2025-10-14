@@ -401,10 +401,10 @@ const DesignHashMap = () => {
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-400 font-semibold">Mode:</span>
                 <div className="flex gap-1 bg-gray-900/50 p-1 rounded-lg border border-gray-700">
-                  <button onClick={() => handleModeChange("brute-force")} className={`px-4 py-1.5 rounded-md font-semibold transition-all text-xs ${mode === "brute-force" ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>
+                  <button onClick={() => handleModeChange("brute-force")} className={`px-4 py-1.5 cursor-pointer rounded-md font-semibold transition-all text-xs ${mode === "brute-force" ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>
                     Brute Force O(N)
                   </button>
-                  <button onClick={() => handleModeChange("optimal")} className={`px-4 py-1.5 rounded-md font-semibold transition-all text-xs ${mode === "optimal" ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>
+                  <button onClick={() => handleModeChange("optimal")} className={`px-4 py-1.5 cursor-pointer rounded-md font-semibold transition-all text-xs ${mode === "optimal" ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>
                     Optimal O(1)
                   </button>
                 </div>
@@ -412,7 +412,7 @@ const DesignHashMap = () => {
 
               <div className="flex items-center gap-2">
                 {!isLoaded ? (
-                  <button onClick={loadOps} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-2 px-6 rounded-md shadow-md transform hover:scale-105 transition-all flex items-center gap-2">
+                  <button onClick={loadOps} className="bg-gradient-to-r from-orange-500 to-red-500 cursor-pointer hover:from-orange-600 hover:to-red-600 text-white font-bold py-2 px-6 rounded-md shadow-md transform hover:scale-105 transition-all flex items-center gap-2">
                     <CheckCircle size={16} /> Visualize
                   </button>
                 ) : (
@@ -430,7 +430,7 @@ const DesignHashMap = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                       </button>
                     </div>
-                    <button onClick={reset} className="bg-red-600/80 hover:bg-red-600 font-bold py-2 px-4 rounded-md shadow-md transition-all text-sm">
+                    <button onClick={reset} className="bg-red-600/80 hover:bg-red-600 cursor-pointer font-bold py-2 px-4 rounded-md shadow-md transition-all text-sm">
                       Reset
                     </button>
                   </>

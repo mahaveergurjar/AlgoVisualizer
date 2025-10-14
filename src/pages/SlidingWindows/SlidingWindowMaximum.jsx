@@ -488,7 +488,7 @@ const SlidingWindowMaximum = () => {
             {!isLoaded ? (
               <button
                 onClick={loadArray}
-                className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+                className="bg-gradient-to-r from-blue-500 to-cyan-600 cursor-pointer hover:from-blue-600 hover:to-cyan-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
               >
                 Load & Visualize
               </button>
@@ -541,7 +541,7 @@ const SlidingWindowMaximum = () => {
             )}
             <button
               onClick={reset}
-              className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+              className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 cursor-pointer rounded-xl shadow-lg transition-all transform hover:scale-105"
             >
               Reset
             </button>

@@ -387,13 +387,13 @@ const BFS = ({ navigate }) => {
               <>
                 <button
                   onClick={load}
-                  className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+                  className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 cursor-pointer text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
                 >
                   Load & Visualize
                 </button>
                 <button
                   onClick={runDemo}
-                  className="bg-gradient-to-r from-orange-500 to-yellow-400 hover:from-orange-600 hover:to-yellow-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105 ml-2"
+                  className="bg-gradient-to-r from-orange-500 to-yellow-400 cursor-pointer hover:from-orange-600 hover:to-yellow-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105 ml-2"
                   disabled={isDemo}
                 >
                   Demo
@@ -433,7 +433,7 @@ const BFS = ({ navigate }) => {
             )}
             <button
               onClick={reset}
-              className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+              className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-xl cursor-pointer shadow-lg transition-all transform hover:scale-105"
             >
               Reset
             </button>

@@ -374,7 +374,7 @@ function AlgorithmList({ navigate }) {
       <div className="flex flex-wrap justify-center gap-3 mb-8">
         <button
           onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "all"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm cursor-pointer transition-all ${filter === "all"
               ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"}`}
         >
@@ -382,7 +382,7 @@ function AlgorithmList({ navigate }) {
         </button>
         <button
           onClick={() => setFilter("beginner")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "beginner"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm cursor-pointer transition-all ${filter === "beginner"
               ? "bg-green-500/20 border-green-500/50 text-green-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"}`}
         >
@@ -390,7 +390,7 @@ function AlgorithmList({ navigate }) {
         </button>
         <button
           onClick={() => setFilter("easy")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "easy"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm cursor-pointer transition-all ${filter === "easy"
               ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"}`}
         >
@@ -398,7 +398,7 @@ function AlgorithmList({ navigate }) {
         </button>
         <button
           onClick={() => setFilter("intermediate")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "intermediate"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm cursor-pointer transition-all ${filter === "intermediate"
               ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"}`}
         >
@@ -656,7 +656,7 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
@@ -677,7 +677,7 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto">
             <button
               onClick={() => parentNavigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home

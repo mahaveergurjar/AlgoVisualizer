@@ -318,6 +318,76 @@ const BubbleSortVisualizer = () => {
                 : "bg-gray-700 text-gray-200"
             }`}
           >
+            Array:
+          </label>
+          <input
+            id="array-input"
+            type="text"
+            value={arrayInput}
+            onChange={(e) => setArrayInput(e.target.value)}
+            disabled={isLoaded}
+            className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          {!isLoaded ? (
+            <>
+              <button
+                onClick={loadArray}
+                className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg"
+              >
+                Load & Visualize
+              </button>
+              <button
+                onClick={reset}
+                className="ml-4 bg-red-600 hover:bg-red-700 text-white font-bold cursor-pointer py-2 px-4 rounded-lg"
+              >
+                Reset
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={stepBackward}
+                disabled={currentStep <= 0}
+                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                </svg>
+              </button>
+              <span className="font-mono w-24 text-center">
+                {currentStep + 1}/{history.length}
+              </span>
+              <button
+                onClick={stepForward}
+                disabled={currentStep >= history.length - 1}
+                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                </svg>
+              </button>
+              <button
+                onClick={reset}
+                className="ml-4 bg-red-600 hover:bg-red-700 text-white font-bold cursor-pointer py-2 px-4 rounded-lg"
+              >
+                Reset
+              </button>
+            </>
+          )}
             JS
           </button>
           <button

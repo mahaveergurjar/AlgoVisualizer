@@ -261,7 +261,7 @@ const SubsetSumVisualizer = () => {
                 {!isLoaded ? (
                     <button
                         onClick={load}
-                        className="px-5 py-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 transition text-white font-bold"
+                        className="px-5 py-3 rounded-xl cursor-pointer bg-rose-500/20 hover:bg-rose-500/40 transition text-white font-bold"
                     >
                         Load & Visualize
                     </button>
@@ -284,7 +284,7 @@ const SubsetSumVisualizer = () => {
                         </button>
                         <button
                             onClick={reset}
-                            className="ml-4 px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 font-bold"
+                            className="ml-4 px-5 py-3 rounded-xl bg-red-600 cursor-pointer hover:bg-red-700 font-bold"
                         >
                             Reset
                         </button>

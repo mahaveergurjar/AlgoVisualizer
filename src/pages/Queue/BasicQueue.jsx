@@ -242,7 +242,7 @@ const BasicQueueVisualizer = () => {
           {!isLoaded ? (
             <button
               onClick={loadOperations}
-              className="bg-rose-500 hover:bg-rose-600 text-white font-bold py-2 px-4 rounded-lg"
+              className="bg-rose-500 hover:bg-rose-600 text-white cursor-pointer font-bold py-2 px-4 rounded-lg"
             >
               Load & Visualize
             </button>
@@ -273,7 +273,7 @@ const BasicQueueVisualizer = () => {
           )}
           <button
             onClick={reset}
-            className="ml-4 bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg"
+            className="ml-4 bg-red-600 hover:bg-red-700 cursor-pointer font-bold py-2 px-4 rounded-lg"
           >
             Reset
           </button>
