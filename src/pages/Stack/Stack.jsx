@@ -18,6 +18,7 @@ import SubarrayRanges from "./SubarrayRanges.jsx";
 import RemoveKDigits from "./RemoveKDigits.jsx";
 import LargestRectangleHistogram from "./LargestRectangleHistogram.jsx";
 import StackOperations from "./StackOperstion.jsx";
+import NextGreaterElementVisualizer from "./NextGreaterElement.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -91,6 +92,24 @@ const AlgorithmList = ({ navigate }) => {
       iconColor: "text-violet-400",
       iconBg: "bg-violet-500/20",
       borderColor: "border-violet-500/30",
+      technique: "Monotonic Stack",
+      timeComplexity: "O(n)",
+    },
+    {
+      name: "Next Greater Element",
+      number: "496",
+      icon: ArrowUpDown,
+      description:
+        "Find the next greater element for each element in a circular array.",
+      page: "NextGreaterElement",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-purple-500 to-fuchsia-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
       technique: "Monotonic Stack",
       timeComplexity: "O(n)",
     },
@@ -270,6 +289,8 @@ const StackPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <RemoveKDigits navigate={navigate} />;
       case "LargestRectangleHistogram":
         return <LargestRectangleHistogram navigate={navigate} />;
+      case "NextGreaterElement":
+        return <NextGreaterElementVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

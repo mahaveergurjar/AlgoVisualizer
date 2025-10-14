@@ -634,11 +634,9 @@ const HomePage = () => {
         return (
           <BitPage navigate={navigate} initialPage={initialSubPage} />
         );
-      case "Graphs":
-        return <GraphPage navigate={navigate} initialPage={initialSubPage} />;
       case "home":
       default:
-return <AlgorithmCategories navigate={navigate} />;
+        return <AlgorithmCategories navigate={navigate} />;
     }
   };
 
