@@ -10,18 +10,36 @@ import {
   TrendingUp,
   Star,
   Zap,
-  RefreshCcw,
+  Layers,
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
 import SubarrayRanges from "./SubarrayRanges.jsx";
 import RemoveKDigits from "./RemoveKDigits.jsx";
 import LargestRectangleHistogram from "./LargestRectangleHistogram.jsx";
+import StackOperations from "./StackOperstion.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const algorithms = [
+    {
+      name: "Stack Operations",
+      number: "Basic",
+      icon: Layers,
+      description: "Visualize the core stack operations: Push, Pop, and Peek.",
+      page: "StackOperations",
+      difficulty: "Fundamental",
+      difficultyColor: "text-cyan-400",
+      difficultyBg: "bg-cyan-400/10",
+      difficultyBorder: "border-cyan-400/30",
+      gradient: "from-green-500 to-emerald-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "LIFO",
+      timeComplexity: "O(1)",
+    },
     {
       name: "Largest Rectangle in Histogram",
       number: "84",
@@ -238,12 +256,14 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const StackPage = ({ navigate: parentNavigate }) => {
-  const [page, setPage] = useState("home");
+const StackPage = ({ navigate: parentNavigate, initialPage = null }) => {
+  const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
+      case "StackOperations":
+        return <StackOperations navigate={navigate} />;
       case "SubarrayRanges":
         return <SubarrayRanges navigate={navigate} />;
       case "RemoveKDigits":

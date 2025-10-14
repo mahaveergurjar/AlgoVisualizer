@@ -16,6 +16,7 @@ import {
 // --- Import your specific design problems here ---
 import LRUCache from "./LRUCache.jsx";
 import LFUCache from "./LFUCache.jsx";
+import DesignHashMap from "./DesignHashMap.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -57,6 +58,23 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Design (HashMap + Doubly Linked List + Frequency Map)",
       timeComplexity: "O(1) average per operation",
     },
+    {
+        name : "Design HashMap",
+        number : "706",
+        icon : Settings,
+        description : "Design a HashMap that supports put, get, and remove operations in O(1) time.",
+        page : "DesignHashMap",
+        difficulty : "Easy",
+        difficultyColor : "text-green-400",
+        difficultyBg : "bg-green-400/10",
+        difficultyBorder : "border-green-400/30",
+        gradient : "from-green-500 to-lime-500",
+        iconColor : "text-lime-400",
+        iconBg : "bg-lime-500/20",
+        borderColor : "border-lime-500/30",
+        technique : "Design (Array, HashTable, HashFunction)",
+        timeComplexity : "O(1)",
+      },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
   return (
@@ -222,8 +240,8 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const DesignPage = ({ navigate: parentNavigate }) => {
-  const [page, setPage] = useState("home");
+const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
+  const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
@@ -232,6 +250,8 @@ const DesignPage = ({ navigate: parentNavigate }) => {
         return <LRUCache navigate={navigate} />;
       case "LFUCache":
         return <LFUCache navigate={navigate} />;
+      case "DesignHashMap":
+        return <DesignHashMap navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

@@ -21,11 +21,11 @@
 - ✅ Bubble Sort (Implemented)
 - ✅ Merge Sort (Implemented)
 - ✅ Quick Sort (Implemented)
-- 🔄 Selection Sort (Coming Soon)
-- 🔄 Insertion Sort (Coming Soon)
-- 🔄 Heap Sort (Coming Soon)
-- 🔄 Counting Sort (Coming Soon)
-- 🔄 Radix Sort (Coming Soon)
+- ✅ Selection Sort (Implemented)
+- ✅ Insertion Sort (Implemented)
+- ✅ Heap Sort (Implemented)
+- ✅ Counting Sort (Implemented)
+- ✅ Radix Sort (Implemented)
 
 **AlgoVisualizer** is a modern, interactive web application designed to help students, developers, and algorithm enthusiasts understand complex Data Structures and Algorithms (DSA) through visual, step-by-step execution. Whether you're preparing for technical interviews, studying for exams, or simply curious about how algorithms work under the hood, AlgoVisualizer makes learning engaging and intuitive.
 
@@ -237,23 +237,23 @@ We welcome contributions from developers of all skill levels! Whether it's fixin
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  HEADER SECTION                                             │
-│  - Problem Title (e.g., "Trapping Rain Water")             │
+│  - Problem Title (e.g., "Trapping Rain Water")              │
 │  - Problem Description/LeetCode Number                      │
 │  - Back to Problems Button                                  │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  INPUT CONTROLS ROW                                         │
-│  - Input Field (for array/data input)                      │
+│  - Input Field (for array/data input)                       │
 │  - Navigation Controls (Previous/Next Step)                 │
-│  - Step Counter (e.g., "31/39")                            │
+│  - Step Counter (e.g., "31/39")                             │
 │  - Reset Button                                             │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  ALGORITHM TABS (if multiple approaches)                    │
-│  - Brute Force O(n²)                                       │
-│  - Optimal O(n)                                            │
+│  - Brute Force O(n²)                                        │
+│  - Optimal O(n)                                             │
 └─────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────┬──────────────────────────────────┐
@@ -269,33 +269,33 @@ We welcome contributions from developers of all skill levels! Whether it's fixin
 
 ┌─────────────────────────────────────────────────────────────┐
 │  DATA STRUCTURE DISPLAY (if applicable)                     │
-│  - Arrays/Stacks/Queues being used                         │
+│  - Arrays/Stacks/Queues being used                          │
 │  - Show values at each step                                 │
 │  - Highlight active elements                                │
 │  Example:                                                   │
-│    Left Max Array (lmax):  [0, 1, 1, 2, 2, 2, ...]        │
-│    Right Max Array (rmax): [3, 3, 3, 3, 3, 2, ...]        │
+│    Left Max Array (lmax):  [0, 1, 1, 2, 2, 2, ...]          │
+│    Right Max Array (rmax): [3, 3, 3, 3, 3, 2, ...]          │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  OUTPUT SECTION                                             │
 │  - Final result display                                     │
 │  - Clear visual indicator                                   │
-│  Example: "Total Trapped Water: 6"                         │
+│  Example: "Total Trapped Water: 6"                          │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  EXPLANATION SECTION                                        │
-│  - Step-by-step explanation of current operation           │
+│  - Step-by-step explanation of current operation            │
 │  - Formula/logic being applied                              │
-│  Example: "Water at index 4 = min(max[4], rmax[4])        │
-│            - height[4] = min(2, 3) - 1 = 1"               │
+│  Example: "Water at index 4 = min(max[4], rmax[4])          │
+│            - height[4] = min(2, 3) - 1 = 1"                 │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │  COMPLEXITY ANALYSIS                                        │
-│  - Time Complexity: O(n) with explanation                  │
-│  - Space Complexity: O(n) with explanation                 │
+│  - Time Complexity: O(n) with explanation                   │
+│  - Space Complexity: O(n) with explanation                  │
 │  - Brief description of approach                            │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -457,6 +457,30 @@ Distributed under the MIT License. See `LICENSE` file for more information.
 ![GitHub issues](https://img.shields.io/github/issues/mahaveergurjar/AlgoVisualizer)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/mahaveergurjar/AlgoVisualizer)
 
+---
+
+## 🧑‍💻 Run the Project Locally (Beginner Friendly)
+
+If you're contributing for the first time (like during Hacktoberfest 🎃), follow these simple steps to set up **AlgoVisualizer** locally:
+
+```bash
+# 1️⃣ Fork this repository (click 'Fork' on GitHub)
+# 2️⃣ Clone your fork
+git clone https://github.com/<your-username>/AlgoVisualizer.git
+
+# 3️⃣ Navigate into the project folder
+cd AlgoVisualizer
+
+# 4️⃣ Install required dependencies
+npm install
+
+# 5️⃣ Start the local development server
+npm run dev
+
+Now open your browser and go to 👉 http://localhost:5173
+
+to explore the app locally!
+```
 ---
 
 <div align="center">
