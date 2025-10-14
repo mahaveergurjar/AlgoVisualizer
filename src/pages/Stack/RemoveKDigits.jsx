@@ -540,7 +540,7 @@ const RemoveKDigitsVisualizer = () => {
           {!isLoaded ? (
             <button
               onClick={loadData}
-              className="bg-violet-500 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors"
+              className="bg-violet-500 hover:bg-violet-600 text-white cursor-pointer font-bold py-2 px-4 rounded-lg shadow-md transition-colors"
             >
               Load & Visualize
             </button>
@@ -593,7 +593,7 @@ const RemoveKDigitsVisualizer = () => {
           )}
           <button
             onClick={reset}
-            className="ml-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md"
+            className="ml-4 bg-red-600 hover:bg-red-700 text-white cursor-pointer font-bold py-2 px-4 rounded-lg shadow-md"
           >
             Reset
           </button>

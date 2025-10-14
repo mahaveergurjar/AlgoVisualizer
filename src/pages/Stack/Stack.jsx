@@ -18,6 +18,7 @@ import SubarrayRanges from "./SubarrayRanges.jsx";
 import RemoveKDigits from "./RemoveKDigits.jsx";
 import LargestRectangleHistogram from "./LargestRectangleHistogram.jsx";
 import StackOperations from "./StackOperstion.jsx";
+import NextGreaterElementVisualizer from "./NextGreaterElement.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -91,6 +92,24 @@ const AlgorithmList = ({ navigate }) => {
       iconColor: "text-violet-400",
       iconBg: "bg-violet-500/20",
       borderColor: "border-violet-500/30",
+      technique: "Monotonic Stack",
+      timeComplexity: "O(n)",
+    },
+    {
+      name: "Next Greater Element",
+      number: "496",
+      icon: ArrowUpDown,
+      description:
+        "Find the next greater element for each element in a circular array.",
+      page: "NextGreaterElement",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-purple-500 to-fuchsia-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
       technique: "Monotonic Stack",
       timeComplexity: "O(n)",
     },
@@ -270,6 +289,8 @@ const StackPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <RemoveKDigits navigate={navigate} />;
       case "LargestRectangleHistogram":
         return <LargestRectangleHistogram navigate={navigate} />;
+      case "NextGreaterElement":
+        return <NextGreaterElementVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -339,7 +360,7 @@ const StackPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
@@ -360,7 +381,7 @@ const StackPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full ">
             <button
               onClick={() => parentNavigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 cursor-pointer hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home

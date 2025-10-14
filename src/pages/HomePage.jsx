@@ -348,7 +348,7 @@ const AlgorithmCategories = ({ navigate }) => {
                   />
                   <button
                     type="submit"
-                    className="px-3 py-1.5 text-sm rounded-lg bg-blue-600/80 hover:bg-blue-600 text-white transition"
+                    className="px-3 py-1.5 text-sm rounded-lg bg-blue-600/80 hover:bg-blue-600 text-white transition cursor-pointer"
                     aria-label="Search"
                   >
                     Search
@@ -646,9 +646,9 @@ const HomePage = () => {
       case "DynamicProgramming":
         return <DPPage navigate={navigate} initialPage={initialSubPage} />;
       case "BitManipulation":
-        return <BitPage navigate={navigate} initialPage={initialSubPage} />;
-      case "Graphs":
-        return <GraphPage navigate={navigate} initialPage={initialSubPage} />;
+        return (
+          <BitPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "home":
       default:
         return <AlgorithmCategories navigate={navigate} />;

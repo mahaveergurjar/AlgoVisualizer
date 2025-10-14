@@ -10,21 +10,23 @@ import {
   Route,
   GitBranch,
   Share2,
+  GitMerge,
 } from "lucide-react";
 
 // --- Import your specific graph algorithm visualizer components here ---
-// For now, these are placeholders. Replace with actual components when built.
 import BFS from "./BFS.jsx";
 import DFS from "./DFS.jsx";
 import Dijkstra from "./Dijkstra.jsx";
 import TopologicalSort from "./TopologicalSort.jsx";
+import Kruskal from "./Kruskal.jsx";
+
 const PlaceholderVisualizer = ({ name, navigate }) => (
   <div className="bg-gray-950 text-white min-h-screen flex flex-col">
     <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
       <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
         <button
           onClick={() => navigate("home")}
-          className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+          className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Problems
@@ -71,7 +73,7 @@ const AlgorithmList = ({ navigate }) => {
     },
     {
       name: "Depth-First Search (DFS)",
-      number: "N/A", 
+      number: "N/A",
       icon: GitBranch,
       description:
         "Explore as far as possible along each branch before backtracking.",
@@ -106,6 +108,24 @@ const AlgorithmList = ({ navigate }) => {
       timeComplexity: "O((V + E) log V)",
     },
     {
+      name: "Kruskal's Algorithm",
+      number: "N/A",
+      icon: GitMerge,
+      description:
+        "Find the Minimum Spanning Tree by greedily selecting edges with minimum weight using Union-Find.",
+      page: "Kruskal",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-green-500 to-emerald-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Union-Find & Greedy",
+      timeComplexity: "O(E log E)",
+    },
+    {
       name: "Topological Sort",
       number: "207",
       icon: Network,
@@ -123,9 +143,6 @@ const AlgorithmList = ({ navigate }) => {
       technique: "DFS & Indegree",
       timeComplexity: "O(V + E)",
     },
-    // Removed Union-Find and Minimum Spanning Tree
-
-    // Add more graph algorithms here as you build them
   ].sort((a, b) => {
     // Sort by number if both have numbers, otherwise keep original order
     if (a.number !== "N/A" && b.number !== "N/A") {
@@ -310,6 +327,8 @@ const GraphsPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <DFS navigate={navigate} />;
       case "Dijkstra":
         return <Dijkstra navigate={navigate} />;
+      case "Kruskal":
+        return <Kruskal navigate={navigate} />;
       case "TopologicalSort":
         return <TopologicalSort navigate={navigate} />;
       case "UnionFind":
@@ -352,7 +371,7 @@ const GraphsPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
@@ -372,7 +391,7 @@ const GraphsPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto">
             <button
               onClick={() => parentNavigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 cursor-pointer hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home

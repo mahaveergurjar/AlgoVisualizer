@@ -237,7 +237,7 @@ const MinSpeedToArriveOnTime = () => {
                         </div>
                         <div className="flex items-center gap-3">
                             {!isLoaded ? (
-                                <button onClick={generateHistory} className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-bold py-2.5 px-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95">
+                                <button onClick={generateHistory} className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-bold py-2.5 px-8 rounded-lg cursor-pointer shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95">
                                     Load & Visualize
                                 </button>
                             ) : (
@@ -253,7 +253,7 @@ const MinSpeedToArriveOnTime = () => {
                                     </button>
                                 </>
                             )}
-                            <button onClick={resetVisualization} className="ml-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95">
+                            <button onClick={resetVisualization} className="ml-2 bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95">
                                 Reset
                             </button>
                         </div>

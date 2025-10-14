@@ -284,7 +284,7 @@ return maxProfit;`,
               <div className="flex items-center gap-3">
                 <button
                   onClick={run}
-                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-gray-900 font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-gray-900 font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer"
                 >
                   Load & Visualize
                 </button>
@@ -302,7 +302,7 @@ return maxProfit;`,
                 </>
               ) : null}
 
-              <button onClick={reset} className="ml-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95">Reset</button>
+              <button onClick={reset} className="ml-2 bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95">Reset</button>
             </div>
           </div>
         </div>

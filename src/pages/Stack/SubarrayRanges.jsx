@@ -637,7 +637,7 @@ const SubarrayRangesVisualizer = () => {
           {!isLoaded ? (
             <button
               onClick={loadArray}
-              className="bg-teal-500 hover:bg-teal-600 text-gray-900 font-bold py-2 px-6 rounded-lg shadow-md transition-colors duration-300"
+              className="bg-teal-500 hover:bg-teal-600 text-gray-900 cursor-pointer font-bold py-2 px-6 rounded-lg shadow-md transition-colors duration-300"
             >
               Load & Visualize
             </button>
@@ -690,7 +690,7 @@ const SubarrayRangesVisualizer = () => {
           )}
           <button
             onClick={reset}
-            className="ml-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300"
+            className="ml-4 bg-red-600 hover:bg-red-700 text-white cursor-pointer font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300"
           >
             Reset
           </button>

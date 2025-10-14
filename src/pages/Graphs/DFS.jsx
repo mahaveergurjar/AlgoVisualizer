@@ -406,13 +406,13 @@ const DFS = ({ navigate }) => {
               <>
                 <button
                   onClick={load}
-                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+                  className="bg-gradient-to-r from-purple-500 to-pink-600 cursor-pointer hover:from-purple-600 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
                 >
                   Load & Visualize
                 </button>
                 <button
                   onClick={runDemo}
-                  className="bg-gradient-to-r from-orange-500 to-yellow-400 hover:from-orange-600 hover:to-yellow-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+                  className="bg-gradient-to-r from-orange-500 to-yellow-400 cursor-pointer hover:from-orange-600 hover:to-yellow-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
                   disabled={isDemo}
                 >
                   Demo
@@ -452,7 +452,7 @@ const DFS = ({ navigate }) => {
             )}
             <button
               onClick={reset}
-              className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+              className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 cursor-pointer rounded-xl shadow-lg transition-all transform hover:scale-105"
             >
               Reset
             </button>
