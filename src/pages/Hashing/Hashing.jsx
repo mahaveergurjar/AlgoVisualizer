@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import ValidAnagram from "./ValidAnagram";
 import SubarraySumEqualsK from "./SubarraySumEqualsK";
+import LongestConsecutiveSequence from "./LongestConsecutiveSequence";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -244,7 +245,7 @@ const HashingPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "SubarraySumEqualsK":
         return <SubarraySumEqualsK />;
       case "LongestConsecutiveSequence":
-        return null;
+        return <LongestConsecutiveSequence />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
