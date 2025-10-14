@@ -38,6 +38,7 @@ import CountZeros from "./CountZeros.jsx";
 import ArraySum from "./ArraySum.jsx";
 import ReverseArray from "./ReverseArray.jsx";
 import TwoSum from "./TwoSum.jsx";
+import SquaresOfSortedArray from "./SquaresOfSortedArray.jsx";
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -144,6 +145,26 @@ function AlgorithmList({ navigate }) {
       timeComplexity: "O(n)",
       platforms: ["LeetCode #1", "GfG"],
       tags: ["Hashing", "Pairs"]
+    },
+    {
+      name: "Squares of a Sorted Array",
+      number: "977",
+      icon: ArrowUpDown,
+      description: "Square each number and return the array sorted in non-decreasing order.",
+      page: "SquaresOfSortedArray",
+      difficulty: "Easy",
+      tier: "Tier 2",
+      difficultyColor: "text-blue-400",
+      difficultyBg: "bg-blue-400/10",
+      difficultyBorder: "border-blue-400/30",
+      gradient: "from-teal-500 to-cyan-500",
+      iconColor: "text-teal-400",
+      iconBg: "bg-teal-500/20",
+      borderColor: "border-teal-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #977"],
+      tags: ["Two Pointers", "Sorting"]
     },
   
     {
@@ -536,6 +557,8 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <ReverseArray navigate={navigate} />;
       case "TwoSum":
         return <TwoSum navigate={navigate} />;
+      case "SquaresOfSortedArray":
+        return <SquaresOfSortedArray navigate={navigate} />;
       case "RotateArray":
         return <RotateArray navigate={navigate} />;
       case "RemoveDuplicates":
