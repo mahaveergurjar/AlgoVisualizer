@@ -621,6 +621,8 @@ const HomePage = () => {
         );
       case "Graphs":
         return <GraphsPage navigate={navigate} initialPage={initialSubPage} />;
+      case "DynamicProgrammin":
+        return <DPPage navigate={navigate} initialPage={initialSubPage} />;
 
       case "home":
       default:
