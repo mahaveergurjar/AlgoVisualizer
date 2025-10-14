@@ -20,6 +20,7 @@ import {
   Wrench,
   ArrowDownUp,
   Navigation,
+  Type
 } from "lucide-react";
 
 // --- Import your page components ----
@@ -38,6 +39,7 @@ import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
 import DPPage from "./DynamicProgramming/DynamicProgramming.jsx";
 import ScrollToTop from "../components/ScrollToTop";
 import GraphsPage from "./Graphs/Graphs.jsx";
+import StringPage from "./Strings/Strings.jsx";
 
 
 const AlgorithmCategories = ({ navigate }) => {
@@ -57,6 +59,16 @@ const AlgorithmCategories = ({ navigate }) => {
         iconBg: "bg-sky-500/20",
         borderColor: "border-sky-500/30",
         iconColor: "text-sky-400",
+      },
+      {
+        name: "Strings",
+        icon: Type, 
+        description: "Text manipulation, pattern matching, and character operations.",
+        page: "Strings",
+        gradient: "from-purple-500 to-pink-600",
+        iconBg: "bg-purple-500/20",
+        borderColor: "border-purple-500/30",
+        iconColor: "text-purple-400",
       },
       {
         name: "Linked List",
@@ -586,6 +598,8 @@ const HomePage = () => {
     switch (page) {
       case "Arrays":
         return <ArrayPage navigate={navigate} initialPage={initialSubPage} />;
+      case "Strings":
+        return <StringPage navigate={navigate} initialPage={initialSubPage} />;
       case "SlidingWindows":
         return (
           <SlidingWindowsPage
