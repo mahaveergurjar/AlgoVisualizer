@@ -405,7 +405,7 @@ const KnapsackVisualizer = () => {
           {!isLoaded ? (
             <button
               onClick={load}
-              className="px-5 py-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 transition text-white font-bold shadow-lg"
+              className="px-5 py-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 transition text-white font-bold shadow-lg cursor-pointer"
             >
               Load & Visualize
             </button>
@@ -457,7 +457,7 @@ const KnapsackVisualizer = () => {
 
               <button
                 onClick={resetAll}
-                className="ml-3 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold shadow"
+                className="ml-3 px-4 py-2 rounded-xl bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold shadow"
               >
                 Reset
               </button>
@@ -473,7 +473,7 @@ const KnapsackVisualizer = () => {
             <button
               key={lang}
               onClick={() => setActiveLang(lang)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm ${activeLang === lang
+              className={`px-4 py-2 rounded-lg font-medium cursor-pointer text-sm ${activeLang === lang
                 ? "bg-rose-500/20 text-rose-300 ring-1 ring-rose-400"
                 : "bg-gray-800/40 text-gray-300 hover:bg-gray-800/60"
                 }`}

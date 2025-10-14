@@ -413,7 +413,7 @@ const ContainerWithMostWater = () => {
           {!isLoaded ? (
             <button
               onClick={loadArray}
-              className="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg"
+              className="bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg cursor-pointer"
             >
               Load & Visualize
             </button>
@@ -456,7 +456,7 @@ const ContainerWithMostWater = () => {
           )}
           <button
             onClick={reset}
-            className="ml-4 bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg"
+            className="ml-4 bg-red-600 hover:bg-red-700 cursor-pointer font-bold py-2 px-4 rounded-lg"
           >
             Reset
           </button>

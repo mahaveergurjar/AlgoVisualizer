@@ -551,7 +551,7 @@ const Dijkstra = ({ navigate }) => {
               <>
                 <button
                   onClick={load}
-                  className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+                  className="bg-gradient-to-r from-orange-500 to-red-600 cursor-pointer hover:from-orange-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
                 >
                   Load & Visualize
                 </button>
@@ -588,7 +588,7 @@ const Dijkstra = ({ navigate }) => {
                 </button>
                 <button
                   onClick={runDemo}
-                  className="bg-gradient-to-r from-yellow-500 to-orange-400 hover:from-yellow-600 hover:to-orange-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+                  className="bg-gradient-to-r from-yellow-500 to-orange-400 cursor-pointer hover:from-yellow-600 hover:to-orange-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
                   disabled={isDemo}
                 >
                   Demo
@@ -597,7 +597,7 @@ const Dijkstra = ({ navigate }) => {
             )}
             <button
               onClick={reset}
-              className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+              className="bg-red-600 hover:bg-red-700 font-bold cursor-pointer py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
             >
               Reset
             </button>
