@@ -38,6 +38,8 @@ import CountZeros from "./CountZeros.jsx";
 import ArraySum from "./ArraySum.jsx";
 import ReverseArray from "./ReverseArray.jsx";
 import TwoSum from "./TwoSum.jsx";
+import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
+
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -287,6 +289,27 @@ function AlgorithmList({ navigate }) {
       timeComplexity: "O(n²)",
       platforms: ["LeetCode #2104", "GfG"],
       tags: ["Subarrays", "Stack"]
+    },
+    {
+      name: "Split Array Largest Sum",
+      number: "410",
+      icon: BarChart3,
+      description:
+        "Split array into k parts such that the largest subarray sum is minimized.",
+      page: "SplitArrayLargestSum",
+      difficulty: "Hard",
+      tier: "Tier 3",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-pink-500 to-rose-600",
+      iconColor: "text-pink-400",
+      iconBg: "bg-pink-500/20",
+      borderColor: "border-pink-500/30",
+      technique: "Binary Search + Greedy",
+      timeComplexity: "O(n log(sum(nums)))",
+      platforms: ["LeetCode #410"],
+      tags: ["Binary Search", "Greedy"]
     }
   ];
 
@@ -556,6 +579,9 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <SubarrayRanges navigate={navigate} />;
       case "BestTimeToBuyAndSellStock":
         return <BestTimeToBuyAndSellStock navigate={navigate} />;
+      case "SplitArrayLargestSum":
+        return <SplitArrayLargestSum navigate={navigate} />;
+
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
