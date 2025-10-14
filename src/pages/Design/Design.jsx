@@ -17,6 +17,7 @@ import {
 import LRUCache from "./LRUCache.jsx";
 import LFUCache from "./LFUCache.jsx";
 import DesignHashMap from "./DesignHashMap.jsx";
+import DesignLinkedList from "./DesignLinkedList.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -74,6 +75,23 @@ const AlgorithmList = ({ navigate }) => {
         borderColor : "border-lime-500/30",
         technique : "Design (Array, HashTable, HashFunction)",
         timeComplexity : "O(1)",
+      },
+      {
+        name : "Design Linked List",
+        number : "707",
+        icon : Settings,
+        description : "Design a Linked List that supports insert, delete, and get operations in O(n) time.",
+        page : "DesignLinkedList",
+        difficulty : "Medium",
+        difficultyColor : "text-yellow-400",
+        difficultyBg : "bg-yellow-400/10",
+        difficultyBorder : "border-yellow-400/30",
+        gradient : "from-yellow-500 to-amber-500",
+        iconColor : "text-amber-400",
+        iconBg : "bg-amber-500/20",
+        borderColor : "border-amber-500/30",
+        technique : "Design (Array, Pointer)",
+        timeComplexity : "O(n)",
       },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
@@ -252,6 +270,8 @@ const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <LFUCache navigate={navigate} />;
       case "DesignHashMap":
         return <DesignHashMap navigate={navigate} />;
+      case "DesignLinkedList":
+        return <DesignLinkedList navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
