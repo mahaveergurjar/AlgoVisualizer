@@ -260,7 +260,8 @@ const LCAofDeepestLeavesVisualizer = () => {
                 <div className="bg-slate-800/50 p-3 rounded-xl border border-slate-700 shadow-xl mb-3">
                     <div className="flex flex-wrap items-end gap-3">
                         <div className="flex-grow min-w-[300px]"><label htmlFor="tree-input" className="block text-xs font-semibold text-gray-300 mb-1">Tree Input</label><input id="tree-input" type="text" value={treeInput} onChange={(e) => setTreeInput(e.target.value)} className="w-full bg-slate-900/70 text-gray-100 text-sm rounded-md p-2 border border-slate-700 focus:ring-1 focus:ring-green-500 focus:outline-none font-mono" disabled={isVisualizing} /></div>
-                        <div className="flex gap-2"><button onClick={handleVisualize} disabled={isVisualizing} className="bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold px-4 py-2 text-sm rounded-md disabled:opacity-50 flex items-center gap-2"><Play size={16} /> Visualize</button><button onClick={handleReset} disabled={!isVisualizing} className="bg-slate-700 text-white font-semibold px-4 py-2 text-sm rounded-md disabled:opacity-50 flex items-center gap-2"><RotateCcw size={16} /> Reset</button></div>
+                        <div className="flex gap-2"><button onClick={handleVisualize} disabled={isVisualizing} className="bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold px-4 py-2 text-sm rounded-md disabled:opacity-50 cursor-pointer flex items-center gap-2"><Play size={16} /> Visualize</button>
+                        <button onClick={handleReset} disabled={!isVisualizing} className="bg-slate-700 text-white font-semibold px-4 py-2 text-sm rounded-md cursor-pointer disabled:opacity-50 flex items-center gap-2"><RotateCcw size={16} /> Reset</button></div>
                     </div>
                 </div>
                 {isVisualizing && (

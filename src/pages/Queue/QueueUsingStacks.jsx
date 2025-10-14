@@ -574,7 +574,7 @@ const QueueUsingStacks = () => {
           {!isLoaded ? (
             <button
               onClick={loadData}
-              className='bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors'
+              className='bg-blue-500 hover:bg-blue-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors'
             >
               Load & Visualize
             </button>
@@ -627,7 +627,7 @@ const QueueUsingStacks = () => {
           )}
           <button
             onClick={reset}
-            className='ml-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md'
+            className='ml-4 bg-red-600 hover:bg-red-700 text-white cursor-pointer font-bold py-2 px-4 rounded-lg shadow-md'
           >
             Reset
           </button>

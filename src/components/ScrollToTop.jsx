@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowUp } from "lucide-react"; // Using a modern icon for attractiveness
+import { ArrowUp } from "lucide-react";
 
 const ScrollToTop = () => {
   const [visible, setVisible] = useState(false);
@@ -23,12 +23,12 @@ const ScrollToTop = () => {
         <button
           onClick={scrollToTop}
           className="
-            fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50
+            fixed bottom-8 right-8 z-50
             p-4 sm:p-5 bg-gradient-to-r from-blue-500 to-purple-500
             rounded-full shadow-2xl text-white flex items-center justify-center
             hover:scale-110 hover:shadow-xl hover:shadow-purple-500/50
             transition-all duration-300
-            ring-2 ring-blue-300/50
+            ring-2 ring-blue-300/50 cursor-pointer
           "
           aria-label="Scroll to top"
         >
@@ -36,7 +36,6 @@ const ScrollToTop = () => {
         </button>
       )}
 
-      {/* subtle bounce animation */}
       <style>{`
         @keyframes bounce-subtle {
           0%, 100% { transform: translateY(0); }
