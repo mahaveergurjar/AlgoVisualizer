@@ -10,6 +10,7 @@ import {
   Database,
   Search,
 } from "lucide-react";
+import ValidAnagram from "./ValidAnagram";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -238,7 +239,7 @@ const HashingPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const renderPage = () => {
     switch (page) {
       case "ValidAnagram":
-        return null;
+        return <ValidAnagram />;
       case "SubarraySumEqualsK":
         return null;
       case "LongestConsecutiveSequence":
