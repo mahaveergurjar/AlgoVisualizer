@@ -20,21 +20,28 @@ import {
   Wrench,
   ArrowDownUp,
   Navigation,
+  Type
 } from "lucide-react";
 
-// --- Import your page components ----
 import ArrayPage from "./Arrays/Arrays.jsx";
 import SlidingWindowsPage from "./SlidingWindows/SlidingWindows.jsx";
 import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
+import HeapsPage from "./Heaps/Heaps.jsx";
 import DesignPage from "./Design/Design.jsx";
+import RecursionPage from "./Recursion/Recursion.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
 import PathfindingPage from "./Pathfinding/Pathfinding.jsx";
 import { problems as PROBLEM_CATALOG } from "../search/catalog";
 import QueuePage from "./Queue/Queue.jsx";
 import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
+import DPPage from "./DynamicProgramming/DynamicProgramming.jsx";
 import ScrollToTop from "../components/ScrollToTop";
+import GraphsPage from "./Graphs/Graphs.jsx";
+import StringPage from "./Strings/Strings.jsx";
+import BitPage from "./BitManipulation/BitManipulation.jsx";
+
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -53,6 +60,16 @@ const AlgorithmCategories = ({ navigate }) => {
         iconBg: "bg-sky-500/20",
         borderColor: "border-sky-500/30",
         iconColor: "text-sky-400",
+      },
+      {
+        name: "Strings",
+        icon: Type,
+        description: "Text manipulation, pattern matching, and character operations.",
+        page: "Strings",
+        gradient: "from-purple-500 to-pink-600",
+        iconBg: "bg-purple-500/20",
+        borderColor: "border-purple-500/30",
+        iconColor: "text-purple-400",
       },
       {
         name: "Linked List",
@@ -109,7 +126,7 @@ const AlgorithmCategories = ({ navigate }) => {
         name: "Recursion",
         icon: Repeat,
         description: "Solve problems by breaking them into smaller instances.",
-        page: "placeholder",
+        page: "Recursion",
         gradient: "from-indigo-500 to-blue-600",
         iconBg: "bg-indigo-500/20",
         borderColor: "border-indigo-500/30",
@@ -120,7 +137,7 @@ const AlgorithmCategories = ({ navigate }) => {
         icon: Binary,
         description:
           "Work with data at the binary level for ultimate efficiency.",
-        page: "placeholder",
+        page: "BitManipulation",
         gradient: "from-slate-500 to-gray-600",
         iconBg: "bg-slate-500/20",
         borderColor: "border-slate-500/30",
@@ -153,7 +170,7 @@ const AlgorithmCategories = ({ navigate }) => {
         icon: Filter,
         description:
           "Priority queues and finding min/max elements efficiently.",
-        page: "placeholder",
+        page: "Heaps",
         gradient: "from-orange-500 to-amber-600",
         iconBg: "bg-orange-500/20",
         borderColor: "border-orange-500/30",
@@ -161,13 +178,13 @@ const AlgorithmCategories = ({ navigate }) => {
       },
       {
         name: "Graphs",
-        icon: Share2,
-        description: "Networks of nodes, pathfinding, and connectivity.",
-        page: "placeholder",
-        gradient: "from-lime-500 to-green-600",
-        iconBg: "bg-lime-500/20",
-        borderColor: "border-lime-500/30",
-        iconColor: "text-lime-400",
+        icon: Network,
+        description: "Networks of nodes, traversal algorithms, and pathfinding.",
+        page: "Graphs",
+        gradient: "from-blue-500 to-cyan-600",
+        iconBg: "bg-blue-500/20",
+        borderColor: "border-blue-500/30",
+        iconColor: "text-blue-400",
       },
       {
         name: "Pathfinding",
@@ -184,7 +201,7 @@ const AlgorithmCategories = ({ navigate }) => {
         name: "Dynamic Programming",
         icon: Workflow,
         description: "Optimization by solving and caching sub-problems.",
-        page: "placeholder",
+        page: "DynamicProgramming",
         gradient: "from-fuchsia-500 to-purple-600",
         iconBg: "bg-fuchsia-500/20",
         borderColor: "border-fuchsia-500/30",
@@ -318,7 +335,7 @@ const AlgorithmCategories = ({ navigate }) => {
                   />
                   <button
                     type="submit"
-                    className="px-3 py-1.5 text-sm rounded-lg bg-blue-600/80 hover:bg-blue-600 text-white transition"
+                    className="px-3 py-1.5 text-sm rounded-lg bg-blue-600/80 hover:bg-blue-600 text-white transition cursor-pointer"
                     aria-label="Search"
                   >
                     Search
@@ -361,11 +378,10 @@ const AlgorithmCategories = ({ navigate }) => {
                                 }}
                               >
                                 <span
-                                  className={`text-xs font-medium px-2 py-0.5 rounded-md border ${
-                                    item.type === "problem"
+                                  className={`text-xs font-medium px-2 py-0.5 rounded-md border ${item.type === "problem"
                                       ? "text-purple-300 bg-purple-400/10 border-purple-400/30"
                                       : "text-blue-300 bg-blue-400/10 border-blue-400/30"
-                                  }`}
+                                    }`}
                                 >
                                   {item.type === "problem"
                                     ? "Problem"
@@ -447,11 +463,10 @@ const AlgorithmCategories = ({ navigate }) => {
               onClick={() => !isPlaceholder && navigate(cat.page)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className={`group relative h-40 sm:h-48 transition-all duration-500 transform animate-fade-in-up ${
-                isPlaceholder
+              className={`group relative h-40 sm:h-48 transition-all duration-500 transform animate-fade-in-up ${isPlaceholder
                   ? "opacity-40 cursor-not-allowed"
                   : "cursor-pointer hover:-translate-y-4 hover:scale-[1.03]"
-              }`}
+                }`}
               style={{
                 animationDelay: `${index * 50}ms`,
               }}
@@ -463,39 +478,33 @@ const AlgorithmCategories = ({ navigate }) => {
 
               {/* Main card container */}
               <div
-                className={`relative bg-gray-900/95 backdrop-blur-sm rounded-3xl p-5 sm:p-6 border ${
-                  cat.borderColor
-                } transition-all duration-500 ${
-                  isHovered && !isPlaceholder
+                className={`relative bg-gray-900/95 backdrop-blur-sm rounded-3xl p-5 sm:p-6 border ${cat.borderColor
+                  } transition-all duration-500 ${isHovered && !isPlaceholder
                     ? "shadow-2xl shadow-gray-900/60"
                     : "shadow-xl shadow-gray-900/40"
-                } w-full h-full flex flex-col justify-between card-shadow card-glow`}
+                  } w-full h-full flex flex-col justify-between card-shadow card-glow`}
               >
                 {/* Header */}
                 <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
                   <div
-                    className={`p-3 ${
-                      cat.iconBg
-                    } rounded-2xl transition-all duration-300 ${
-                      !isPlaceholder &&
+                    className={`p-3 ${cat.iconBg
+                      } rounded-2xl transition-all duration-300 ${!isPlaceholder &&
                       "group-hover:scale-110 group-hover:rotate-6"
-                    }`}
+                      }`}
                   >
                     <Icon
-                      className={`h-8 w-8 sm:h-10 sm:w-10 ${
-                        isHovered && !isPlaceholder
+                      className={`h-8 w-8 sm:h-10 sm:w-10 ${isHovered && !isPlaceholder
                           ? "text-white"
                           : cat.iconColor
-                      } transition-colors duration-300`}
+                        } transition-colors duration-300`}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h2
-                      className={`text-lg sm:text-xl font-bold transition-colors duration-300 leading-tight ${
-                        isHovered && !isPlaceholder
+                      className={`text-lg sm:text-xl font-bold transition-colors duration-300 leading-tight ${isHovered && !isPlaceholder
                           ? "text-white"
                           : "text-gray-200"
-                      }`}
+                        }`}
                     >
                       {cat.name}
                     </h2>
@@ -514,22 +523,20 @@ const AlgorithmCategories = ({ navigate }) => {
                 {/* Description + Footer */}
                 <div className="flex flex-col flex-grow justify-between">
                   <p
-                    className={`text-sm leading-relaxed transition-colors duration-300 ${
-                      isHovered && !isPlaceholder
+                    className={`text-sm leading-relaxed transition-colors duration-300 ${isHovered && !isPlaceholder
                         ? "text-gray-300"
                         : "text-gray-500"
-                    }`}
+                      }`}
                   >
                     {cat.description}
                   </p>
 
                   {!isPlaceholder && (
                     <div
-                      className={`pt-4 mt-6 border-t border-gray-800/50 flex items-center justify-between transition-all duration-300 ${
-                        isHovered
+                      className={`pt-4 mt-6 border-t border-gray-800/50 flex items-center justify-between transition-all duration-300 ${isHovered
                           ? "opacity-100 translate-y-0"
                           : "opacity-0 translate-y-2"
-                      }`}
+                        }`}
                     >
                       <span className="text-xs text-gray-400 font-medium">
                         Click to explore
@@ -582,6 +589,8 @@ const HomePage = () => {
     switch (page) {
       case "Arrays":
         return <ArrayPage navigate={navigate} initialPage={initialSubPage} />;
+      case "Strings":
+        return <StringPage navigate={navigate} initialPage={initialSubPage} />;
       case "SlidingWindows":
         return (
           <SlidingWindowsPage
@@ -607,30 +616,43 @@ const HomePage = () => {
         return (
           <BinarySearchPage navigate={navigate} initialPage={initialSubPage} />
         );
+      case "Heaps":
+        return <HeapsPage navigate={navigate} initialPage={initialSubPage} />;
+      case "Recursion":
+        return (
+          <RecursionPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "Pathfinding":
         return (
           <PathfindingPage navigate={navigate} initialPage={initialSubPage} />
         );
-
+      case "Graphs":
+        return <GraphsPage navigate={navigate} initialPage={initialSubPage} />;
+      case "DynamicProgramming":
+        return <DPPage navigate={navigate} initialPage={initialSubPage} />;
+      case "BitManipulation":
+        return (
+          <BitPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "home":
       default:
         return <AlgorithmCategories navigate={navigate} />;
     }
   };
 
-  const PageWrapper = ({ children }) => (
-    <>
-      <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
-        <div className="fixed inset-0 z-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float-delayed" />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" />
-        </div>
+const PageWrapper = ({ children }) => (
+  <>
+    <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
+      <div className="fixed inset-0 z-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float-delayed" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" />
+      </div>
 
-        <div className="relative z-10">{children}</div>
-        <ScrollToTop />
+      <div className="relative z-10">{children}</div>
+      <ScrollToTop />
 
-        <style>{`
+      <style>{`
         .animated-gradient {
           background-size: 200% auto;
           animation: gradient-animation 4s ease-in-out infinite;
@@ -749,10 +771,10 @@ const HomePage = () => {
           box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
         }
       `}</style>
-      </div>
-    </>
-  );
-  return <PageWrapper>{renderPage()}</PageWrapper>;
+    </div>
+  </>
+);
+return <PageWrapper>{renderPage()}</PageWrapper>;
 };
 
 export default HomePage;

@@ -20,6 +20,7 @@ const TrappingRainWater = () => {
   const [heightsInput, setHeightsInput] = useState("0,1,0,2,1,0,1,3,2,1,2,1");
   const [isLoaded, setIsLoaded] = useState(false);
   const [maxHeight, setMaxHeight] = useState(1);
+  const [codeLang, setCodeLang] = useState("cpp");
 
   const generateBruteForceHistory = useCallback((heights) => {
     const n = heights.length;
@@ -239,7 +240,8 @@ const TrappingRainWater = () => {
       .map((s) => s.trim())
       .filter(Boolean)
       .map(Number);
-    if (localHeights.some(isNaN) || localHeights.length < 2) throw new Error("Invalid input");
+    if (localHeights.some(isNaN) || localHeights.length < 2)
+      throw new Error("Invalid input");
     return localHeights;
   }, [heightsInput]);
   const handleModeChange = useModeHistorySwitch({
@@ -444,6 +446,64 @@ const TrappingRainWater = () => {
     },
   ];
 
+  //Java
+  const javaOptimalCode = [
+    {
+      l: 1,
+      c: [
+        { t: "public static int ", c: "purple" },
+        { t: "TrappingRainWater", c: "yellow" },
+        { t: "(int height[]){", c: "" },
+        { t: " // T.C. O(n)", c: "light-gray" },
+      ],
+    },
+    { l: 2, c: [{ t: "    int n = height.length;", c: "" }] },
+    { l: 4, c: [{ t: "    int leftMax[] = new int[n];", c: "" }] },
+    { l: 5, c: [{ t: "    leftMax[0] = height[0];", c: "" }] },
+    {
+      l: 7,
+      c: [
+        { t: "    for", c: "purple" },
+        { t: " (int i = 1; i < n; i++)", c: "" },
+        { t: " leftMax[i] = Math.max(height[i], leftMax[i-1]);", c: "" },
+      ],
+    },
+    { l: 10, c: [{ t: "    int rightMax[] = new int[n];", c: "" }] },
+    { l: 11, c: [{ t: "    rightMax[n-1] = height[n-1];", c: "" }] },
+    {
+      l: 13,
+      c: [
+        { t: "    for", c: "purple" },
+        { t: " (int i = n-2; i >= 0; i--)", c: "" },
+        { t: " rightMax[i] = Math.max(height[i], rightMax[i+1]);", c: "" },
+      ],
+    },
+    { l: 16, c: [{ t: "    int trapperWater = 0;", c: "" }] },
+    {
+      l: 18,
+      c: [
+        { t: "    for", c: "purple" },
+        { t: " (int i = 0; i < n; i++) {", c: "" },
+      ],
+    },
+    {
+      l: 19,
+      c: [
+        {
+          t: "        int waterLevel = Math.min(leftMax[i], rightMax[i]);",
+          c: "",
+        },
+      ],
+    },
+    {
+      l: 20,
+      c: [{ t: "        trapperWater += waterLevel - height[i];", c: "" }],
+    },
+    { l: 22, c: [{ t: "    }", c: "light-gray" }] },
+    { l: 24, c: [{ t: "    return trapperWater;", c: "" }] },
+    { l: 25, c: [{ t: "}", c: "light-gray" }] },
+  ];
+
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <header className="text-center mb-6">
@@ -474,7 +534,7 @@ const TrappingRainWater = () => {
           {!isLoaded ? (
             <button
               onClick={loadArray}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg cursor-pointer"
             >
               Load & Visualize
             </button>
@@ -517,7 +577,7 @@ const TrappingRainWater = () => {
           )}
           <button
             onClick={reset}
-            className="ml-4 bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg"
+            className="ml-4 bg-red-600 cursor-pointer hover:bg-red-700 font-bold py-2 px-4 rounded-lg"
           >
             Reset
           </button>
@@ -550,17 +610,51 @@ const TrappingRainWater = () => {
       {isLoaded ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Code size={20} />
-              C++ {mode === "brute-force" ? "Brute Force" : "Optimal"} Solution
-            </h3>
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-600/50">
+              <h3 className="font-bold text-xl text-blue-400 flex items-center gap-2">
+                <Code size={20} />
+                {mode === "brute-force"
+                  ? "C++ Brute Force Solution"
+                  : `${codeLang === "cpp" ? "C++" : "Java"} Optimal Solution`}
+              </h3>
+
+              {mode === "optimal" && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setCodeLang("cpp")}
+                    className={`px-3 py-1 rounded-md text-sm font-semibold ${
+                      codeLang === "cpp"
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    }`}
+                  >
+                    C++
+                  </button>
+                  <button
+                    onClick={() => setCodeLang("java")}
+                    className={`px-3 py-1 rounded-md text-sm font-semibold ${
+                      codeLang === "java"
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    }`}
+                  >
+                    Java
+                  </button>
+                </div>
+              )}
+            </div>
+
             <pre className="text-sm overflow-auto">
               <code className="font-mono leading-relaxed">
                 {mode === "brute-force"
                   ? bruteForceCode.map((line) => (
                       <CodeLine key={line.l} line={line.l} content={line.c} />
                     ))
-                  : optimalCode.map((line) => (
+                  : codeLang === "cpp"
+                  ? optimalCode.map((line) => (
+                      <CodeLine key={line.l} line={line.l} content={line.c} />
+                    ))
+                  : javaOptimalCode.map((line) => (
                       <CodeLine key={line.l} line={line.l} content={line.c} />
                     ))}
               </code>
