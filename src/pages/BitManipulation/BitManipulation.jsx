@@ -13,76 +13,72 @@ import {
   Zap,
 } from "lucide-react";
 
-// --- Import your specific algorithm visualizer components here ---
-import KnapsackVisualizer from "./KnapSack.jsx";
+import SingleNumberVisualizer from "./SingleNumber.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const algorithms = [
     {
-      name: "0/1 Knapsack",
-      number: "416", // LeetCode problem: Partition Equal Subset Sum
-      icon: TrendingUp,
+      name: "Single Number",
+      number: "136",
+      icon: Zap,
       description:
-        "Given weights and values of N items, and a maximum capacity W, determine the maximum value that can be put in a knapsack of capacity W. Each item can be selected at most once.",
-      page: "KnapSack",
-      difficulty: "Medium",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-yellow-400 to-orange-500",
-      iconColor: "text-yellow-400",
-      iconBg: "bg-yellow-500/20",
-      borderColor: "border-yellow-500/30",
-      technique: "Dynamic Programming",
-      timeComplexity: "O(N × W)"
-    }
-
+        "Given a non-empty array of integers where every element appears twice except for one, find the single one using linear time and constant space.",
+      page: "SingleNumber",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-cyan-400 to-indigo-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/10",
+      borderColor: "border-cyan-500/30",
+      technique: "Bit Manipulation (XOR)",
+      timeComplexity: "O(N)",
+    },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
       <header className="text-center mb-16 mt-8 relative">
-        <div className="absolute top-0 left-1/3 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
-        <div className="absolute top-10 right-1/3 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
+        <div className="absolute top-0 left-1/3 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
+        <div className="absolute top-10 right-1/3 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-6">
             <div className="relative">
-              <Brackets className="h-14 sm:h-16 w-14 sm:w-16 text-amber-400 animated-icon" />
-              <Zap className="h-5 w-5 text-yellow-300 absolute -top-1 -right-1 animate-pulse" />
+              <Brackets className="h-14 sm:h-16 w-14 sm:w-16 text-cyan-400 animated-icon" />
+              <Zap className="h-5 w-5 text-teal-300 absolute -top-1 -right-1 animate-pulse" />
             </div>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 animated-gradient">
-              DP Algorithms
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-400 to-indigo-500 animated-gradient">
+              Bit Manipulation Algorithms
             </h1>
           </div>
 
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
-            Master classic dynamic programming problems with techniques like{" "}
-            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
-              0/1 Knapsack DP
+            Master classic Bit Manipulation problems with techniques like{" "}
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">
+              XOR accumulation
             </span>{" "}
             and{" "}
-            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-              subset sum optimization
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">
+              bit masking & shifts.
             </span>
-            , and visualize how the DP table fills step by step.
           </p>
 
-
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
-            <div className="px-4 py-2 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-full border border-amber-500/30 backdrop-blur-sm">
+            <div className="px-4 py-2 bg-gradient-to-r from-cyan-500/10 to-teal-500/10 rounded-full border border-cyan-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
-                <Code2 className="h-3.5 w-3.5 text-amber-400" />
+                <Code2 className="h-3.5 w-3.5 text-cyan-400" />
                 <span className="text-xs font-medium text-gray-300">
                   {algorithms.length} Problems
                 </span>
               </div>
             </div>
-            <div className="px-4 py-2 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-full border border-green-500/30 backdrop-blur-sm">
+            <div className="px-4 py-2 bg-gradient-to-r from-indigo-500/10 to-violet-500/10 rounded-full border border-indigo-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-3.5 w-3.5 text-green-400" />
+                <TrendingUp className="h-3.5 w-3.5 text-indigo-400" />
                 <span className="text-xs font-medium text-gray-300">
                   Multiple Techniques
                 </span>
@@ -119,8 +115,9 @@ const AlgorithmList = ({ navigate }) => {
                       className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor
-                          } transition-colors duration-300`}
+                        className={`h-10 w-10 ${
+                          isHovered ? "text-white" : algo.iconColor
+                        } transition-colors duration-300`}
                       />
                     </div>
                     <div>
@@ -135,8 +132,9 @@ const AlgorithmList = ({ navigate }) => {
                         </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"
-                          }`}
+                        className={`text-xl font-bold transition-colors duration-300 ${
+                          isHovered ? "text-white" : "text-gray-200"
+                        }`}
                       >
                         {algo.name}
                       </h2>
@@ -145,8 +143,9 @@ const AlgorithmList = ({ navigate }) => {
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"
-                    }`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
+                    isHovered ? "text-gray-300" : "text-gray-400"
+                  }`}
                 >
                   {algo.description}
                 </p>
@@ -154,13 +153,13 @@ const AlgorithmList = ({ navigate }) => {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-800">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1.5">
-                      <Star className="h-4 w-4 text-amber-400" />
+                      <Star className="h-4 w-4 text-cyan-400" />
                       <span className="text-xs font-medium text-gray-400">
                         {algo.technique}
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <Clock className="h-4 w-4 text-blue-400" />
+                      <Clock className="h-4 w-4 text-indigo-400" />
                       <span className="text-xs font-mono text-gray-400">
                         {algo.timeComplexity}
                       </span>
@@ -168,15 +167,12 @@ const AlgorithmList = ({ navigate }) => {
                   </div>
 
                   <div
-                    className={`transition-all duration-300 ${isHovered
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 -translate-x-2"
-                      }`}
+                    className={`transition-all duration-300 ${
+                      isHovered ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
+                    }`}
                   >
                     <div className="flex items-center gap-1">
-                      <span className="text-xs font-medium text-gray-400">
-                        Solve
-                      </span>
+                      <span className="text-xs font-medium text-gray-400">Solve</span>
                       <ArrowLeft className="h-4 w-4 text-gray-400 rotate-180" />
                     </div>
                   </div>
@@ -189,9 +185,9 @@ const AlgorithmList = ({ navigate }) => {
 
       <div className="mt-12 text-center">
         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-full border border-gray-700 backdrop-blur-sm">
-          <TrendingUp className="h-4 w-4 text-green-400" />
+          <TrendingUp className="h-4 w-4 text-cyan-400" />
           <span className="text-sm text-gray-400">
-            More DP problems coming soon
+            More Bit Manipulation problems coming soon
           </span>
         </div>
       </div>
@@ -199,15 +195,14 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
+const BitPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
-      case "KnapSack":
-        return <KnapsackVisualizer navigate={navigate} />;
-      case "home":
+      case "SingleNumber":
+        return <SingleNumberVisualizer navigate={navigate} />;
       default:
         return <AlgorithmList navigate={navigate} />;
     }
@@ -216,9 +211,9 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const PageWrapper = ({ children }) => (
     <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl animate-float-delayed" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl animate-float-delayed" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse-slow" />
       </div>
 
       <style>{`
@@ -264,40 +259,39 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
           50% { transform: translate(30px, -30px) scale(1.1); }
         }
       `}</style>
+
       <div className="relative z-10">{children}</div>
     </div>
   );
 
   return (
     <PageWrapper>
-      {/* Navigation to go back to the problem list within this category */}
       {page !== "home" && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
             </button>
             <div className="flex items-center gap-2">
-              <Brackets className="h-5 w-5 text-amber-400" />
+              <Brackets className="h-5 w-5 text-cyan-400" />
               <span className="text-sm font-semibold text-gray-300">
-                DP Algorithms
+                Bit Manipulation Algorithms
               </span>
             </div>
           </div>
         </nav>
       )}
 
-      {/* Navigation to go back to the main category homepage */}
       {page === "home" && parentNavigate && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto">
             <button
               onClick={() => parentNavigate("home")}
-              className="flex items-center gap-2 text-gray-300 cursor-pointer bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home
@@ -311,4 +305,4 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
   );
 };
 
-export default DPPage;
+export default BitPage;
