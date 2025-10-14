@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import RatInMaze from "./RatInMaze.jsx";
+import BFSVisualizer from "./BFS";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -184,6 +185,8 @@ const PathfindingPage = ({ navigate: parentNavigate, initialPage = null }) => {
     switch (page) {
       case "RatInMaze":
         return <RatInMaze navigate={navigate} />;
+      case "BFS":
+        return <BFSVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
