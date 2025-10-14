@@ -22,7 +22,7 @@ import {
   Hash,
   MoveRight,
   Eye,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
@@ -32,14 +32,14 @@ import MaxConsecutiveOnesIII from "./MaxConsecutiveOnesIII.jsx";
 import SubarrayRanges from "./SubarrayRanges.jsx";
 //adding absolute beginner friendly problems for progressive learning (beginners)
 import FindMaxElement from "./FindMaxElement.jsx";
-import FindMinElement from "./FindMinElement.jsx"; 
+import FindMinElement from "./FindMinElement.jsx";
 import MoveZeros from "./MoveZeros.jsx";
 import CountZeros from "./CountZeros.jsx";
 import ArraySum from "./ArraySum.jsx";
 import ReverseArray from "./ReverseArray.jsx";
 import TwoSum from "./TwoSum.jsx";
+import ThreeSum from "./3Sum.jsx";
 import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
-
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -64,7 +64,7 @@ function AlgorithmList({ navigate }) {
       technique: "Traversal",
       timeComplexity: "O(n)",
       platforms: ["All Platforms"],
-      tags: ["Beginner", "Traversal"]
+      tags: ["Beginner", "Traversal"],
     },
     {
       name: "Find Minimum Element",
@@ -84,7 +84,7 @@ function AlgorithmList({ navigate }) {
       technique: "Traversal",
       timeComplexity: "O(n)",
       platforms: ["All Platforms"],
-      tags: ["Beginner", "Traversal"]
+      tags: ["Beginner", "Traversal"],
     },
     {
       name: "Array Sum",
@@ -104,7 +104,7 @@ function AlgorithmList({ navigate }) {
       technique: "Traversal",
       timeComplexity: "O(n)",
       platforms: ["All Platforms"],
-      tags: ["Beginner", "Sum"]
+      tags: ["Beginner", "Sum"],
     },
     {
       name: "Reverse Array",
@@ -124,7 +124,7 @@ function AlgorithmList({ navigate }) {
       technique: "Two Pointers",
       timeComplexity: "O(n)",
       platforms: ["All Platforms"],
-      tags: ["Beginner", "Two Pointers"]
+      tags: ["Beginner", "Two Pointers"],
     },
     // // ===== TIER 2: BEGINNER+ =====
     {
@@ -145,9 +145,9 @@ function AlgorithmList({ navigate }) {
       technique: "Hashing",
       timeComplexity: "O(n)",
       platforms: ["LeetCode #1", "GfG"],
-      tags: ["Hashing", "Pairs"]
+      tags: ["Hashing", "Pairs"],
     },
-  
+
     {
       name: "Move Zeros",
       number: "8",
@@ -166,7 +166,7 @@ function AlgorithmList({ navigate }) {
       technique: "Two Pointers",
       timeComplexity: "O(n)",
       platforms: ["LeetCode #283", "GfG"],
-      tags: ["Two Pointers", "Partitioning"]
+      tags: ["Two Pointers", "Partitioning"],
     },
     {
       name: "Move Zeros to End",
@@ -186,7 +186,7 @@ function AlgorithmList({ navigate }) {
       technique: "Two Pointers",
       timeComplexity: "O(n)",
       platforms: ["LeetCode #283"],
-      tags: ["Two Pointers", "In-place"]
+      tags: ["Two Pointers", "In-place"],
     },
     {
       name: "Count Zeros in Array",
@@ -206,9 +206,8 @@ function AlgorithmList({ navigate }) {
       technique: "Traversal",
       timeComplexity: "O(n)",
       platforms: ["GfG"],
-      tags: ["Beginner", "Counting"]
+      tags: ["Beginner", "Counting"],
     },
-
 
     {
       name: "Container With Most Water",
@@ -228,7 +227,7 @@ function AlgorithmList({ navigate }) {
       technique: "Two Pointers",
       timeComplexity: "O(n)",
       platforms: ["LeetCode #11", "GfG"],
-      tags: ["Two Pointers", "Area"]
+      tags: ["Two Pointers", "Area"],
     },
     {
       name: "Trapping Rain Water",
@@ -248,7 +247,7 @@ function AlgorithmList({ navigate }) {
       technique: "Two Pointers",
       timeComplexity: "O(n)",
       platforms: ["LeetCode #42", "GfG"],
-      tags: ["Two Pointers", "DP", "Water"]
+      tags: ["Two Pointers", "DP", "Water"],
     },
     {
       name: "Max Consecutive Ones III",
@@ -268,7 +267,7 @@ function AlgorithmList({ navigate }) {
       technique: "Sliding Window",
       timeComplexity: "O(n)",
       platforms: ["LeetCode #1004", "GfG"],
-      tags: ["Sliding Window", "Ones"]
+      tags: ["Sliding Window", "Ones"],
     },
     {
       name: "Sum of Subarray Ranges",
@@ -288,7 +287,7 @@ function AlgorithmList({ navigate }) {
       technique: "Array",
       timeComplexity: "O(n²)",
       platforms: ["LeetCode #2104", "GfG"],
-      tags: ["Subarrays", "Stack"]
+      tags: ["Subarrays", "Stack"],
     },
     {
       name: "Split Array Largest Sum",
@@ -309,11 +308,32 @@ function AlgorithmList({ navigate }) {
       technique: "Binary Search + Greedy",
       timeComplexity: "O(n log(sum(nums)))",
       platforms: ["LeetCode #410"],
-      tags: ["Binary Search", "Greedy"]
-    }
+      tags: ["Binary Search", "Greedy"],
+    },
+    {
+      name: "3Sum",
+      number: "6",
+      icon: Target,
+      description:
+        "Find all unique triplets in the array which give the sum of zero.",
+      page: "ThreeSum",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-emerald-500 to-green-500",
+      iconColor: "text-emerald-400",
+      iconBg: "bg-emerald-500/20",
+      borderColor: "border-emerald-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n²)",
+      platforms: ["LeetCode #15", "GfG"],
+      tags: ["Two Pointers", "Sorting", "Triplets"],
+    },
   ];
 
-  const filteredAlgorithms = algorithms.filter(algo => {
+  const filteredAlgorithms = algorithms.filter((algo) => {
     if (filter === "all") return true;
     if (filter === "beginner") return algo.tier === "Tier 1";
     if (filter === "easy") return algo.tier === "Tier 2";
@@ -374,33 +394,41 @@ function AlgorithmList({ navigate }) {
       <div className="flex flex-wrap justify-center gap-3 mb-8">
         <button
           onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm cursor-pointer transition-all ${filter === "all"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
+            filter === "all"
               ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
-              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"}`}
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+          }`}
         >
           All Problems
         </button>
         <button
           onClick={() => setFilter("beginner")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm cursor-pointer transition-all ${filter === "beginner"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
+            filter === "beginner"
               ? "bg-green-500/20 border-green-500/50 text-green-300"
-              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"}`}
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+          }`}
         >
           Beginner (Tier 1)
         </button>
         <button
           onClick={() => setFilter("easy")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm cursor-pointer transition-all ${filter === "easy"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
+            filter === "easy"
               ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
-              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"}`}
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+          }`}
         >
           Easy (Tier 2)
         </button>
         <button
           onClick={() => setFilter("intermediate")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm cursor-pointer transition-all ${filter === "intermediate"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
+            filter === "intermediate"
               ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300"
-              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"}`}
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+          }`}
         >
           Intermediate+ (Tier 3)
         </button>
@@ -421,7 +449,8 @@ function AlgorithmList({ navigate }) {
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`} />
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+              />
 
               <div
                 className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
@@ -432,7 +461,10 @@ function AlgorithmList({ navigate }) {
                       className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor} transition-colors duration-300`} />
+                        className={`h-10 w-10 ${
+                          isHovered ? "text-white" : algo.iconColor
+                        } transition-colors duration-300`}
+                      />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
@@ -449,7 +481,9 @@ function AlgorithmList({ navigate }) {
                         </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"}`}
+                        className={`text-xl font-bold transition-colors duration-300 ${
+                          isHovered ? "text-white" : "text-gray-200"
+                        }`}
                       >
                         {algo.name}
                       </h2>
@@ -458,7 +492,9 @@ function AlgorithmList({ navigate }) {
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"}`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
+                    isHovered ? "text-gray-300" : "text-gray-400"
+                  }`}
                 >
                   {algo.description}
                 </p>
@@ -503,9 +539,11 @@ function AlgorithmList({ navigate }) {
                     </div>
 
                     <div
-                      className={`transition-all duration-300 ${isHovered
+                      className={`transition-all duration-300 ${
+                        isHovered
                           ? "opacity-100 translate-x-0"
-                          : "opacity-0 -translate-x-2"}`}
+                          : "opacity-0 -translate-x-2"
+                      }`}
                     >
                       <div className="flex items-center gap-1">
                         <span className="text-xs font-medium text-gray-400">
@@ -566,8 +604,8 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "MoveZeros":
         return <MoveZeros navigate={navigate} />;
       case "CountZeros":
-        return <CountZeros navigate={navigate}/>;
-      
+        return <CountZeros navigate={navigate} />;
+
       // Existing problems
       case "TrappingRainWater":
         return <TrappingRainWater navigate={navigate} />;
@@ -581,7 +619,10 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <BestTimeToBuyAndSellStock navigate={navigate} />;
       case "SplitArrayLargestSum":
         return <SplitArrayLargestSum navigate={navigate} />;
+      case "ThreeSum":
+        return <ThreeSum navigate={navigate} />;
 
+     
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

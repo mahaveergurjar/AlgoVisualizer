@@ -15,6 +15,7 @@ export const problems = [
   { label: "Max Consecutive Ones III", category: "Arrays", subpage: "MaxConsecutiveOnesIII", keywords: ["array", "sliding window", "ones", "1004"] },
   { label: "Sum of Subarray Ranges", category: "Arrays", subpage: "SubarrayRanges", keywords: ["array", "ranges", "subarray", "2104"] },
   { label: "Best Time to Buy and Sell Stock", category: "Arrays", subpage: "BestTimeToBuyAndSellStock", keywords: ["array", "stock", "profit", "buy", "sell", "121"] },
+  { label: "3Sum", category: "Arrays", subpage: "ThreeSum", keywords: ["array", "two pointers", "three sum", "3sum", "triplet", "15"] },
 
   // Sliding Window
   { label: "Max Consecutive Ones III", category: "SlidingWindows", subpage: "MaxConsecutiveOnesIII", keywords: ["sliding window", "ones", "1004"] },
