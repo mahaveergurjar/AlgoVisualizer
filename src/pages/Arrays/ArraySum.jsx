@@ -65,9 +65,9 @@ const ArraySum = ({ navigate }) => {
       <div className="max-w-6xl mx-auto mb-8">
         <button
           onClick={() => navigate("home")}
-          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group"
+          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group cursor-pointer"
         >
-          <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+          <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform " />
           Back to Array Problems
         </button>
 
@@ -91,21 +91,21 @@ const ArraySum = ({ navigate }) => {
               <div className="flex items-center gap-4">
                 <button
                   onClick={loadDefaultArray}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl font-medium transition-all"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl font-medium transition-all cursor-pointer"
                 >
                   Load & Visualize
                 </button>
                 <button
                   onClick={startAnimation}
                   disabled={isPlaying}
-                  className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 rounded-xl font-medium transition-all disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 cursor-pointer disabled:bg-green-500/50 rounded-xl font-medium transition-all disabled:cursor-not-allowed"
                 >
                   <Play className="h-4 w-4" />
                   {isPlaying ? "Running..." : "Start Animation"}
                 </button>
                 <button
                   onClick={resetAnimation}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-all"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-all cursor-pointer"
                 >
                   <RotateCcw className="h-4 w-4" />
                   Reset
@@ -113,7 +113,7 @@ const ArraySum = ({ navigate }) => {
               </div>
               <button
                 onClick={generateNewArray}
-                className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-xl font-medium transition-all"
+                className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-xl font-medium transition-all cursor-pointer"
               >
                 New Array
               </button>
@@ -124,7 +124,7 @@ const ArraySum = ({ navigate }) => {
               <select 
                 value={speed} 
                 onChange={(e) => setSpeed(Number(e.target.value))}
-                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white"
+                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 cursor-pointer text-white"
               >
                 <option value={1500}>Slow</option>
                 <option value={1000}>Medium</option>
