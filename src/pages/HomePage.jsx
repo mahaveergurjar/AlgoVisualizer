@@ -40,6 +40,7 @@ import DPPage from "./DynamicProgramming/DynamicProgramming.jsx";
 import ScrollToTop from "../components/ScrollToTop";
 import GraphsPage from "./Graphs/Graphs.jsx";
 import StringPage from "./Strings/Strings.jsx";
+import BitPage from "./BitManipulation/BitManipulation.jsx";
 
 
 const AlgorithmCategories = ({ navigate }) => {
@@ -62,7 +63,7 @@ const AlgorithmCategories = ({ navigate }) => {
       },
       {
         name: "Strings",
-        icon: Type, 
+        icon: Type,
         description: "Text manipulation, pattern matching, and character operations.",
         page: "Strings",
         gradient: "from-purple-500 to-pink-600",
@@ -136,7 +137,7 @@ const AlgorithmCategories = ({ navigate }) => {
         icon: Binary,
         description:
           "Work with data at the binary level for ultimate efficiency.",
-        page: "placeholder",
+        page: "BitManipulation",
         gradient: "from-slate-500 to-gray-600",
         iconBg: "bg-slate-500/20",
         borderColor: "border-slate-500/30",
@@ -377,11 +378,10 @@ const AlgorithmCategories = ({ navigate }) => {
                                 }}
                               >
                                 <span
-                                  className={`text-xs font-medium px-2 py-0.5 rounded-md border ${
-                                    item.type === "problem"
+                                  className={`text-xs font-medium px-2 py-0.5 rounded-md border ${item.type === "problem"
                                       ? "text-purple-300 bg-purple-400/10 border-purple-400/30"
                                       : "text-blue-300 bg-blue-400/10 border-blue-400/30"
-                                  }`}
+                                    }`}
                                 >
                                   {item.type === "problem"
                                     ? "Problem"
@@ -463,11 +463,10 @@ const AlgorithmCategories = ({ navigate }) => {
               onClick={() => !isPlaceholder && navigate(cat.page)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className={`group relative h-40 sm:h-48 transition-all duration-500 transform animate-fade-in-up ${
-                isPlaceholder
+              className={`group relative h-40 sm:h-48 transition-all duration-500 transform animate-fade-in-up ${isPlaceholder
                   ? "opacity-40 cursor-not-allowed"
                   : "cursor-pointer hover:-translate-y-4 hover:scale-[1.03]"
-              }`}
+                }`}
               style={{
                 animationDelay: `${index * 50}ms`,
               }}
@@ -479,39 +478,33 @@ const AlgorithmCategories = ({ navigate }) => {
 
               {/* Main card container */}
               <div
-                className={`relative bg-gray-900/95 backdrop-blur-sm rounded-3xl p-5 sm:p-6 border ${
-                  cat.borderColor
-                } transition-all duration-500 ${
-                  isHovered && !isPlaceholder
+                className={`relative bg-gray-900/95 backdrop-blur-sm rounded-3xl p-5 sm:p-6 border ${cat.borderColor
+                  } transition-all duration-500 ${isHovered && !isPlaceholder
                     ? "shadow-2xl shadow-gray-900/60"
                     : "shadow-xl shadow-gray-900/40"
-                } w-full h-full flex flex-col justify-between card-shadow card-glow`}
+                  } w-full h-full flex flex-col justify-between card-shadow card-glow`}
               >
                 {/* Header */}
                 <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
                   <div
-                    className={`p-3 ${
-                      cat.iconBg
-                    } rounded-2xl transition-all duration-300 ${
-                      !isPlaceholder &&
+                    className={`p-3 ${cat.iconBg
+                      } rounded-2xl transition-all duration-300 ${!isPlaceholder &&
                       "group-hover:scale-110 group-hover:rotate-6"
-                    }`}
+                      }`}
                   >
                     <Icon
-                      className={`h-8 w-8 sm:h-10 sm:w-10 ${
-                        isHovered && !isPlaceholder
+                      className={`h-8 w-8 sm:h-10 sm:w-10 ${isHovered && !isPlaceholder
                           ? "text-white"
                           : cat.iconColor
-                      } transition-colors duration-300`}
+                        } transition-colors duration-300`}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h2
-                      className={`text-lg sm:text-xl font-bold transition-colors duration-300 leading-tight ${
-                        isHovered && !isPlaceholder
+                      className={`text-lg sm:text-xl font-bold transition-colors duration-300 leading-tight ${isHovered && !isPlaceholder
                           ? "text-white"
                           : "text-gray-200"
-                      }`}
+                        }`}
                     >
                       {cat.name}
                     </h2>
@@ -530,22 +523,20 @@ const AlgorithmCategories = ({ navigate }) => {
                 {/* Description + Footer */}
                 <div className="flex flex-col flex-grow justify-between">
                   <p
-                    className={`text-sm leading-relaxed transition-colors duration-300 ${
-                      isHovered && !isPlaceholder
+                    className={`text-sm leading-relaxed transition-colors duration-300 ${isHovered && !isPlaceholder
                         ? "text-gray-300"
                         : "text-gray-500"
-                    }`}
+                      }`}
                   >
                     {cat.description}
                   </p>
 
                   {!isPlaceholder && (
                     <div
-                      className={`pt-4 mt-6 border-t border-gray-800/50 flex items-center justify-between transition-all duration-300 ${
-                        isHovered
+                      className={`pt-4 mt-6 border-t border-gray-800/50 flex items-center justify-between transition-all duration-300 ${isHovered
                           ? "opacity-100 translate-y-0"
                           : "opacity-0 translate-y-2"
-                      }`}
+                        }`}
                     >
                       <span className="text-xs text-gray-400 font-medium">
                         Click to explore
@@ -637,26 +628,29 @@ const HomePage = () => {
         return <GraphsPage navigate={navigate} initialPage={initialSubPage} />;
       case "DynamicProgramming":
         return <DPPage navigate={navigate} initialPage={initialSubPage} />;
-
+      case "BitManipulation":
+        return (
+          <BitPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "home":
       default:
-        return <AlgorithmCategories navigate={navigate} />;
+return <AlgorithmCategories navigate={navigate} />;
     }
   };
 
-  const PageWrapper = ({ children }) => (
-    <>
-      <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
-        <div className="fixed inset-0 z-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float-delayed" />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" />
-        </div>
+const PageWrapper = ({ children }) => (
+  <>
+    <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
+      <div className="fixed inset-0 z-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float-delayed" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow" />
+      </div>
 
-        <div className="relative z-10">{children}</div>
-        <ScrollToTop />
+      <div className="relative z-10">{children}</div>
+      <ScrollToTop />
 
-        <style>{`
+      <style>{`
         .animated-gradient {
           background-size: 200% auto;
           animation: gradient-animation 4s ease-in-out infinite;
@@ -775,10 +769,10 @@ const HomePage = () => {
           box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
         }
       `}</style>
-      </div>
-    </>
-  );
-  return <PageWrapper>{renderPage()}</PageWrapper>;
+    </div>
+  </>
+);
+return <PageWrapper>{renderPage()}</PageWrapper>;
 };
 
 export default HomePage;
