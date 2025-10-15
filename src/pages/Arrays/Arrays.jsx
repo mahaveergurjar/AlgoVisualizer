@@ -43,6 +43,7 @@ import ReverseArray from "./ReverseArray.jsx";
 import TwoSum from "./TwoSum.jsx";
 import ThreeSum from "./3Sum.jsx";
 import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
+import SquaresOfSortedArray from "./SquaresOfSortedArray.tsx";
 import ProductOfArrayExceptSelf from "./ProductOfArrayExceptSelf.jsx";
 import MaximumSubarray from "./MaximumSubarray.jsx";
 import MergeIntervals from "./MergeIntervals.jsx";
@@ -153,6 +154,26 @@ function AlgorithmList({ navigate }) {
       timeComplexity: "O(n)",
       platforms: ["LeetCode #1", "GfG"],
       tags: ["Hashing", "Pairs"],
+    },
+    {
+      name: "Squares of a Sorted Array",
+      number: "977",
+      icon: ArrowUpDown, // Certifique-se que ArrowUpDown está importado de lucide-react no topo do arquivo
+      description: "Square each number and return the array sorted in non-decreasing order.",
+      page: "SquaresOfSortedArray",
+      difficulty: "Easy",
+      tier: "Tier 2",
+      difficultyColor: "text-blue-400",
+      difficultyBg: "bg-blue-400/10",
+      difficultyBorder: "border-blue-400/30",
+      gradient: "from-teal-500 to-cyan-500",
+      iconColor: "text-teal-400",
+      iconBg: "bg-teal-500/20",
+      borderColor: "border-teal-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #977"],
+      tags: ["Two Pointers", "Sorting"]
     },
 
     {
@@ -485,41 +506,37 @@ function AlgorithmList({ navigate }) {
       <div className="flex flex-wrap justify-center gap-3 mb-8">
         <button
           onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "all"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "all"
               ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
+            }`}
         >
           All Problems
         </button>
         <button
           onClick={() => setFilter("beginner")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "beginner"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "beginner"
               ? "bg-green-500/20 border-green-500/50 text-green-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
+            }`}
         >
           Beginner (Tier 1)
         </button>
         <button
           onClick={() => setFilter("easy")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "easy"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "easy"
               ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
+            }`}
         >
           Easy (Tier 2)
         </button>
         <button
           onClick={() => setFilter("intermediate")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "intermediate"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "intermediate"
               ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
+            }`}
         >
           Intermediate+ (Tier 3)
         </button>
@@ -552,9 +569,8 @@ function AlgorithmList({ navigate }) {
                       className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
-                        } transition-colors duration-300`}
+                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor
+                          } transition-colors duration-300`}
                       />
                     </div>
                     <div>
@@ -572,9 +588,8 @@ function AlgorithmList({ navigate }) {
                         </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${
-                          isHovered ? "text-white" : "text-gray-200"
-                        }`}
+                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"
+                          }`}
                       >
                         {algo.name}
                       </h2>
@@ -583,9 +598,8 @@ function AlgorithmList({ navigate }) {
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
-                    isHovered ? "text-gray-300" : "text-gray-400"
-                  }`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"
+                    }`}
                 >
                   {algo.description}
                 </p>
@@ -630,11 +644,10 @@ function AlgorithmList({ navigate }) {
                     </div>
 
                     <div
-                      className={`transition-all duration-300 ${
-                        isHovered
+                      className={`transition-all duration-300 ${isHovered
                           ? "opacity-100 translate-x-0"
                           : "opacity-0 -translate-x-2"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-1">
                         <span className="text-xs font-medium text-gray-400">
@@ -696,6 +709,8 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <MoveZeros navigate={navigate} />;
       case "CountZeros":
         return <CountZeros navigate={navigate} />;
+      case "SquaresOfSortedArray":
+        return <SquaresOfSortedArray navigate={navigate} />;
 
       // Existing problems
       case "TrappingRainWater":
@@ -719,7 +734,7 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "MergeIntervals":
         return <MergeIntervals navigate={navigate} />;
 
-     
+
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
