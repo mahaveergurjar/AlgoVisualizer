@@ -17,6 +17,7 @@ import {
 import LRUCache from "./LRUCache.jsx";
 import LFUCache from "./LFUCache.jsx";
 import DesignHashMap from "./DesignHashMap.jsx";
+import DesignLinkedList from "./DesignLinkedList.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -74,6 +75,23 @@ const AlgorithmList = ({ navigate }) => {
         borderColor : "border-lime-500/30",
         technique : "Design (Array, HashTable, HashFunction)",
         timeComplexity : "O(1)",
+      },
+      {
+        name : "Design Linked List",
+        number : "707",
+        icon : Settings,
+        description : "Design a Linked List that supports insert, delete, and get operations in O(n) time.",
+        page : "DesignLinkedList",
+        difficulty : "Medium",
+        difficultyColor : "text-yellow-400",
+        difficultyBg : "bg-yellow-400/10",
+        difficultyBorder : "border-yellow-400/30",
+        gradient : "from-yellow-500 to-amber-500",
+        iconColor : "text-amber-400",
+        iconBg : "bg-amber-500/20",
+        borderColor : "border-amber-500/30",
+        technique : "Design (Array, Pointer)",
+        timeComplexity : "O(n)",
       },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
@@ -252,6 +270,8 @@ const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <LFUCache navigate={navigate} />;
       case "DesignHashMap":
         return <DesignHashMap navigate={navigate} />;
+      case "DesignLinkedList":
+        return <DesignLinkedList navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -289,7 +309,7 @@ const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
@@ -309,7 +329,7 @@ const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto">
             <button
               onClick={() => parentNavigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 cursor-pointer bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home

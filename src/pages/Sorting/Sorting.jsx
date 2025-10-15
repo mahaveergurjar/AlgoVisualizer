@@ -9,6 +9,10 @@ import {
   TrendingUp,
   Star,
   Zap,
+  Layers,
+  BarChart3,
+  Trees,
+  Target,
 } from "lucide-react";
 
 // --- Import your specific sorting algorithm visualizer components here ---
@@ -23,14 +27,18 @@ const PlaceholderVisualizer = ({ name }) => (
 import BubbleSortVisualizer from "./BubbleSort";
 import MergeSortVisualizer from "./MergeSort";
 import QuickSortVisualizer from "./QuickSort";
-
+import InsertionSortVisualizer from "./InsertionSort";
+import RadixSortVisualizer from  "./RadixSort";
+import CountingSortVisualizer from "./CountingSort";
+import HeapSortVisualizer from "./HeapSort";
+import  SelectionSortVisualizer from "./SelectionSort";
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const algorithms = [
     {
       name: "Bubble Sort",
-      number: "N/A",
+      number: "912",
       icon: ArrowDownUp,
       description:
         "A simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.",
@@ -82,6 +90,95 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Partitioning",
       timeComplexity: "O(n log n)",
     },
+    {
+    name: "Insertion Sort",
+    number: "N/A",
+    icon: Code2,
+    description:
+      "A simple sorting algorithm that builds the final sorted array one element at a time by comparing and inserting elements at the correct position.",
+    page: "InsertionSort",
+    difficulty: "Easy",
+    difficultyColor: "text-green-400",
+    difficultyBg: "bg-green-400/10",
+    difficultyBorder: "border-green-400/30",
+    gradient: "from-green-500 to-lime-500",
+    iconColor: "text-green-400",
+    iconBg: "bg-green-500/20",
+    borderColor: "border-green-500/30",
+    technique: "Insertion",
+    timeComplexity: "O(n²)",
+  },
+  {
+  name: "Radix Sort",
+  number: "N/A",
+  icon: Layers, // you can replace with another icon if you want
+  description:
+    "A non-comparative, digit-based sorting algorithm that sorts numbers by processing individual digits from least significant to most significant.",
+  page: "RadixSort",
+  difficulty: "Medium",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-blue-500 to-cyan-500",
+  iconColor: "text-cyan-400",
+  iconBg: "bg-cyan-500/20",
+  borderColor: "border-cyan-500/30",
+  technique: "Digit-wise Sorting",
+  timeComplexity: "O(d * (n + k))", // d = number of digits, k = base (10)
+},
+{
+  name: "Counting Sort",
+  number: "N/A",
+  icon: BarChart3, // a good visual representation for counts
+  description:
+    "A non-comparative sorting algorithm that counts the frequency of each element and uses it to place elements in sorted order.",
+  page: "CountingSort",
+  difficulty: "Medium",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-amber-500 to-yellow-500",
+  iconColor: "text-amber-400",
+  iconBg: "bg-amber-500/20",
+  borderColor: "border-amber-500/30",
+  technique: "Counting & Placement",
+  timeComplexity: "O(n + k)", // n = number of elements, k = range of elements
+},{
+  name: "Heap Sort",
+  number: "N/A",
+  icon: Trees, // you can replace with another icon if desired
+  description:
+    "A comparison-based sorting technique based on a binary heap data structure. It builds a heap from the array and repeatedly extracts the maximum element to sort the array.",
+  page: "HeapSort",
+  difficulty: "Medium",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-purple-500 to-indigo-500",
+  iconColor: "text-indigo-400",
+  iconBg: "bg-indigo-500/20",
+  borderColor: "border-indigo-500/30",
+  technique: "Heap-based Sorting",
+  timeComplexity: "O(n log n)",
+},
+{
+  name: "Selection Sort",
+  number: "N/A",
+  icon: Target,
+  description:
+    "A simple comparison-based sorting algorithm that repeatedly selects the minimum element from the unsorted part and moves it to the sorted part.",
+  page: "SelectionSort",
+  difficulty: "Easy",
+  difficultyColor: "text-green-400",
+  difficultyBg: "bg-green-400/10",
+  difficultyBorder: "border-green-400/30",
+  gradient: "from-green-500 to-emerald-500",
+  iconColor: "text-green-400",
+  iconBg: "bg-green-500/20",
+  borderColor: "border-green-500/30",
+  technique: "Selection",
+  timeComplexity: "O(n²)",
+},
   ];
 
   return (
@@ -238,6 +335,17 @@ const SortingPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <MergeSortVisualizer navigate={navigate} />;
       case "QuickSort":
         return <QuickSortVisualizer navigate={navigate} />;
+      case "InsertionSort":
+        return <InsertionSortVisualizer navigate={navigate} />;
+      case "RadixSort":
+        return <RadixSortVisualizer navigate={navigate} />;
+      case "CountingSort":
+        return <CountingSortVisualizer navigate={navigate} />
+      case "HeapSort":
+        return <HeapSortVisualizer navigate={navigate} />; 
+      case "SelectionSort":
+        return <SelectionSortVisualizer navigate={navigate} />;  
+      
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -274,7 +382,7 @@ const SortingPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
@@ -294,7 +402,7 @@ const SortingPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto">
             <button
               onClick={() => parentNavigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 cursor-pointer active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home

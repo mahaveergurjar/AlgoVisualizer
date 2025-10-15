@@ -398,13 +398,13 @@ const LFUCacheVisualizer = () => {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold text-gray-300">Mode:</span>
                     <div className="flex gap-1 bg-gray-900/50 p-1 rounded-lg border border-gray-700">
-                      <button onClick={() => handleModeChange("brute-force")} className={`px-3 py-1 rounded-md font-semibold transition-all text-xs ${mode === "brute-force" ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>Brute Force O(N)</button>
-                      <button onClick={() => handleModeChange("optimal")} className={`px-3 py-1 rounded-md font-semibold transition-all text-xs ${mode === "optimal" ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>Optimal O(1)</button>
+                      <button onClick={() => handleModeChange("brute-force")} className={`px-3 py-1 rounded-md font-semibold cursor-pointer transition-all text-xs ${mode === "brute-force" ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>Brute Force O(N)</button>
+                      <button onClick={() => handleModeChange("optimal")} className={`px-3 py-1 rounded-md font-semibold cursor-pointer transition-all text-xs ${mode === "optimal" ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>Optimal O(1)</button>
                     </div>
                   </div>
 
                   {!isLoaded ? (
-                    <button onClick={loadOps} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-md shadow-md transform hover:scale-105 transition-all flex items-center gap-2 justify-center">
+                    <button onClick={loadOps} className="bg-gradient-to-r from-purple-500 to-pink-500 cursor-pointer hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-md shadow-md transform hover:scale-105 transition-all flex items-center gap-2 justify-center">
                       <CheckCircle size={16} /> Visualize
                     </button>
                   ) : (
@@ -416,7 +416,7 @@ const LFUCacheVisualizer = () => {
                         </div>
                         <button onClick={stepForward} disabled={currentStep >= history.length - 1} className="bg-gray-700 hover:bg-gray-600 p-2 rounded disabled:opacity-30" title="Next Step (→)"><svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg></button>
                       </div>
-                       <button onClick={reset} className="bg-red-600/80 hover:bg-red-600 font-bold py-2 px-4 rounded-md shadow-md transition-all text-sm">Reset</button>
+                       <button onClick={reset} className="bg-red-600/80 hover:bg-red-600 cursor-pointer font-bold py-2 px-4 rounded-md shadow-md transition-all text-sm">Reset</button>
                     </div>
                   )}
                 </div>
