@@ -22,6 +22,7 @@ import {
 
 import PalindromeCheck from "./PalindromeCheck.jsx";
 import ReverseString from "./ReverseString.jsx";
+import CountVowels from "./CountVowels.jsx";
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -529,6 +530,8 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <PalindromeCheck navigate={navigate} />;
       case "ReverseString":
         return <ReverseString navigate={navigate} />;
+      case "CountVowels":
+        return <CountVowels navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
