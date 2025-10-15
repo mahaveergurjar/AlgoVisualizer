@@ -21,11 +21,11 @@
 - ✅ Bubble Sort (Implemented)
 - ✅ Merge Sort (Implemented)
 - ✅ Quick Sort (Implemented)
-- 🔄 Selection Sort (Coming Soon)
-- 🔄 Insertion Sort (Coming Soon)
-- 🔄 Heap Sort (Coming Soon)
-- 🔄 Counting Sort (Coming Soon)
-- 🔄 Radix Sort (Coming Soon)
+- ✅ Selection Sort (Implemented)
+- ✅ Insertion Sort (Implemented)
+- ✅ Heap Sort (Implemented)
+- ✅ Counting Sort (Implemented)
+- ✅ Radix Sort (Implemented)
 
 **AlgoVisualizer** is a modern, interactive web application designed to help students, developers, and algorithm enthusiasts understand complex Data Structures and Algorithms (DSA) through visual, step-by-step execution. Whether you're preparing for technical interviews, studying for exams, or simply curious about how algorithms work under the hood, AlgoVisualizer makes learning engaging and intuitive.
 

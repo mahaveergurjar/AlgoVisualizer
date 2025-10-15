@@ -617,6 +617,39 @@ const Search2DMatrix = () => {
                     {" "}
                     <CodeLine text={text} />{" "}
                   </div>
+            <div className="p-4 max-w-7xl mx-auto">
+                 <header className="text-center mb-8 pt-6">
+                    <h1 className="text-5xl font-bold bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent mb-3"> Search a 2D Matrix </h1>
+                    <p className="text-lg text-gray-400"> Visualizing LeetCode 74 </p>
+                     <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-500">
+                        <span className="flex items-center gap-2"> <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">←</kbd> <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">→</kbd> Navigate </span>
+                    </div>
+                </header>
+                 
+                <div className="bg-gray-900/70 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50 mb-8">
+                    {/* Controls section */}
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+                        <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto flex-wrap">
+                            <div className="flex items-center gap-3 w-full sm:w-auto">
+                                <label htmlFor="matrix-input" className="font-semibold text-gray-300 text-sm whitespace-nowrap">Matrix:</label>
+                                <input id="matrix-input" type="text" value={matrixInput} onChange={(e) => setMatrixInput(e.target.value)} disabled={isLoaded} className="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 w-full sm:w-96 focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm" placeholder="e.g., [[1,3,5],[10,11,16]]"/>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <label htmlFor="target-input" className="font-semibold text-gray-300 text-sm">Target:</label>
+                                <input id="target-input" type="number" value={targetInput} onChange={(e) => setTargetInput(e.target.value)} disabled={isLoaded} className="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 w-24 focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm"/>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            {!isLoaded ? ( <button onClick={generateHistory} className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white font-bold py-2.5 px-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer"> Load & Visualize </button> ) : (
+                                <>
+                                    <button onClick={stepBackward} disabled={currentStep <= 0} className="bg-gray-700 hover:bg-gray-600 font-bold p-2.5 rounded-lg transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed" title="Previous step (←)"> <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" /></svg> </button>
+                                    <span className="font-mono text-base text-gray-300 min-w-[100px] text-center bg-gray-800/80 px-4 py-2 rounded-lg border border-gray-700"> Step <span className="text-sky-400 font-bold">{currentStep + 1}</span>/{history.length} </span>
+                                    <button onClick={stepForward} disabled={currentStep >= history.length - 1} className="bg-gray-700 hover:bg-gray-600 font-bold p-2.5 rounded-lg transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed" title="Next step (→)"> <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg> </button>
+                                </>
+                            )}
+                            <button onClick={resetVisualization} className="ml-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 cursor-pointer active:scale-95"> Reset </button>
+                        </div>
+                    </div>
                 </div>
               ))}
             </div>
