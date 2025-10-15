@@ -9,10 +9,12 @@ import {
   Star,
   Zap,
   BarChart3,
+  ShoppingBasket,
 } from "lucide-react";
 
 import MaxConsecutiveOnesIII from "./MaxConsecutiveOnesIII.jsx";
 import SlidingWindowMaximum from "./SlidingWindowMaximum.jsx";
+import FruitIntoBaskets from "./FruitIntoBaskets.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -34,6 +36,24 @@ const AlgorithmList = ({ navigate }) => {
       iconBg: "bg-purple-500/20",
       borderColor: "border-purple-500/30",
       technique: "Deque / Sliding Window",
+      timeComplexity: "O(n)",
+    },
+
+    {
+      name: "Fruit Into Baskets",
+      number: "904", 
+      icon: ShoppingBasket, 
+      description: "Find the maximum number of fruits you can pick with at most two types of fruits in your baskets.",
+      page: "FruitIntoBaskets", 
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-orange-500 to-amber-500",
+      iconColor: "text-orange-400",
+      iconBg: "bg-orange-500/20",
+      borderColor: "border-orange-500/30",
+      technique: "Sliding Window / Two Pointers",
       timeComplexity: "O(n)",
     },
 
@@ -133,9 +153,8 @@ const AlgorithmList = ({ navigate }) => {
                       className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
-                        } transition-colors duration-300`}
+                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor
+                          } transition-colors duration-300`}
                       />
                     </div>
                     <div>
@@ -150,9 +169,8 @@ const AlgorithmList = ({ navigate }) => {
                         </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${
-                          isHovered ? "text-white" : "text-gray-200"
-                        }`}
+                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"
+                          }`}
                       >
                         {algo.name}
                       </h2>
@@ -161,9 +179,8 @@ const AlgorithmList = ({ navigate }) => {
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
-                    isHovered ? "text-gray-300" : "text-gray-400"
-                  }`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"
+                    }`}
                 >
                   {algo.description}
                 </p>
@@ -185,11 +202,10 @@ const AlgorithmList = ({ navigate }) => {
                   </div>
 
                   <div
-                    className={`transition-all duration-300 ${
-                      isHovered
+                    className={`transition-all duration-300 ${isHovered
                         ? "opacity-100 translate-x-0"
                         : "opacity-0 -translate-x-2"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-1">
                       <span className="text-xs font-medium text-gray-400">
@@ -227,6 +243,8 @@ const SlidingWindowsPage = ({ navigate: parentNavigate, initialPage = null }) =>
         return <MaxConsecutiveOnesIII navigate={navigate} />;
       case "SlidingWindowMaximum":
         return <SlidingWindowMaximum navigate={navigate} />;
+      case "FruitIntoBaskets":
+        return <FruitIntoBaskets navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
