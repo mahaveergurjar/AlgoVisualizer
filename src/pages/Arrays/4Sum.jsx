@@ -4,15 +4,14 @@ import {
   Play,
   RotateCcw,
   Code,
-  Clock,
-  Cpu,
-  Hash,
+  ChevronLeft,
+  ChevronRight,
+  Info,
 } from "lucide-react";
 
-const FourSum = ({ navigate }) => {
+function App() {
   const [array, setArray] = useState([1, 0, -1, 0, -2, 2]);
   const [sortedArray, setSortedArray] = useState([]);
-  const [originalArray] = useState([1, 0, -1, 0, -2, 2]);
   const [target, setTarget] = useState(0);
   const [i, setI] = useState(-1);
   const [j, setJ] = useState(-1);
@@ -20,11 +19,16 @@ const FourSum = ({ navigate }) => {
   const [right, setRight] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1000);
-  const [, setIsComplete] = useState(false);
   const [currentSum, setCurrentSum] = useState(null);
   const [foundQuadruplets, setFoundQuadruplets] = useState([]);
-  const [currentStep, setCurrentStep] = useState("");
+  const [, setCurrentStep] = useState("");
   const [phase, setPhase] = useState("sorting");
+  const [stepNumber, setStepNumber] = useState(1);
+  const [totalSteps] = useState(92);
+  const [explanation, setExplanation] = useState(
+    "Initialize sorted array and start 4Sum algorithm"
+  );
+  const [activeLineCode, setActiveLineCode] = useState(1);
 
   const resetAnimation = () => {
     const sorted = [...array].sort((a, b) => a - b);
@@ -34,33 +38,19 @@ const FourSum = ({ navigate }) => {
     setLeft(-1);
     setRight(-1);
     setIsPlaying(false);
-    setIsComplete(false);
     setCurrentSum(null);
     setFoundQuadruplets([]);
     setCurrentStep("Ready to start");
     setPhase("sorting");
+    setStepNumber(1);
+    setExplanation("Initialize sorted array and start 4Sum algorithm");
+    setActiveLineCode(1);
   };
 
   const startAnimation = () => {
     resetAnimation();
     setIsPlaying(true);
     setPhase("sorting");
-  };
-
-  const generateNewArray = () => {
-    const newArray = [];
-    const size = 6 + Math.floor(Math.random() * 3);
-    for (let i = 0; i < size; i++) {
-      newArray.push(Math.floor(Math.random() * 11) - 5);
-    }
-    setArray(newArray);
-    resetAnimation();
-  };
-
-  const loadDefaultArray = () => {
-    setArray([...originalArray]);
-    setTarget(0);
-    resetAnimation();
   };
 
   useEffect(() => {
@@ -71,11 +61,15 @@ const FourSum = ({ navigate }) => {
         const sorted = [...array].sort((a, b) => a - b);
         setSortedArray(sorted);
         setCurrentStep("Array sorted, starting 4Sum algorithm");
+        setExplanation(
+          "Array sorted. Now we'll use nested loops with two pointers."
+        );
         setPhase("finding");
         setI(0);
         setJ(1);
         setLeft(2);
         setRight(sorted.length - 1);
+        setActiveLineCode(2);
         return;
       }
 
@@ -84,48 +78,65 @@ const FourSum = ({ navigate }) => {
 
         if (i >= arr.length - 3) {
           setIsPlaying(false);
-          setIsComplete(true);
           setCurrentStep(
             `Complete! Found ${foundQuadruplets.length} unique quadruplet(s)`
+          );
+          setExplanation(
+            `Algorithm completed. Total quadruplets found: ${foundQuadruplets.length}`
           );
           setI(-1);
           setJ(-1);
           setLeft(-1);
           setRight(-1);
+          setActiveLineCode(16);
           return;
         }
 
         if (i > 0 && arr[i] === arr[i - 1]) {
           setCurrentStep(`Skipping duplicate value at index i=${i}`);
+          setExplanation(`Skipping duplicate to avoid repeated quadruplets`);
           setI(i + 1);
           setJ(i + 2);
           setLeft(i + 3);
           setRight(arr.length - 1);
+          setActiveLineCode(5);
+          setStepNumber(stepNumber + 1);
           return;
         }
 
         if (j >= arr.length - 2) {
           setCurrentStep(`Moving to next i position`);
+          setExplanation(
+            `Completed all j iterations for current i, moving i forward`
+          );
           setI(i + 1);
           setJ(i + 2);
           setLeft(i + 3);
           setRight(arr.length - 1);
+          setActiveLineCode(4);
+          setStepNumber(stepNumber + 1);
           return;
         }
 
         if (j > i + 1 && arr[j] === arr[j - 1]) {
           setCurrentStep(`Skipping duplicate value at index j=${j}`);
+          setExplanation(`Skipping duplicate j value`);
           setJ(j + 1);
           setLeft(j + 2);
           setRight(arr.length - 1);
+          setActiveLineCode(7);
+          setStepNumber(stepNumber + 1);
           return;
         }
 
         if (left >= right) {
           setCurrentStep(`Moving to next j position`);
+          setExplanation(`Two pointers met, moving to next j`);
           setJ(j + 1);
           setLeft(j + 2);
           setRight(arr.length - 1);
+          setActiveLineCode(6);
+          setStepNumber(stepNumber + 1);
           return;
         }
 
@@ -151,6 +162,7 @@ const FourSum = ({ navigate }) => {
             setCurrentStep(
               `Found quadruplet: [${arr[i]}, ${arr[j]}, ${arr[left]}, ${arr[right]}]`
             );
+            setExplanation(`Sum equals target! Found valid quadruplet.`);
           }
 
           let newLeft = left + 1;
@@ -163,13 +175,23 @@ const FourSum = ({ navigate }) => {
 
           setLeft(newLeft);
           setRight(newRight);
+          setActiveLineCode(11);
         } else if (sum < target) {
           setCurrentStep(`Sum ${sum} < ${target}, move left pointer right`);
+          setExplanation(
+            `Current sum is too small, increase it by moving left pointer`
+          );
           setLeft(left + 1);
+          setActiveLineCode(13);
         } else {
           setCurrentStep(`Sum ${sum} > ${target}, move right pointer left`);
+          setExplanation(
+            `Current sum is too large, decrease it by moving right pointer`
+          );
           setRight(right - 1);
+          setActiveLineCode(15);
         }
+        setStepNumber(stepNumber + 1);
       }
     }, speed);
 
@@ -186,389 +208,368 @@ const FourSum = ({ navigate }) => {
     speed,
     foundQuadruplets,
     target,
+    stepNumber,
   ]);
 
   const displayArray = phase === "sorting" ? array : sortedArray;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        <button
-          onClick={() => navigate("home")}
-          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group"
-        >
-          <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-          Back to Problems
-        </button>
-
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <Hash className="h-12 w-12 text-purple-400" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-              4Sum Problem
-            </h1>
-          </div>
-          <p className="text-gray-400 text-lg max-w-3xl mx-auto">
-            Find all unique quadruplets in the array that sum to target using
-            nested loops and two-pointer technique
-          </p>
+    <div className="min-h-screen bg-[#0a0e1a] text-white">
+      {/* Header */}
+      <div className="border-b border-gray-800 bg-[#0d1117]">
+        <div className="max-w-[1920px] mx-auto px-6 py-4 flex items-center justify-between">
+          <button className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Problems
+          </button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={loadDefaultArray}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl font-medium transition-all"
-                  >
-                    Load Default
-                  </button>
-                  <button
-                    onClick={startAnimation}
-                    disabled={isPlaying}
-                    className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 rounded-xl font-medium transition-all disabled:cursor-not-allowed"
-                  >
-                    <Play className="h-4 w-4" />
-                    {isPlaying ? "Running..." : "Start Animation"}
-                  </button>
-                  <button
-                    onClick={resetAnimation}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-all"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                    Reset
-                  </button>
-                </div>
-                <button
-                  onClick={generateNewArray}
-                  className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-xl font-medium transition-all"
-                >
-                  New Array
-                </button>
-              </div>
+      {/* Title Section */}
+      <div className="text-center py-8 bg-gradient-to-b from-[#0d1117] to-[#0a0e1a]">
+        <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-pink-600 mb-2">
+          4Sum Visualizer
+        </h1>
+        <p className="text-gray-400">
+          Find all unique quadruplets that sum to target
+        </p>
+      </div>
 
-              <div className="flex items-center gap-4 mb-4">
-                <label className="text-gray-400 text-sm">Target:</label>
-                <input
-                  type="number"
-                  value={target}
-                  onChange={(e) => {
-                    setTarget(Number(e.target.value));
+      {/* Main Content */}
+      <div className="max-w-[1920px] mx-auto px-6 pb-8">
+        {/* Control Panel */}
+        <div className="bg-[#0d1117] rounded-lg border border-gray-800 p-4 mb-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            {/* Left Controls */}
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                value={array.join(", ")}
+                onChange={(e) => {
+                  const values = e.target.value
+                    .split(",")
+                    .map((v) => parseInt(v.trim()))
+                    .filter((v) => !isNaN(v));
+                  if (values.length > 0) {
+                    setArray(values);
                     resetAnimation();
-                  }}
-                  className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white w-24"
-                />
+                  }
+                }}
+                className="bg-[#161b22] border border-gray-700 rounded px-4 py-2 text-white font-mono text-sm w-48"
+                placeholder="Array"
+              />
+              <input
+                type="number"
+                value={target}
+                onChange={(e) => {
+                  setTarget(Number(e.target.value));
+                  resetAnimation();
+                }}
+                className="bg-[#161b22] border border-gray-700 rounded px-4 py-2 text-white font-mono text-sm w-20"
+                placeholder="Target"
+              />
+
+              <select className="bg-[#c1185b] hover:bg-[#d81b60] text-white px-3 py-2 rounded text-sm font-medium cursor-pointer border-none">
+                <option>C++</option>
+                <option>Python</option>
+                <option>Java</option>
+              </select>
+            </div>
+
+            {/* Center Controls */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setStepNumber(Math.max(1, stepNumber - 1))}
+                className="p-2 bg-[#161b22] hover:bg-[#1f2937] border border-gray-700 rounded transition-colors"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={isPlaying ? () => setIsPlaying(false) : startAnimation}
+                className="p-2 bg-[#161b22] hover:bg-[#1f2937] border border-gray-700 rounded transition-colors"
+              >
+                <Play className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() =>
+                  setStepNumber(Math.min(totalSteps, stepNumber + 1))
+                }
+                className="p-2 bg-[#161b22] hover:bg-[#1f2937] border border-gray-700 rounded transition-colors"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+
+              <div className="bg-[#161b22] border border-gray-700 rounded px-3 py-2 font-mono text-sm">
+                {stepNumber}/{totalSteps}
               </div>
 
-              <div className="flex items-center gap-4">
-                <label className="text-gray-400 text-sm">Speed:</label>
-                <select
-                  value={speed}
-                  onChange={(e) => setSpeed(Number(e.target.value))}
-                  className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white"
-                >
-                  <option value={1500}>Slow</option>
-                  <option value={1000}>Medium</option>
-                  <option value={500}>Fast</option>
-                  <option value={250}>Very Fast</option>
-                </select>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400 text-sm">Speed</span>
+                <input
+                  type="range"
+                  min="250"
+                  max="2000"
+                  value={2250 - speed}
+                  onChange={(e) => setSpeed(2250 - Number(e.target.value))}
+                  className="w-32 accent-blue-500"
+                />
               </div>
             </div>
 
-            <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-2 text-center">
-                {phase === "sorting"
-                  ? "Step 1: Sort Array"
-                  : "Step 2: Find Quadruplets"}
-              </h3>
-              <p className="text-center text-gray-400 mb-6 text-sm">
-                {currentStep}
-              </p>
+            {/* Right Controls */}
+            <button
+              onClick={resetAnimation}
+              className="px-6 py-2 bg-[#dc2626] hover:bg-[#ef4444] rounded font-medium transition-colors"
+            >
+              Reset
+            </button>
+          </div>
 
-              {phase === "finding" && (
-                <div className="flex justify-center gap-8 mb-6 text-sm flex-wrap">
+          <div className="mt-3 flex items-center gap-2 text-sm text-gray-400">
+            <Info className="h-4 w-4" />
+            <span>
+              Approach: Sorting + Two nested loops with two-pointer technique
+            </span>
+          </div>
+        </div>
+
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Code Section */}
+          <div className="lg:col-span-5 bg-[#0d1117] rounded-lg border border-gray-800 overflow-hidden">
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-800">
+              <Code className="h-4 w-4 text-green-400" />
+              <span className="font-medium">Code</span>
+              <span className="ml-auto text-xs text-gray-500">
+                Language: C++
+              </span>
+            </div>
+            <div className="p-4 font-mono text-xs overflow-auto max-h-[600px]">
+              <pre className="text-gray-300">
+                {`  1  vector<vector<int>> fourSum(vector<int>& nums, int target) {
+  2    vector<vector<int>> result;
+  3    sort(nums.begin(), nums.end());
+  4    int n = nums.size();
+  5
+  6    for (int i = 0; i < n - 3; i++) {
+  7      if (i > 0 && nums[i] == nums[i-1]) continue;
+  8
+  9      for (int j = i + 1; j < n - 2; j++) {
+ 10        if (j > i + 1 && nums[j] == nums[j-1]) continue;
+ 11
+ 12        int left = j + 1, right = n - 1;
+ 13
+ 14        while (left < right) {
+ 15          long sum = (long)nums[i] + nums[j] +
+ 16                     nums[left] + nums[right];
+ 17
+ 18          if (sum == target) {
+ 19            result.push_back({nums[i], nums[j],
+ 20                             nums[left], nums[right]});
+ 21            while (left < right && nums[left] == nums[left+1])
+ 22              left++;
+ 23            while (left < right && nums[right] == nums[right-1])
+ 24              right--;
+ 25            left++; right--;
+ 26          } else if (sum < target) {
+ 27            left++;
+ 28          } else {
+ 29            right--;
+ 30          }
+ 31        }
+ 32      }
+ 33    }
+ 34    return result;
+ 35  }`}
+              </pre>
+            </div>
+            <div className="px-4 py-2 border-t border-gray-800 text-xs text-gray-400">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                Current active line highlighted in green. Lines map to steps in
+                the algorithm.
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Visualization */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Items Visualization */}
+            <div className="bg-[#0d1117] rounded-lg border border-gray-800 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-medium flex items-center gap-2">
+                  <span className="text-gray-400">≡</span> Array Elements
+                </h3>
+                <div className="flex items-center gap-4 text-xs">
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-red-500 rounded"></div>
+                    <span className="text-gray-400">i={i >= 0 ? i : "-"}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                    <span className="text-gray-400">j={j >= 0 ? j : "-"}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-green-500 rounded"></div>
                     <span className="text-gray-400">
-                      i = {i >= 0 ? i : "-"}
+                      left={left >= 0 ? left : "-"}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-500 rounded"></div>
                     <span className="text-gray-400">
-                      j = {j >= 0 ? j : "-"}
+                      right={right >= 0 ? right : "-"}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-                    <span className="text-gray-400">
-                      left = {left >= 0 ? left : "-"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
-                    <span className="text-gray-400">
-                      right = {right >= 0 ? right : "-"}
-                    </span>
-                  </div>
-                  {currentSum !== null && (
-                    <div className="flex items-center gap-2 ml-4 font-bold">
-                      <span
-                        className={`${
-                          currentSum === target
-                            ? "text-green-400"
-                            : currentSum < target
-                            ? "text-blue-400"
-                            : "text-orange-400"
-                        }`}
-                      >
-                        sum = {currentSum}{" "}
-                        {currentSum === target
-                          ? "✓"
-                          : currentSum < target
-                          ? "↑"
-                          : "↓"}
-                      </span>
-                    </div>
-                  )}
                 </div>
-              )}
+              </div>
 
-              <div className="flex justify-center items-end gap-2 mb-8 min-h-[200px] overflow-x-auto pb-4">
+              <div className="grid grid-cols-8 gap-3">
                 {displayArray.map((value, index) => {
                   const isI = phase === "finding" && index === i;
                   const isJ = phase === "finding" && index === j;
                   const isLeft = phase === "finding" && index === left;
                   const isRight = phase === "finding" && index === right;
-                  const isInRange =
-                    phase === "finding" &&
-                    index > j &&
-                    index >= left &&
-                    index <= right;
 
                   return (
                     <div
                       key={index}
-                      className="flex flex-col items-center gap-3"
+                      className={`aspect-square rounded-lg flex flex-col items-center justify-center border-2 transition-all duration-300 ${
+                        isI
+                          ? "bg-red-500/20 border-red-500"
+                          : isJ
+                          ? "bg-blue-500/20 border-blue-500"
+                          : isLeft
+                          ? "bg-green-500/20 border-green-500"
+                          : isRight
+                          ? "bg-yellow-500/20 border-yellow-500"
+                          : "bg-[#161b22] border-gray-700"
+                      }`}
                     >
-                      <div className="text-gray-400 text-xs font-mono">
-                        [{index}]
-                      </div>
-                      <div
-                        className={`w-12 flex flex-col items-center justify-end rounded-lg border-2 transition-all duration-300 ${
-                          isI
-                            ? "bg-red-500/30 border-red-400 scale-110 shadow-lg shadow-red-500/25"
-                            : isJ
-                            ? "bg-blue-500/30 border-blue-400 scale-110 shadow-lg shadow-blue-500/25"
-                            : isLeft
-                            ? "bg-green-500/30 border-green-400 scale-110 shadow-lg shadow-green-500/25"
-                            : isRight
-                            ? "bg-yellow-500/30 border-yellow-400 scale-110 shadow-lg shadow-yellow-500/25"
-                            : isInRange
-                            ? "bg-purple-500/20 border-purple-400"
-                            : "bg-gray-700/30 border-gray-600"
-                        }`}
-                        style={{ height: `${Math.abs(value) * 15 + 60}px` }}
-                      >
-                        <div className="flex-1 flex items-center justify-center">
-                          <span className="text-white font-bold text-sm">
-                            {value}
-                          </span>
-                        </div>
-                        <div
-                          className={`w-full text-center py-1 text-xs font-bold ${
-                            isI
-                              ? "bg-red-500 text-white"
-                              : isJ
-                              ? "bg-blue-500 text-white"
-                              : isLeft
-                              ? "bg-green-500 text-white"
-                              : isRight
-                              ? "bg-yellow-500 text-white"
-                              : "bg-gray-700 text-gray-400"
-                          }`}
-                        >
-                          {isI
-                            ? "i"
-                            : isJ
-                            ? "j"
-                            : isLeft
-                            ? "L"
-                            : isRight
-                            ? "R"
-                            : ""}
-                        </div>
+                      <div className="text-xs text-gray-500 mb-1">#{index}</div>
+                      <div className="font-bold">W: {value}</div>
+                      <div className="text-xs text-gray-400">
+                        V: {Math.abs(value) * 10}
                       </div>
                     </div>
                   );
                 })}
               </div>
+            </div>
 
-              <div className="bg-gray-950 rounded-xl p-4 border border-gray-800">
-                <h4 className="text-sm font-bold text-gray-300 mb-3">
-                  Found Quadruplets ({foundQuadruplets.length}):
-                </h4>
+            {/* Data Structures */}
+            <div className="bg-[#0d1117] rounded-lg border border-gray-800 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-gray-400">▷</span>
+                <h3 className="font-medium">Found Quadruplets</h3>
+              </div>
+
+              <div className="bg-[#161b22] rounded p-4 font-mono text-sm min-h-[100px]">
                 {foundQuadruplets.length === 0 ? (
-                  <p className="text-gray-500 text-sm">
-                    No quadruplets found yet...
-                  </p>
+                  <div className="text-gray-600 grid grid-cols-10 gap-1">
+                    {Array.from({ length: 100 }).map((_, i) => (
+                      <div key={i} className="text-center">
+                        0
+                      </div>
+                    ))}
+                  </div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {foundQuadruplets.map((quadruplet, idx) => (
-                      <div
-                        key={idx}
-                        className="bg-green-500/10 border border-green-500/30 rounded-lg p-2 text-center"
-                      >
-                        <span className="text-green-400 font-mono text-sm">
-                          [{quadruplet.values.join(", ")}]
-                        </span>
+                  <div className="space-y-2">
+                    {foundQuadruplets.map((quad, idx) => (
+                      <div key={idx} className="text-green-400">
+                        [{quad.values.join(", ")}]
                       </div>
                     ))}
                   </div>
                 )}
               </div>
-            </div>
-          </div>
 
-          <div className="space-y-6">
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">
-                Problem Info
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-                  <Code className="h-5 w-5 text-purple-400" />
-                  <div>
-                    <div className="font-bold text-white">LeetCode #18</div>
-                    <div className="text-sm text-gray-400">Medium</div>
-                  </div>
+              <div className="mt-3 text-xs text-gray-400">
+                <div>
+                  Active cell: {i >= 0 && j >= 0 ? `[${i}][${j}]` : "-, -"}
+                </div>
+                <div>
+                  Selected items:{" "}
+                  {foundQuadruplets.length > 0
+                    ? `[${foundQuadruplets[
+                        foundQuadruplets.length - 1
+                      ]?.indices.join(", ")}]`
+                    : "[]"}
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">
-                Algorithm Steps
-              </h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500 flex items-center justify-center text-purple-400 font-bold text-xs">
-                    1
-                  </div>
-                  <p className="text-gray-300">
-                    Sort the array in ascending order
-                  </p>
+            {/* Explanation & Output */}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-[#0d1117] rounded-lg border border-gray-800 p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-gray-400">≡</span>
+                  <h3 className="font-medium">Explanation</h3>
                 </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500 flex items-center justify-center text-purple-400 font-bold text-xs">
-                    2
+                <div className="text-sm text-gray-300 mb-4">{explanation}</div>
+                <div className="text-xs text-gray-500 space-y-1">
+                  <div>
+                    Decision:{" "}
+                    {currentSum !== null
+                      ? currentSum === target
+                        ? "Found match"
+                        : currentSum < target
+                        ? "Increase sum"
+                        : "Decrease sum"
+                      : "-"}
                   </div>
-                  <p className="text-gray-300">
-                    Fix pointer i, iterate j from i+1
-                  </p>
+                  <div>Active line: {activeLineCode}</div>
+                  <div className="text-gray-400">
+                    Current sum: {currentSum !== null ? currentSum : "-"}
+                  </div>
                 </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500 flex items-center justify-center text-purple-400 font-bold text-xs">
-                    3
-                  </div>
-                  <p className="text-gray-300">
-                    Use two pointers (left, right) for remaining array
-                  </p>
+              </div>
+
+              <div className="bg-[#0d1117] rounded-lg border border-gray-800 p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-green-400">○</span>
+                  <h3 className="font-medium">Output</h3>
                 </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500 flex items-center justify-center text-purple-400 font-bold text-xs">
-                    4
-                  </div>
-                  <p className="text-gray-300">
-                    If sum = target: found quadruplet, skip duplicates
-                  </p>
+                <div className="text-4xl font-bold text-green-400 mb-4">
+                  {foundQuadruplets.length}
                 </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500 flex items-center justify-center text-purple-400 font-bold text-xs">
-                    5
-                  </div>
-                  <p className="text-gray-300">
-                    If sum &lt; target: move left pointer right
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500 flex items-center justify-center text-purple-400 font-bold text-xs">
-                    6
-                  </div>
-                  <p className="text-gray-300">
-                    If sum &gt; target: move right pointer left
-                  </p>
+                <div className="text-xs text-gray-400 space-y-1">
+                  <div>Quadruplets found for target: {target}</div>
+                  <div className="mt-2 font-bold text-white">Result:</div>
+                  {foundQuadruplets.length > 0 ? (
+                    foundQuadruplets.map((quad, idx) => (
+                      <div key={idx} className="text-green-400 font-mono">
+                        [{quad.values.join(", ")}]
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-600">None yet</div>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">
-                C++ Solution
-              </h3>
-              <div className="bg-gray-950 rounded-lg p-4 font-mono text-xs overflow-x-auto">
-                <pre className="text-gray-300">
-                  {`vector<vector<int>> fourSum(vector<int>& nums, int target) {
-  vector<vector<int>> result;
-  sort(nums.begin(), nums.end());
-  int n = nums.size();
-
-  for (int i = 0; i < n - 3; i++) {
-    if (i > 0 && nums[i] == nums[i-1]) continue;
-
-    for (int j = i + 1; j < n - 2; j++) {
-      if (j > i + 1 && nums[j] == nums[j-1]) continue;
-
-      int left = j + 1, right = n - 1;
-
-      while (left < right) {
-        long long sum = (long long)nums[i] + nums[j] +
-                        nums[left] + nums[right];
-
-        if (sum == target) {
-          result.push_back({nums[i], nums[j],
-                           nums[left], nums[right]});
-          while (left < right && nums[left] == nums[left+1])
-            left++;
-          while (left < right && nums[right] == nums[right-1])
-            right--;
-          left++; right--;
-        } else if (sum < target) {
-          left++;
-        } else {
-          right--;
-        }
-      }
-    }
-  }
-  return result;
-}`}
-                </pre>
+            {/* Complexity & Notes */}
+            <div className="bg-[#0d1117] rounded-lg border border-gray-800 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-green-400">○</span>
+                <h3 className="font-medium">Complexity & Notes</h3>
               </div>
-            </div>
-
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">Complexity</h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <Clock className="h-5 w-5 text-blue-400 mt-1" />
-                  <div>
-                    <div className="font-bold text-white">Time: O(N³)</div>
-                    <div className="text-sm text-gray-400">
-                      Sorting O(N log N) + triple nested loops O(N³)
-                    </div>
-                  </div>
+              <div className="space-y-2 text-sm">
+                <div>
+                  <span className="text-gray-400">Time:</span>{" "}
+                  <span className="text-green-400 font-mono">O(N³)</span> — we
+                  fill N × W DP table.
                 </div>
-                <div className="flex items-start gap-3">
-                  <Cpu className="h-5 w-5 text-green-400 mt-1" />
-                  <div>
-                    <div className="font-bold text-white">Space: O(1)</div>
-                    <div className="text-sm text-gray-400">
-                      Excluding output array, constant extra space
-                    </div>
-                  </div>
+                <div>
+                  <span className="text-gray-400">Space:</span>{" "}
+                  <span className="text-green-400 font-mono">O(1)</span> —
+                  constant extra space excluding output.
+                </div>
+                <div className="text-gray-400 text-xs mt-3">
+                  <span className="font-bold text-white">Optimization:</span>{" "}
+                  Can reduce space by not storing all intermediate sums, but
+                  sorting is required for duplicate handling.
                 </div>
               </div>
             </div>
@@ -577,6 +578,6 @@ const FourSum = ({ navigate }) => {
       </div>
     </div>
   );
-};
+}
 
-export default FourSum;
+export default App;
