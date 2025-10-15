@@ -20,7 +20,8 @@ import {
   Wrench,
   ArrowDownUp,
   Navigation,
-  Type
+  Type,
+  Hash
 } from "lucide-react";
 
 import ArrayPage from "./Arrays/Arrays.jsx";
@@ -41,6 +42,7 @@ import ScrollToTop from "../components/ScrollToTop";
 import GraphsPage from "./Graphs/Graphs.jsx";
 import StringPage from "./Strings/Strings.jsx";
 import BitPage from "./BitManipulation/BitManipulation.jsx";
+import HashingPage from "./Hashing/Hashing.jsx";
 
 
 const AlgorithmCategories = ({ navigate }) => {
@@ -70,6 +72,16 @@ const AlgorithmCategories = ({ navigate }) => {
         iconBg: "bg-purple-500/20",
         borderColor: "border-purple-500/30",
         iconColor: "text-purple-400",
+      },
+      {
+        name: "Hashing",
+        icon: Hash,
+        description: "Key-value pairs, hash maps, and collision resolution.",
+        page: "Hashing",
+        gradient: "from-red-500 to-orange-600",
+        iconBg: "bg-red-500/20",
+        borderColor: "border-red-500/30",
+        iconColor: "text-red-400",
       },
       {
         name: "Linked List",
@@ -179,7 +191,8 @@ const AlgorithmCategories = ({ navigate }) => {
       {
         name: "Graphs",
         icon: Network,
-        description: "Networks of nodes, traversal algorithms, and pathfinding.",
+        description:
+          "Networks of nodes, traversal algorithms, and pathfinding.",
         page: "Graphs",
         gradient: "from-blue-500 to-cyan-600",
         iconBg: "bg-blue-500/20",
@@ -591,6 +604,8 @@ const HomePage = () => {
         return <ArrayPage navigate={navigate} initialPage={initialSubPage} />;
       case "Strings":
         return <StringPage navigate={navigate} initialPage={initialSubPage} />;
+      case "Hashing":
+        return <HashingPage navigate={navigate} initialPage={initialSubPage} />;
       case "SlidingWindows":
         return (
           <SlidingWindowsPage
