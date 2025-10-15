@@ -16,6 +16,8 @@ import {
 
 // --- Import your specific algorithm visualizer components here ---
 import SubsetSumVisualizer from "./SubsetSum.jsx";
+import TowerOfHanoiVisualizer from "./TowerOfHanoi.jsx";
+import FibonacciVisualizer from "./Fibonacci.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -37,6 +39,42 @@ const AlgorithmList = ({ navigate }) => {
       iconBg: "bg-amber-500/20",
       borderColor: "border-amber-500/30",
       technique: "Backtracking",
+      timeComplexity: "O(2^n)",
+    },
+    {
+      name: "Tower of Hanoi",
+      number: "26",
+      icon: Container,
+      description:
+        "Tower of Hanoi is a mathematical puzzle where we have three rods and n disks. The objective is to move the entire stack to another rod, obeying rules: only one disk can be moved at a time, and no larger disk may be placed on top of a smaller disk.",
+      page: "TowerOfHanoiVisualizer",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Divide & Conquer",
+      timeComplexity: "O(2^n)",
+    },
+    {
+      name: "Fibonacci",
+      number: "27",
+      icon: Zap,
+      description:
+        "The Fibonacci sequence is a series where each number is the sum of the two preceding ones. Visualize the recursive call tree and understand why memoization dramatically improves performance.",
+      page: "FibonacciVisualizer",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Tree Recursion",
       timeComplexity: "O(2^n)",
     },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
@@ -205,6 +243,10 @@ const RecursionPage = ({ navigate: parentNavigate, initialPage = null }) => {
     switch (page) {
       case "SubsetSumVisualizer":
         return <SubsetSumVisualizer navigate={navigate} />;
+      case "TowerOfHanoiVisualizer":
+        return <TowerOfHanoiVisualizer navigate={navigate} />;
+      case "FibonacciVisualizer":
+        return <FibonacciVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

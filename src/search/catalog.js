@@ -59,6 +59,11 @@ export const problems = [
   // Pathfinding problems
   { label: "Rat in Maze", category: "Pathfinding", subpage: "RatInMaze", keywords: ["pathfinding", "maze", "rat", "bfs", "dfs", "backtracking", "graph traversal"]},
   
+  // Recursion problems
+  { label: "Subset Sum", category: "Recursion", subpage: "SubsetSumVisualizer", keywords: ["recursion", "subset", "sum", "backtracking", "dynamic programming"] },
+  { label: "Tower of Hanoi", category: "Recursion", subpage: "TowerOfHanoiVisualizer", keywords: ["recursion", "tower", "hanoi", "divide and conquer", "puzzle", "rods", "disks"] },
+  { label: "Fibonacci", category: "Recursion", subpage: "FibonacciVisualizer", keywords: ["recursion", "fibonacci", "tree recursion", "memoization", "dynamic programming", "exponential"] },
+
   { 
     label: "Min Speed to Arrive on Time", 
     category: "BinarySearch", 
