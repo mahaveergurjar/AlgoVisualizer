@@ -484,7 +484,7 @@ const LinkedListCycle = () => {
             {!isLoaded ? (
               <button
                 onClick={buildAndGenerateHistory}
-                className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+                className="bg-gradient-to-r from-sky-500 to-blue-600 cursor-pointer hover:from-sky-600 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
               >
                 Load & Visualize
               </button>
@@ -537,7 +537,7 @@ const LinkedListCycle = () => {
             )}
             <button
               onClick={reset}
-              className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+              className="bg-red-600 hover:bg-red-700 font-bold py-3 cursor-pointer px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
             >
               Reset
             </button>

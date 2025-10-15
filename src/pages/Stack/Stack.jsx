@@ -360,7 +360,7 @@ const StackPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
@@ -381,7 +381,7 @@ const StackPage = ({ navigate: parentNavigate, initialPage = null }) => {
           <div className="max-w-7xl px-6 w-full ">
             <button
               onClick={() => parentNavigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 cursor-pointer hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home

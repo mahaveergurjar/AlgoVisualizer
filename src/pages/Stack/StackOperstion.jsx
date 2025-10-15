@@ -174,7 +174,7 @@ const StackOperations = ({ navigate }) => {
           </div>
           <button
             onClick={handleReset}
-            className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-5 rounded-xl shadow-lg transition-all transform hover:scale-105"
+            className="flex items-center gap-2 bg-gray-600 cursor-pointer hover:bg-gray-700 text-white font-bold py-3 px-5 rounded-xl shadow-lg transition-all transform hover:scale-105"
           >
             <RefreshCw size={18} /> Reset
           </button>
