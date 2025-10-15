@@ -23,6 +23,10 @@ import {
   MoveRight,
   Eye,
   ArrowRight,
+  Calculator,
+  Merge,
+  Layers,
+  RotateCw,
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
@@ -30,7 +34,6 @@ import TrappingRainWater from "./TrappingRainWater.jsx";
 import ContainerWithMostWater from "./ContainerWithMostWater.jsx";
 import MaxConsecutiveOnesIII from "./MaxConsecutiveOnesIII.jsx";
 import SubarrayRanges from "./SubarrayRanges.jsx";
-//adding absolute beginner friendly problems for progressive learning (beginners)
 import FindMaxElement from "./FindMaxElement.jsx";
 import FindMinElement from "./FindMinElement.jsx";
 import MoveZeros from "./MoveZeros.jsx";
@@ -40,6 +43,10 @@ import ReverseArray from "./ReverseArray.jsx";
 import TwoSum from "./TwoSum.jsx";
 import ThreeSum from "./3Sum.jsx";
 import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
+import ProductOfArrayExceptSelf from "./ProductOfArrayExceptSelf.jsx";
+import MaximumSubarray from "./MaximumSubarray.jsx";
+import MergeIntervals from "./MergeIntervals.jsx";
+import RotateArray from "./RotateArray.jsx";
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -331,6 +338,90 @@ function AlgorithmList({ navigate }) {
       platforms: ["LeetCode #15", "GfG"],
       tags: ["Two Pointers", "Sorting", "Triplets"],
     },
+    {
+      name: "Product of Array Except Self",
+      number: "238",
+      icon: Calculator,
+      description:
+        "Return an array where each element is the product of all elements except itself, without using division.",
+      page: "ProductOfArrayExceptSelf",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-indigo-500 to-purple-500",
+      iconColor: "text-indigo-400",
+      iconBg: "bg-indigo-500/20",
+      borderColor: "border-indigo-500/30",
+      technique: "Prefix & Suffix Products",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #238", "GfG"],
+      tags: ["Array", "Prefix Sum", "Important"],
+    },
+    {
+      name: "Maximum Subarray",
+      number: "53",
+      icon: TrendingUp,
+      description:
+        "Find the contiguous subarray with the largest sum using Kadane's Algorithm.",
+      page: "MaximumSubarray",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-green-500 to-teal-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Kadane's Algorithm",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #53", "GfG"],
+      tags: ["DP", "Kadane", "Classic"],
+    },
+    {
+      name: "Merge Intervals",
+      number: "56",
+      icon: Merge,
+      description:
+        "Merge all overlapping intervals and return an array of non-overlapping intervals.",
+      page: "MergeIntervals",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-orange-500 to-red-500",
+      iconColor: "text-orange-400",
+      iconBg: "bg-orange-500/20",
+      borderColor: "border-orange-500/30",
+      technique: "Sorting + Greedy",
+      timeComplexity: "O(n log n)",
+      platforms: ["LeetCode #56", "GfG"],
+      tags: ["Intervals", "Sorting", "Important"],
+    },
+    {
+      name: "Rotate Array",
+      number: "189",
+      icon: RotateCcw,
+      description:
+        "Rotate the array to the right by k steps in-place with O(1) extra space.",
+      page: "RotateArray",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Reverse Algorithm",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #189", "GfG"],
+      tags: ["Array", "In-place", "Rotation"],
+    },
   ];
 
   const filteredAlgorithms = algorithms.filter((algo) => {
@@ -621,6 +712,12 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <SplitArrayLargestSum navigate={navigate} />;
       case "ThreeSum":
         return <ThreeSum navigate={navigate} />;
+      case "ProductOfArrayExceptSelf":
+        return <ProductOfArrayExceptSelf navigate={navigate} />;
+      case "MaximumSubarray":
+        return <MaximumSubarray navigate={navigate} />;
+      case "MergeIntervals":
+        return <MergeIntervals navigate={navigate} />;
 
      
       case "home":
