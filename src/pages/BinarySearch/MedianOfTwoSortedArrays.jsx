@@ -1,459 +1,576 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { ArrowLeft, Play, RotateCw, Pause, SkipBack, SkipForward, Layers } from "lucide-react";
-import VisualizerPointer from "../../components/VisualizerPointer";
-import useModeHistorySwitch from "../../hooks/useModeHistorySwitch";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Layers,
+  Play,
+  Pause,
+  RotateCw,
+  Cpu,
+  FileText,
+  Clock,
+  CheckCircle,
+} from "lucide-react";
+import VisualizerPointer from "../../components/VisualizerPointer"; // Assuming this component is available
+
+const LANG_TABS = ["JavaScript"];
+
+// Code snippet for the algorithm to be displayed in the UI
+const CODE_SNIPPETS = {
+  JavaScript: [
+    { l: 1, t: "function findMedian(nums1, nums2) {" },
+    {
+      l: 2,
+      t: "  if (nums1.length > nums2.length) return findMedian(nums2, nums1);",
+    },
+    { l: 3, t: "  const m = nums1.length, n = nums2.length;" },
+    { l: 4, t: "  let left = 0, right = m;" },
+    { l: 5, t: "  while (left <= right) {" },
+    { l: 6, t: "    const p1 = Math.floor((left + right) / 2);" },
+    { l: 7, t: "    const p2 = Math.floor((m + n + 1) / 2) - p1;" },
+    { l: 8, t: "    const maxLeft1 = p1 === 0 ? -Infinity : nums1[p1 - 1];" },
+    { l: 9, t: "    const minRight1 = p1 === m ? Infinity : nums1[p1];" },
+    { l: 10, t: "    const maxLeft2 = p2 === 0 ? -Infinity : nums2[p2 - 1];" },
+    { l: 11, t: "    const minRight2 = p2 === n ? Infinity : nums2[p2];" },
+    { l: 12, t: "    if (maxLeft1 <= minRight2 && maxLeft2 <= minRight1) {" },
+    { l: 13, t: "      if ((m + n) % 2 === 0) {" },
+    {
+      l: 14,
+      t: "        return (Math.max(maxLeft1, maxLeft2) + Math.min(minRight1, minRight2)) / 2;",
+    },
+    { l: 15, t: "      } else {" },
+    { l: 16, t: "        return Math.max(maxLeft1, maxLeft2);" },
+    { l: 17, t: "      }" },
+    { l: 18, t: "    } else if (maxLeft1 > minRight2) {" },
+    { l: 19, t: "      right = p1 - 1;" },
+    { l: 20, t: "    } else {" },
+    { l: 21, t: "      left = p1 + 1;" },
+    { l: 22, t: "    }" },
+    { l: 23, t: "  }" },
+    { l: 24, t: "}" },
+  ],
+};
 
 const MedianOfTwoSortedArrays = () => {
-  const initialArray1 = [1, 3];
-  const initialArray2 = [2];
+  const [inputArray1, setInputArray1] = useState("1,8,9");
+  const [inputArray2, setInputArray2] = useState("2,3,5,6,7");
 
-  const [array1, setArray1] = useState(initialArray1);
-  const [array2, setArray2] = useState(initialArray2);
-  const [inputArray1, setInputArray1] = useState(initialArray1.join(","));
-  const [inputArray2, setInputArray2] = useState(initialArray2.join(","));
+  const [array1, setArray1] = useState([]);
+  const [array2, setArray2] = useState([]);
 
-  const [animSpeed, setAnimSpeed] = useState(1500);
+  const [history, setHistory] = useState([]);
+  const [currentStep, setCurrentStep] = useState(-1);
+
+  const [isLoaded, setIsLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1000);
+  const playRef = useRef(null);
 
-  const {
-    mode,
-    history,
-    currentStep,
-    setMode,
-    setHistory,
-    setCurrentStep,
-    goToPrevStep,
-    goToNextStep,
-  } = useModeHistorySwitch();
+  const activeLang = "JavaScript"; // Only one language for this visualizer
+  const state = history[currentStep] || {};
 
-  // Generate history for finding median
+  // --- GENERATE HISTORY ---
   const generateMedianHistory = useCallback((nums1, nums2) => {
     const hist = [];
-    
-    // Ensure nums1 is the smaller array
+    const addState = (props) => hist.push({ ...props });
+
     if (nums1.length > nums2.length) {
       [nums1, nums2] = [nums2, nums1];
     }
 
     const m = nums1.length;
     const n = nums2.length;
-    
-    hist.push({
+
+    addState({
+      line: 2,
       array1: [...nums1],
       array2: [...nums2],
-      message: `Finding median of two sorted arrays. Total elements: ${m + n}`,
-      phase: "init",
-      partition1: null,
-      partition2: null,
-      median: null
+      message: `Ensuring the first array is smaller. m=${m}, n=${n}`,
     });
 
-    let left = 0;
-    let right = m;
+    let left = 0,
+      right = m;
 
     while (left <= right) {
-      const partition1 = Math.floor((left + right) / 2);
-      const partition2 = Math.floor((m + n + 1) / 2) - partition1;
+      const p1 = Math.floor((left + right) / 2);
+      const p2 = Math.floor((m + n + 1) / 2) - p1;
 
-      hist.push({
+      addState({
+        line: 6,
         array1: [...nums1],
         array2: [...nums2],
-        partition1,
-        partition2,
-        message: `Trying partition at position ${partition1} in array1 and ${partition2} in array2`,
-        phase: "partition",
-        median: null
+        partition1: p1,
+        partition2: p2,
+        message: `Looping... Trying partition p1=${p1} in array1 and p2=${p2} in array2.`,
       });
 
-      const maxLeft1 = partition1 === 0 ? -Infinity : nums1[partition1 - 1];
-      const minRight1 = partition1 === m ? Infinity : nums1[partition1];
-      const maxLeft2 = partition2 === 0 ? -Infinity : nums2[partition2 - 1];
-      const minRight2 = partition2 === n ? Infinity : nums2[partition2];
+      const maxLeft1 = p1 === 0 ? -Infinity : nums1[p1 - 1];
+      const minRight1 = p1 === m ? Infinity : nums1[p1];
+      const maxLeft2 = p2 === 0 ? -Infinity : nums2[p2 - 1];
+      const minRight2 = p2 === n ? Infinity : nums2[p2];
 
-      hist.push({
+      const ml1 = maxLeft1 === -Infinity ? "−∞" : maxLeft1;
+      const mr1 = minRight1 === Infinity ? "+∞" : minRight1;
+      const ml2 = maxLeft2 === -Infinity ? "−∞" : maxLeft2;
+      const mr2 = minRight2 === Infinity ? "+∞" : minRight2;
+
+      addState({
+        line: 8,
         array1: [...nums1],
         array2: [...nums2],
-        partition1,
-        partition2,
-        maxLeft1: maxLeft1 === -Infinity ? "−∞" : maxLeft1,
-        minRight1: minRight1 === Infinity ? "+∞" : minRight1,
-        maxLeft2: maxLeft2 === -Infinity ? "−∞" : maxLeft2,
-        minRight2: minRight2 === Infinity ? "+∞" : minRight2,
-        message: `maxLeft1=${maxLeft1 === -Infinity ? "−∞" : maxLeft1}, minRight1=${minRight1 === Infinity ? "+∞" : minRight1}, maxLeft2=${maxLeft2 === -Infinity ? "−∞" : maxLeft2}, minRight2=${minRight2 === Infinity ? "+∞" : minRight2}`,
-        phase: "compare",
-        median: null
+        partition1: p1,
+        partition2: p2,
+        maxLeft1: ml1,
+        minRight1: mr1,
+        maxLeft2: ml2,
+        minRight2: mr2,
+        message: `Checking partition boundaries: maxLeft1=${ml1}, minRight1=${mr1}, maxLeft2=${ml2}, minRight2=${mr2}.`,
       });
 
       if (maxLeft1 <= minRight2 && maxLeft2 <= minRight1) {
-        // Found the correct partition
         let median;
         if ((m + n) % 2 === 0) {
-          median = (Math.max(maxLeft1, maxLeft2) + Math.min(minRight1, minRight2)) / 2;
-          hist.push({
+          median =
+            (Math.max(maxLeft1, maxLeft2) + Math.min(minRight1, minRight2)) / 2;
+          addState({
+            line: 14,
             array1: [...nums1],
             array2: [...nums2],
-            partition1,
-            partition2,
+            partition1: p1,
+            partition2: p2,
+            maxLeft1: ml1,
+            minRight1: mr1,
+            maxLeft2: ml2,
+            minRight2: mr2,
             median,
-            message: `Found correct partition! Median = (max(${maxLeft1}, ${maxLeft2}) + min(${minRight1}, ${minRight2})) / 2 = ${median}`,
-            phase: "found",
-            maxLeft1: maxLeft1 === -Infinity ? "−∞" : maxLeft1,
-            minRight1: minRight1 === Infinity ? "+∞" : minRight1,
-            maxLeft2: maxLeft2 === -Infinity ? "−∞" : maxLeft2,
-            minRight2: minRight2 === Infinity ? "+∞" : minRight2
+            message: `Found partition! Total length is even. Median = (max(${ml1}, ${ml2}) + min(${mr1}, ${mr2})) / 2 = ${median}.`,
           });
         } else {
           median = Math.max(maxLeft1, maxLeft2);
-          hist.push({
+          addState({
+            line: 16,
             array1: [...nums1],
             array2: [...nums2],
-            partition1,
-            partition2,
+            partition1: p1,
+            partition2: p2,
+            maxLeft1: ml1,
+            minRight1: mr1,
+            maxLeft2: ml2,
+            minRight2: mr2,
             median,
-            message: `Found correct partition! Median = max(${maxLeft1}, ${maxLeft2}) = ${median}`,
-            phase: "found",
-            maxLeft1: maxLeft1 === -Infinity ? "−∞" : maxLeft1,
-            minRight1: minRight1 === Infinity ? "+∞" : minRight1,
-            maxLeft2: maxLeft2 === -Infinity ? "−∞" : maxLeft2,
-            minRight2: minRight2 === Infinity ? "+∞" : minRight2
+            message: `Found partition! Total length is odd. Median = max(${ml1}, ${ml2}) = ${median}.`,
           });
         }
-        return hist;
+        setHistory(hist);
+        setCurrentStep(0);
+        return;
       } else if (maxLeft1 > minRight2) {
-        hist.push({
+        addState({
+          line: 19,
           array1: [...nums1],
           array2: [...nums2],
-          partition1,
-          partition2,
-          message: `maxLeft1 (${maxLeft1}) > minRight2 (${minRight2}), moving partition left`,
-          phase: "adjust",
-          median: null
+          partition1: p1,
+          partition2: p2,
+          maxLeft1: ml1,
+          minRight1: mr1,
+          maxLeft2: ml2,
+          minRight2: mr2,
+          message: `maxLeft1 (${ml1}) > minRight2 (${mr2}). Partition is too far right. Moving left.`,
         });
-        right = partition1 - 1;
+        right = p1 - 1;
       } else {
-        hist.push({
+        addState({
+          line: 21,
           array1: [...nums1],
           array2: [...nums2],
-          partition1,
-          partition2,
-          message: `maxLeft2 (${maxLeft2}) > minRight1 (${minRight1}), moving partition right`,
-          phase: "adjust",
-          median: null
+          partition1: p1,
+          partition2: p2,
+          maxLeft1: ml1,
+          minRight1: mr1,
+          maxLeft2: ml2,
+          minRight2: mr2,
+          message: `maxLeft2 (${ml2}) > minRight1 (${mr1}). Partition is too far left. Moving right.`,
         });
-        left = partition1 + 1;
+        left = p1 + 1;
       }
     }
-
-    return hist;
-  }, []);
-
-  const handleStart = () => {
-    setMode("visualizing");
-    const hist = generateMedianHistory(array1, array2);
     setHistory(hist);
     setCurrentStep(0);
-  };
+  }, []);
 
-  const handleReset = () => {
-    setMode("input");
-    setHistory([]);
-    setCurrentStep(0);
-    setIsPlaying(false);
-  };
+  // --- CONTROLS ---
+  const load = () => {
+    const arr1 = inputArray1
+      .split(",")
+      .map((s) => parseInt(s.trim(), 10))
+      .filter((n) => !isNaN(n))
+      .sort((a, b) => a - b);
+    const arr2 = inputArray2
+      .split(",")
+      .map((s) => parseInt(s.trim(), 10))
+      .filter((n) => !isNaN(n))
+      .sort((a, b) => a - b);
 
-  const handleArray1Change = (e) => {
-    setInputArray1(e.target.value);
-  };
-
-  const handleArray2Change = (e) => {
-    setInputArray2(e.target.value);
-  };
-
-  const handleApply = () => {
-    const newArray1 = inputArray1.split(",").map((n) => parseInt(n.trim(), 10)).filter((n) => !isNaN(n));
-    const newArray2 = inputArray2.split(",").map((n) => parseInt(n.trim(), 10)).filter((n) => !isNaN(n));
-    if (newArray1.length > 0 && newArray2.length > 0) {
-      setArray1(newArray1);
-      setArray2(newArray2);
+    if (arr1.length === 0 && arr2.length === 0) {
+      return alert("Please provide at least one array.");
     }
+    setArray1(arr1);
+    setArray2(arr2);
+    setIsLoaded(true);
+    generateMedianHistory(arr1, arr2);
   };
+
+  const resetAll = () => {
+    setIsLoaded(false);
+    setHistory([]);
+    setCurrentStep(-1);
+    setIsPlaying(false);
+    clearInterval(playRef.current);
+  };
+
+  const stepForward = useCallback(() => {
+    if (currentStep < history.length - 1) {
+      setCurrentStep((s) => s + 1);
+    }
+  }, [currentStep, history.length]);
+
+  const stepBackward = useCallback(() => {
+    if (currentStep > 0) {
+      setCurrentStep((s) => s - 1);
+    }
+  }, [currentStep]);
+
+  const togglePlay = useCallback(() => setIsPlaying((p) => !p), []);
 
   useEffect(() => {
-    let interval;
-    if (isPlaying && mode === "visualizing") {
-      interval = setInterval(() => {
-        if (currentStep < history.length - 1) {
-          goToNextStep();
-        } else {
-          setIsPlaying(false);
-        }
-      }, animSpeed);
+    if (isPlaying) {
+      if (currentStep >= history.length - 1) {
+        setIsPlaying(false);
+        return;
+      }
+      playRef.current = setInterval(() => {
+        setCurrentStep((s) => {
+          if (s >= history.length - 1) {
+            clearInterval(playRef.current);
+            setIsPlaying(false);
+            return s;
+          }
+          return s + 1;
+        });
+      }, speed);
+    } else {
+      clearInterval(playRef.current);
     }
-    return () => clearInterval(interval);
-  }, [isPlaying, currentStep, history.length, animSpeed, mode, goToNextStep]);
+    return () => clearInterval(playRef.current);
+  }, [isPlaying, speed, history.length, currentStep]);
 
-  const step = history[currentStep] || {};
-  const { partition1 = null, partition2 = null, message = "", phase = "init", median = null, 
-          maxLeft1, minRight1, maxLeft2, minRight2 } = step;
+  useEffect(() => {
+    if (currentStep >= history.length - 1 && history.length > 0) {
+      setIsPlaying(false);
+    }
+  }, [currentStep, history.length]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const onKey = (e) => {
+      if (!isLoaded) return;
+      if (e.key === "ArrowRight") stepForward();
+      if (e.key === "ArrowLeft") stepBackward();
+      if (e.key === " ") {
+        e.preventDefault();
+        togglePlay();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isLoaded, stepForward, stepBackward, togglePlay]);
+
+  // --- RENDER HELPERS ---
+  const renderCodeLine = (lineObj) => {
+    const active = state.line === lineObj.l;
+    return (
+      <div
+        key={lineObj.l}
+        className={`flex font-mono text-sm ${active ? "bg-purple-500/10" : ""}`}
+      >
+        <span className="flex-none w-8 text-right text-gray-500 pr-3">
+          {lineObj.l}
+        </span>
+        <pre className="flex-1 m-0 p-0 text-gray-200 whitespace-pre">
+          {lineObj.t}
+        </pre>
+      </div>
+    );
+  };
+
+  const arrayToDisplay1 = state.array1 || array1;
+  const arrayToDisplay2 = state.array2 || array2;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white p-8">
-      {/* Header */}
-      <header className="mb-8">
-        <button
-          onClick={() => window.history.back()}
-          className="flex items-center gap-2 text-purple-300 hover:text-purple-100 transition-colors mb-4"
-        >
-          <ArrowLeft className="h-5 w-5" />
-          Back to Binary Search
-        </button>
-        <div className="flex items-center gap-4 mb-4">
-          <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg">
-            <Layers className="h-8 w-8 text-white" />
-          </div>
-          <div>
-            <h1 className="text-4xl font-black tracking-tight">Median of Two Sorted Arrays</h1>
-            <p className="text-purple-200 mt-1">LeetCode #4 - Hard</p>
-          </div>
-        </div>
-        <p className="text-gray-300 text-lg leading-relaxed max-w-4xl">
-          Given two sorted arrays <code className="px-2 py-1 bg-gray-800 rounded">nums1</code> and{" "}
-          <code className="px-2 py-1 bg-gray-800 rounded">nums2</code> of size <code className="px-2 py-1 bg-gray-800 rounded">m</code> and{" "}
-          <code className="px-2 py-1 bg-gray-800 rounded">n</code> respectively, return <strong>the median</strong> of the two sorted arrays. 
-          The overall run time complexity should be <strong>O(log(min(m,n)))</strong>.
-        </p>
-      </header>
+    <div className="bg-gray-900 text-white min-h-screen">
+      <div className="px-6 py-8 max-w-7xl mx-auto relative">
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-purple-500/10 rounded-full blur-3xl -z-0" />
+        <div className="absolute bottom-12 right-12 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl -z-0" />
 
-      {/* Input Controls */}
-      {mode === "input" && (
-        <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 mb-8 shadow-xl">
-          <h2 className="text-2xl font-bold mb-4 text-purple-300">Input Configuration</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Array 1 (comma-separated):
-              </label>
-              <input
-                type="text"
-                value={inputArray1}
-                onChange={handleArray1Change}
-                className="w-full px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="e.g., 1,3"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Array 2 (comma-separated):
-              </label>
-              <input
-                type="text"
-                value={inputArray2}
-                onChange={handleArray2Change}
-                className="w-full px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="e.g., 2"
-              />
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={handleApply}
-              className="px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-colors"
-            >
-              Apply
-            </button>
-            <button
-              onClick={handleStart}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-700 hover:from-purple-700 hover:to-pink-800 rounded-lg font-semibold transition-all shadow-lg shadow-purple-500/30"
-            >
-              <Play className="h-4 w-4" />
-              Start Visualization
-            </button>
-          </div>
-        </section>
-      )}
+        <header className="relative z-10 mb-12 text-center">
+          <h1 className="text-4xl sm:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-pink-500">
+            Median of Two Sorted Arrays
+          </h1>
+          <p className="text-gray-300 mt-2 text-sm sm:text-base max-w-2xl mx-auto">
+            Visualizing the binary search approach to find the median with
+            O(log(min(m,n))) complexity.
+          </p>
+        </header>
 
-      {/* Visualization Controls */}
-      {mode === "visualizing" && (
-        <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 mb-8 shadow-xl">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+        {/* --- CONTROLS SECTION --- */}
+        <section className="mb-6 z-10 relative p-4 bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700">
+          <div className="flex flex-col md:flex-row gap-3 items-center">
+            <input
+              type="text"
+              value={inputArray1}
+              onChange={(e) => setInputArray1(e.target.value)}
+              disabled={isLoaded}
+              className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 font-mono focus:ring-2 focus:ring-purple-400"
+              placeholder="Array 1 (comma-separated)"
+            />
+            <input
+              type="text"
+              value={inputArray2}
+              onChange={(e) => setInputArray2(e.target.value)}
+              disabled={isLoaded}
+              className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 font-mono focus:ring-2 focus:ring-purple-400"
+              placeholder="Array 2 (comma-separated)"
+            />
+
+            {!isLoaded ? (
               <button
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg transition-all shadow-lg"
+                onClick={load}
+                className="px-5 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 transition text-white font-bold shadow-lg"
               >
-                {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                Load & Visualize
               </button>
-              <button
-                onClick={goToPrevStep}
-                disabled={currentStep === 0}
-                className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <SkipBack className="h-5 w-5" />
-              </button>
-              <button
-                onClick={goToNextStep}
-                disabled={currentStep >= history.length - 1}
-                className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <SkipForward className="h-5 w-5" />
-              </button>
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
-              >
-                <RotateCw className="h-5 w-5" />
-                Reset
-              </button>
-            </div>
-            <div className="text-center">
-              <div className="text-sm text-gray-400">Step</div>
-              <div className="text-2xl font-bold text-purple-300">
-                {currentStep + 1} / {history.length}
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-2">Animation Speed</label>
-              <select
-                value={animSpeed}
-                onChange={(e) => setAnimSpeed(Number(e.target.value))}
-                className="px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white"
-              >
-                <option value={2500}>Slow</option>
-                <option value={1500}>Normal</option>
-                <option value={800}>Fast</option>
-              </select>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Message Display */}
-      {mode === "visualizing" && message && (
-        <div className={`mb-6 p-4 rounded-xl border ${
-          phase === "found" 
-            ? "bg-green-900/30 border-green-500 text-green-200"
-            : "bg-purple-900/30 border-purple-500 text-purple-200"
-        }`}>
-          <p className="text-center font-medium">{message}</p>
-        </div>
-      )}
-
-      {/* Array Visualization */}
-      {mode === "visualizing" && history.length > 0 && (
-        <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-8 shadow-xl">
-          <div className="space-y-8">
-            {/* Array 1 */}
-            <div>
-              <h3 className="text-lg font-semibold text-purple-300 mb-3">Array 1</h3>
-              <div className="flex justify-center items-end gap-2 flex-wrap">
-                {array1.map((value, index) => {
-                  const isPartition = partition1 !== null && index === partition1;
-                  const isLeftPart = partition1 !== null && index < partition1;
-
-                  return (
-                    <div key={index} className="flex flex-col items-center gap-2 relative">
-                      {isPartition && <VisualizerPointer label="P1" color="bg-purple-500" />}
-                      
-                      <div
-                        className={`w-16 h-16 flex items-center justify-center rounded-xl font-bold text-lg transition-all duration-300 ${
-                          isPartition
-                            ? "bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-lg shadow-purple-500/50 scale-105 ring-2 ring-purple-400"
-                            : isLeftPart
-                            ? "bg-gradient-to-br from-blue-500 to-blue-700 text-white"
-                            : "bg-gray-700 text-white"
-                        }`}
-                      >
-                        {value}
-                      </div>
-                      <div className="text-xs text-gray-400 font-medium">
-                        [{index}]
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Array 2 */}
-            <div>
-              <h3 className="text-lg font-semibold text-pink-300 mb-3">Array 2</h3>
-              <div className="flex justify-center items-end gap-2 flex-wrap">
-                {array2.map((value, index) => {
-                  const isPartition = partition2 !== null && index === partition2;
-                  const isLeftPart = partition2 !== null && index < partition2;
-
-                  return (
-                    <div key={index} className="flex flex-col items-center gap-2 relative">
-                      {isPartition && <VisualizerPointer label="P2" color="bg-pink-500" />}
-                      
-                      <div
-                        className={`w-16 h-16 flex items-center justify-center rounded-xl font-bold text-lg transition-all duration-300 ${
-                          isPartition
-                            ? "bg-gradient-to-br from-pink-500 to-pink-700 text-white shadow-lg shadow-pink-500/50 scale-105 ring-2 ring-pink-400"
-                            : isLeftPart
-                            ? "bg-gradient-to-br from-blue-500 to-blue-700 text-white"
-                            : "bg-gray-700 text-white"
-                        }`}
-                      >
-                        {value}
-                      </div>
-                      <div className="text-xs text-gray-400 font-medium">
-                        [{index}]
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Partition Values */}
-            {(maxLeft1 || minRight1 || maxLeft2 || minRight2) && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 p-4 bg-gray-900/50 rounded-xl">
-                <div className="text-center">
-                  <div className="text-xs text-gray-400 mb-1">maxLeft1</div>
-                  <div className="text-xl font-bold text-purple-300">{maxLeft1}</div>
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={stepBackward}
+                    disabled={currentStep <= 0}
+                    className="p-3 rounded-full bg-gray-700 hover:bg-pink-600 disabled:opacity-40 transition"
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+                  <button
+                    onClick={togglePlay}
+                    className="p-3 rounded-full bg-gray-700 hover:bg-pink-600 transition"
+                  >
+                    {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+                  </button>
+                  <button
+                    onClick={stepForward}
+                    disabled={currentStep >= history.length - 1}
+                    className="p-3 rounded-full bg-gray-700 hover:bg-pink-600 disabled:opacity-40 transition"
+                  >
+                    <ArrowRight size={18} />
+                  </button>
                 </div>
-                <div className="text-center">
-                  <div className="text-xs text-gray-400 mb-1">minRight1</div>
-                  <div className="text-xl font-bold text-purple-300">{minRight1}</div>
+                <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200">
+                  {currentStep + 1}/{history.length}
                 </div>
-                <div className="text-center">
-                  <div className="text-xs text-gray-400 mb-1">maxLeft2</div>
-                  <div className="text-xl font-bold text-pink-300">{maxLeft2}</div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-300">Speed</label>
+                  <input
+                    type="range"
+                    min={100}
+                    max={2000}
+                    step={50}
+                    value={speed}
+                    onChange={(e) =>
+                      setSpeed(2100 - parseInt(e.target.value, 10))
+                    }
+                    className="w-24"
+                  />
                 </div>
-                <div className="text-center">
-                  <div className="text-xs text-gray-400 mb-1">minRight2</div>
-                  <div className="text-xl font-bold text-pink-300">{minRight2}</div>
-                </div>
-              </div>
-            )}
-
-            {/* Median Result */}
-            {median !== null && (
-              <div className="text-center p-6 bg-green-900/30 rounded-xl border-2 border-green-500">
-                <div className="text-sm text-green-300 mb-2">Median</div>
-                <div className="text-4xl font-black text-green-200">{median}</div>
-              </div>
+                <button
+                  onClick={resetAll}
+                  className="px-4 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold flex items-center gap-2"
+                >
+                  <RotateCw size={16} /> Reset
+                </button>
+              </>
             )}
           </div>
-
-          {/* Legend */}
-          <div className="mt-8 flex flex-wrap justify-center gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gradient-to-br from-blue-500 to-blue-700"></div>
-              <span className="text-sm text-gray-300">Left Partition</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gray-700"></div>
-              <span className="text-sm text-gray-300">Right Partition</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gradient-to-br from-purple-500 to-purple-700 ring-2 ring-purple-400"></div>
-              <span className="text-sm text-gray-300">Partition Point</span>
-            </div>
-          </div>
         </section>
-      )}
+
+        {/* --- MAIN GRID --- */}
+        {!isLoaded ? (
+          <div className="mt-10 text-center text-gray-400">
+            Enter two comma-separated arrays and click{" "}
+            <span className="font-semibold text-purple-400">
+              Load & Visualize
+            </span>{" "}
+            to begin.
+          </div>
+        ) : (
+          <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
+            {/* LEFT PANEL: CODE */}
+            <aside className="lg:col-span-1 p-4 bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-700/60 shadow-2xl">
+              <h3 className="text-purple-300 flex items-center gap-2 font-semibold mb-3">
+                <FileText size={18} /> Algorithm Steps
+              </h3>
+              <div className="bg-[#0b1020] rounded-lg border border-gray-700/80 p-3 max-h-[640px] overflow-auto">
+                {CODE_SNIPPETS[activeLang].map(renderCodeLine)}
+              </div>
+            </aside>
+
+            {/* RIGHT PANEL: VISUALIZATION */}
+            <section className="lg:col-span-2 flex flex-col gap-6">
+              {/* TOP PART: Arrays & Partitions */}
+              <div className="p-6 bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-700/60 shadow-2xl">
+                <div className="space-y-8">
+                  <div>
+                    <h3 className="text-lg font-semibold text-purple-300 mb-3">
+                      Array 1
+                    </h3>
+                    <div className="flex justify-center items-end gap-2 flex-wrap min-h-[5rem]">
+                      {arrayToDisplay1.map((value, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center gap-2 relative"
+                        >
+                          {state.partition1 === index && (
+                            <VisualizerPointer label="P1" color="purple" />
+                          )}
+                          <div
+                            className={`w-14 h-14 flex items-center justify-center rounded-xl font-bold text-lg ${
+                              index < state.partition1
+                                ? "bg-blue-600"
+                                : "bg-gray-700"
+                            }`}
+                          >
+                            {value}
+                          </div>
+                          <div className="text-xs text-gray-400">[{index}]</div>
+                        </div>
+                      ))}
+                      {state.partition1 === arrayToDisplay1.length && (
+                        <VisualizerPointer label="P1" color="purple" />
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-pink-300 mb-3">
+                      Array 2
+                    </h3>
+                    <div className="flex justify-center items-end gap-2 flex-wrap min-h-[5rem]">
+                      {arrayToDisplay2.map((value, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center gap-2 relative"
+                        >
+                          {state.partition2 === index && (
+                            <VisualizerPointer label="P2" color="pink" />
+                          )}
+                          <div
+                            className={`w-14 h-14 flex items-center justify-center rounded-xl font-bold text-lg ${
+                              index < state.partition2
+                                ? "bg-blue-600"
+                                : "bg-gray-700"
+                            }`}
+                          >
+                            {value}
+                          </div>
+                          <div className="text-xs text-gray-400">[{index}]</div>
+                        </div>
+                      ))}
+                      {state.partition2 === arrayToDisplay2.length && (
+                        <VisualizerPointer label="P2" color="pink" />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* MIDDLE PART: Explanation & Values */}
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <div className="md:col-span-3 p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
+                  <h4 className="text-gray-300 text-sm mb-2 font-semibold">
+                    Explanation
+                  </h4>
+                  <p className="text-gray-200 min-h-[3rem]">
+                    {state.message || "..."}
+                  </p>
+                </div>
+                <div className="md:col-span-2 p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
+                  <h4 className="text-gray-300 text-sm mb-2 font-semibold">
+                    Partition Boundaries
+                  </h4>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                    <div>
+                      <span className="text-gray-400">maxLeft1:</span>{" "}
+                      <span className="font-mono text-purple-300">
+                        {state.maxLeft1 ?? "-"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">minRight1:</span>{" "}
+                      <span className="font-mono text-purple-300">
+                        {state.minRight1 ?? "-"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">maxLeft2:</span>{" "}
+                      <span className="font-mono text-pink-300">
+                        {state.maxLeft2 ?? "-"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">minRight2:</span>{" "}
+                      <span className="font-mono text-pink-300">
+                        {state.minRight2 ?? "-"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* BOTTOM PART: Result & Complexity */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-1 p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
+                  <h4 className="text-green-300 font-semibold flex items-center gap-2 mb-2">
+                    <CheckCircle size={16} /> Result
+                  </h4>
+                  {state.median != null ? (
+                    <div className="text-4xl font-mono text-green-400">
+                      {state.median}
+                    </div>
+                  ) : (
+                    <div className="text-2xl text-gray-500">...</div>
+                  )}
+                </div>
+                <div className="md:col-span-2 p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
+                  <h4 className="text-purple-300 font-semibold flex items-center gap-2 mb-2">
+                    <Clock size={16} /> Complexity
+                  </h4>
+                  <div className="text-sm text-gray-300 space-y-1">
+                    <div>
+                      <strong>Time:</strong>{" "}
+                      <span className="font-mono text-teal-300">
+                        O(log(min(m, n)))
+                      </span>{" "}
+                      — Binary search on the smaller array.
+                    </div>
+                    <div>
+                      <strong>Space:</strong>{" "}
+                      <span className="font-mono text-teal-300">O(1)</span> —
+                      Algorithm requires constant extra space.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </main>
+        )}
+      </div>
     </div>
   );
 };
