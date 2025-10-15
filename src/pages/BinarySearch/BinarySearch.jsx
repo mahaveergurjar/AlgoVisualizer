@@ -9,7 +9,9 @@ import {
     Mountain,
     Zap,
     Code2,
-    TrendingUp
+    TrendingUp,
+    Search,
+    Layers
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components ---
@@ -18,6 +20,10 @@ import Search2DMatrix from './Search2DMatrix';
 import PeakIndexInMountainArray from './PeakIndexInMountainArray';
 import FindFirstAndLastPosition from './FindFirstAndLastPosition';
 import FindMinimumInRotatedSortedArray from './FindMinimumInRotatedSortedArray';
+import SearchInRotatedSortedArray from './SearchInRotatedSortedArray';
+import FindPeakElement from './FindPeakElement';
+import MedianOfTwoSortedArrays from './MedianOfTwoSortedArrays';
+import BinarySearchBasic from './BinarySearchBasic';
 
 
 const BinarySearchAlgorithmList = ({ navigate }) => {
@@ -107,6 +113,74 @@ const BinarySearchAlgorithmList = ({ navigate }) => {
             iconColor: "text-emerald-400",
             iconBg: "bg-emerald-500/20",
             borderColor: "border-emerald-500/30",
+            technique: "Binary Search",
+            timeComplexity: "O(log n)",
+        },
+        {
+            name: "Search in Rotated Sorted Array",
+            number: "33",
+            icon: Search,
+            description: "Search for a target value in a rotated sorted array using modified binary search to handle the rotation.",
+            page: "SearchInRotatedSortedArray",
+            difficulty: "Medium",
+            difficultyColor: "text-yellow-400",
+            difficultyBg: "bg-yellow-400/10",
+            difficultyBorder: "border-yellow-400/30",
+            gradient: "from-blue-500 to-purple-500",
+            iconColor: "text-blue-400",
+            iconBg: "bg-blue-500/20",
+            borderColor: "border-blue-500/30",
+            technique: "Binary Search",
+            timeComplexity: "O(log n)",
+        },
+        {
+            name: "Find Peak Element",
+            number: "162",
+            icon: Mountain,
+            description: "Find a peak element in an array where a peak is strictly greater than its neighbors using binary search.",
+            page: "FindPeakElement",
+            difficulty: "Medium",
+            difficultyColor: "text-yellow-400",
+            difficultyBg: "bg-yellow-400/10",
+            difficultyBorder: "border-yellow-400/30",
+            gradient: "from-green-500 to-teal-500",
+            iconColor: "text-green-400",
+            iconBg: "bg-green-500/20",
+            borderColor: "border-green-500/30",
+            technique: "Binary Search",
+            timeComplexity: "O(log n)",
+        },
+        {
+            name: "Median of Two Sorted Arrays",
+            number: "4",
+            icon: Layers,
+            description: "Find the median of two sorted arrays with O(log(min(m,n))) time complexity using binary search on partitions.",
+            page: "MedianOfTwoSortedArrays",
+            difficulty: "Hard",
+            difficultyColor: "text-red-400",
+            difficultyBg: "bg-red-400/10",
+            difficultyBorder: "border-red-400/30",
+            gradient: "from-purple-500 to-pink-500",
+            iconColor: "text-purple-400",
+            iconBg: "bg-purple-500/20",
+            borderColor: "border-purple-500/30",
+            technique: "Binary Search",
+            timeComplexity: "O(log(min(m,n)))",
+        },
+        {
+            name: "Binary Search",
+            number: "704",
+            icon: SearchCode,
+            description: "The fundamental binary search algorithm: find a target value in a sorted array with O(log n) time complexity.",
+            page: "BinarySearchBasic",
+            difficulty: "Easy",
+            difficultyColor: "text-green-400",
+            difficultyBg: "bg-green-400/10",
+            difficultyBorder: "border-green-400/30",
+            gradient: "from-cyan-500 to-blue-500",
+            iconColor: "text-cyan-400",
+            iconBg: "bg-cyan-500/20",
+            borderColor: "border-cyan-500/30",
             technique: "Binary Search",
             timeComplexity: "O(log n)",
         },
@@ -281,6 +355,14 @@ const BinarySearchPage = ({ navigate: parentNavigate, initialPage = null }) => {
                 return <FindFirstAndLastPosition navigate={navigate} />;
             case "FindMinimumInRotatedSortedArray":
                 return <FindMinimumInRotatedSortedArray navigate={navigate} />;
+            case "SearchInRotatedSortedArray":
+                return <SearchInRotatedSortedArray navigate={navigate} />;
+            case "FindPeakElement":
+                return <FindPeakElement navigate={navigate} />;
+            case "MedianOfTwoSortedArrays":
+                return <MedianOfTwoSortedArrays navigate={navigate} />;
+            case "BinarySearchBasic":
+                return <BinarySearchBasic navigate={navigate} />;
             case "home":
             default:
                 return <BinarySearchAlgorithmList navigate={navigate} />;

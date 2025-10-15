@@ -11,6 +11,8 @@ import {
   Star,
   TrendingUp,
   Zap,
+  Search,
+  Twitter,
 } from "lucide-react";
 
 // --- Import your specific design problems here ---
@@ -18,6 +20,8 @@ import LRUCache from "./LRUCache.jsx";
 import LFUCache from "./LFUCache.jsx";
 import DesignHashMap from "./DesignHashMap.jsx";
 import DesignLinkedList from "./DesignLinkedList.jsx";
+import MinStack from "./MinStack.jsx";
+import ImplementTrie from "./ImplementTrie.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -92,6 +96,40 @@ const AlgorithmList = ({ navigate }) => {
         borderColor : "border-amber-500/30",
         technique : "Design (Array, Pointer)",
         timeComplexity : "O(n)",
+      },
+      {
+        name: "Min Stack",
+        number: "155",
+        icon: Layers,
+        description: "Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.",
+        page: "MinStack",
+        difficulty: "Medium",
+        difficultyColor: "text-yellow-400",
+        difficultyBg: "bg-yellow-400/10",
+        difficultyBorder: "border-yellow-400/30",
+        gradient: "from-blue-500 to-indigo-500",
+        iconColor: "text-blue-400",
+        iconBg: "bg-blue-500/20",
+        borderColor: "border-blue-500/30",
+        technique: "Design (Stack + Min Tracking)",
+        timeComplexity: "O(1)",
+      },
+      {
+        name: "Implement Trie (Prefix Tree)",
+        number: "208",
+        icon: Search,
+        description: "Implement a trie with insert, search, and startsWith methods for efficient string operations.",
+        page: "ImplementTrie",
+        difficulty: "Medium",
+        difficultyColor: "text-yellow-400",
+        difficultyBg: "bg-yellow-400/10",
+        difficultyBorder: "border-yellow-400/30",
+        gradient: "from-green-500 to-teal-500",
+        iconColor: "text-green-400",
+        iconBg: "bg-green-500/20",
+        borderColor: "border-green-500/30",
+        technique: "Design (Trie, Tree)",
+        timeComplexity: "O(m)",
       },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
@@ -272,6 +310,10 @@ const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <DesignHashMap navigate={navigate} />;
       case "DesignLinkedList":
         return <DesignLinkedList navigate={navigate} />;
+      case "MinStack":
+        return <MinStack navigate={navigate} />;
+      case "ImplementTrie":
+        return <ImplementTrie navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
