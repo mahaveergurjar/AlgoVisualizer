@@ -708,7 +708,7 @@ const RatInMaze = () => {
                       setN(4);
                       setMaze("1 0 0 0\n1 1 0 1\n0 1 0 0\n1 1 1 1");
                     }}
-                    className="text-xs px-3 py-1 bg-gray-600 hover:bg-gray-500 text-gray-300 rounded transition-colors"
+                    className="text-xs px-3 py-1 bg-gray-600 cursor-pointer hover:bg-gray-500 text-gray-300 rounded transition-colors"
                   >
                     Load Sample
                   </button>
@@ -716,7 +716,7 @@ const RatInMaze = () => {
                     onClick={() => {
                       setMaze("");
                     }}
-                    className="text-xs px-3 py-1 bg-gray-600 hover:bg-gray-500 text-gray-300 rounded transition-colors"
+                    className="text-xs px-3 py-1 bg-gray-600 cursor-pointer hover:bg-gray-500 text-gray-300 rounded transition-colors"
                   >
                     Clear Maze
                   </button>
@@ -740,7 +740,7 @@ const RatInMaze = () => {
                       }
                       setMaze(emptyMaze.join("\n"));
                     }}
-                    className="text-xs px-3 py-1 bg-gray-600 hover:bg-gray-500 text-gray-300 rounded transition-colors"
+                    className="text-xs px-3 py-1 cursor-pointer bg-gray-600 hover:bg-gray-500 text-gray-300 rounded transition-colors"
                   >
                     Generate Empty
                   </button>
@@ -772,13 +772,13 @@ const RatInMaze = () => {
               )}
               <button
                 onClick={handleVisualize}
-                className="bg-cyan-500 hover:bg-cyan-400 text-white px-6 py-2 rounded text-sm font-medium transition-colors"
+                className="bg-cyan-500 hover:bg-cyan-400 text-white cursor-pointer px-6 py-2 rounded text-sm font-medium transition-colors"
               >
                 Load & Visualize
               </button>
               <button
                 onClick={handleReset}
-                className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+                className="bg-red-600 hover:bg-red-500 cursor-pointer text-white px-4 py-2 rounded text-sm font-medium transition-colors"
               >
                 Reset
               </button>
@@ -791,7 +791,7 @@ const RatInMaze = () => {
           <div className="flex gap-2">
             <button
               onClick={() => setAlgorithm("DFS")}
-              className={`px-6 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+              className={`px-6 py-2 text-sm font-medium cursor-pointer rounded-t-lg transition-colors ${
                 algorithm === "DFS"
                   ? "bg-cyan-600 text-white border-b-2 border-cyan-400"
                   : "bg-gray-700 text-gray-300 hover:bg-gray-600"
@@ -801,7 +801,7 @@ const RatInMaze = () => {
             </button>
             <button
               onClick={() => setAlgorithm("BFS")}
-              className={`px-6 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+              className={`px-6 py-2 text-sm font-medium cursor-pointer rounded-t-lg transition-colors ${
                 algorithm === "BFS"
                   ? "bg-cyan-600 text-white border-b-2 border-cyan-400"
                   : "bg-gray-700 text-gray-300 hover:bg-gray-600"
