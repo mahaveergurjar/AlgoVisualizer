@@ -16,6 +16,9 @@ export const problems = [
   { label: "Sum of Subarray Ranges", category: "Arrays", subpage: "SubarrayRanges", keywords: ["array", "ranges", "subarray", "2104"] },
   { label: "Best Time to Buy and Sell Stock", category: "Arrays", subpage: "BestTimeToBuyAndSellStock", keywords: ["array", "stock", "profit", "buy", "sell", "121"] },
   { label: "3Sum", category: "Arrays", subpage: "ThreeSum", keywords: ["array", "two pointers", "three sum", "3sum", "triplet", "15"] },
+  { label: "Product of Array Except Self", category: "Arrays", subpage: "ProductOfArrayExceptSelf", keywords: ["array", "product", "prefix", "suffix", "238", "except self", "division"] },
+  { label: "Maximum Subarray", category: "Arrays", subpage: "MaximumSubarray", keywords: ["array", "kadane", "maximum subarray", "53", "subarray sum", "dynamic programming"] },
+  { label: "Merge Intervals", category: "Arrays", subpage: "MergeIntervals", keywords: ["array", "intervals", "merge", "56", "overlapping", "sorting"] },
 
   // Sliding Window
   { label: "Max Consecutive Ones III", category: "SlidingWindows", subpage: "MaxConsecutiveOnesIII", keywords: ["sliding window", "ones", "1004"] },
@@ -84,5 +87,61 @@ export const problems = [
     category: "BinarySearch", 
     subpage: "PeakIndexInMountainArray", 
     keywords: ["binary search", "peak", "mountain array", "logarithmic", "852"]
+  },
+  { 
+    label: "Median of Two Sorted Arrays", 
+    category: "BinarySearch", 
+    subpage: "MedianOfTwoSortedArrays", 
+    keywords: ["binary search", "median", "two sorted arrays", "partition", "hard", "4"]
+  },
+  { 
+    label: "Search in Rotated Sorted Array", 
+    category: "BinarySearch", 
+    subpage: "SearchInRotatedSortedArray", 
+    keywords: ["binary search", "rotated", "sorted array", "pivot", "33"]
+  },
+  { 
+    label: "Find Peak Element", 
+    category: "BinarySearch", 
+    subpage: "FindPeakElement", 
+    keywords: ["binary search", "peak", "peak element", "neighbors", "162"]
+  },
+  { 
+    label: "Binary Search", 
+    category: "BinarySearch", 
+    subpage: "BinarySearchBasic", 
+    keywords: ["binary search", "search", "sorted array", "fundamental", "basic", "704"]
+  },
+
+  // Bit Manipulation
+  { 
+    label: "Single Number", 
+    category: "BitManipulation", 
+    subpage: "SingleNumber", 
+    keywords: ["bit manipulation", "xor", "single", "136"]
+  },
+  { 
+    label: "Reverse Bits", 
+    category: "BitManipulation", 
+    subpage: "ReverseBits", 
+    keywords: ["bit manipulation", "reverse", "bits", "190"]
+  },
+  { 
+    label: "Number of 1 Bits", 
+    category: "BitManipulation", 
+    subpage: "NumberOf1Bits", 
+    keywords: ["bit manipulation", "hamming weight", "count bits", "191"]
+  },
+  { 
+    label: "Power of Two", 
+    category: "BitManipulation", 
+    subpage: "PowerOfTwo", 
+    keywords: ["bit manipulation", "power of two", "bit trick", "231"]
+  },
+  { 
+    label: "Counting Bits", 
+    category: "BitManipulation", 
+    subpage: "CountingBits", 
+    keywords: ["bit manipulation", "counting", "bits", "dp", "338"]
   }
 ];
