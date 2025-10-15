@@ -28,7 +28,7 @@ const ScrollToTop = () => {
             rounded-full shadow-2xl text-white flex items-center justify-center
             hover:scale-110 hover:shadow-xl hover:shadow-purple-500/50
             transition-all duration-300
-            ring-2 ring-blue-300/50
+            ring-2 ring-blue-300/50 cursor-pointer
           "
           aria-label="Scroll to top"
         >
