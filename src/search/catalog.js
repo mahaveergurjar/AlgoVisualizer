@@ -42,6 +42,7 @@ export const problems = [
   { label: "Radix Sort", category: "Sorting", subpage: "RadixSort", keywords: ["sorting", "radix sort", "digit-wise", "LSD", "MSD"] }, 
   { label: "Insertion Sort", category: "Sorting", subpage: "InsertionSort", keywords: ["sorting", "insertion sort", "insert", "stable"] },
   { label: "Selection Sort", category: "Sorting", subpage: "SelectionSort", keywords: ["sorting", "selection sort", "select min", "in-place"] },
+  { label: "Shell Sort", category: "Sorting", subpage: "ShellSort", keywords: ["sorting", "shell sort", "gap sequence", "insertion", "optimization"] },
 
 
   // Trees
@@ -58,6 +59,14 @@ export const problems = [
   // Pathfinding problems
   { label: "Rat in Maze", category: "Pathfinding", subpage: "RatInMaze", keywords: ["pathfinding", "maze", "rat", "bfs", "dfs", "backtracking", "graph traversal"]},
   
+  // Recursion problems
+  { label: "Subset Sum", category: "Recursion", subpage: "SubsetSumVisualizer", keywords: ["recursion", "subset", "sum", "backtracking", "dynamic programming"] },
+  { label: "Tower of Hanoi", category: "Recursion", subpage: "TowerOfHanoiVisualizer", keywords: ["recursion", "tower", "hanoi", "divide and conquer", "puzzle", "rods", "disks"] },
+  { label: "Fibonacci", category: "Recursion", subpage: "FibonacciVisualizer", keywords: ["recursion", "fibonacci", "tree recursion", "memoization", "dynamic programming", "exponential"] },
+  { label: "Factorial", category: "Recursion", subpage: "FactorialVisualizer", keywords: ["recursion", "factorial", "linear recursion", "call stack", "base case"] },
+  { label: "N-Queens", category: "Recursion", subpage: "NQueensVisualizer", keywords: ["recursion", "n-queens", "backtracking", "chess", "constraint satisfaction", "queens"] },
+  { label: "Binary Search (Recursive)", category: "Recursion", subpage: "BinarySearchRecursiveVisualizer", keywords: ["recursion", "binary search", "divide and conquer", "sorted array", "logarithmic", "search"] },
+
   { 
     label: "Min Speed to Arrive on Time", 
     category: "BinarySearch", 

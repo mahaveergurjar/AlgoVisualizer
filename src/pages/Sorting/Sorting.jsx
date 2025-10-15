@@ -32,6 +32,7 @@ import RadixSortVisualizer from  "./RadixSort";
 import CountingSortVisualizer from "./CountingSort";
 import HeapSortVisualizer from "./HeapSort";
 import  SelectionSortVisualizer from "./SelectionSort";
+import ShellSortVisualizer from "./ShellSort";
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -178,6 +179,24 @@ const AlgorithmList = ({ navigate }) => {
   borderColor: "border-green-500/30",
   technique: "Selection",
   timeComplexity: "O(n²)",
+},
+{
+  name: "Shell Sort",
+  number: "N/A",
+  icon: Layers,
+  description:
+    "An optimized version of insertion sort that allows exchange of items that are far apart. The gap between elements decreases until it reaches 1.",
+  page: "ShellSort",
+  difficulty: "Medium",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-teal-500 to-cyan-500",
+  iconColor: "text-teal-400",
+  iconBg: "bg-teal-500/20",
+  borderColor: "border-teal-500/30",
+  technique: "Gap Insertion",
+  timeComplexity: "O(n^3/2)",
 },
   ];
 
@@ -345,7 +364,8 @@ const SortingPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <HeapSortVisualizer navigate={navigate} />; 
       case "SelectionSort":
         return <SelectionSortVisualizer navigate={navigate} />;  
-      
+      case "ShellSort":
+        return <ShellSortVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
