@@ -23,6 +23,10 @@ import {
   MoveRight,
   Eye,
   ArrowRight,
+  Calculator,
+  Merge,
+  Layers,
+  RotateCw,
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
@@ -30,7 +34,6 @@ import TrappingRainWater from "./TrappingRainWater.jsx";
 import ContainerWithMostWater from "./ContainerWithMostWater.jsx";
 import MaxConsecutiveOnesIII from "./MaxConsecutiveOnesIII.jsx";
 import SubarrayRanges from "./SubarrayRanges.jsx";
-//adding absolute beginner friendly problems for progressive learning (beginners)
 import FindMaxElement from "./FindMaxElement.jsx";
 import FindMinElement from "./FindMinElement.jsx";
 import MoveZeros from "./MoveZeros.jsx";
@@ -42,6 +45,11 @@ import ThreeSum from "./3Sum.jsx";
 import FourSum from "./4Sum.jsx";
 
 import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
+import SquaresOfSortedArray from "./SquaresOfSortedArray.tsx";
+import ProductOfArrayExceptSelf from "./ProductOfArrayExceptSelf.jsx";
+import MaximumSubarray from "./MaximumSubarray.jsx";
+import MergeIntervals from "./MergeIntervals.jsx";
+import RotateArray from "./RotateArray.jsx";
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -148,6 +156,26 @@ function AlgorithmList({ navigate }) {
       timeComplexity: "O(n)",
       platforms: ["LeetCode #1", "GfG"],
       tags: ["Hashing", "Pairs"],
+    },
+    {
+      name: "Squares of a Sorted Array",
+      number: "977",
+      icon: ArrowUpDown, // Certifique-se que ArrowUpDown está importado de lucide-react no topo do arquivo
+      description: "Square each number and return the array sorted in non-decreasing order.",
+      page: "SquaresOfSortedArray",
+      difficulty: "Easy",
+      tier: "Tier 2",
+      difficultyColor: "text-blue-400",
+      difficultyBg: "bg-blue-400/10",
+      difficultyBorder: "border-blue-400/30",
+      gradient: "from-teal-500 to-cyan-500",
+      iconColor: "text-teal-400",
+      iconBg: "bg-teal-500/20",
+      borderColor: "border-teal-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #977"],
+      tags: ["Two Pointers", "Sorting"]
     },
 
     {
@@ -334,24 +362,88 @@ function AlgorithmList({ navigate }) {
       tags: ["Two Pointers", "Sorting", "Triplets"],
     },
     {
-      name: "Four Sum",
-      number: "18",
-      icon: Target,
-      description: "Find four numbers that add up to the target value.",
-      page: "FourSum",
+      name: "Product of Array Except Self",
+      number: "238",
+      icon: Calculator,
+      description:
+        "Return an array where each element is the product of all elements except itself, without using division.",
+      page: "ProductOfArrayExceptSelf",
       difficulty: "Medium",
-      tier: "Tier 2",
+      tier: "Tier 3",
       difficultyColor: "text-yellow-400",
       difficultyBg: "bg-yellow-400/10",
       difficultyBorder: "border-yellow-400/30",
-      gradient: "from-pink-500 to-rose-500",
-      iconColor: "text-pink-400",
-      iconBg: "bg-pink-500/20",
-      borderColor: "border-pink-500/30",
-      technique: "Two Pointers",
-      timeComplexity: "O(n²)",
-      platforms: ["LeetCode #18", "GfG"],
-      tags: ["Two Pointers", "Pairs"],
+      gradient: "from-indigo-500 to-purple-500",
+      iconColor: "text-indigo-400",
+      iconBg: "bg-indigo-500/20",
+      borderColor: "border-indigo-500/30",
+      technique: "Prefix & Suffix Products",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #238", "GfG"],
+      tags: ["Array", "Prefix Sum", "Important"],
+    },
+    {
+      name: "Maximum Subarray",
+      number: "53",
+      icon: TrendingUp,
+      description:
+        "Find the contiguous subarray with the largest sum using Kadane's Algorithm.",
+      page: "MaximumSubarray",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-green-500 to-teal-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Kadane's Algorithm",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #53", "GfG"],
+      tags: ["DP", "Kadane", "Classic"],
+    },
+    {
+      name: "Merge Intervals",
+      number: "56",
+      icon: Merge,
+      description:
+        "Merge all overlapping intervals and return an array of non-overlapping intervals.",
+      page: "MergeIntervals",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-orange-500 to-red-500",
+      iconColor: "text-orange-400",
+      iconBg: "bg-orange-500/20",
+      borderColor: "border-orange-500/30",
+      technique: "Sorting + Greedy",
+      timeComplexity: "O(n log n)",
+      platforms: ["LeetCode #56", "GfG"],
+      tags: ["Intervals", "Sorting", "Important"],
+    },
+    {
+      name: "Rotate Array",
+      number: "189",
+      icon: RotateCcw,
+      description:
+        "Rotate the array to the right by k steps in-place with O(1) extra space.",
+      page: "RotateArray",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Reverse Algorithm",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #189", "GfG"],
+      tags: ["Array", "In-place", "Rotation"],
     },
   ];
 
@@ -416,41 +508,37 @@ function AlgorithmList({ navigate }) {
       <div className="flex flex-wrap justify-center gap-3 mb-8">
         <button
           onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "all"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "all"
               ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
+            }`}
         >
           All Problems
         </button>
         <button
           onClick={() => setFilter("beginner")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "beginner"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "beginner"
               ? "bg-green-500/20 border-green-500/50 text-green-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
+            }`}
         >
           Beginner (Tier 1)
         </button>
         <button
           onClick={() => setFilter("easy")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "easy"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "easy"
               ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
+            }`}
         >
           Easy (Tier 2)
         </button>
         <button
           onClick={() => setFilter("intermediate")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "intermediate"
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "intermediate"
               ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
+            }`}
         >
           Intermediate+ (Tier 3)
         </button>
@@ -483,9 +571,8 @@ function AlgorithmList({ navigate }) {
                       className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
-                        } transition-colors duration-300`}
+                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor
+                          } transition-colors duration-300`}
                       />
                     </div>
                     <div>
@@ -503,9 +590,8 @@ function AlgorithmList({ navigate }) {
                         </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${
-                          isHovered ? "text-white" : "text-gray-200"
-                        }`}
+                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"
+                          }`}
                       >
                         {algo.name}
                       </h2>
@@ -514,9 +600,8 @@ function AlgorithmList({ navigate }) {
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
-                    isHovered ? "text-gray-300" : "text-gray-400"
-                  }`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"
+                    }`}
                 >
                   {algo.description}
                 </p>
@@ -561,11 +646,10 @@ function AlgorithmList({ navigate }) {
                     </div>
 
                     <div
-                      className={`transition-all duration-300 ${
-                        isHovered
+                      className={`transition-all duration-300 ${isHovered
                           ? "opacity-100 translate-x-0"
                           : "opacity-0 -translate-x-2"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-1">
                         <span className="text-xs font-medium text-gray-400">
@@ -627,6 +711,8 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <MoveZeros navigate={navigate} />;
       case "CountZeros":
         return <CountZeros navigate={navigate} />;
+      case "SquaresOfSortedArray":
+        return <SquaresOfSortedArray navigate={navigate} />;
 
       // Existing problems
       case "TrappingRainWater":
@@ -643,8 +729,13 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <SplitArrayLargestSum navigate={navigate} />;
       case "ThreeSum":
         return <ThreeSum navigate={navigate} />;
-      case "FourSum":
-        return <FourSum navigate={navigate} />;
+      case "ProductOfArrayExceptSelf":
+        return <ProductOfArrayExceptSelf navigate={navigate} />;
+      case "MaximumSubarray":
+        return <MaximumSubarray navigate={navigate} />;
+      case "MergeIntervals":
+        return <MergeIntervals navigate={navigate} />;
+
 
       case "home":
       default:
