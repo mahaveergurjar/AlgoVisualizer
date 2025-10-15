@@ -39,6 +39,8 @@ import ArraySum from "./ArraySum.jsx";
 import ReverseArray from "./ReverseArray.jsx";
 import TwoSum from "./TwoSum.jsx";
 import ThreeSum from "./3Sum.jsx";
+import FourSum from "./4Sum.jsx";
+
 import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
 
 function AlgorithmList({ navigate }) {
@@ -331,6 +333,26 @@ function AlgorithmList({ navigate }) {
       platforms: ["LeetCode #15", "GfG"],
       tags: ["Two Pointers", "Sorting", "Triplets"],
     },
+    {
+      name: "Four Sum",
+      number: "18",
+      icon: Target,
+      description: "Find four numbers that add up to the target value.",
+      page: "FourSum",
+      difficulty: "Medium",
+      tier: "Tier 2",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-pink-500 to-rose-500",
+      iconColor: "text-pink-400",
+      iconBg: "bg-pink-500/20",
+      borderColor: "border-pink-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n²)",
+      platforms: ["LeetCode #18", "GfG"],
+      tags: ["Two Pointers", "Pairs"],
+    },
   ];
 
   const filteredAlgorithms = algorithms.filter((algo) => {
@@ -621,8 +643,9 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <SplitArrayLargestSum navigate={navigate} />;
       case "ThreeSum":
         return <ThreeSum navigate={navigate} />;
+      case "FourSum":
+        return <FourSum navigate={navigate} />;
 
-     
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
