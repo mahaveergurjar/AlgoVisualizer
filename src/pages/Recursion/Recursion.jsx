@@ -12,12 +12,18 @@ import {
   TrendingUp,
   Star,
   Zap,
+  Hash,
+  Crown,
+  Search,
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
 import SubsetSumVisualizer from "./SubsetSum.jsx";
 import TowerOfHanoiVisualizer from "./TowerOfHanoi.jsx";
 import FibonacciVisualizer from "./Fibonacci.jsx";
+import FactorialVisualizer from "./Factorial.jsx";
+import NQueensVisualizer from "./NQueens.jsx";
+import BinarySearchRecursiveVisualizer from "./BinarySearchRecursive.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -76,6 +82,60 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-cyan-500/30",
       technique: "Tree Recursion",
       timeComplexity: "O(2^n)",
+    },
+    {
+      name: "Factorial",
+      number: "28",
+      icon: Hash,
+      description:
+        "Calculate factorial using recursion. Visualize the linear call stack and understand how each recursive call multiplies the current number with the result of the next call.",
+      page: "FactorialVisualizer",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-blue-500 to-indigo-500",
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/20",
+      borderColor: "border-blue-500/30",
+      technique: "Linear Recursion",
+      timeComplexity: "O(n)",
+    },
+    {
+      name: "N-Queens",
+      number: "29",
+      icon: Crown,
+      description:
+        "Place N queens on an N×N chessboard such that no two queens attack each other. Visualize the backtracking algorithm as it explores the solution space and backtracks from invalid configurations.",
+      page: "NQueensVisualizer",
+      difficulty: "Hard",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-pink-500 to-rose-500",
+      iconColor: "text-pink-400",
+      iconBg: "bg-pink-500/20",
+      borderColor: "border-pink-500/30",
+      technique: "Backtracking",
+      timeComplexity: "O(n!)",
+    },
+    {
+      name: "Binary Search (Recursive)",
+      number: "30",
+      icon: Search,
+      description:
+        "Search for a target value in a sorted array using recursive binary search. Visualize how the search space is divided in half with each recursive call, achieving logarithmic time complexity.",
+      page: "BinarySearchRecursiveVisualizer",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-teal-500 to-emerald-500",
+      iconColor: "text-teal-400",
+      iconBg: "bg-teal-500/20",
+      borderColor: "border-teal-500/30",
+      technique: "Divide & Conquer",
+      timeComplexity: "O(log n)",
     },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
@@ -247,6 +307,12 @@ const RecursionPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <TowerOfHanoiVisualizer navigate={navigate} />;
       case "FibonacciVisualizer":
         return <FibonacciVisualizer navigate={navigate} />;
+      case "FactorialVisualizer":
+        return <FactorialVisualizer navigate={navigate} />;
+      case "NQueensVisualizer":
+        return <NQueensVisualizer navigate={navigate} />;
+      case "BinarySearchRecursiveVisualizer":
+        return <BinarySearchRecursiveVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
