@@ -19,6 +19,7 @@ import DFS from "./DFS.jsx";
 import Dijkstra from "./Dijkstra.jsx";
 import TopologicalSort from "./TopologicalSort.jsx";
 import Kruskal from "./Kruskal.jsx";
+import Prims from "./Prims.jsx";
 
 const PlaceholderVisualizer = ({ name, navigate }) => (
   <div className="bg-gray-950 text-white min-h-screen flex flex-col">
@@ -112,7 +113,7 @@ const AlgorithmList = ({ navigate }) => {
       number: "N/A",
       icon: GitMerge,
       description:
-        "Find the Minimum Spanning Tree by greedily selecting edges with minimum weight using Union-Find.",
+      "Find Minimum Spanning Tree by selecting minimum weight edges using Union-Find.",
       page: "Kruskal",
       difficulty: "Medium",
       difficultyColor: "text-yellow-400",
@@ -124,6 +125,24 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-green-500/30",
       technique: "Union-Find & Greedy",
       timeComplexity: "O(E log E)",
+    },
+    {
+      name: "Prim's Algorithm",
+      number: "N/A",
+      icon: Network,
+      description:
+      "Build Minimum Spanning Tree by growing from start node with minimum edge weights.",
+      page: "Prims",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-blue-500 to-cyan-500",
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/20",
+      borderColor: "border-blue-500/30",
+      technique: "Priority Queue & Greedy",
+      timeComplexity: "O((V + E) log V)",
     },
     {
       name: "Topological Sort",
@@ -329,6 +348,8 @@ const GraphsPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <Dijkstra navigate={navigate} />;
       case "Kruskal":
         return <Kruskal navigate={navigate} />;
+      case "Prims":
+        return <Prims navigate={navigate} />;
       case "TopologicalSort":
         return <TopologicalSort navigate={navigate} />;
       case "UnionFind":
