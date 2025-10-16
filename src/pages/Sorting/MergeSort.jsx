@@ -16,10 +16,13 @@ const MergeSortVisualizer = () => {
   const [currentStep, setCurrentStep] = useState(-1);
   const [arrayInput, setArrayInput] = useState("8,5,2,9,5,6,3");
   const [isLoaded, setIsLoaded] = useState(false);
+
   const [active, setActive] = useState(false);
   const visualizerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
+  const [codeLanguage, setCodeLanguage] = useState("cpp");
+
 
   const generateMergeSortHistory = useCallback((initialArray) => {
     const arr = JSON.parse(JSON.stringify(initialArray));
@@ -390,6 +393,86 @@ const MergeSortVisualizer = () => {
     { l: 21, c: [{ t: "}", c: "light-gray" }] },
   ];
 
+  const mergeSortCodeJava = [
+    { l: 1, c: [{ t: "public static void mergeSort(int arr[]) {", c: "" }] },
+    { l: 2, c: [{ t: "    mergeSortHelper(arr, 0, arr.length - 1);", c: "" }] },
+    { l: 3, c: [{ t: "}", c: "light-gray" }] },
+    { l: 4, c: [{ t: "", c: "" }] },
+    {
+      l: 5,
+      c: [
+        {
+          t: "private static void mergeSortHelper(int arr[], int si, int ei) {",
+          c: "",
+        },
+      ],
+    },
+    {
+      l: 6,
+      c: [
+        { t: "    if", c: "purple" },
+        { t: " (si >= ei) return;", c: "" },
+      ],
+    },
+    { l: 7, c: [{ t: "    int mid = si + (ei - si) / 2;", c: "" }] },
+    { l: 8, c: [{ t: "    mergeSortHelper(arr, si, mid);", c: "" }] },
+    { l: 9, c: [{ t: "    mergeSortHelper(arr, mid + 1, ei);", c: "" }] },
+    { l: 10, c: [{ t: "    merge(arr, si, mid, ei);", c: "" }] },
+    { l: 11, c: [{ t: "}", c: "light-gray" }] },
+    { l: 12, c: [{ t: "", c: "" }] },
+    {
+      l: 13,
+      c: [
+        {
+          t: "private static void merge(int arr[], int si, int mid, int ei) {",
+          c: "",
+        },
+      ],
+    },
+    { l: 14, c: [{ t: "    int temp[] = new int[ei - si + 1];", c: "" }] },
+    { l: 15, c: [{ t: "    int i = si, j = mid + 1, k = 0;", c: "" }] },
+    {
+      l: 16,
+      c: [
+        { t: "    while", c: "purple" },
+        { t: " (i <= mid && j <= ei) {", c: "" },
+      ],
+    },
+    {
+      l: 17,
+      c: [
+        { t: "        if", c: "purple" },
+        { t: " (arr[i] < arr[j]) temp[k++] = arr[i++];", c: "" },
+      ],
+    },
+    { l: 18, c: [{ t: "        else temp[k++] = arr[j++];", c: "" }] },
+    { l: 19, c: [{ t: "    }", c: "light-gray" }] },
+    {
+      l: 20,
+      c: [
+        { t: "    while", c: "purple" },
+        { t: " (i <= mid) temp[k++] = arr[i++];", c: "" },
+      ],
+    },
+    {
+      l: 21,
+      c: [
+        { t: "    while", c: "purple" },
+        { t: " (j <= ei) temp[k++] = arr[j++];", c: "" },
+      ],
+    },
+    {
+      l: 22,
+      c: [
+        {
+          t: "    for (k = 0, i = si; k < temp.length; k++, i++) arr[i] = temp[k];",
+          c: "",
+        },
+      ],
+    },
+    { l: 23, c: [{ t: "}", c: "light-gray" }] },
+  ];
+
   return (
     <div
       ref={visualizerRef}
@@ -406,7 +489,8 @@ const MergeSortVisualizer = () => {
         </p>
       </header>
 
-      <div class="w-full flex justify-center">
+ update-array-input-bar
+      <div className="w-full flex justify-center">
         <div className="shadow-2xl border border-gray-700/50 bg-gray-800/50 p-4 rounded-lg  flex flex-col md:flex-row items-center justify-between gap-2 mb-6 w-full">
           <div
             className={`flex items-center gap-4 ${
@@ -532,19 +616,119 @@ const MergeSortVisualizer = () => {
               </button>
             </div>
           </div>
+
+      <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+        <div className="flex items-center gap-4 flex-grow w-full">
+          <label
+            htmlFor="array-input"
+            className="font-medium text-gray-300 font-mono"
+          >
+            Array:
+          </label>
+          <input
+            id="array-input"
+            type="text"
+            value={arrayInput}
+            onChange={(e) => setArrayInput(e.target.value)}
+            disabled={isLoaded}
+            className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          {!isLoaded ? (
+            <button
+              onClick={loadArray}
+              className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Load & Visualize
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={stepBackward}
+                disabled={currentStep <= 0}
+                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                </svg>
+              </button>
+              <span className="font-mono w-24 text-center">
+                {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
+              </span>
+              <button
+                onClick={stepForward}
+                disabled={currentStep >= history.length - 1}
+                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                </svg>
+              </button>
+            </>
+          )}
+          <button
+            onClick={reset}
+            className="ml-4 bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg"
+          >
+            Reset
+          </button>
+ main
         </div>
       </div>
 
       {isLoaded ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Code size={20} />
-              Pseudocode
+            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2 justify-between">
+              <span className="flex items-center gap-2">
+                <Code size={20} /> Pseudocode
+              </span>
+
+              {/* 👇 Toggle buttons for C++ and Java */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setCodeLanguage("cpp")}
+                  className={`px-3 py-1 rounded-md text-sm font-medium ${
+                    codeLanguage === "cpp"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  }`}
+                >
+                  C++
+                </button>
+
+                <button
+                  onClick={() => setCodeLanguage("java")}
+                  className={`px-3 py-1 rounded-md text-sm font-medium ${
+                    codeLanguage === "java"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  }`}
+                >
+                  Java
+                </button>
+              </div>
             </h3>
+
             <pre className="text-sm overflow-auto">
               <code className="font-mono leading-relaxed">
-                {mergeSortCode.map((line) => (
+                {(codeLanguage === "cpp"
+                  ? mergeSortCode
+                  : mergeSortCodeJava
+                ).map((line) => (
                   <CodeLine key={line.l} line={line.l} content={line.c} />
                 ))}
               </code>
@@ -557,7 +741,10 @@ const MergeSortVisualizer = () => {
                 <BarChart3 size={20} />
                 Array Visualization
               </h3>
+
               <div className="flex justify-center items-center min-h-[170px] py-4 overflow-x-auto">
+
+
                 <div
                   id="array-container"
                   className="relative transition-all"

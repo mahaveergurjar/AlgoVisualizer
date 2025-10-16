@@ -12,10 +12,18 @@ import {
   TrendingUp,
   Star,
   Zap,
+  Hash,
+  Crown,
+  Search,
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
 import SubsetSumVisualizer from "./SubsetSum.jsx";
+import TowerOfHanoiVisualizer from "./TowerOfHanoi.jsx";
+import FibonacciVisualizer from "./Fibonacci.jsx";
+import FactorialVisualizer from "./Factorial.jsx";
+import NQueensVisualizer from "./NQueens.jsx";
+import BinarySearchRecursiveVisualizer from "./BinarySearchRecursive.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -38,6 +46,96 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-amber-500/30",
       technique: "Backtracking",
       timeComplexity: "O(2^n)",
+    },
+    {
+      name: "Tower of Hanoi",
+      number: "26",
+      icon: Container,
+      description:
+        "Tower of Hanoi is a mathematical puzzle where we have three rods and n disks. The objective is to move the entire stack to another rod, obeying rules: only one disk can be moved at a time, and no larger disk may be placed on top of a smaller disk.",
+      page: "TowerOfHanoiVisualizer",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Divide & Conquer",
+      timeComplexity: "O(2^n)",
+    },
+    {
+      name: "Fibonacci",
+      number: "27",
+      icon: Zap,
+      description:
+        "The Fibonacci sequence is a series where each number is the sum of the two preceding ones. Visualize the recursive call tree and understand why memoization dramatically improves performance.",
+      page: "FibonacciVisualizer",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Tree Recursion",
+      timeComplexity: "O(2^n)",
+    },
+    {
+      name: "Factorial",
+      number: "28",
+      icon: Hash,
+      description:
+        "Calculate factorial using recursion. Visualize the linear call stack and understand how each recursive call multiplies the current number with the result of the next call.",
+      page: "FactorialVisualizer",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-blue-500 to-indigo-500",
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/20",
+      borderColor: "border-blue-500/30",
+      technique: "Linear Recursion",
+      timeComplexity: "O(n)",
+    },
+    {
+      name: "N-Queens",
+      number: "29",
+      icon: Crown,
+      description:
+        "Place N queens on an N×N chessboard such that no two queens attack each other. Visualize the backtracking algorithm as it explores the solution space and backtracks from invalid configurations.",
+      page: "NQueensVisualizer",
+      difficulty: "Hard",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-pink-500 to-rose-500",
+      iconColor: "text-pink-400",
+      iconBg: "bg-pink-500/20",
+      borderColor: "border-pink-500/30",
+      technique: "Backtracking",
+      timeComplexity: "O(n!)",
+    },
+    {
+      name: "Binary Search (Recursive)",
+      number: "30",
+      icon: Search,
+      description:
+        "Search for a target value in a sorted array using recursive binary search. Visualize how the search space is divided in half with each recursive call, achieving logarithmic time complexity.",
+      page: "BinarySearchRecursiveVisualizer",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-teal-500 to-emerald-500",
+      iconColor: "text-teal-400",
+      iconBg: "bg-teal-500/20",
+      borderColor: "border-teal-500/30",
+      technique: "Divide & Conquer",
+      timeComplexity: "O(log n)",
     },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
@@ -205,6 +303,16 @@ const RecursionPage = ({ navigate: parentNavigate, initialPage = null }) => {
     switch (page) {
       case "SubsetSumVisualizer":
         return <SubsetSumVisualizer navigate={navigate} />;
+      case "TowerOfHanoiVisualizer":
+        return <TowerOfHanoiVisualizer navigate={navigate} />;
+      case "FibonacciVisualizer":
+        return <FibonacciVisualizer navigate={navigate} />;
+      case "FactorialVisualizer":
+        return <FactorialVisualizer navigate={navigate} />;
+      case "NQueensVisualizer":
+        return <NQueensVisualizer navigate={navigate} />;
+      case "BinarySearchRecursiveVisualizer":
+        return <BinarySearchRecursiveVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

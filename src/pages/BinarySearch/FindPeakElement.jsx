@@ -17,6 +17,7 @@ import {
   CheckCircle,
   Terminal,
   Activity,
+  Mountain,
 } from "lucide-react";
 
 // A standardized Pointer component for the visualizer
@@ -73,8 +74,8 @@ const VisualizerPointer = ({
   );
 };
 
-const FindMinimumInRotatedSortedArray = () => {
-  const [arrInput, setArrInput] = useState("4,5,6,7,0,1,2");
+const FindPeakElement = () => {
+  const [arrInput, setArrInput] = useState("1,2,3,1");
   const [array, setArray] = useState([]);
 
   const [history, setHistory] = useState([]);
@@ -107,16 +108,18 @@ const FindMinimumInRotatedSortedArray = () => {
         l,
         r,
         mid,
-        message: `Check if arr[mid] (${arr[mid]}) > arr[r] (${arr[r]})`,
+        message: `Check if arr[mid] (${arr[mid]}) < arr[mid+1] (${
+          arr[mid + 1]
+        })`,
         line: 4,
       });
-      if (arr[mid] > arr[r]) {
+      if (arr[mid] < arr[mid + 1]) {
         l = mid + 1;
         add({
           l,
           r,
           mid,
-          message: "Condition is true. Minimum must be in the right half.",
+          message: "Condition is true. A peak must be in the right half.",
           line: 5,
         });
       } else {
@@ -126,7 +129,7 @@ const FindMinimumInRotatedSortedArray = () => {
           r,
           mid,
           message:
-            "Condition is false. Minimum is in the left half (including mid).",
+            "Condition is false. Peak is in the left half (including mid).",
           line: 6,
         });
       }
@@ -135,8 +138,8 @@ const FindMinimumInRotatedSortedArray = () => {
       l,
       r,
       mid: l,
-      result: arr[l],
-      message: `Loop terminates. Minimum found at index ${l}.`,
+      peak: l,
+      message: `Loop terminates. Peak found at index ${l}.`,
       line: 8,
     });
 
@@ -200,34 +203,35 @@ const FindMinimumInRotatedSortedArray = () => {
 
   const codeContent = useMemo(
     () => ({
-      1: `int findMin(vector<int>& nums) {`,
+      1: `int findPeakElement(vector<int>& nums) {`,
       2: `    int l = 0, r = nums.size() - 1;`,
       3: `    while (l < r) {`,
       4: `        int mid = l + (r - l) / 2;`,
-      5: `        if (nums[mid] > nums[r]) l = mid + 1;`,
+      5: `        if (nums[mid] < nums[mid + 1]) l = mid + 1;`,
       6: `        else r = mid;`,
       7: `    }`,
-      8: `    return nums[l];`,
+      8: `    return l; // or r, since l == r`,
       9: `}`,
     }),
     []
   );
 
   const arrayToDisplay = state.array || array;
-  const { line, l, r, mid, result, message } = state;
+  const { line, l, r, mid, peak, message } = state;
 
   return (
     <div className="px-4 py-8 max-w-7xl mx-auto relative">
       <header className="relative z-10 mb-12 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-emerald-400 to-green-300">
-          Find Minimum in Rotated Sorted Array
+        <h1 className="text-4xl sm:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-teal-400 to-green-300">
+          Find Peak Element
         </h1>
         <p className="text-gray-400 mt-3 text-base max-w-2xl mx-auto">
-          Visualizing an efficient binary search to find the pivot point or
-          minimum element in logarithmic time.
+          Visualizing an O(log n) binary search approach to find any peak in an
+          array.
         </p>
       </header>
 
+      {/* --- START: REPLACED SECTION --- */}
       <section className="mb-6 z-10 relative">
         <div className="flex flex-col md:flex-row gap-3 items-center">
           <input
@@ -236,7 +240,7 @@ const FindMinimumInRotatedSortedArray = () => {
             onChange={(e) => setArrInput(e.target.value)}
             disabled={isLoaded}
             className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm"
-            placeholder="Rotated Sorted Array"
+            placeholder="Array (comma-separated)"
           />
 
           {!isLoaded ? (
@@ -285,7 +289,6 @@ const FindMinimumInRotatedSortedArray = () => {
                   max={1500}
                   step={50}
                   value={speed}
-                  // Note: Changed onChange logic to match the target example
                   onChange={(e) => setSpeed(parseInt(e.target.value, 10))}
                   className="w-36"
                 />
@@ -301,10 +304,11 @@ const FindMinimumInRotatedSortedArray = () => {
           )}
         </div>
       </section>
+      {/* --- END: REPLACED SECTION --- */}
 
       {!isLoaded ? (
         <div className="mt-12 text-center text-gray-500 animate-pulse">
-          Enter a rotated sorted array to begin the visualization.
+          Enter an array to begin the visualization.
         </div>
       ) : (
         <main className="grid grid-cols-1 lg:grid-cols-5 gap-6 relative z-10 animate-[fadeIn_0.5s_ease-in-out]">
@@ -347,7 +351,9 @@ const FindMinimumInRotatedSortedArray = () => {
                   >
                     <div
                       className={`w-12 h-12 flex items-center justify-center rounded-lg font-bold transition-all duration-300 ${
-                        l <= r && index >= l && index <= r
+                        index === peak
+                          ? "bg-green-500 scale-110 ring-2 ring-green-300"
+                          : l <= r && index >= l && index <= r
                           ? "bg-gray-700"
                           : "bg-gray-800 text-gray-500"
                       }`}
@@ -373,7 +379,7 @@ const FindMinimumInRotatedSortedArray = () => {
                   index={mid}
                   total={arrayToDisplay.length}
                   label="MID"
-                  color="green"
+                  color="blue"
                   position="top"
                 />
               </div>
@@ -398,19 +404,19 @@ const FindMinimumInRotatedSortedArray = () => {
                 </div>
               </div>
               <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
-                <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-green-300">
+                <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-blue-300">
                   <Code size={16} /> Mid Value
                 </h4>
-                <div className="text-3xl font-mono text-green-300">
+                <div className="text-3xl font-mono text-blue-300">
                   {mid !== null ? arrayToDisplay[mid] : "-"}
                 </div>
               </div>
               <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
                 <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-emerald-300">
-                  <CheckCircle size={16} /> Minimum
+                  <Mountain size={16} /> Peak Index
                 </h4>
                 <div className="text-3xl font-bold text-emerald-300">
-                  {result ?? "..."}
+                  {peak ?? "..."}
                 </div>
               </div>
             </div>
@@ -440,4 +446,4 @@ const FindMinimumInRotatedSortedArray = () => {
   );
 };
 
-export default FindMinimumInRotatedSortedArray;
+export default FindPeakElement;

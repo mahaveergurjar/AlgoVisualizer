@@ -11,9 +11,16 @@ import {
   TrendingUp,
   Star,
   Zap,
+  Hash,
+  Binary,
+  FlipHorizontal,
 } from "lucide-react";
 
 import SingleNumberVisualizer from "./SingleNumber.jsx";
+import NumberOf1Bits from "./NumberOf1Bits.jsx";
+import CountingBits from "./CountingBits.jsx";
+import ReverseBits from "./ReverseBits.jsx";
+import PowerOfTwo from "./PowerOfTwo.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -35,6 +42,78 @@ const AlgorithmList = ({ navigate }) => {
       iconBg: "bg-cyan-500/10",
       borderColor: "border-cyan-500/30",
       technique: "Bit Manipulation (XOR)",
+      timeComplexity: "O(N)",
+    },
+    {
+      name: "Reverse Bits",
+      number: "190",
+      icon: FlipHorizontal,
+      description:
+        "Reverse the bits of a given 32-bit unsigned integer using bit manipulation techniques.",
+      page: "ReverseBits",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-indigo-500 to-violet-500",
+      iconColor: "text-indigo-400",
+      iconBg: "bg-indigo-500/10",
+      borderColor: "border-indigo-500/30",
+      technique: "Bit Manipulation",
+      timeComplexity: "O(1)",
+    },
+    {
+      name: "Number of 1 Bits",
+      number: "191",
+      icon: Hash,
+      description:
+        "Count the number of set bits (1's) in the binary representation of a positive integer.",
+      page: "NumberOf1Bits",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/10",
+      borderColor: "border-cyan-500/30",
+      technique: "Bit Manipulation",
+      timeComplexity: "O(1)",
+    },
+    {
+      name: "Power of Two",
+      number: "231",
+      icon: Zap,
+      description:
+        "Determine if an integer is a power of two using the clever bit trick: n & (n-1) == 0.",
+      page: "PowerOfTwo",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-yellow-500 to-orange-500",
+      iconColor: "text-yellow-400",
+      iconBg: "bg-yellow-500/10",
+      borderColor: "border-yellow-500/30",
+      technique: "Bit Manipulation",
+      timeComplexity: "O(1)",
+    },
+    {
+      name: "Counting Bits",
+      number: "338",
+      icon: Binary,
+      description:
+        "Return an array where each element represents the number of 1's in the binary representation of numbers from 0 to n.",
+      page: "CountingBits",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/10",
+      borderColor: "border-purple-500/30",
+      technique: "Bit Manipulation (DP)",
       timeComplexity: "O(N)",
     },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
@@ -203,6 +282,14 @@ const BitPage = ({ navigate: parentNavigate, initialPage = null }) => {
     switch (page) {
       case "SingleNumber":
         return <SingleNumberVisualizer navigate={navigate} />;
+      case "NumberOf1Bits":
+        return <NumberOf1Bits navigate={navigate} />;
+      case "CountingBits":
+        return <CountingBits navigate={navigate} />;
+      case "ReverseBits":
+        return <ReverseBits navigate={navigate} />;
+      case "PowerOfTwo":
+        return <PowerOfTwo navigate={navigate} />;
       default:
         return <AlgorithmList navigate={navigate} />;
     }
