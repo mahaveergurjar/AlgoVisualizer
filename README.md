@@ -25,7 +25,7 @@
 - ✅ Insertion Sort (Implemented)
 - ✅ Heap Sort (Implemented)
 - ✅ Counting Sort (Implemented)
-- ✅ Radix Sort (Implemented)
+- ✅ Gallery (Implemented) - Browse and search through all available algorithms and problems with tags, difficulty filters, and direct links to visualizations
 
 **AlgoVisualizer** is a modern, interactive web application designed to help students, developers, and algorithm enthusiasts understand complex Data Structures and Algorithms (DSA) through visual, step-by-step execution. Whether you're preparing for technical interviews, studying for exams, or simply curious about how algorithms work under the hood, AlgoVisualizer makes learning engaging and intuitive.
 
@@ -169,12 +169,14 @@ The optimized production build will be generated in the `dist/` folder.
 4. Adjust visualization speed
 5. Click "Visualize" to see the algorithm in action
 
-### Graph Algorithms
+### Algorithm Gallery
 
-1. Select DFS or BFS
-2. Click nodes to create a graph structure
-3. Choose a starting node
-4. Watch the traversal process unfold
+1. Click on the "Gallery" badge on the homepage or navigate to `/gallery`
+2. Use the search bar to find specific algorithms by name or description
+3. Apply filters by difficulty (Easy, Medium, Hard) or tags (e.g., Sorting, Pathfinding)
+4. Browse the grid of algorithm cards, each showing title, description, difficulty, and tags
+5. Click "View Visualization" on any card to jump directly to that algorithm's interactive demo
+6. Use "Clear Filters" to reset your search and filters
 
 ---
 

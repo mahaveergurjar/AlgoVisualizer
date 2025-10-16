@@ -1,0 +1,146 @@
+[
+  {
+    "id": "bubble-sort",
+    "title": "Bubble Sort",
+    "description": "A simple comparison-based sorting algorithm that repeatedly swaps adjacent elements if they are in the wrong order.",
+    "difficulty": "Easy",
+    "tags": ["Sorting", "Comparison-based", "Stable"],
+    "category": "Sorting",
+    "route": "/sorting/bubble-sort"
+  },
+  {
+    "id": "merge-sort",
+    "title": "Merge Sort",
+    "description": "A divide-and-conquer algorithm that divides the array into two halves, sorts them recursively, and merges the sorted halves.",
+    "difficulty": "Medium",
+    "tags": ["Sorting", "Divide and Conquer", "Stable"],
+    "category": "Sorting",
+    "route": "/sorting/merge-sort"
+  },
+  {
+    "id": "quick-sort",
+    "title": "Quick Sort",
+    "description": "An efficient divide-and-conquer sorting algorithm that picks a pivot and partitions the array around it.",
+    "difficulty": "Medium",
+    "tags": ["Sorting", "Divide and Conquer", "In-place"],
+    "category": "Sorting",
+    "route": "/sorting/quick-sort"
+  },
+  {
+    "id": "selection-sort",
+    "title": "Selection Sort",
+    "description": "Finds the minimum element in the unsorted part and swaps it with the first unsorted element.",
+    "difficulty": "Easy",
+    "tags": ["Sorting", "Comparison-based", "In-place"],
+    "category": "Sorting",
+    "route": "/sorting/selection-sort"
+  },
+  {
+    "id": "insertion-sort",
+    "title": "Insertion Sort",
+    "description": "Builds the final sorted array one item at a time by inserting elements into their correct position.",
+    "difficulty": "Easy",
+    "tags": ["Sorting", "Comparison-based", "Stable", "Adaptive"],
+    "category": "Sorting",
+    "route": "/sorting/insertion-sort"
+  },
+  {
+    "id": "heap-sort",
+    "title": "Heap Sort",
+    "description": "Uses a binary heap data structure to sort elements by building a max heap and repeatedly extracting the maximum.",
+    "difficulty": "Medium",
+    "tags": ["Sorting", "Heap", "In-place"],
+    "category": "Sorting",
+    "route": "/sorting/heap-sort"
+  },
+  {
+    "id": "counting-sort",
+    "title": "Counting Sort",
+    "description": "A non-comparison sorting algorithm that counts occurrences of each element and uses this info to place elements.",
+    "difficulty": "Medium",
+    "tags": ["Sorting", "Non-comparison", "Stable"],
+    "category": "Sorting",
+    "route": "/sorting/counting-sort"
+  },
+  {
+    "id": "radix-sort",
+    "title": "Radix Sort",
+    "description": "Sorts numbers by processing individual digits, typically using counting sort as a subroutine.",
+    "difficulty": "Medium",
+    "tags": ["Sorting", "Non-comparison", "Stable"],
+    "category": "Sorting",
+    "route": "/sorting/radix-sort"
+  },
+  {
+    "id": "dijkstra-pathfinding",
+    "title": "Dijkstra's Algorithm",
+    "description": "Finds the shortest path between nodes in a graph with non-negative weights using a priority queue.",
+    "difficulty": "Medium",
+    "tags": ["Pathfinding", "Graph", "Shortest Path", "Greedy"],
+    "category": "Pathfinding",
+    "route": "/pathfinding/dijkstra"
+  },
+  {
+    "id": "astar-pathfinding",
+    "title": "A* Search",
+    "description": "An informed search algorithm that finds the shortest path using heuristics to guide the search.",
+    "difficulty": "Hard",
+    "tags": ["Pathfinding", "Graph", "Shortest Path", "Heuristic"],
+    "category": "Pathfinding",
+    "route": "/pathfinding/astar"
+  },
+  {
+    "id": "dfs-graph",
+    "title": "Depth-First Search (DFS)",
+    "description": "Traverses a graph by exploring as far as possible along each branch before backtracking.",
+    "difficulty": "Easy",
+    "tags": ["Graph", "Traversal", "Recursion"],
+    "category": "Graphs",
+    "route": "/graphs/dfs"
+  },
+  {
+    "id": "bfs-graph",
+    "title": "Breadth-First Search (BFS)",
+    "description": "Explores all nodes at the present depth level before moving to nodes at the next depth level.",
+    "difficulty": "Easy",
+    "tags": ["Graph", "Traversal", "Queue"],
+    "category": "Graphs",
+    "route": "/graphs/bfs"
+  },
+  {
+    "id": "binary-search",
+    "title": "Binary Search",
+    "description": "Efficiently finds the position of a target value within a sorted array by repeatedly dividing the search interval.",
+    "difficulty": "Easy",
+    "tags": ["Searching", "Divide and Conquer", "Logarithmic"],
+    "category": "Searching",
+    "route": "/binary-search"
+  },
+  {
+    "id": "two-sum",
+    "title": "Two Sum",
+    "description": "Finds two numbers in an array that add up to a specific target using a hash map for O(n) time.",
+    "difficulty": "Easy",
+    "tags": ["Array", "Hash Table", "Two Pointers"],
+    "category": "Arrays",
+    "route": "/arrays/two-sum"
+  },
+  {
+    "id": "longest-substring",
+    "title": "Longest Substring Without Repeating Characters",
+    "description": "Finds the length of the longest substring without repeating characters using a sliding window.",
+    "difficulty": "Medium",
+    "tags": ["String", "Sliding Window", "Hash Table"],
+    "category": "Strings",
+    "route": "/strings/longest-substring"
+  },
+  {
+    "id": "fibonacci",
+    "title": "Fibonacci Number",
+    "description": "Computes the nth Fibonacci number using dynamic programming or memoization.",
+    "difficulty": "Easy",
+    "tags": ["Dynamic Programming", "Recursion", "Memoization"],
+    "category": "Dynamic Programming",
+    "route": "/dynamic-programming/fibonacci"
+  }
+]

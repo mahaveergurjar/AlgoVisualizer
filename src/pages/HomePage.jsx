@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   ArrowLeft,
   Shapes,
@@ -431,6 +432,14 @@ const AlgorithmCategories = ({ navigate }) => {
 
           {/* Feature Badges */}
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8 sm:mb-10 md:mb-12 px-4">
+            <Link to="/gallery" className="group px-6 py-3 bg-gradient-to-r from-green-500/15 to-teal-500/15 rounded-2xl border border-green-500/40 backdrop-blur-sm hover:scale-110 hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 cursor-pointer">
+              <div className="flex items-center gap-3">
+                <Shapes className="h-5 w-5 text-green-400" />
+                <span className="text-base font-semibold text-gray-200">
+                  Gallery
+                </span>
+              </div>
+            </Link>
             <div className="group px-6 py-3 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-2xl border border-blue-500/40 backdrop-blur-sm hover:scale-110 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 cursor-default">
               <div className="flex items-center gap-3">
                 <Zap className="h-5 w-5 text-blue-400" />
