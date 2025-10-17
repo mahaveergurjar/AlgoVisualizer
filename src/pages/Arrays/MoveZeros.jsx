@@ -12,7 +12,6 @@ const MoveZeros = ({ navigate }) => {
   const [steps, setSteps] = useState(0);
 
   const resetAnimation = () => {
-    setArray([...originalArray]);
     setLeft(0);
     setRight(0);
     setIsPlaying(false);
@@ -21,7 +20,9 @@ const MoveZeros = ({ navigate }) => {
   };
 
   const startAnimation = () => {
-    resetAnimation();
+    resetAnimation(); // ensures clean state
+    setArray([...originalArray]); // use the already generated array
+    setIsComplete(false);
     setIsPlaying(true);
   };
 
@@ -31,6 +32,8 @@ const MoveZeros = ({ navigate }) => {
     );
     setArray(newArray);
     setOriginalArray([...newArray]);
+    console.log("New array generated:", newArray);
+    console.log("Original array:", originalArray);
     resetAnimation();
   };
 
@@ -45,31 +48,23 @@ const MoveZeros = ({ navigate }) => {
     let interval;
     if (isPlaying && right < array.length) {
       interval = setInterval(() => {
-        setRight(prev => {
-          const newRight = prev + 1;
           setSteps(s => s + 1);
-          
-          // Swap if current element is non-zero
-          if (array[prev] !== 0) {
+          if (array[right] !== 0) {
             const newArray = [...array];
-            [newArray[left], newArray[prev]] = [newArray[prev], newArray[left]];
+            [newArray[left], newArray[right]] = [newArray[right], newArray[left]];
             setArray(newArray);
-            setLeft(l => l + 1);
+            setLeft(prevleft => prevleft + 1);
           }
-
-          if (newRight >= array.length) {
-            setIsPlaying(false);
-            setIsComplete(true);
-            return prev;
-          }
-
-          return newRight;
-        });
+          setRight(prevright => prevright + 1);
       }, speed);
+    }
+    else if (isPlaying && right === array.length){
+      setIsPlaying(false);
+      setIsComplete(true);
     }
 
     return () => clearInterval(interval);
-  }, [isPlaying, right, array, left, speed]);
+  }, [isPlaying, right, array, left, speed, setIsComplete,setRight,setLeft,setSteps]);
 
   return (
     <div className="min-h-screen bg-gray-950 text-white p-6">
