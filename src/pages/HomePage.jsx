@@ -20,6 +20,8 @@ import {
   Wrench,
   ArrowDownUp,
   Navigation,
+  Target,
+  CheckCircle,
   Type,
   Hash,
 } from "lucide-react";
@@ -40,6 +42,7 @@ import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
 import DPPage from "./DynamicProgramming/DynamicProgramming.jsx";
 import ScrollToTop from "../components/ScrollToTop";
 import GraphsPage from "./Graphs/Graphs.jsx";
+import GreedyPage from "./GreedyAlgorithms/Greedy.jsx";
 import StringPage from "./Strings/Strings.jsx";
 import BitPage from "./BitManipulation/BitManipulation.jsx";
 import HashingPage from "./Hashing/Hashing.jsx";
@@ -213,6 +216,17 @@ const AlgorithmCategories = ({ navigate }) => {
         iconBg: "bg-purple-500/20",
         borderColor: "border-purple-500/30",
         iconColor: "text-purple-400",
+      },
+      {
+        name: "Greedy Algorithms",
+        icon: CheckCircle,
+        description:
+          "Make locally optimal choices in the hope of finding a global optimum.",
+        page: "GreedyPage",
+        gradient: "from-rose-500 to-pink-600",
+        iconBg: "bg-rose-500/20",
+        borderColor: "border-rose-500/30",
+        iconColor: "text-rose-400",
       },
       {
         name: "Dynamic Programming",
@@ -657,6 +671,8 @@ const HomePage = () => {
         );
       case "Graphs":
         return <GraphsPage navigate={navigate} initialPage={initialSubPage} />;
+      case "GreedyPage":
+        return <GreedyPage navigate={navigate} initialPage={initialSubPage} />;
       case "DynamicProgramming":
         return <DPPage navigate={navigate} initialPage={initialSubPage} />;
       case "BitManipulation":
