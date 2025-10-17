@@ -472,7 +472,7 @@ const ConstructBinaryTree = () => {
             {!isLoaded ? (
               <button
                 onClick={loadArrays}
-                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+                className="bg-gradient-to-r from-emerald-500 to-green-600 cursor-pointer hover:from-emerald-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
               >
                 Load & Visualize
               </button>
@@ -525,7 +525,7 @@ const ConstructBinaryTree = () => {
             )}
             <button
               onClick={reset}
-              className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
+              className="bg-red-600 hover:bg-red-700 font-bold py-3 cursor-pointer px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
             >
               Reset
             </button>

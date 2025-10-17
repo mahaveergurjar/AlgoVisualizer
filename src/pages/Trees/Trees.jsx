@@ -48,6 +48,22 @@ const ValidateBST = ({ navigate }) => (
     </div>
 );
 
+// --- Placeholder for LCAofDeepestLeaves ---
+const LCAofDeepestLeaves = ({ navigate }) => (
+    <div className="p-4 max-w-7xl mx-auto text-center">
+        <h1 className="text-4xl font-bold text-cyan-400 mt-8">LCA of Deepest Leaves</h1>
+        <p className="text-lg text-gray-400 mt-4">Visualizer for LeetCode 1123 goes here.</p>
+    </div>
+);
+
+// --- Placeholder for AVLTree ---
+const AVLTree = ({ navigate }) => (
+    <div className="p-4 max-w-7xl mx-auto text-center">
+        <h1 className="text-4xl font-bold text-purple-400 mt-8">AVL Tree Visualizer</h1>
+        <p className="text-lg text-gray-400 mt-4">Visualizer for LeetCode 110 goes here.</p>
+    </div>
+);
+
 // --- VISUALIZER COMPONENT: LCAofBinaryTree (Your New Component) ---
 const LCAofBinaryTree = ({ navigate }) => {
     const [history, setHistory] = useState([]);
@@ -109,7 +125,8 @@ const LCAofBinaryTree = ({ navigate }) => {
                 return nodeId;
             }
             const result = leftLCA !== null ? leftLCA : rightLCA;
-            addState({ callStack: newCallStack, line: 18, explanation: `One subtree returned null, the other returned ${nodes.find(n=>n.id===result)?.data ?? 'null'}. Propagating this result up.`, highlightNode: nodeId, lcaNode: state.lcaNode, p, q });
+            const currentState = newHistory[newHistory.length -1] || {};
+            addState({ callStack: newCallStack, line: 18, explanation: `One subtree returned null, the other returned ${nodes.find(n=>n.id===result)?.data ?? 'null'}. Propagating this result up.`, highlightNode: nodeId, lcaNode: currentState.lcaNode, p, q });
             return result;
         }
         addState({ line: 0, explanation: "Starting search for Lowest Common Ancestor.", p, q });
@@ -189,6 +206,41 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-teal-500/30",
       technique: "DFS & Boundaries",
       timeComplexity: "O(n)",
+    },
+    {
+      name: "LCA of Deepest Leaves",
+      number: "1123",
+      icon: GitMerge,
+      description:
+        "Find the lowest common ancestor node of a binary tree's deepest leaves.",
+      page: "LCAofDeepestLeaves",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Depth-First Search (DFS)",
+      timeComplexity: "O(n)",
+    },
+    {
+      name: "AVL Tree Visualizer",
+      number: "110",
+      icon: GitMerge,
+      description: "Visualize AVL tree insertions and rotations.",
+      page: "AVLTree",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Balanced Binary Search Tree",
+      timeComplexity: "O(log n)",
     },
     {
       name: "Lowest Common Ancestor",
@@ -290,8 +342,8 @@ const PageWrapper = ({ children }) => (
     </div>
 );
 
-const TreesPage = ({ navigate: parentNavigate }) => {
-  const [page, setPage] = useState("home");
+const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
+  const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
@@ -300,6 +352,10 @@ const TreesPage = ({ navigate: parentNavigate }) => {
         return <ConstructBinaryTree navigate={navigate} />;
       case "ValidateBST":
         return <ValidateBST navigate={navigate} />;
+      case "LCAofDeepestLeaves":
+        return <LCAofDeepestLeaves navigate={navigate} />
+      case "AVLTree":
+        return <AVLTree navigate={navigate} />;
       case "LCAofBinaryTree":
         return <LCAofBinaryTree navigate={navigate} />;
       case "home":
@@ -313,7 +369,10 @@ const TreesPage = ({ navigate: parentNavigate }) => {
       {page !== "home" && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
-            <button onClick={() => navigate("home")} className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600">
+            <button
+              onClick={() => navigate("home")}
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
+            >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
             </button>
@@ -327,7 +386,10 @@ const TreesPage = ({ navigate: parentNavigate }) => {
       {page === "home" && parentNavigate && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto">
-            <button onClick={() => parentNavigate("home")} className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600">
+            <button
+              onClick={() => parentNavigate("home")}
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 cursor-pointer hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+            >
               <ArrowLeft className="h-4 w-4" />
               Back to Home
             </button>

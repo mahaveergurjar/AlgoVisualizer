@@ -219,7 +219,7 @@ const MaxConsecutiveOnes = () => {
               {!isLoaded ? (
                 <button
                   onClick={generateHistory}
-                  className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-gray-900 font-bold py-2.5 px-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
+                  className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-gray-900 font-bold py-2.5 px-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer"
                 >
                   Load & Visualize
                 </button>
@@ -278,7 +278,7 @@ const MaxConsecutiveOnes = () => {
               )}
               <button
                 onClick={resetVisualization}
-                className="ml-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
+                className="ml-2 bg-red-600 hover:bg-red-700 cursor-pointer text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
               >
                 Reset
               </button>

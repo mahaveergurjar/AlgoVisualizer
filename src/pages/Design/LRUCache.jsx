@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
-  Code,
   Clock,
   Hash,
   Link2,
   ArrowRight,
   CheckCircle,
+  Code,
 } from "lucide-react";
 
 // Main Visualizer Component
@@ -19,39 +20,26 @@ const LRUCacheVisualizer = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const parseOperations = (input) => {
-    const lines = input
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean);
+    const lines = input.split("\n").map((line) => line.trim()).filter(Boolean);
     let capacity = 0;
     const commands = [];
-
     const capMatch = lines[0].match(/LRUCache\((\d+)\)/);
-    if (capMatch) {
-      capacity = parseInt(capMatch[1], 10);
-    }
+    if (capMatch) capacity = parseInt(capMatch[1], 10);
 
     for (let i = 1; i < lines.length; i++) {
       const putMatch = lines[i].match(/put\((\d+),\s*(\d+)\)/);
       if (putMatch) {
-        commands.push({
-          op: "put",
-          key: parseInt(putMatch[1], 10),
-          value: parseInt(putMatch[2], 10),
-        });
+        commands.push({ op: "put", key: parseInt(putMatch[1], 10), value: parseInt(putMatch[2], 10) });
         continue;
       }
       const getMatch = lines[i].match(/get\((\d+)\)/);
-      if (getMatch) {
-        commands.push({ op: "get", key: parseInt(getMatch[1], 10) });
-      }
+      if (getMatch) commands.push({ op: "get", key: parseInt(getMatch[1], 10) });
     }
     return { capacity, commands };
   };
 
   const generateOptimalHistory = useCallback((capacity, commands) => {
     if (capacity <= 0) return;
-
     const newHistory = [];
     let cache = new Map();
     let head = { key: -1, val: -1, next: null, prev: null };
@@ -69,132 +57,94 @@ const LRUCacheVisualizer = () => {
       }
       return list;
     };
-
     const getMap = () => {
       const mapObject = {};
-      for (let [key, node] of cache.entries()) {
-        mapObject[key] = node.val;
-      }
+      for (let [key, node] of cache.entries()) mapObject[key] = node.val;
       return mapObject;
     };
+    const addState = (props) => newHistory.push({ cache: getMap(), list: getList(), outputLog: [...outputLog], explanation: "", ...props });
 
-    const addState = (props) =>
-      newHistory.push({
-        cache: getMap(),
-        list: getList(),
-        outputLog: [...outputLog],
-        explanation: "",
-        ...props,
-      });
-
-    addState({
-      line: 5,
-      commandIndex: -1,
-      explanation: `LRU Cache initialized with capacity ${capacity}.`,
-    });
+    addState({ commandIndex: -1, explanation: `LRU Cache initialized with capacity ${capacity}.` });
 
     commands.forEach((command, commandIndex) => {
       if (command.op === "put") {
         const { key, value } = command;
-        addState({
-          line: 17,
-          commandIndex,
-          explanation: `Executing put(${key}, ${value}).`,
-        });
+        addState({ commandIndex, explanation: `Executing put(${key}, ${value}). Checking if key exists in hash map.` });
 
         if (cache.has(key)) {
           const node = cache.get(key);
+          const oldVal = node.val;
+          addState({ commandIndex, explanation: `Key ${key} found in hash map. Updating its value.` });
           node.val = value;
-
-          addState({
-            line: 19,
-            commandIndex,
-            explanation: `Key ${key} exists. Update value to ${value}.`,
-          });
-
+          addState({ commandIndex, explanation: `Value for key ${key} updated from ${oldVal} to ${value}. Now moving node to front.` });
+          
+          // Unlink
           node.prev.next = node.next;
           node.next.prev = node.prev;
+          addState({ commandIndex, movedKey: key, explanation: `Unlinked node from its current position in the list.` });
 
+          // Move to front
           node.next = head.next;
           node.prev = head;
           head.next.prev = node;
           head.next = node;
-          addState({
-            line: 20,
-            commandIndex,
-            movedKey: key,
-            explanation: `Key ${key} moved to front (most recently used).`,
-          });
+          addState({ commandIndex, movedKey: key, explanation: `Moved node to the front of the list to mark it as most recently used.` });
+
         } else {
+          addState({ commandIndex, explanation: `Key ${key} not in hash map. Checking if cache is full.` });
           if (cache.size === capacity) {
+            addState({ commandIndex, explanation: `Cache is full (size=${capacity}). Eviction is necessary.` });
             const lru = tail.prev;
-            addState({
-              line: 25,
-              commandIndex,
-              evictedKey: lru.key,
-              explanation: `Cache is full. Evicting least recently used key: ${lru.key}.`,
-            });
+            addState({ commandIndex, explanation: `Identified least recently used item: key ${lru.key}.` });
+            
+            // Evict from map
             cache.delete(lru.key);
+            addState({ commandIndex, evictedKey: lru.key, explanation: `Removed key ${lru.key} from the hash map.` });
+            
+            // Evict from list
             lru.prev.next = tail;
             tail.prev = lru.prev;
+            addState({ commandIndex, evictedKey: lru.key, explanation: `Removed the LRU node from the end of the linked list.` });
           }
           const newNode = { key, val: value, prev: head, next: head.next };
+          addState({ commandIndex, explanation: `Creating new node for key ${key} with value ${value}.` });
+
+          // Add to list
           head.next.prev = newNode;
           head.next = newNode;
+          addState({ commandIndex, newKey: key, explanation: `Inserted new node at the front of the linked list.` });
+          
+          // Add to map
           cache.set(key, newNode);
-
-          addState({
-            line: 32,
-            commandIndex,
-            newKey: key,
-            explanation: `Added new key ${key} with value ${value} to the front.`,
-          });
+          addState({ commandIndex, newKey: key, explanation: `Added key ${key} with its node reference to the hash map.` });
         }
       } else if (command.op === "get") {
         const { key } = command;
-        addState({
-          line: 9,
-          commandIndex,
-          explanation: `Executing get(${key}).`,
-        });
-
+        addState({ commandIndex, explanation: `Executing get(${key}). Checking for key in hash map.` });
         if (cache.has(key)) {
           const node = cache.get(key);
           outputLog.push(node.val);
-          addState({
-            line: 13,
-            commandIndex,
-            getResult: node.val,
-            explanation: `Key ${key} found. Value is ${node.val}.`,
-          });
+          addState({ commandIndex, getResult: node.val, explanation: `Key ${key} found. Returning value ${node.val}. Now moving node to front.` });
 
+          // Unlink
           node.prev.next = node.next;
           node.next.prev = node.prev;
-
+          addState({ commandIndex, movedKey: key, getResult: node.val, explanation: `Unlinked node from its current position in the list.` });
+          
+          // Move to front
           node.next = head.next;
           node.prev = head;
           head.next.prev = node;
           head.next = node;
-          addState({
-            line: 14,
-            commandIndex,
-            getResult: node.val,
-            movedKey: key,
-            explanation: `Moving key ${key} to front as it's now most recently used.`,
-          });
+          addState({ commandIndex, movedKey: key, getResult: node.val, explanation: `Moved node to the front of the list to mark it as most recently used.` });
         } else {
           outputLog.push(-1);
-          addState({
-            line: 10,
-            commandIndex,
-            getResult: -1,
-            explanation: `Key ${key} not found. Returning -1.`,
-          });
+          addState({ commandIndex, getResult: -1, explanation: `Key ${key} not found in hash map. Returning -1.` });
         }
       }
     });
 
-    addState({ finished: true, explanation: "All operations complete." });
+    addState({ finished: true, explanation: "All operations completed." });
     setHistory(newHistory);
     setCurrentStep(0);
   }, []);
@@ -207,115 +157,54 @@ const LRUCacheVisualizer = () => {
 
     const getList = () => usage.map((key) => ({ key, val: cache.get(key) }));
     const getMap = () => Object.fromEntries(cache.entries());
+    const addState = (props) => newHistory.push({ cache: getMap(), list: getList(), outputLog: [...outputLog], explanation: "", ...props });
 
-    const addState = (props) =>
-      newHistory.push({
-        cache: getMap(),
-        list: getList(),
-        outputLog: [...outputLog],
-        explanation: "",
-        ...props,
-      });
-
-    addState({
-      commandIndex: -1,
-      explanation: `Cache initialized with capacity ${capacity}.`,
-    });
+    addState({ commandIndex: -1, explanation: `Cache initialized with capacity ${capacity} using a vector.` });
 
     commands.forEach((command, commandIndex) => {
       if (command.op === "put") {
         const { key, value } = command;
-        addState({
-          line: 13,
-          commandIndex,
-          explanation: `Executing put(${key}, ${value}).`,
-        });
+        addState({ commandIndex, explanation: `Executing put(${key}, ${value}). Checking if key exists.` });
         if (cache.has(key)) {
-          addState({
-            line: 14,
-            commandIndex,
-            explanation: `Key ${key} exists.`,
-          });
+          addState({ commandIndex, explanation: `Key ${key} exists. Updating its value in the hash map.` });
           cache.set(key, value);
-          addState({
-            line: 15,
-            commandIndex,
-            explanation: `Value updated to ${value}.`,
-          });
+          addState({ commandIndex, explanation: `Value updated. Now updating recency in the usage vector.` });
           usage = usage.filter((k) => k !== key);
+          addState({ commandIndex, movedKey: key, explanation: `Removed key ${key} from its current position in the vector (O(N) search).` });
           usage.unshift(key);
-          addState({
-            line: 16,
-            commandIndex,
-            movedKey: key,
-            explanation: `Key ${key} moved to front.`,
-          });
+          addState({ commandIndex, movedKey: key, explanation: `Added key ${key} to the front of the vector to mark it as most recent.` });
         } else {
-          addState({
-            line: 17,
-            commandIndex,
-            explanation: `Key ${key} does not exist.`,
-          });
+          addState({ commandIndex, explanation: `Key ${key} is new. Checking if cache is full.` });
           if (cache.size === capacity) {
-            addState({
-              line: 18,
-              commandIndex,
-              explanation: `Cache is full (size=${cache.size}).`,
-            });
+            addState({ commandIndex, explanation: `Cache is full. Evicting the LRU item.` });
             const lruKey = usage.pop();
+            addState({ commandIndex, evictedKey: lruKey, explanation: `Removed LRU key ${lruKey} from the back of the usage vector.` });
             cache.delete(lruKey);
-            addState({
-              line: 19,
-              commandIndex,
-              evictedKey: lruKey,
-              explanation: `Evicted LRU key ${lruKey}.`,
-            });
+            addState({ commandIndex, evictedKey: lruKey, explanation: `Removed evicted key ${lruKey} from the hash map.` });
           }
           cache.set(key, value);
-          addState({
-            line: 23,
-            commandIndex,
-            explanation: `Set data for key ${key}.`,
-          });
+          addState({ commandIndex, newKey: key, explanation: `Added new key ${key} with value ${value} to the hash map.` });
           usage.unshift(key);
-          addState({
-            line: 24,
-            commandIndex,
-            newKey: key,
-            explanation: `Added new key ${key} to front.`,
-          });
+          addState({ commandIndex, newKey: key, explanation: `Added new key ${key} to the front of the usage vector.` });
         }
       } else if (command.op === "get") {
         const { key } = command;
-        addState({
-          line: 5,
-          commandIndex,
-          explanation: `Executing get(${key}).`,
-        });
+        addState({ commandIndex, explanation: `Executing get(${key}). Checking for key.` });
         if (cache.has(key)) {
-          addState({ line: 6, commandIndex, explanation: `Key ${key} found.` });
-          outputLog.push(cache.get(key));
+          const val = cache.get(key);
+          outputLog.push(val);
+          addState({ commandIndex, getResult: val, explanation: `Key ${key} found, returning ${val}. Now updating recency.` });
           usage = usage.filter((k) => k !== key);
+          addState({ commandIndex, getResult: val, movedKey: key, explanation: `Removed key ${key} from the usage vector (O(N) search).` });
           usage.unshift(key);
-          addState({
-            line: 8,
-            commandIndex,
-            getResult: cache.get(key),
-            movedKey: key,
-            explanation: `Moving key ${key} to front.`,
-          });
+          addState({ commandIndex, getResult: val, movedKey: key, explanation: `Added key ${key} to the front of the vector.` });
         } else {
           outputLog.push(-1);
-          addState({
-            line: 6,
-            commandIndex,
-            getResult: -1,
-            explanation: `Key ${key} not found. Returning -1.`,
-          });
+          addState({ commandIndex, getResult: -1, explanation: `Key ${key} not found. Returning -1.` });
         }
       }
     });
-    addState({ finished: true, explanation: "All operations complete." });
+    addState({ finished: true, explanation: "All operations completed." });
     setHistory(newHistory);
     setCurrentStep(0);
   }, []);
@@ -327,11 +216,8 @@ const LRUCacheVisualizer = () => {
       return;
     }
     setIsLoaded(true);
-    if (mode === "optimal") {
-      generateOptimalHistory(capacity, commands);
-    } else {
-      generateBruteForceHistory(capacity, commands);
-    }
+    if (mode === "optimal") generateOptimalHistory(capacity, commands);
+    else generateBruteForceHistory(capacity, commands);
   };
 
   const reset = () => {
@@ -339,14 +225,24 @@ const LRUCacheVisualizer = () => {
     setHistory([]);
     setCurrentStep(-1);
   };
-  const stepForward = useCallback(
-    () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
-    [history.length]
-  );
-  const stepBackward = useCallback(
-    () => setCurrentStep((prev) => Math.max(prev - 1, 0)),
-    []
-  );
+
+  const parseInput = useCallback(() => {
+    const { capacity, commands } = parseOperations(operationsInput);
+    if (capacity <= 0 || commands.length === 0) throw new Error("Invalid operations");
+    return { capacity, commands };
+  }, [operationsInput]);
+
+  const handleModeChange = useModeHistorySwitch({
+    mode, setMode, isLoaded, parseInput,
+    generators: {
+      "brute-force": ({ capacity, commands }) => generateBruteForceHistory(capacity, commands),
+      optimal: ({ capacity, commands }) => generateOptimalHistory(capacity, commands),
+    },
+    setCurrentStep, onError: () => {},
+  });
+
+  const stepForward = useCallback(() => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)), [history.length]);
+  const stepBackward = useCallback(() => setCurrentStep((prev) => Math.max(prev - 1, 0)), []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -360,454 +256,208 @@ const LRUCacheVisualizer = () => {
   }, [isLoaded, stepForward, stepBackward]);
 
   const state = history[currentStep] || {};
-  const { commands } = parseOperations(operationsInput);
-
-  const colorMapping = {
-    purple: "text-purple-400",
-    cyan: "text-cyan-400",
-    "light-blue": "text-sky-300",
-    yellow: "text-yellow-300",
-    orange: "text-orange-400",
-    red: "text-red-400",
-    "light-gray": "text-gray-400",
-    green: "text-green-400",
-    "": "text-gray-200",
-  };
-  const CodeLine = ({ line, content }) => (
-    <div
-      className={`block rounded-md transition-colors px-2 py-1 ${
-        state.line === line
-          ? "bg-orange-500/20 border-l-4 border-orange-400"
-          : ""
-      }`}
-    >
-      <span className="text-gray-500 w-8 inline-block text-right pr-4 select-none">
-        {line}
-      </span>
-      {content.map((token, index) => (
-        <span key={index} className={colorMapping[token.c]}>
-          {token.t}
-        </span>
-      ))}
-    </div>
-  );
-
-  const optimalCode = [
-    {
-      l: 1,
-      c: [
-        { t: "class", c: "purple" },
-        { t: " LRUCache {", c: "" },
-      ],
-    },
-    { l: 5, c: [{ t: "LRUCache(int capacity) { ... }", c: "light-gray" }] },
-    {
-      l: 8,
-      c: [
-        { t: "int", c: "cyan" },
-        { t: " get(", c: "" },
-        { t: "int", c: "cyan" },
-        { t: " key) {", c: "" },
-      ],
-    },
-    {
-      l: 9,
-      c: [
-        { t: "  if", c: "purple" },
-        { t: " (cache.find(key) == cache.end()) {", c: "" },
-      ],
-    },
-    {
-      l: 10,
-      c: [
-        { t: "    return", c: "purple" },
-        { t: " -1;", c: "orange" },
-      ],
-    },
-    { l: 11, c: [{ t: "  }", c: "light-gray" }] },
-    { l: 13, c: [{ t: "  // move to front", c: "green" }] },
-    {
-      l: 14,
-      c: [
-        { t: "  return", c: "purple" },
-        { t: " cache[key]->second;", c: "" },
-      ],
-    },
-    { l: 15, c: [{ t: "}", c: "light-gray" }] },
-    {
-      l: 17,
-      c: [
-        { t: "void", c: "purple" },
-        { t: " put(", c: "" },
-        { t: "int", c: "cyan" },
-        { t: " key, ", c: "" },
-        { t: "int", c: "cyan" },
-        { t: " value) {", c: "" },
-      ],
-    },
-    {
-      l: 18,
-      c: [
-        { t: "  if", c: "purple" },
-        { t: " (cache.find(key) != cache.end()) {", c: "" },
-      ],
-    },
-    { l: 19, c: [{ t: "    cache[key]->second = value;", c: "" }] },
-    { l: 20, c: [{ t: "    // move to front", c: "green" }] },
-    { l: 21, c: [{ t: "    return;", c: "purple" }] },
-    { l: 22, c: [{ t: "  }", c: "light-gray" }] },
-    {
-      l: 24,
-      c: [
-        { t: "  if", c: "purple" },
-        { t: " (cache.size() == capacity) {", c: "" },
-      ],
-    },
-    { l: 25, c: [{ t: "    // evict LRU", c: "green" }] },
-    { l: 28, c: [{ t: "  }", c: "light-gray" }] },
-    { l: 31, c: [{ t: "  // add to front", c: "green" }] },
-    { l: 32, c: [{ t: "  cache[key] = ...;", c: "" }] },
-    { l: 33, c: [{ t: "}", c: "light-gray" }] },
-    { l: 34, c: [{ t: "};", c: "" }] },
-  ];
-
-  const bruteForceCode = [
-    { l: 1, c: [{ t: "// Using vector for usage order", c: "green" }] },
-    { l: 2, c: [{ t: "vector<int> usage;", c: "" }] },
-    { l: 3, c: [{ t: "unordered_map<int, int> data;", c: "" }] },
-    { l: 5, c: [{ t: "int get(int key) {", c: "" }] },
-    {
-      l: 6,
-      c: [{ t: "  if(data.find(key) == data.end()) return -1;", c: "" }],
-    },
-    { l: 7, c: [{ t: "  // O(N) find and move", c: "green" }] },
-    {
-      l: 8,
-      c: [
-        { t: "  usage.erase(find(usage.begin(), usage.end(), key));", c: "" },
-      ],
-    },
-    { l: 9, c: [{ t: "  usage.insert(usage.begin(), key);", c: "" }] },
-    { l: 10, c: [{ t: "  return data[key];", c: "" }] },
-    { l: 11, c: [{ t: "}", c: "light-gray" }] },
-    { l: 13, c: [{ t: "void put(int key, int value) {", c: "" }] },
-    { l: 14, c: [{ t: "  if(data.find(key) != data.end()){", c: "" }] },
-    { l: 15, c: [{ t: "    data[key] = value;", c: "" }] },
-    { l: 16, c: [{ t: "    // O(N) find and move", c: "green" }] },
-    { l: 17, c: [{ t: "  } else {", c: "" }] },
-    { l: 18, c: [{ t: "    if(usage.size() == capacity){", c: "" }] },
-    { l: 19, c: [{ t: "      int lru = usage.back();", c: "" }] },
-    { l: 20, c: [{ t: "      usage.pop_back();", c: "" }] },
-    { l: 21, c: [{ t: "      data.erase(lru);", c: "" }] },
-    { l: 22, c: [{ t: "    }", c: "light-gray" }] },
-    { l: 23, c: [{ t: "    data[key] = value;", c: "" }] },
-    { l: 24, c: [{ t: "    usage.insert(usage.begin(), key);", c: "" }] },
-    { l: 25, c: [{ t: "  }", c: "light-gray" }] },
-    { l: 26, c: [{ t: "}", c: "light-gray" }] },
-  ];
+  const { cache = {}, list = [], outputLog = [] } = state;
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <header className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-orange-400">
-          LRU Cache Visualizer
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">Visualizing LeetCode 146</p>
-      </header>
+    <div className="min-h-screen bg-gray-900 text-gray-200 p-4">
+      <div className="max-w-7xl mx-auto flex flex-col gap-6">
+        <header className="text-center">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent mb-1">
+            LRU Cache Visualizer
+          </h1>
+          <p className="text-sm text-gray-400">
+            Visualizing LeetCode 146: Comparing O(1) and O(N) solutions
+          </p>
+        </header>
 
-      <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2 w-full">
-          <textarea
-            placeholder="Enter operations here..."
-            value={operationsInput}
-            onChange={(e) => setOperationsInput(e.target.value)}
-            disabled={isLoaded}
-            rows="4"
-            className="w-full p-2 bg-gray-900 rounded-md font-mono text-sm border border-gray-600"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          {!isLoaded ? (
-            <button
-              onClick={loadOps}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg w-full"
-            >
-              Load & Visualize
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={stepBackward}
-                disabled={currentStep <= 0}
-                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                </svg>
-              </button>
-              <span className="font-mono w-24 text-center">
-                {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
-              </span>
-              <button
-                onClick={stepForward}
-                disabled={currentStep >= history.length - 1}
-                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                </svg>
-              </button>
-            </>
-          )}
-          <button
-            onClick={reset}
-            className="ml-auto bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg"
-          >
-            Reset
-          </button>
-        </div>
-      </div>
-
-      <div className="flex border-b-2 border-gray-700 mb-6">
-        <div
-          onClick={() => {
-            setMode("brute-force");
-            reset();
-          }}
-          className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
-            mode === "brute-force"
-              ? "border-orange-400 text-orange-400"
-              : "border-transparent text-gray-400"
-          }`}
-        >
-          Brute Force O(N)
-        </div>
-        <div
-          onClick={() => {
-            setMode("optimal");
-            reset();
-          }}
-          className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
-            mode === "optimal"
-              ? "border-orange-400 text-orange-400"
-              : "border-transparent text-gray-400"
-          }`}
-        >
-          Optimal O(1)
-        </div>
-      </div>
-
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-6">
-            <div className="bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-              <h3 className="font-bold text-xl text-orange-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-                <Code size={20} />
-                C++ Solution
-              </h3>
-              <pre className="text-sm overflow-auto">
-                <code className="font-mono leading-relaxed">
-                  {mode === "optimal"
-                    ? optimalCode.map((l) => (
-                        <CodeLine key={l.l} line={l.l} content={l.c} />
-                      ))
-                    : bruteForceCode.map((l) => (
-                        <CodeLine key={l.l} line={l.l} content={l.c} />
-                      ))}
-                </code>
-              </pre>
+        {/* Top Control Bar */}
+        <div className="bg-gray-800 p-4 rounded-lg border border-gray-700 w-full">
+          <div className="flex flex-col gap-3">
+            {/* Input Section */}
+            <div className="w-full">
+              <label className="block text-xs font-semibold text-gray-300 mb-2">Enter Operations (one per line or comma-separated):</label>
+              <div className="bg-gray-900 rounded-lg border border-gray-600 focus-within:border-orange-500 transition-colors p-3 max-h-32 overflow-y-auto">
+                <input
+                  type="text"
+                  placeholder="LRUCache(2), put(1,1), put(2,2), get(1), put(3,3), get(2), put(4,4), get(1), get(3), get(4)"
+                  value={operationsInput.replace(/\n/g, ', ')}
+                  onChange={(e) => setOperationsInput(e.target.value.replace(/, /g, '\n').replace(/,/g, '\n'))}
+                  disabled={isLoaded}
+                  className="w-full bg-transparent font-mono text-xs text-gray-200 focus:outline-none disabled:opacity-50"
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-6">
-            <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-              <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
-                <Hash size={20} />
-                Hash Map (Cache)
-              </h3>
-              <div className="flex flex-wrap gap-4 min-h-[6rem]">
-                {Object.entries(state.cache || {}).map(([key, value]) => (
-                  <div
-                    key={key}
-                    className={`flex items-center gap-2 p-2 rounded-lg bg-gray-700 border-2 ${
-                      state.newKey == key || state.movedKey == key
-                        ? "border-orange-400 animate-pulse"
-                        : "border-gray-600"
-                    }`}
-                  >
-                    <div className="w-8 h-8 flex items-center justify-center bg-gray-800 rounded-md font-mono text-orange-300">
-                      {key}
+            {/* Controls Section */}
+            <div className="flex flex-wrap items-center gap-3 justify-between">
+              {/* Mode Selection */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400 font-semibold">Mode:</span>
+                <div className="flex gap-1 bg-gray-900/50 p-1 rounded-lg border border-gray-700">
+                  <button onClick={() => handleModeChange("brute-force")} className={`px-4 py-1.5 rounded-md font-semibold cursor-pointer transition-all text-xs ${mode === "brute-force" ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>
+                    Brute Force O(N)
+                  </button>
+                  <button onClick={() => handleModeChange("optimal")} className={`px-4 py-1.5 rounded-md font-semibold cursor-pointer transition-all text-xs ${mode === "optimal" ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md" : "text-gray-400 hover:bg-gray-700"}`}>
+                    Optimal O(1)
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2">
+                {!isLoaded ? (
+                  <button onClick={loadOps} className="bg-gradient-to-r from-orange-500 to-red-500 cursor-pointer hover:from-orange-600 hover:to-red-600 text-white font-bold py-2 px-6 rounded-md shadow-md transform hover:scale-105 transition-all flex items-center gap-2">
+                    <CheckCircle size={16} /> Visualize
+                  </button>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2 bg-gray-900/50 p-1.5 rounded-md border border-gray-600">
+                      <button onClick={stepBackward} disabled={currentStep <= 0} className="bg-gray-700 hover:bg-gray-600 p-2 rounded disabled:opacity-30 transition-all" title="Previous Step (←)">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                      </button>
+                      <div className="bg-gray-800 px-3 py-1 rounded border border-gray-600">
+                        <span className="font-mono text-sm font-bold text-orange-400">{currentStep >= 0 ? currentStep + 1 : 0}</span>
+                        <span className="text-gray-500 mx-1">/</span>
+                        <span className="font-mono text-xs text-gray-400">{history.length}</span>
+                      </div>
+                      <button onClick={stepForward} disabled={currentStep >= history.length - 1} className="bg-gray-700 hover:bg-gray-600 p-2 rounded disabled:opacity-30 transition-all" title="Next Step (→)">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                      </button>
                     </div>
-                    <ArrowRight size={16} className="text-gray-500" />
-                    <div className="w-8 h-8 flex items-center justify-center bg-gray-800 rounded-md font-mono text-white">
-                      {value}
-                    </div>
-                  </div>
-                ))}
-                {state.evictedKey && (
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-red-900/50 border-2 border-red-500">
-                    <div className="w-8 h-8 flex items-center justify-center bg-gray-800 rounded-md font-mono text-red-400">
-                      {state.evictedKey}
-                    </div>
-                    <span className="text-red-400 text-sm">Evicted</span>
-                  </div>
+                    <button onClick={reset} className="bg-red-600/80 cursor-pointer hover:bg-red-600 font-bold py-2 px-4 rounded-md shadow-md transition-all text-sm">
+                      Reset
+                    </button>
+                  </>
                 )}
               </div>
             </div>
-            <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-              <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
-                <Link2 size={20} />
-                Usage Order (Doubly Linked List / Vector)
-              </h3>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-mono text-gray-400">MRU</span>
-                <ArrowRight size={16} className="text-gray-500" />
-                <div className="flex-grow bg-gray-900/50 p-2 rounded-lg flex gap-2 items-center h-24 overflow-x-auto">
-                  {state.list?.map((node) => (
-                    <div
-                      key={node.key}
-                      className={`flex-shrink-0 w-20 h-16 p-2 rounded-lg flex flex-col justify-center items-center font-mono border-2 transition-all duration-300 ${
-                        state.movedKey == node.key || state.newKey == node.key
-                          ? "bg-orange-500/30 border-orange-400"
-                          : "bg-gray-700 border-gray-600"
-                      }`}
-                    >
-                      <span className="text-xs text-gray-400">
-                        K:{node.key}
-                      </span>
-                      <span className="font-bold text-lg">V:{node.val}</span>
-                    </div>
-                  ))}
+          </div>
+        </div>
+
+        {/* Main Visualization Area */}
+        {isLoaded ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="lg:col-span-2 bg-gray-800 p-4 rounded-lg border border-gray-700">
+              <div className="flex items-center gap-3 mb-2">
+                <Clock size={18} className="text-blue-400" />
+                <h3 className="font-bold text-md text-blue-300">Current Step Explanation</h3>
+              </div>
+              <div className="bg-gray-900/70 p-3 rounded-md border border-gray-700 min-h-[50px]">
+                <p className="text-sm text-gray-200">{state.explanation}</p>
+              </div>
+            </div>
+
+            <div className="lg:col-span-2 bg-gray-800 p-4 rounded-lg border border-gray-700">
+              <div className="flex items-center gap-3 mb-2">
+                <CheckCircle size={18} className="text-cyan-400" />
+                <div>
+                  <h3 className="font-bold text-md text-cyan-300">Output Log</h3>
+                  <p className="text-xs text-gray-500">Results from get() operations</p>
                 </div>
-                <ArrowRight size={16} className="text-gray-500" />
-                <span className="text-sm font-mono text-gray-400">LRU</span>
+              </div>
+              <div className="bg-gray-900/70 p-3 rounded-md border border-gray-700 min-h-[50px]">
+                <div className="flex flex-wrap gap-2">
+                  {outputLog.length === 0 ? <p className="text-gray-500 text-xs italic">No output yet</p>
+                    : outputLog.map((out, i) => (
+                      <div key={i} className={`font-mono px-3 py-1 rounded-md font-bold text-md border transition-all ${state.commandIndex === i && state.getResult !== undefined ? "bg-orange-500/30 border-orange-400 scale-110" : out === -1 ? "bg-red-900/30 border-red-600 text-red-300" : "bg-green-900/30 border-green-600 text-green-300"}`}>{out}</div>
+                    ))}
+                </div>
               </div>
             </div>
-            <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
-              <h3 className="text-gray-400 text-sm mb-1">Output</h3>
-              <div className="flex flex-wrap gap-2">
-                {state.outputLog?.map((out, i) => (
-                  <div
-                    key={i}
-                    className={`font-mono px-3 py-1 rounded-md ${
-                      state.commandIndex === i && state.getResult !== undefined
-                        ? "bg-orange-500/30"
-                        : "bg-gray-700"
-                    }`}
-                  >
-                    {out}
-                  </div>
-                ))}
+
+            <div className="bg-gray-800 p-4 rounded-lg border border-gray-700">
+              <div className="flex items-center gap-3 mb-2">
+                <Hash size={18} className="text-purple-400" />
+                <div>
+                  <h3 className="font-bold text-md text-purple-300">Hash Map</h3>
+                  <p className="text-xs text-gray-500 font-mono">{mode === 'optimal' ? 'Map<Int, Node*>' : 'Map<Int, Int>'}</p>
+                </div>
+              </div>
+              <div className="bg-gray-900/70 p-3 rounded-md border border-gray-700 min-h-[150px]">
+                <div className="flex flex-wrap gap-3">
+                  {Object.entries(cache).length === 0 ? <p className="text-gray-500 text-xs italic">Cache is empty</p>
+                    : Object.entries(cache).map(([key, value]) => (
+                      <div key={key} className={`p-2 rounded-lg bg-gray-700/50 border shadow-md transform transition-all flex items-center gap-2 ${state.newKey == key || state.movedKey == key ? "border-orange-400 scale-110" : "border-gray-600"}`}>
+                        <div className="w-8 h-8 flex items-center justify-center bg-orange-500 rounded font-mono text-sm font-bold">{key}</div>
+                        <ArrowRight size={14} className="text-gray-500" />
+                        <div className="w-8 h-8 flex items-center justify-center bg-blue-500 rounded font-mono text-sm font-bold">{value}</div>
+                      </div>
+                    ))}
+                  {state.evictedKey && (<div className="p-2 rounded-lg bg-red-900/30 border border-red-500 shadow-md"><div className="w-8 h-8 flex items-center justify-center bg-red-800 rounded font-mono text-sm font-bold">{state.evictedKey}</div></div>)}
+                </div>
               </div>
             </div>
-            <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem]">
-              <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
-              <p className="text-gray-300">{state.explanation}</p>
+
+            <div className="bg-gray-800 p-4 rounded-lg border border-gray-700">
+              <div className="flex items-center gap-3 mb-2">
+                <Link2 size={18} className="text-green-400" />
+                <div>
+                  <h3 className="font-bold text-md text-green-300">Usage Order</h3>
+                  <p className="text-xs text-gray-500">{mode === "optimal" ? "Doubly Linked List: Node {key, val, ...}" : "Vector<Integer>"}</p>
+                </div>
+              </div>
+              <div className="bg-gray-900/70 p-3 rounded-md border border-gray-700 min-h-[150px]">
+                <div className="flex items-center gap-2 mb-3 text-xs font-bold text-green-400">
+                  {mode === "optimal" && <span className="bg-green-900/30 px-2 py-1 rounded border border-green-600">HEAD</span>}
+                  MOST RECENT →
+                </div>
+                <div className="flex gap-2 items-center overflow-x-auto pb-2">
+                  {list.length === 0 ? <p className="text-gray-500 text-xs italic">No items yet</p>
+                    : list.map((node, idx) => (
+                      <div key={`${node.key}-${idx}`} className="flex items-center gap-2">
+                        <div className={`flex-shrink-0 w-20 p-2 rounded-lg flex flex-col justify-center items-center font-mono border transition-all shadow-md ${state.movedKey == node.key || state.newKey == node.key ? "bg-orange-500/20 border-orange-400 scale-110" : "bg-gray-700/50 border-gray-600"}`}>
+                          <span className="text-xs text-gray-400">Key: <span className="font-bold text-lg text-orange-300">{node.key}</span></span>
+                          <div className="w-full h-px bg-gray-600 my-1"></div>
+                          <span className="text-xs text-gray-400">Val: <span className="font-bold text-md text-blue-300">{node.val}</span></span>
+                        </div>
+                        {idx < list.length - 1 && <ArrowRight size={14} className="text-gray-600 flex-shrink-0" />}
+                      </div>
+                   ))}
+                </div>
+                <div className="flex items-center gap-2 mt-3 text-xs font-bold text-red-400">
+                  ← LEAST RECENT
+                  {mode === "optimal" && <span className="bg-red-900/30 px-2 py-1 rounded border border-red-600">TAIL</span>}
+                </div>
+              </div>
+            </div>
+            
+            <div className="lg:col-span-2 bg-gray-800 p-4 rounded-lg border border-gray-700">
+              <h3 className="font-bold text-md text-purple-300 mb-3 pb-2 border-b border-gray-700 flex items-center gap-3"><Clock size={18} /> Complexity Analysis</h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                {mode === "optimal" ? (<>
+                  <div className="bg-gray-900/50 p-3 rounded-md border border-gray-700">
+                    <h4 className="font-bold text-green-400 mb-1">Time: <span className="font-mono text-cyan-300">O(1)</span></h4>
+                    <p className="text-gray-400 text-xs">Both <code className="text-orange-300">get()</code> and <code className="text-orange-300">put()</code> run in constant time due to hash map lookups and linked list pointer updates.</p>
+                  </div>
+                  <div className="bg-gray-900/50 p-3 rounded-md border border-gray-700">
+                    <h4 className="font-bold text-blue-400 mb-1">Space: <span className="font-mono text-cyan-300">O(capacity)</span></h4>
+                    <p className="text-gray-400 text-xs">Space is proportional to the cache capacity for storing items in the hash map and linked list.</p>
+                  </div>
+                </> ) : ( <>
+                  <div className="bg-gray-900/50 p-3 rounded-md border border-gray-700">
+                    <h4 className="font-bold text-orange-400 mb-1">Time: <span className="font-mono text-red-300">O(N)</span></h4>
+                    <p className="text-gray-400 text-xs">Operations take linear time due to searching and moving elements within the usage vector (where N is current cache size).</p>
+                  </div>
+                  <div className="bg-gray-900/50 p-3 rounded-md border border-gray-700">
+                    <h4 className="font-bold text-blue-400 mb-1">Space: <span className="font-mono text-cyan-300">O(capacity)</span></h4>
+                    <p className="text-gray-400 text-xs">Space is proportional to capacity for storing items in the hash map and the usage vector.</p>
+                  </div>
+                </>)}
+              </div>
             </div>
           </div>
-          <div className="lg:col-span-2 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50 mt-6">
-            <h3 className="font-bold text-xl text-orange-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Clock size={20} />
-              Complexity Analysis
-            </h3>
-            <div className="space-y-4 text-sm">
-              {mode === "optimal" ? (
-                <>
-                  <div>
-                    <h4 className="font-semibold text-orange-300">
-                      Time Complexity:{" "}
-                      <span className="font-mono text-teal-300">O(1)</span> for
-                      get and put
-                    </h4>
-                    <p className="text-gray-400 mt-1">
-                      Both `get` and `put` operations have an average time
-                      complexity of O(1). Accessing an element in the hash map
-                      is O(1). Moving a node in the doubly linked list (removing
-                      and adding to the front) involves updating a few pointers,
-                      which is also a constant time operation.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-orange-300">
-                      Space Complexity:{" "}
-                      <span className="font-mono text-teal-300">
-                        O(capacity)
-                      </span>
-                    </h4>
-                    <p className="text-gray-400 mt-1">
-                      The space used is proportional to the capacity of the
-                      cache, as we store up to `capacity` key-value pairs in the
-                      hash map and the same number of nodes in the doubly linked
-                      list.
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div>
-                    <h4 className="font-semibold text-orange-300">
-                      Time Complexity:{" "}
-                      <span className="font-mono text-teal-300">O(N)</span> for
-                      get and put
-                    </h4>
-                    <p className="text-gray-400 mt-1">
-                      For both `get` and `put`, finding and moving an element in
-                      the usage vector can take O(N) time in the worst case,
-                      where N is the current size of the cache.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-orange-300">
-                      Space Complexity:{" "}
-                      <span className="font-mono text-teal-300">
-                        O(capacity)
-                      </span>
-                    </h4>
-                    <p className="text-gray-400 mt-1">
-                      The space is proportional to the capacity, used by both
-                      the hash map and the usage vector.
-                    </p>
-                  </div>
-                </>
-              )}
+        ) : (
+          <div className="text-center py-10">
+            <div className="bg-gray-800 p-8 rounded-lg border border-dashed border-gray-600 max-w-md mx-auto">
+              <div className="bg-orange-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><Code size={32} className="text-orange-400" /></div>
+              <h2 className="text-xl font-bold text-gray-300 mb-2">Ready to Visualize</h2>
+              <p className="text-gray-400 text-sm">Enter operations above and click "Visualize" to see how the LRU Cache works.</p>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="text-center text-gray-500 mt-20">
-          <p className="text-lg">
-            Enter operations and click "Load & Visualize" to start.
-          </p>
-          <p className="text-sm mt-2">
-            Use the format:
-            <br />
-            <code className="bg-gray-900/50 p-1 rounded-md font-mono">
-              LRUCache(capacity)
-            </code>
-            ,<br />
-            <code className="bg-gray-900/50 p-1 rounded-md font-mono">
-              put(key, value)
-            </code>
-            ,<br />
-            <code className="bg-gray-900/50 p-1 rounded-md font-mono">
-              get(key)
-            </code>
-          </p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
+
 export default LRUCacheVisualizer;

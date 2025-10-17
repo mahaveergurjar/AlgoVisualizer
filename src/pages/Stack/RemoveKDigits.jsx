@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  ArrowUp,
   Code,
   Hash,
   Trash2,
@@ -8,41 +7,7 @@ import {
   CheckCircle,
   Clock,
 } from "lucide-react";
-
-// Pointer Component
-const VisualizerPointer = ({ index, containerId, color, label }) => {
-  const [position, setPosition] = useState({ opacity: 0, left: 0 });
-
-  useEffect(() => {
-    if (index === null || index < 0) {
-      setPosition({ opacity: 0 });
-      return;
-    }
-    const container = document.getElementById(containerId);
-    const element = document.getElementById(`${containerId}-element-${index}`);
-    if (container && element) {
-      const containerRect = container.getBoundingClientRect();
-      const elementRect = element.getBoundingClientRect();
-      const offset =
-        elementRect.left - containerRect.left + elementRect.width / 2 - 12;
-      setPosition({ opacity: 1, left: offset });
-    } else {
-      setPosition({ opacity: 0 });
-    }
-  }, [index, containerId]);
-
-  return (
-    <div
-      className="absolute top-full mt-1 text-center transition-all duration-300 ease-out"
-      style={position}
-    >
-      <ArrowUp className={`w-6 h-6 mx-auto text-${color}-400`} />
-      <span className={`font-bold text-lg font-mono text-${color}-400`}>
-        {label}
-      </span>
-    </div>
-  );
-};
+import VisualizerPointer from "../../components/VisualizerPointer";
 
 // Main Visualizer Component
 const RemoveKDigitsVisualizer = () => {
@@ -575,7 +540,7 @@ const RemoveKDigitsVisualizer = () => {
           {!isLoaded ? (
             <button
               onClick={loadData}
-              className="bg-violet-500 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors"
+              className="bg-violet-500 hover:bg-violet-600 text-white cursor-pointer font-bold py-2 px-4 rounded-lg shadow-md transition-colors"
             >
               Load & Visualize
             </button>
@@ -628,7 +593,7 @@ const RemoveKDigitsVisualizer = () => {
           )}
           <button
             onClick={reset}
-            className="ml-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md"
+            className="ml-4 bg-red-600 hover:bg-red-700 text-white cursor-pointer font-bold py-2 px-4 rounded-lg shadow-md"
           >
             Reset
           </button>
@@ -693,6 +658,7 @@ const RemoveKDigitsVisualizer = () => {
                 containerId="nums-container"
                 color="amber"
                 label="i"
+                direction="up"
               />
             )}
           </div>
