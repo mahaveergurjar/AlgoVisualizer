@@ -96,9 +96,6 @@ AlgoVisualizer/
 |   |   └── Heaps    # Heaps
 │   ├── search/         # Search 
 │   │   └── catalog.js/    # Catalog of algorithms
-│   ├── utils/             # Utility functions
-│   │   ├── helpers.js     # Helper functions
-│   │   └── constants.js   # App constants
 │   ├── App.jsx            # Main App component
 │   ├── App.css            # Global styles
 │   ├── main.jsx           # Entry point
