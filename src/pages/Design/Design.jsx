@@ -11,10 +11,17 @@ import {
   Star,
   TrendingUp,
   Zap,
+  Search,
+  Twitter,
 } from "lucide-react";
 
 // --- Import your specific design problems here ---
 import LRUCache from "./LRUCache.jsx";
+import LFUCache from "./LFUCache.jsx";
+import DesignHashMap from "./DesignHashMap.jsx";
+import DesignLinkedList from "./DesignLinkedList.jsx";
+import MinStack from "./MinStack.jsx";
+import ImplementTrie from "./ImplementTrie.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -38,6 +45,92 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Design (HashMap + Linked List)",
       timeComplexity: "O(1)",
     },
+    {
+      name: "LFU Cache",
+      number: "460",
+      icon: Settings, // you can replace with any suitable icon
+      description:
+        "Implement an LFU (Least Frequently Used) cache supporting get and put operations. When capacity is reached, it evicts the least frequently used key. Ties are broken by least recently used key.",
+      page: "LFUCache",
+      difficulty: "Hard",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-pink-500 to-rose-500",
+      iconColor: "text-pink-400",
+      iconBg: "bg-pink-500/20",
+      borderColor: "border-pink-500/30",
+      technique: "Design (HashMap + Doubly Linked List + Frequency Map)",
+      timeComplexity: "O(1) average per operation",
+    },
+    {
+        name : "Design HashMap",
+        number : "706",
+        icon : Settings,
+        description : "Design a HashMap that supports put, get, and remove operations in O(1) time.",
+        page : "DesignHashMap",
+        difficulty : "Easy",
+        difficultyColor : "text-green-400",
+        difficultyBg : "bg-green-400/10",
+        difficultyBorder : "border-green-400/30",
+        gradient : "from-green-500 to-lime-500",
+        iconColor : "text-lime-400",
+        iconBg : "bg-lime-500/20",
+        borderColor : "border-lime-500/30",
+        technique : "Design (Array, HashTable, HashFunction)",
+        timeComplexity : "O(1)",
+      },
+      {
+        name : "Design Linked List",
+        number : "707",
+        icon : Settings,
+        description : "Design a Linked List that supports insert, delete, and get operations in O(n) time.",
+        page : "DesignLinkedList",
+        difficulty : "Medium",
+        difficultyColor : "text-yellow-400",
+        difficultyBg : "bg-yellow-400/10",
+        difficultyBorder : "border-yellow-400/30",
+        gradient : "from-yellow-500 to-amber-500",
+        iconColor : "text-amber-400",
+        iconBg : "bg-amber-500/20",
+        borderColor : "border-amber-500/30",
+        technique : "Design (Array, Pointer)",
+        timeComplexity : "O(n)",
+      },
+      {
+        name: "Min Stack",
+        number: "155",
+        icon: Layers,
+        description: "Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.",
+        page: "MinStack",
+        difficulty: "Medium",
+        difficultyColor: "text-yellow-400",
+        difficultyBg: "bg-yellow-400/10",
+        difficultyBorder: "border-yellow-400/30",
+        gradient: "from-blue-500 to-indigo-500",
+        iconColor: "text-blue-400",
+        iconBg: "bg-blue-500/20",
+        borderColor: "border-blue-500/30",
+        technique: "Design (Stack + Min Tracking)",
+        timeComplexity: "O(1)",
+      },
+      {
+        name: "Implement Trie (Prefix Tree)",
+        number: "208",
+        icon: Search,
+        description: "Implement a trie with insert, search, and startsWith methods for efficient string operations.",
+        page: "ImplementTrie",
+        difficulty: "Medium",
+        difficultyColor: "text-yellow-400",
+        difficultyBg: "bg-yellow-400/10",
+        difficultyBorder: "border-yellow-400/30",
+        gradient: "from-green-500 to-teal-500",
+        iconColor: "text-green-400",
+        iconBg: "bg-green-500/20",
+        borderColor: "border-green-500/30",
+        technique: "Design (Trie, Tree)",
+        timeComplexity: "O(m)",
+      },
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
   return (
@@ -203,14 +296,24 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const DesignPage = ({ navigate: parentNavigate }) => {
-  const [page, setPage] = useState("home");
+const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
+  const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
       case "LRUCache":
         return <LRUCache navigate={navigate} />;
+      case "LFUCache":
+        return <LFUCache navigate={navigate} />;
+      case "DesignHashMap":
+        return <DesignHashMap navigate={navigate} />;
+      case "DesignLinkedList":
+        return <DesignLinkedList navigate={navigate} />;
+      case "MinStack":
+        return <MinStack navigate={navigate} />;
+      case "ImplementTrie":
+        return <ImplementTrie navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -248,7 +351,7 @@ const DesignPage = ({ navigate: parentNavigate }) => {
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
@@ -268,7 +371,7 @@ const DesignPage = ({ navigate: parentNavigate }) => {
           <div className="max-w-7xl px-6 w-full mx-auto">
             <button
               onClick={() => parentNavigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 cursor-pointer bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home

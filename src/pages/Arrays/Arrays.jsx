@@ -11,6 +11,22 @@ import {
   TrendingUp,
   Star,
   Zap,
+  RefreshCw,
+  Search,
+  Maximize2,
+  Minus,
+  Plus,
+  Target,
+  RotateCcw,
+  BarChart3,
+  Hash,
+  MoveRight,
+  Eye,
+  ArrowRight,
+  Calculator,
+  Merge,
+  Layers,
+  RotateCw,
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
@@ -18,19 +34,239 @@ import TrappingRainWater from "./TrappingRainWater.jsx";
 import ContainerWithMostWater from "./ContainerWithMostWater.jsx";
 import MaxConsecutiveOnesIII from "./MaxConsecutiveOnesIII.jsx";
 import SubarrayRanges from "./SubarrayRanges.jsx";
+import FindMaxElement from "./FindMaxElement.jsx";
+import FindMinElement from "./FindMinElement.jsx";
+import MoveZeros from "./MoveZeros.jsx";
+import CountZeros from "./CountZeros.jsx";
+import ArraySum from "./ArraySum.jsx";
+import ReverseArray from "./ReverseArray.jsx";
+import TwoSum from "./TwoSum.jsx";
+import ThreeSum from "./3Sum.jsx";
+import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
+import SquaresOfSortedArray from "./SquaresOfSortedArray.tsx";
+import ProductOfArrayExceptSelf from "./ProductOfArrayExceptSelf.jsx";
+import MaximumSubarray from "./MaximumSubarray.jsx";
+import MergeIntervals from "./MergeIntervals.jsx";
+import RotateArray from "./RotateArray.jsx";
+import MaximumGap from "./MaximumGap.jsx";
 
-const AlgorithmList = ({ navigate }) => {
+function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [filter, setFilter] = useState("all");
 
   const algorithms = [
+    {
+      name: "Find Maximum Element",
+      number: "1",
+      icon: Maximize2,
+      description: "Find the largest element in an array.",
+      page: "FindMaxElement",
+      difficulty: "Basic",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-green-500 to-emerald-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Traversal",
+      timeComplexity: "O(n)",
+      platforms: ["All Platforms"],
+      tags: ["Beginner", "Traversal"],
+    },
+    {
+      name: "Find Minimum Element",
+      number: "2",
+      icon: Minus,
+      description: "Find the smallest element in an array.",
+      page: "FindMinElement",
+      difficulty: "Basic",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-emerald-500 to-teal-500",
+      iconColor: "text-emerald-400",
+      iconBg: "bg-emerald-500/20",
+      borderColor: "border-emerald-500/30",
+      technique: "Traversal",
+      timeComplexity: "O(n)",
+      platforms: ["All Platforms"],
+      tags: ["Beginner", "Traversal"],
+    },
+    {
+      name: "Array Sum",
+      number: "3",
+      icon: Plus,
+      description: "Calculate the sum of all elements in an array.",
+      page: "ArraySum",
+      difficulty: "Basic",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-blue-500 to-cyan-500",
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/20",
+      borderColor: "border-blue-500/30",
+      technique: "Traversal",
+      timeComplexity: "O(n)",
+      platforms: ["All Platforms"],
+      tags: ["Beginner", "Sum"],
+    },
+    {
+      name: "Reverse Array",
+      number: "4",
+      icon: RefreshCw,
+      description: "Reverse the elements of an array in place.",
+      page: "ReverseArray",
+      difficulty: "Basic",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-purple-500 to-indigo-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n)",
+      platforms: ["All Platforms"],
+      tags: ["Beginner", "Two Pointers"],
+    },
+    // // ===== TIER 2: BEGINNER+ =====
+    {
+      name: "Two Sum",
+      number: "5",
+      icon: Target,
+      description: "Find two numbers that add up to the target value.",
+      page: "TwoSum",
+      difficulty: "Easy",
+      tier: "Tier 2",
+      difficultyColor: "text-blue-400",
+      difficultyBg: "bg-blue-400/10",
+      difficultyBorder: "border-blue-400/30",
+      gradient: "from-orange-500 to-amber-500",
+      iconColor: "text-orange-400",
+      iconBg: "bg-orange-500/20",
+      borderColor: "border-orange-500/30",
+      technique: "Hashing",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #1", "GfG"],
+      tags: ["Hashing", "Pairs"],
+    },
+    {
+      name: "Squares of a Sorted Array",
+      number: "977",
+      icon: ArrowUpDown, // Certifique-se que ArrowUpDown está importado de lucide-react no topo do arquivo
+      description: "Square each number and return the array sorted in non-decreasing order.",
+      page: "SquaresOfSortedArray",
+      difficulty: "Easy",
+      tier: "Tier 2",
+      difficultyColor: "text-blue-400",
+      difficultyBg: "bg-blue-400/10",
+      difficultyBorder: "border-blue-400/30",
+      gradient: "from-teal-500 to-cyan-500",
+      iconColor: "text-teal-400",
+      iconBg: "bg-teal-500/20",
+      borderColor: "border-teal-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #977"],
+      tags: ["Two Pointers", "Sorting"]
+    },
+
+    {
+      name: "Move Zeros",
+      number: "8",
+      icon: MoveRight,
+      description: "Move all zeros to the end while maintaining order.",
+      page: "MoveZeros",
+      difficulty: "Easy",
+      tier: "Tier 2",
+      difficultyColor: "text-blue-400",
+      difficultyBg: "bg-blue-400/10",
+      difficultyBorder: "border-blue-400/30",
+      gradient: "from-violet-500 to-purple-500",
+      iconColor: "text-violet-400",
+      iconBg: "bg-violet-500/20",
+      borderColor: "border-violet-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #283", "GfG"],
+      tags: ["Two Pointers", "Partitioning"],
+    },
+    {
+      name: "Move Zeros to End",
+      number: "283",
+      icon: MoveRight,
+      description: "Move all zeros to the end while maintaining order.",
+      page: "MoveZeros",
+      difficulty: "Easy",
+      tier: "Tier 2",
+      difficultyColor: "text-blue-400",
+      difficultyBg: "bg-blue-400/10",
+      difficultyBorder: "border-blue-400/30",
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #283"],
+      tags: ["Two Pointers", "In-place"],
+    },
+    {
+      name: "Maximum Gap",
+      number : "164",
+      icon : MoveRight,
+      description  :"Find the Maximum gap between two successive element in its sorted form ",
+      page : "MaximumGap",
+      difficulty : "Medium",
+      tier : "Tier 2",
+      difficultyColor : "text-yellow-400",
+      difficultyBg : "bg-yellow-400/10",
+      difficultyBorder : "border-yellow-400/30",
+      gradient : "from-amber-500 to-orange-500",
+      iconColor : "text-amber-400",
+      iconBg : "bg-amber-500/20",
+      borderColor : "border-amber-500/30",
+      technique : "Sorting, Traversal",
+      timeComplexity : "O(n log n)",
+      platforms : ["LeetCode #164"],
+      tags : ["Sorting", "Traversal"],
+
+    },
+    {
+      name: "Count Zeros in Array",
+      number: "3",
+      icon: Hash,
+      description: "Count the number of zero elements in an array.",
+      page: "CountZeros",
+      difficulty: "Basic",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Traversal",
+      timeComplexity: "O(n)",
+      platforms: ["GfG"],
+      tags: ["Beginner", "Counting"],
+    },
+
     {
       name: "Container With Most Water",
       number: "11",
       icon: Container,
-      description:
-        "Find two vertical lines that, with the x-axis, form a container holding the most water.",
+      description: "Find two lines that form container with most water.",
       page: "ContainerWithMostWater",
       difficulty: "Medium",
+      tier: "Tier 3",
       difficultyColor: "text-yellow-400",
       difficultyBg: "bg-yellow-400/10",
       difficultyBorder: "border-yellow-400/30",
@@ -40,15 +276,17 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-amber-500/30",
       technique: "Two Pointers",
       timeComplexity: "O(n)",
+      platforms: ["LeetCode #11", "GfG"],
+      tags: ["Two Pointers", "Area"],
     },
     {
       name: "Trapping Rain Water",
       number: "42",
       icon: Droplets,
-      description:
-        "Given an elevation map, compute how much water it can trap after raining.",
+      description: "Compute how much water can be trapped after raining.",
       page: "TrappingRainWater",
       difficulty: "Hard",
+      tier: "Tier 3",
       difficultyColor: "text-red-400",
       difficultyBg: "bg-red-400/10",
       difficultyBorder: "border-red-400/30",
@@ -58,15 +296,17 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-red-500/30",
       technique: "Two Pointers",
       timeComplexity: "O(n)",
+      platforms: ["LeetCode #42", "GfG"],
+      tags: ["Two Pointers", "DP", "Water"],
     },
     {
       name: "Max Consecutive Ones III",
       number: "1004",
       icon: ToggleRight,
-      description:
-        "Find the longest subarray of 1s after flipping at most K zeros to ones.",
+      description: "Longest subarray of 1s after flipping at most K zeros.",
       page: "MaxConsecutiveOnesIII",
       difficulty: "Medium",
+      tier: "Tier 3",
       difficultyColor: "text-yellow-400",
       difficultyBg: "bg-yellow-400/10",
       difficultyBorder: "border-yellow-400/30",
@@ -76,15 +316,17 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-cyan-500/30",
       technique: "Sliding Window",
       timeComplexity: "O(n)",
+      platforms: ["LeetCode #1004", "GfG"],
+      tags: ["Sliding Window", "Ones"],
     },
     {
       name: "Sum of Subarray Ranges",
       number: "2104",
       icon: ArrowUpDown,
-      description:
-        "Calculate the sum of the differences between the largest and smallest elements over all subarrays.",
+      description: "Sum of differences between max and min in all subarrays.",
       page: "SubarrayRanges",
       difficulty: "Medium",
+      tier: "Tier 3",
       difficultyColor: "text-yellow-400",
       difficultyBg: "bg-yellow-400/10",
       difficultyBorder: "border-yellow-400/30",
@@ -94,8 +336,144 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-purple-500/30",
       technique: "Array",
       timeComplexity: "O(n²)",
+      platforms: ["LeetCode #2104", "GfG"],
+      tags: ["Subarrays", "Stack"],
     },
-  ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
+    {
+      name: "Split Array Largest Sum",
+      number: "410",
+      icon: BarChart3,
+      description:
+        "Split array into k parts such that the largest subarray sum is minimized.",
+      page: "SplitArrayLargestSum",
+      difficulty: "Hard",
+      tier: "Tier 3",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-pink-500 to-rose-600",
+      iconColor: "text-pink-400",
+      iconBg: "bg-pink-500/20",
+      borderColor: "border-pink-500/30",
+      technique: "Binary Search + Greedy",
+      timeComplexity: "O(n log(sum(nums)))",
+      platforms: ["LeetCode #410"],
+      tags: ["Binary Search", "Greedy"],
+    },
+    {
+      name: "3Sum",
+      number: "6",
+      icon: Target,
+      description:
+        "Find all unique triplets in the array which give the sum of zero.",
+      page: "ThreeSum",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-emerald-500 to-green-500",
+      iconColor: "text-emerald-400",
+      iconBg: "bg-emerald-500/20",
+      borderColor: "border-emerald-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n²)",
+      platforms: ["LeetCode #15", "GfG"],
+      tags: ["Two Pointers", "Sorting", "Triplets"],
+    },
+    {
+      name: "Product of Array Except Self",
+      number: "238",
+      icon: Calculator,
+      description:
+        "Return an array where each element is the product of all elements except itself, without using division.",
+      page: "ProductOfArrayExceptSelf",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-indigo-500 to-purple-500",
+      iconColor: "text-indigo-400",
+      iconBg: "bg-indigo-500/20",
+      borderColor: "border-indigo-500/30",
+      technique: "Prefix & Suffix Products",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #238", "GfG"],
+      tags: ["Array", "Prefix Sum", "Important"],
+    },
+    {
+      name: "Maximum Subarray",
+      number: "53",
+      icon: TrendingUp,
+      description:
+        "Find the contiguous subarray with the largest sum using Kadane's Algorithm.",
+      page: "MaximumSubarray",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-green-500 to-teal-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Kadane's Algorithm",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #53", "GfG"],
+      tags: ["DP", "Kadane", "Classic"],
+    },
+    {
+      name: "Merge Intervals",
+      number: "56",
+      icon: Merge,
+      description:
+        "Merge all overlapping intervals and return an array of non-overlapping intervals.",
+      page: "MergeIntervals",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-orange-500 to-red-500",
+      iconColor: "text-orange-400",
+      iconBg: "bg-orange-500/20",
+      borderColor: "border-orange-500/30",
+      technique: "Sorting + Greedy",
+      timeComplexity: "O(n log n)",
+      platforms: ["LeetCode #56", "GfG"],
+      tags: ["Intervals", "Sorting", "Important"],
+    },
+    {
+      name: "Rotate Array",
+      number: "189",
+      icon: RotateCcw,
+      description:
+        "Rotate the array to the right by k steps in-place with O(1) extra space.",
+      page: "RotateArray",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Reverse Algorithm",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #189", "GfG"],
+      tags: ["Array", "In-place", "Rotation"],
+    },
+  ];
+
+  const filteredAlgorithms = algorithms.filter((algo) => {
+    if (filter === "all") return true;
+    if (filter === "beginner") return algo.tier === "Tier 1";
+    if (filter === "easy") return algo.tier === "Tier 2";
+    if (filter === "intermediate") return algo.tier === "Tier 3";
+    return true;
+  });
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -146,8 +524,48 @@ const AlgorithmList = ({ navigate }) => {
         </div>
       </header>
 
+      {/* Filter Buttons */}
+      <div className="flex flex-wrap justify-center gap-3 mb-8">
+        <button
+          onClick={() => setFilter("all")}
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "all"
+              ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+            }`}
+        >
+          All Problems
+        </button>
+        <button
+          onClick={() => setFilter("beginner")}
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "beginner"
+              ? "bg-green-500/20 border-green-500/50 text-green-300"
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+            }`}
+        >
+          Beginner (Tier 1)
+        </button>
+        <button
+          onClick={() => setFilter("easy")}
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "easy"
+              ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+            }`}
+        >
+          Easy (Tier 2)
+        </button>
+        <button
+          onClick={() => setFilter("intermediate")}
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${filter === "intermediate"
+              ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300"
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+            }`}
+        >
+          Intermediate+ (Tier 3)
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-        {algorithms.map((algo, index) => {
+        {filteredAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
           const Icon = algo.icon;
 
@@ -173,9 +591,8 @@ const AlgorithmList = ({ navigate }) => {
                       className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
-                        } transition-colors duration-300`}
+                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor
+                          } transition-colors duration-300`}
                       />
                     </div>
                     <div>
@@ -188,11 +605,13 @@ const AlgorithmList = ({ navigate }) => {
                         >
                           {algo.difficulty}
                         </div>
+                        <div className="px-2 py-0.5 bg-gray-700/50 rounded-md text-xs text-gray-300 border border-gray-600">
+                          {algo.tier}
+                        </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${
-                          isHovered ? "text-white" : "text-gray-200"
-                        }`}
+                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"
+                          }`}
                       >
                         {algo.name}
                       </h2>
@@ -201,12 +620,22 @@ const AlgorithmList = ({ navigate }) => {
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
-                    isHovered ? "text-gray-300" : "text-gray-400"
-                  }`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"
+                    }`}
                 >
                   {algo.description}
                 </p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {algo.tags.map((tag, tagIndex) => (
+                    <span
+                      key={tagIndex}
+                      className="px-2 py-1 bg-gray-700/30 rounded text-xs text-gray-300 border border-gray-600"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-800">
                   <div className="flex items-center gap-4">
@@ -224,18 +653,30 @@ const AlgorithmList = ({ navigate }) => {
                     </div>
                   </div>
 
-                  <div
-                    className={`transition-all duration-300 ${
-                      isHovered
-                        ? "opacity-100 translate-x-0"
-                        : "opacity-0 -translate-x-2"
-                    }`}
-                  >
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs font-medium text-gray-400">
-                        Solve
-                      </span>
-                      <ArrowLeft className="h-4 w-4 text-gray-400 rotate-180" />
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap gap-1">
+                      {algo.platforms.map((platform, platformIndex) => (
+                        <span
+                          key={platformIndex}
+                          className="px-2 py-1 bg-gray-800/50 rounded text-xs text-gray-400 border border-gray-700"
+                        >
+                          {platform}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div
+                      className={`transition-all duration-300 ${isHovered
+                          ? "opacity-100 translate-x-0"
+                          : "opacity-0 -translate-x-2"
+                        }`}
+                    >
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-medium text-gray-400">
+                          Solve
+                        </span>
+                        <ArrowRight className="h-4 w-4 text-gray-400" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -244,6 +685,14 @@ const AlgorithmList = ({ navigate }) => {
           );
         })}
       </div>
+
+      {filteredAlgorithms.length === 0 && (
+        <div className="text-center py-12">
+          <div className="text-gray-500 text-lg">
+            No problems found for the selected filter.
+          </div>
+        </div>
+      )}
 
       <div className="mt-12 text-center">
         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-full border border-gray-700 backdrop-blur-sm">
@@ -255,14 +704,40 @@ const AlgorithmList = ({ navigate }) => {
       </div>
     </div>
   );
-};
+}
 
-const ArrayPage = ({ navigate: parentNavigate }) => {
-  const [page, setPage] = useState("home");
+const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
+  const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
+      // Basic problems
+      case "FindMaxElement":
+        return <FindMaxElement navigate={navigate} />;
+      case "FindMinElement":
+        return <FindMinElement navigate={navigate} />;
+      case "ArraySum":
+        return <ArraySum navigate={navigate} />;
+      case "ReverseArray":
+        return <ReverseArray navigate={navigate} />;
+      case "TwoSum":
+        return <TwoSum navigate={navigate} />;
+      case "RotateArray":
+        return <RotateArray navigate={navigate} />;
+      case "RemoveDuplicates":
+        return <RemoveDuplicates navigate={navigate} />;
+      case "MoveZeros":
+        return <MoveZeros navigate={navigate} />;
+      case "CountZeros":
+        return <CountZeros navigate={navigate} />;
+      case "SquaresOfSortedArray":
+        return <SquaresOfSortedArray navigate={navigate} />;
+      case "MaximumGap":
+        return <MaximumGap navigate={navigate} />;
+
+
+      // Existing problems
       case "TrappingRainWater":
         return <TrappingRainWater navigate={navigate} />;
       case "ContainerWithMostWater":
@@ -271,6 +746,20 @@ const ArrayPage = ({ navigate: parentNavigate }) => {
         return <MaxConsecutiveOnesIII navigate={navigate} />;
       case "SubarrayRanges":
         return <SubarrayRanges navigate={navigate} />;
+      case "BestTimeToBuyAndSellStock":
+        return <BestTimeToBuyAndSellStock navigate={navigate} />;
+      case "SplitArrayLargestSum":
+        return <SplitArrayLargestSum navigate={navigate} />;
+      case "ThreeSum":
+        return <ThreeSum navigate={navigate} />;
+      case "ProductOfArrayExceptSelf":
+        return <ProductOfArrayExceptSelf navigate={navigate} />;
+      case "MaximumSubarray":
+        return <MaximumSubarray navigate={navigate} />;
+      case "MergeIntervals":
+        return <MergeIntervals navigate={navigate} />;
+      
+
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -313,15 +802,20 @@ const ArrayPage = ({ navigate: parentNavigate }) => {
         }
         .animate-pulse-slow, .animate-pulse-slow-delayed {
           animation: pulse-slow 4s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
+        }
+        .animate-pulse-slow-delayed {
+          animation-delay: 2s;
         }
         @keyframes pulse-slow {
           0%, 100% { opacity: 0.3; }
           50% { opacity: 0.6; }
         }
-        .animate-float, .animate-float-delayed {
+        .animate-float {
           animation: float 20s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
+        }
+        .animate-float-delayed {
+          animation: float 20s ease-in-out infinite;
+          animation-delay: 10s;
         }
         @keyframes float {
           0%, 100% { transform: translate(0, 0) scale(1); }
@@ -340,7 +834,7 @@ const ArrayPage = ({ navigate: parentNavigate }) => {
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
             <button
               onClick={() => navigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Problems
@@ -361,7 +855,7 @@ const ArrayPage = ({ navigate: parentNavigate }) => {
           <div className="max-w-7xl px-6 w-full mx-auto">
             <button
               onClick={() => parentNavigate("home")}
-              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600"
+              className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home

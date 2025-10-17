@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
-  ArrowUp,
   Code,
   Sigma,
   CheckCircle,
@@ -8,73 +8,7 @@ import {
   Calculator,
   Layers,
 } from "lucide-react";
-
-// A specialized Pointer component for this visualizer using Lucide icons
-const VisualizerPointer = ({
-  index,
-  containerId,
-  color,
-  label,
-  isEnd = false,
-}) => {
-  const [position, setPosition] = useState({ opacity: 0, left: 0 });
-
-  useEffect(() => {
-    if (index === null || index < -1) {
-      setPosition({ opacity: 0 });
-      return;
-    }
-
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    let offset = 0;
-
-    if (isEnd) {
-      const lastEl = container.lastChild;
-      if (lastEl) {
-        const containerRect = container.getBoundingClientRect();
-        const lastElRect = lastEl.getBoundingClientRect();
-        offset = lastElRect.right - containerRect.left + 16;
-      }
-    } else if (index === -1) {
-      // Position for 'k' when stack is empty
-      const firstEl = container.firstChild;
-      if (firstEl) {
-        const containerRect = container.getBoundingClientRect();
-        const firstElRect = firstEl.getBoundingClientRect();
-        offset = firstElRect.left - containerRect.left - 80;
-      }
-    } else {
-      const element = document.getElementById(
-        `${containerId}-element-${index}`
-      );
-      if (element) {
-        const containerRect = container.getBoundingClientRect();
-        const elementRect = element.getBoundingClientRect();
-        offset =
-          elementRect.left - containerRect.left + elementRect.width / 2 - 12; // 12 is half of pointer width
-      } else {
-        setPosition({ opacity: 0 });
-        return;
-      }
-    }
-
-    setPosition({ opacity: 1, left: offset });
-  }, [index, containerId, isEnd]);
-
-  return (
-    <div
-      className="absolute top-full mt-0 text-center transition-all duration-500 ease-out"
-      style={position}
-    >
-      <ArrowUp className={`w-6 h-6 mx-auto text-${color}-400`} />
-      <span className={`font-bold text-lg font-mono text-${color}-400`}>
-        {label}
-      </span>
-    </div>
-  );
-};
+import VisualizerPointer from "../../components/VisualizerPointer";
 
 const SubarrayRangesVisualizer = () => {
   const [mode, setMode] = useState("brute-force");
@@ -307,10 +241,27 @@ const SubarrayRangesVisualizer = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isLoaded, stepBackward, stepForward]);
 
-  const switchTab = (newMode) => {
-    setMode(newMode);
-    reset();
-  };
+  const parseInput = useCallback(() => {
+    const nums = numsInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map(Number);
+    if (nums.some(isNaN) || nums.length === 0) throw new Error("Invalid input");
+    return nums;
+  }, [numsInput]);
+  const handleModeChange = useModeHistorySwitch({
+    mode,
+    setMode,
+    isLoaded,
+    parseInput,
+    generators: {
+      "brute-force": (n) => generateBruteForceHistory(n),
+      optimal: (n) => generateOptimalHistory(n),
+    },
+    setCurrentStep,
+    onError: () => {},
+  });
 
   const state = history[currentStep] || {};
   const { nums = [], line } = state;
@@ -410,6 +361,7 @@ const SubarrayRangesVisualizer = () => {
                 containerId="bf-array-container"
                 color="amber"
                 label="i"
+                direction="up"
               />
             )}
             {isLoaded && (
@@ -418,6 +370,7 @@ const SubarrayRangesVisualizer = () => {
                 containerId="bf-array-container"
                 color="cyan"
                 label="j"
+                direction="up"
               />
             )}
           </div>
@@ -572,6 +525,7 @@ const SubarrayRangesVisualizer = () => {
                 color="amber"
                 label="i"
                 isEnd={i === nums.length}
+                direction="up"
               />
             )}
             {isLoaded && (
@@ -580,6 +534,7 @@ const SubarrayRangesVisualizer = () => {
                 containerId="opt-array-container"
                 color="cyan"
                 label="j"
+                direction="up"
               />
             )}
             {isLoaded && (
@@ -588,6 +543,7 @@ const SubarrayRangesVisualizer = () => {
                 containerId="opt-array-container"
                 color="violet"
                 label="k"
+                direction="up"
               />
             )}
           </div>
@@ -681,7 +637,7 @@ const SubarrayRangesVisualizer = () => {
           {!isLoaded ? (
             <button
               onClick={loadArray}
-              className="bg-teal-500 hover:bg-teal-600 text-gray-900 font-bold py-2 px-6 rounded-lg shadow-md transition-colors duration-300"
+              className="bg-teal-500 hover:bg-teal-600 text-gray-900 font-bold py-2 px-6 rounded-lg shadow-md transition-colors duration-300 cursor-pointer"
             >
               Load & Visualize
             </button>
@@ -734,7 +690,7 @@ const SubarrayRangesVisualizer = () => {
           )}
           <button
             onClick={reset}
-            className="ml-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300"
+            className="ml-4 bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300"
           >
             Reset
           </button>
@@ -743,7 +699,7 @@ const SubarrayRangesVisualizer = () => {
 
       <div className="flex border-b border-gray-700 mb-6">
         <div
-          onClick={() => switchTab("brute-force")}
+          onClick={() => handleModeChange("brute-force")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "brute-force"
               ? "border-teal-400 text-teal-400"
@@ -753,7 +709,7 @@ const SubarrayRangesVisualizer = () => {
           Brute Force O(n²)
         </div>
         <div
-          onClick={() => switchTab("optimal")}
+          onClick={() => handleModeChange("optimal")}
           className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
             mode === "optimal"
               ? "border-teal-400 text-teal-400"
