@@ -71,22 +71,31 @@
 ```
 AlgoVisualizer/
 ├── public/                  # Static assets
-│   └── vite.svg            # Vite logo
+│   └── algo.svg            # Vite logo
 ├── src/                    # Source files
 │   ├── components/         # React components
-│   │   ├── Sorting/       # Sorting algorithm components
-│   │   ├── Pathfinding/   # Pathfinding components
-│   │   ├── Graph/         # Graph algorithm components
-│   │   └── UI/            # Reusable UI components
-│   ├── algorithms/         # Algorithm implementations
-│   │   ├── sorting/       # Sorting algorithm logic
-│   │   ├── pathfinding/   # Pathfinding algorithm logic
-│   │   └── graph/         # Graph algorithm logic
-│   ├── utils/             # Utility functions
-│   │   ├── helpers.js     # Helper functions
-│   │   └── constants.js   # App constants
-│   ├── styles/            # CSS modules and styles
-│   │   └── *.module.css   # Component-specific styles
+│   ├── pages/
+|   |   ├── Arrays            # Array Data Structure
+|   |   ├── BinarySearch      # Binary Search Questions
+|   |   ├── Graph             # Graph Data Structure
+|   |   ├── BitManipulation   # Bit Manipulation Questions
+|   |   ├── DynamicProgramming # Dynamic Programming Questions
+|   |   ├── Deque            # Deque Data Structure
+|   |   ├── GreedyAlgorithms # Greedy Algorithms Question
+|   |   ├── Hashing          # Hashing Data Structure
+|   |   ├── LinkedList       # Linked List Data Structure
+|   |   ├── Pathfinding      # Pathfinding Algorithms Question
+|   |   ├── Queue            # Queue Data Structure
+|   |   ├── Recursion        # Recursion Question
+|   |   ├── Stack            # Stack Data Structure
+|   |   ├── Strings          # Strings Data Structure
+|   |   ├── Tree             # Tree Data Structure
+|   |   ├── Trie             # Trie Data Structure
+|   |   ├── Sorting          # Sorting Algorithms Question
+|   |   ├── SlidingWindows   #Sliding Window Algorithm Question
+|   |   └── Heaps    # Heaps
+│   ├── search/         # Search 
+│   │   └── catalog.js/    # Catalog of algorithms
 │   ├── App.jsx            # Main App component
 │   ├── App.css            # Global styles
 │   ├── main.jsx           # Entry point
