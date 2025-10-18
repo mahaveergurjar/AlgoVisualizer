@@ -42,6 +42,8 @@ import ArraySum from "./ArraySum.jsx";
 import ReverseArray from "./ReverseArray.jsx";
 import TwoSum from "./TwoSum.jsx";
 import ThreeSum from "./3Sum.jsx";
+import FourSum from "./4Sum.jsx";
+
 import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
 import SquaresOfSortedArray from "./SquaresOfSortedArray.tsx";
 import ProductOfArrayExceptSelf from "./ProductOfArrayExceptSelf.jsx";
