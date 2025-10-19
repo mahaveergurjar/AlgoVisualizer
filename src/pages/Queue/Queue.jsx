@@ -1,4 +1,3 @@
-// Queue.jsx — fixed hover/flicker issues (CSS-only hover, no parent re-renders)
 import React, { useState } from "react";
 import {
   ArrowLeft,
@@ -12,109 +11,60 @@ import {
   Container,
   Star,
   Clock,
-  ArrowLeft as ArrowLeftIcon,
 } from "lucide-react";
 
-// Import all queue visualizers
+// --- Import all queue visualizers ---
 import BasicQueueVisualizer from "./BasicQueue";
 import CircularQueueVisualizer from "./CircularQueue";
 import QueueUsingStacks from "./QueueUsingStacks";
 
+// --- ✅ Import the master catalog and your StarButton ---
+import { problems as PROBLEM_CATALOG } from '../../search/catalog';
+import StarButton from '../../components/StarButton';
+
+// ✅ (Optional but Recommended) Default values for visual properties
+const defaultVisuals = {
+  icon: ArrowRightLeft,
+  gradient: "from-gray-700 to-gray-800",
+  borderColor: "border-gray-600",
+  iconBg: "bg-gray-700/20",
+  iconColor: "text-gray-300",
+};
+
+
 const AlgorithmList = ({ navigate }) => {
-  // removed hoveredIndex state to avoid parent re-renders on hover
-  const [pageSection] = useState("home"); // placeholder if needed; kept minimal
 
-  const algorithms = [
-    // EDUCATIONAL VISUALIZATIONS
-    {
-      name: "Basic Queue (FIFO)",
-      number: "N/A",
-      icon: ArrowRightLeft,
-      description:
-        "First-In-First-Out data structure. Elements are added at the rear and removed from the front, like a waiting line.",
-      page: "BasicQueue",
-      difficulty: "Easy",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-rose-500 to-pink-600",
-      iconColor: "text-rose-400",
-      iconBg: "bg-rose-500/20",
-      borderColor: "border-rose-500/30",
-      technique: "Linear Structure",
-      operations: "Enqueue, Dequeue",
-      category: "Data Structure",
-    },
-    {
-      name: "Circular Queue",
-      number: "N/A",
-      icon: List,
-      description:
-        "Optimized queue using circular array to reuse space. The rear connects back to the front, eliminating wasted space.",
-      page: "CircularQueue",
-      difficulty: "Medium",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-pink-500 to-rose-600",
-      iconColor: "text-pink-400",
-      iconBg: "bg-pink-500/20",
-      borderColor: "border-pink-500/30",
-      technique: "Circular Array",
-      operations: "Enqueue, Dequeue",
-      category: "Data Structure",
-    },
-    // LEETCODE PROBLEMS
-    {
-      name: "Implement Queue using Stacks",
-      number: "232",
-      icon: Container,
-      description:
-        "Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue.",
-      page: "QueueUsingStacks",
-      difficulty: "Easy",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-blue-500 to-indigo-600",
-      iconColor: "text-blue-400",
-      iconBg: "bg-blue-500/20",
-      borderColor: "border-blue-500/30",
-      technique: "Stack",
-      timeComplexity: "O(n)",
-      category: "LeetCode Problem",
-    },
-  ];
+  // ✅ Get Queue problems directly from the master catalog
+  const queueAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'Queue');
 
-  // Group algorithms by category
-  const dataStructures = algorithms.filter((a) => a.category === "Data Structure");
-  const leetCodeProblems = algorithms.filter((a) => a.category === "LeetCode Problem");
+  // ✅ Group algorithms based on their type for separate sections in the UI
+  const dataStructures = queueAlgorithms.filter(a => a.subpage === 'BasicQueue' || a.subpage === 'CircularQueue');
+  const leetCodeProblems = queueAlgorithms.filter(a => a.subpage === 'QueueUsingStacks');
 
   const AlgorithmCard = ({ algo, index }) => {
-    const Icon = algo.icon;
+    const Icon = algo.icon || defaultVisuals.icon;
 
     return (
       <div
-        key={algo.name}
-        onClick={() => navigate(algo.page)}
+        key={algo.subpage} // ✅ Use subpage
+        onClick={() => navigate(algo.subpage)} // ✅ Use subpage
         className="group relative cursor-pointer animate-fade-in-up"
         style={{ animationDelay: `${index * 80}ms` }}
       >
-        {/* gradient overlay — always present, but fades via CSS on hover */}
         <div
-          className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+          className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient || defaultVisuals.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
         />
 
         <div
-          className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+          className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor || defaultVisuals.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
         >
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-4">
               <div
-                className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                className={`p-3 ${algo.iconBg || defaultVisuals.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
               >
                 <Icon
-                  className={`h-10 w-10 ${algo.iconColor} group-hover:text-white transition-colors duration-300`}
+                  className={`h-10 w-10 ${algo.iconColor || defaultVisuals.iconColor} group-hover:text-white transition-colors duration-300`}
                 />
               </div>
               <div>
@@ -129,10 +79,16 @@ const AlgorithmList = ({ navigate }) => {
                   </div>
                 </div>
                 <h2 className="text-xl font-bold transition-colors duration-300 text-gray-200 group-hover:text-white">
-                  {algo.name}
+                  {algo.label} {/* ✅ Use label */}
                 </h2>
               </div>
             </div>
+
+            {/* ✅ Add the StarButton here */}
+            <div onClick={(e) => e.stopPropagation()}>
+                <StarButton problemId={algo.subpage} />
+            </div>
+
           </div>
 
           <p className="text-sm leading-relaxed mb-5 transition-colors duration-300 text-gray-400 group-hover:text-gray-300">
@@ -162,15 +118,12 @@ const AlgorithmList = ({ navigate }) => {
                 </div>
               )}
             </div>
-
-            {/* CTA — made purely CSS-driven using group-hover */
-            }
             <div className="transition-all duration-300 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0">
               <div className="flex items-center gap-1">
                 <span className="text-xs font-medium text-gray-400">
-                  {algo.category === "LeetCode Problem" ? "Solve" : "Visualize"}
+                  {algo.technique === "Two Stacks" ? "Solve" : "Visualize"}
                 </span>
-                <ArrowLeftIcon className="h-4 w-4 text-gray-400 rotate-180" />
+                <ArrowLeft className="h-4 w-4 text-gray-400 rotate-180" />
               </div>
             </div>
           </div>
@@ -184,7 +137,6 @@ const AlgorithmList = ({ navigate }) => {
       <header className="text-center mb-16 mt-8 relative">
         <div className="absolute top-0 left-1/3 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
         <div className="absolute top-10 right-1/3 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
-
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-6">
             <div className="relative">
@@ -195,17 +147,15 @@ const AlgorithmList = ({ navigate }) => {
               Queue Algorithms
             </h1>
           </div>
-
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
             Master the First-In-First-Out principle through interactive
             visualizations and solve real-world problems.
           </p>
-
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
             <div className="px-4 py-2 bg-gradient-to-r from-rose-500/10 to-pink-500/10 rounded-full border border-rose-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
                 <Code2 className="h-3.5 w-3.5 text-rose-400" />
-                <span className="text-xs font-medium text-gray-300">{algorithms.length} Algorithms</span>
+                <span className="text-xs font-medium text-gray-300">{queueAlgorithms.length} Algorithms</span>
               </div>
             </div>
             <div className="px-4 py-2 bg-gradient-to-r from-pink-500/10 to-fuchsia-500/10 rounded-full border border-pink-500/30 backdrop-blur-sm">
@@ -217,8 +167,6 @@ const AlgorithmList = ({ navigate }) => {
           </div>
         </div>
       </header>
-
-      {/* Data Structures Section */}
       <div className="mb-12">
         <h2 className="text-2xl font-bold text-gray-200 mb-6 flex items-center gap-3">
           <div className="h-1 w-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded"></div>
@@ -227,12 +175,10 @@ const AlgorithmList = ({ navigate }) => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {dataStructures.map((algo, index) => (
-            <AlgorithmCard key={algo.name} algo={algo} index={index} />
+            <AlgorithmCard key={algo.subpage} algo={algo} index={index} />
           ))}
         </div>
       </div>
-
-      {/* LeetCode Problems Section */}
       <div>
         <h2 className="text-2xl font-bold text-gray-200 mb-6 flex items-center gap-3">
           <div className="h-1 w-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded"></div>
@@ -241,11 +187,10 @@ const AlgorithmList = ({ navigate }) => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {leetCodeProblems.map((algo, index) => (
-            <AlgorithmCard key={algo.name} algo={algo} index={dataStructures.length + index} />
+            <AlgorithmCard key={algo.subpage} algo={algo} index={dataStructures.length + index} />
           ))}
         </div>
       </div>
-
       <div className="mt-12 text-center">
         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-full border border-gray-700 backdrop-blur-sm">
           <TrendingUp className="h-4 w-4 text-green-400" />
@@ -256,18 +201,16 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
+// ✅ This part remains completely the same as before.
 const QueuePage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
-      case "BasicQueue":
-        return <BasicQueueVisualizer navigate={navigate} />;
-      case "CircularQueue":
-        return <CircularQueueVisualizer navigate={navigate} />;
-      case "QueueUsingStacks":
-        return <QueueUsingStacks navigate={navigate} />;
+      case "BasicQueue": return <BasicQueueVisualizer navigate={navigate} />;
+      case "CircularQueue": return <CircularQueueVisualizer navigate={navigate} />;
+      case "QueueUsingStacks": return <QueueUsingStacks navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -338,4 +281,3 @@ const QueuePage = ({ navigate: parentNavigate, initialPage = null }) => {
 };
 
 export default QueuePage;
-

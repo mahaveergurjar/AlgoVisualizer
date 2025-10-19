@@ -4,15 +4,12 @@ import {
   Wrench,
   Layers,
   Settings,
-  ArrowUpDown,
-  Hash,
   Code2,
   Clock,
   Star,
   TrendingUp,
   Zap,
   Search,
-  Twitter,
 } from "lucide-react";
 
 // --- Import your specific design problems here ---
@@ -23,123 +20,32 @@ import DesignLinkedList from "./DesignLinkedList.jsx";
 import MinStack from "./MinStack.jsx";
 import ImplementTrie from "./ImplementTrie.jsx";
 
+// --- ✅ Import the master catalog and your StarButton ---
+import { problems as PROBLEM_CATALOG } from '../../search/catalog';
+import StarButton from '../../components/StarButton';
+
+// ✅ (Optional but Recommended) Default values for visual properties
+const defaultVisuals = {
+  icon: Wrench,
+  gradient: "from-gray-700 to-gray-800",
+  borderColor: "border-gray-600",
+  iconBg: "bg-gray-700/20",
+  iconColor: "text-gray-300",
+};
+
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const algorithms = [
-    {
-      name: "LRU Cache",
-      number: "146",
-      icon: Settings,
-      description:
-        "Implement an LRU (Least Recently Used) cache supporting get and put operations in O(1) time using HashMap and Doubly Linked List.",
-      page: "LRUCache",
-      difficulty: "Medium",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-teal-500 to-emerald-500",
-      iconColor: "text-teal-400",
-      iconBg: "bg-teal-500/20",
-      borderColor: "border-teal-500/30",
-      technique: "Design (HashMap + Linked List)",
-      timeComplexity: "O(1)",
-    },
-    {
-      name: "LFU Cache",
-      number: "460",
-      icon: Settings, // you can replace with any suitable icon
-      description:
-        "Implement an LFU (Least Frequently Used) cache supporting get and put operations. When capacity is reached, it evicts the least frequently used key. Ties are broken by least recently used key.",
-      page: "LFUCache",
-      difficulty: "Hard",
-      difficultyColor: "text-red-400",
-      difficultyBg: "bg-red-400/10",
-      difficultyBorder: "border-red-400/30",
-      gradient: "from-pink-500 to-rose-500",
-      iconColor: "text-pink-400",
-      iconBg: "bg-pink-500/20",
-      borderColor: "border-pink-500/30",
-      technique: "Design (HashMap + Doubly Linked List + Frequency Map)",
-      timeComplexity: "O(1) average per operation",
-    },
-    {
-        name : "Design HashMap",
-        number : "706",
-        icon : Settings,
-        description : "Design a HashMap that supports put, get, and remove operations in O(1) time.",
-        page : "DesignHashMap",
-        difficulty : "Easy",
-        difficultyColor : "text-green-400",
-        difficultyBg : "bg-green-400/10",
-        difficultyBorder : "border-green-400/30",
-        gradient : "from-green-500 to-lime-500",
-        iconColor : "text-lime-400",
-        iconBg : "bg-lime-500/20",
-        borderColor : "border-lime-500/30",
-        technique : "Design (Array, HashTable, HashFunction)",
-        timeComplexity : "O(1)",
-      },
-      {
-        name : "Design Linked List",
-        number : "707",
-        icon : Settings,
-        description : "Design a Linked List that supports insert, delete, and get operations in O(n) time.",
-        page : "DesignLinkedList",
-        difficulty : "Medium",
-        difficultyColor : "text-yellow-400",
-        difficultyBg : "bg-yellow-400/10",
-        difficultyBorder : "border-yellow-400/30",
-        gradient : "from-yellow-500 to-amber-500",
-        iconColor : "text-amber-400",
-        iconBg : "bg-amber-500/20",
-        borderColor : "border-amber-500/30",
-        technique : "Design (Array, Pointer)",
-        timeComplexity : "O(n)",
-      },
-      {
-        name: "Min Stack",
-        number: "155",
-        icon: Layers,
-        description: "Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.",
-        page: "MinStack",
-        difficulty: "Medium",
-        difficultyColor: "text-yellow-400",
-        difficultyBg: "bg-yellow-400/10",
-        difficultyBorder: "border-yellow-400/30",
-        gradient: "from-blue-500 to-indigo-500",
-        iconColor: "text-blue-400",
-        iconBg: "bg-blue-500/20",
-        borderColor: "border-blue-500/30",
-        technique: "Design (Stack + Min Tracking)",
-        timeComplexity: "O(1)",
-      },
-      {
-        name: "Implement Trie (Prefix Tree)",
-        number: "208",
-        icon: Search,
-        description: "Implement a trie with insert, search, and startsWith methods for efficient string operations.",
-        page: "ImplementTrie",
-        difficulty: "Medium",
-        difficultyColor: "text-yellow-400",
-        difficultyBg: "bg-yellow-400/10",
-        difficultyBorder: "border-yellow-400/30",
-        gradient: "from-green-500 to-teal-500",
-        iconColor: "text-green-400",
-        iconBg: "bg-green-500/20",
-        borderColor: "border-green-500/30",
-        technique: "Design (Trie, Tree)",
-        timeComplexity: "O(m)",
-      },
-  ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
+  // ✅ Get Design problems directly from the master catalog
+  const designAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'Design');
+
+  // ❌ The local 'algorithms' array has been DELETED.
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
-      {/* --- Header --- */}
       <header className="text-center mb-16 mt-8 relative">
         <div className="absolute top-0 left-1/3 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
         <div className="absolute top-10 right-1/3 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
-
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-6">
             <div className="relative">
@@ -150,7 +56,6 @@ const AlgorithmList = ({ navigate }) => {
               Design Patterns
             </h1>
           </div>
-
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
             Master system design problems that combine{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">
@@ -162,13 +67,12 @@ const AlgorithmList = ({ navigate }) => {
             </span>{" "}
             for optimized performance.
           </p>
-
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
             <div className="px-4 py-2 bg-gradient-to-r from-teal-500/10 to-emerald-500/10 rounded-full border border-teal-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
                 <Code2 className="h-3.5 w-3.5 text-teal-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  {algorithms.length} Problems
+                  {designAlgorithms.length} Problems
                 </span>
               </div>
             </div>
@@ -183,36 +87,33 @@ const AlgorithmList = ({ navigate }) => {
           </div>
         </div>
       </header>
-
-      {/* --- Algorithm Cards --- */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-        {algorithms.map((algo, index) => {
+        {designAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
-          const Icon = algo.icon;
-
+          const Icon = algo.icon || defaultVisuals.icon;
           return (
             <div
-              key={algo.name}
-              onClick={() => navigate(algo.page)}
+              key={algo.subpage} // ✅ Use subpage
+              onClick={() => navigate(algo.subpage)} // ✅ Use subpage
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className="group relative cursor-pointer animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient || defaultVisuals.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
               />
               <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor || defaultVisuals.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                      className={`p-3 ${algo.iconBg || defaultVisuals.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
                         className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
+                          isHovered ? "text-white" : (algo.iconColor || defaultVisuals.iconColor)
                         } transition-colors duration-300`}
                       />
                     </div>
@@ -232,12 +133,17 @@ const AlgorithmList = ({ navigate }) => {
                           isHovered ? "text-white" : "text-gray-200"
                         }`}
                       >
-                        {algo.name}
+                        {algo.label} {/* ✅ Use label */}
                       </h2>
                     </div>
                   </div>
-                </div>
 
+                  {/* ✅ Add the StarButton here */}
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <StarButton problemId={algo.subpage} />
+                  </div>
+
+                </div>
                 <p
                   className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
                     isHovered ? "text-gray-300" : "text-gray-400"
@@ -245,7 +151,6 @@ const AlgorithmList = ({ navigate }) => {
                 >
                   {algo.description}
                 </p>
-
                 <div className="flex items-center justify-between pt-4 border-t border-gray-800">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1.5">
@@ -261,7 +166,6 @@ const AlgorithmList = ({ navigate }) => {
                       </span>
                     </div>
                   </div>
-
                   <div
                     className={`transition-all duration-300 ${
                       isHovered
@@ -282,8 +186,6 @@ const AlgorithmList = ({ navigate }) => {
           );
         })}
       </div>
-
-      {/* --- Footer --- */}
       <div className="mt-12 text-center">
         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-full border border-gray-700 backdrop-blur-sm">
           <TrendingUp className="h-4 w-4 text-teal-400" />
@@ -302,18 +204,12 @@ const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
 
   const renderPage = () => {
     switch (page) {
-      case "LRUCache":
-        return <LRUCache navigate={navigate} />;
-      case "LFUCache":
-        return <LFUCache navigate={navigate} />;
-      case "DesignHashMap":
-        return <DesignHashMap navigate={navigate} />;
-      case "DesignLinkedList":
-        return <DesignLinkedList navigate={navigate} />;
-      case "MinStack":
-        return <MinStack navigate={navigate} />;
-      case "ImplementTrie":
-        return <ImplementTrie navigate={navigate} />;
+      case "LRUCache": return <LRUCache navigate={navigate} />;
+      case "LFUCache": return <LFUCache navigate={navigate} />;
+      case "DesignHashMap": return <DesignHashMap navigate={navigate} />;
+      case "DesignLinkedList": return <DesignLinkedList navigate={navigate} />;
+      case "MinStack": return <MinStack navigate={navigate} />;
+      case "ImplementTrie": return <ImplementTrie navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -327,25 +223,16 @@ const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-float-delayed" />
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse-slow" />
       </div>
-
       <style>{`
-        .animated-gradient {
-          background-size: 200% auto;
-          animation: gradient-animation 4s ease-in-out infinite;
-        }
-        @keyframes gradient-animation {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
+        .animated-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; }
+        @keyframes gradient-animation { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
       `}</style>
-
       <div className="relative z-10">{children}</div>
     </div>
   );
 
   return (
     <PageWrapper>
-      {/* Navigation */}
       {page !== "home" && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
@@ -365,7 +252,6 @@ const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
           </div>
         </nav>
       )}
-
       {page === "home" && parentNavigate && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto">
@@ -379,7 +265,6 @@ const DesignPage = ({ navigate: parentNavigate, initialPage = null }) => {
           </div>
         </nav>
       )}
-
       {renderPage()}
     </PageWrapper>
   );

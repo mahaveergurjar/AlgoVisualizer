@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
     ArrowLeft,
     SearchCode,
     GaugeCircle,
-    Grid, // New icon for the 2D Matrix problem
+    Grid,
     Clock,
     Star,
     Mountain,
@@ -25,166 +25,26 @@ import FindPeakElement from './FindPeakElement';
 import MedianOfTwoSortedArrays from './MedianOfTwoSortedArrays';
 import BinarySearchBasic from './BinarySearchBasic';
 
+// --- ✅ Import the master catalog and your StarButton ---
+import { problems as PROBLEM_CATALOG } from '../../search/catalog';
+import StarButton from '../../components/StarButton';
+
+// ✅ (Optional but Recommended) Default values for visual properties
+const defaultVisuals = {
+    icon: SearchCode,
+    gradient: "from-gray-700 to-gray-800",
+    borderColor: "border-gray-600",
+    iconBg: "bg-gray-700/20",
+    iconColor: "text-gray-300",
+};
 
 const BinarySearchAlgorithmList = ({ navigate }) => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
-    // Optimization: useMemo ensures the list is created and sorted only once.
-    const algorithms = useMemo(() => [
-        {
-            name: "Search a 2D Matrix",
-            number: "74",
-            icon: Grid,
-            description: "Efficiently find a target in a sorted m x n matrix by treating it as a single sorted array and using binary search.",
-            page: "Search2DMatrix",
-            difficulty: "Medium",
-            difficultyColor: "text-yellow-400",
-            difficultyBg: "bg-yellow-400/10",
-            difficultyBorder: "border-yellow-400/30",
-            gradient: "from-sky-500 to-blue-500",
-            iconColor: "text-sky-400",
-            iconBg: "bg-sky-500/20",
-            borderColor: "border-sky-500/30",
-            technique: "Binary Search",
-            timeComplexity: "O(log(m*n))",
-        },
-        {
-            name: "Minimum Speed to Arrive on Time",
-            number: "1870",
-            icon: GaugeCircle,
-            description: "Find the minimum integer speed to travel across several train routes within a given time limit, leveraging a monotonic search space.",
-            page: "MinSpeedToArriveOnTime",
-            difficulty: "Medium",
-            difficultyColor: "text-yellow-400",
-            difficultyBg: "bg-yellow-400/10",
-            difficultyBorder: "border-yellow-400/30",
-            gradient: "from-teal-500 to-cyan-500",
-            iconColor: "text-teal-400",
-            iconBg: "bg-teal-500/20",
-            borderColor: "border-teal-500/30",
-            technique: "Binary Search",
-            timeComplexity: "O(n log k)",
-        },
-        {
-          name: "Peak Index in a Mountain Array",
-          number: "852",
-          icon: Mountain, // Assuming Mountain icon is imported from lucide-react
-          description: "Find the index of the highest element in an array that first increases and then decreases, using binary search to achieve logarithmic time.",
-          page: "PeakIndexInMountainArray",
-          difficulty: "Medium",
-          difficultyColor: "text-yellow-400",
-          difficultyBg: "bg-yellow-400/10",
-          difficultyBorder: "border-yellow-400/30",
-          gradient: "from-green-500 to-teal-500",
-          iconColor: "text-green-400",
-          iconBg: "bg-green-500/20",
-          borderColor: "border-green-500/30",
-          technique: "Binary Search",
-          timeComplexity: "O(log n)",
-      },
-        {
-            name: "Find First and Last Position",
-            number: "34",
-            icon: Code2,
-            description: "Given a sorted array and a target value, find the starting and ending position of the target using binary search.",
-            page: "FindFirstAndLastPosition",
-            difficulty: "Medium",
-            difficultyColor: "text-yellow-400",
-            difficultyBg: "bg-yellow-400/10",
-            difficultyBorder: "border-yellow-400/30",
-            gradient: "from-indigo-500 to-violet-500",
-            iconColor: "text-indigo-400",
-            iconBg: "bg-indigo-500/20",
-            borderColor: "border-indigo-500/30",
-            technique: "Binary Search",
-            timeComplexity: "O(log n)",
-        },
-        {
-            name: "Find Minimum in Rotated Sorted Array",
-            number: "153",
-            icon: Clock,
-            description: "Find the minimum element in a rotated sorted array using binary search on the monotonic halves.",
-            page: "FindMinimumInRotatedSortedArray",
-            difficulty: "Medium",
-            difficultyColor: "text-yellow-400",
-            difficultyBg: "bg-yellow-400/10",
-            difficultyBorder: "border-yellow-400/30",
-            gradient: "from-emerald-500 to-teal-500",
-            iconColor: "text-emerald-400",
-            iconBg: "bg-emerald-500/20",
-            borderColor: "border-emerald-500/30",
-            technique: "Binary Search",
-            timeComplexity: "O(log n)",
-        },
-        {
-            name: "Search in Rotated Sorted Array",
-            number: "33",
-            icon: Search,
-            description: "Search for a target value in a rotated sorted array using modified binary search to handle the rotation.",
-            page: "SearchInRotatedSortedArray",
-            difficulty: "Medium",
-            difficultyColor: "text-yellow-400",
-            difficultyBg: "bg-yellow-400/10",
-            difficultyBorder: "border-yellow-400/30",
-            gradient: "from-blue-500 to-purple-500",
-            iconColor: "text-blue-400",
-            iconBg: "bg-blue-500/20",
-            borderColor: "border-blue-500/30",
-            technique: "Binary Search",
-            timeComplexity: "O(log n)",
-        },
-        {
-            name: "Find Peak Element",
-            number: "162",
-            icon: Mountain,
-            description: "Find a peak element in an array where a peak is strictly greater than its neighbors using binary search.",
-            page: "FindPeakElement",
-            difficulty: "Medium",
-            difficultyColor: "text-yellow-400",
-            difficultyBg: "bg-yellow-400/10",
-            difficultyBorder: "border-yellow-400/30",
-            gradient: "from-green-500 to-teal-500",
-            iconColor: "text-green-400",
-            iconBg: "bg-green-500/20",
-            borderColor: "border-green-500/30",
-            technique: "Binary Search",
-            timeComplexity: "O(log n)",
-        },
-        {
-            name: "Median of Two Sorted Arrays",
-            number: "4",
-            icon: Layers,
-            description: "Find the median of two sorted arrays with O(log(min(m,n))) time complexity using binary search on partitions.",
-            page: "MedianOfTwoSortedArrays",
-            difficulty: "Hard",
-            difficultyColor: "text-red-400",
-            difficultyBg: "bg-red-400/10",
-            difficultyBorder: "border-red-400/30",
-            gradient: "from-purple-500 to-pink-500",
-            iconColor: "text-purple-400",
-            iconBg: "bg-purple-500/20",
-            borderColor: "border-purple-500/30",
-            technique: "Binary Search",
-            timeComplexity: "O(log(min(m,n)))",
-        },
-        {
-            name: "Binary Search",
-            number: "704",
-            icon: SearchCode,
-            description: "The fundamental binary search algorithm: find a target value in a sorted array with O(log n) time complexity.",
-            page: "BinarySearchBasic",
-            difficulty: "Easy",
-            difficultyColor: "text-green-400",
-            difficultyBg: "bg-green-400/10",
-            difficultyBorder: "border-green-400/30",
-            gradient: "from-cyan-500 to-blue-500",
-            iconColor: "text-cyan-400",
-            iconBg: "bg-cyan-500/20",
-            borderColor: "border-cyan-500/30",
-            technique: "Binary Search",
-            timeComplexity: "O(log n)",
-        },
-    ].sort((a, b) => parseInt(a.number) - parseInt(b.number)), []);
+    // ✅ Get Binary Search problems directly from the master catalog
+    const binarySearchAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'BinarySearch');
+    
+    // ❌ The local 'algorithms' array has been DELETED.
 
     return (
         <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -216,7 +76,7 @@ const BinarySearchAlgorithmList = ({ navigate }) => {
                             <div className="flex items-center gap-2">
                                 <Code2 className="h-3.5 w-3.5 text-cyan-400" />
                                 <span className="text-xs font-medium text-gray-300">
-                                    {algorithms.length} {algorithms.length === 1 ? 'Problem' : 'Problems'}
+                                    {binarySearchAlgorithms.length} {binarySearchAlgorithms.length === 1 ? 'Problem' : 'Problems'}
                                 </span>
                             </div>
                         </div>
@@ -233,33 +93,33 @@ const BinarySearchAlgorithmList = ({ navigate }) => {
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-                {algorithms.map((algo, index) => {
+                {binarySearchAlgorithms.map((algo, index) => {
                     const isHovered = hoveredIndex === index;
-                    const Icon = algo.icon;
+                    const Icon = algo.icon || defaultVisuals.icon;
 
                     return (
                         <div
-                            key={algo.name}
-                            onClick={() => navigate(algo.page)}
+                            key={algo.subpage} // ✅ Use subpage
+                            onClick={() => navigate(algo.subpage)} // ✅ Use subpage
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
                             className="group relative cursor-pointer animate-fade-in-up"
                             style={{ animationDelay: `${index * 80}ms` }}
                         >
                             <div
-                                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient || defaultVisuals.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
                             />
 
                             <div
-                                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor || defaultVisuals.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
                             >
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="flex items-center gap-4">
                                         <div
-                                            className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                                            className={`p-3 ${algo.iconBg || defaultVisuals.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                                         >
                                             <Icon
-                                                className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor
+                                                className={`h-10 w-10 ${isHovered ? "text-white" : (algo.iconColor || defaultVisuals.iconColor)
                                                     } transition-colors duration-300`}
                                             />
                                         </div>
@@ -278,9 +138,14 @@ const BinarySearchAlgorithmList = ({ navigate }) => {
                                                 className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"
                                                     }`}
                                             >
-                                                {algo.name}
+                                                {algo.label} {/* ✅ Use label */}
                                             </h2>
                                         </div>
+                                    </div>
+
+                                    {/* ✅ Add the StarButton here */}
+                                    <div onClick={(e) => e.stopPropagation()}>
+                                        <StarButton problemId={algo.subpage} />
                                     </div>
                                 </div>
 
@@ -339,30 +204,22 @@ const BinarySearchAlgorithmList = ({ navigate }) => {
     );
 };
 
+// ✅ This part remains completely the same as before.
 const BinarySearchPage = ({ navigate: parentNavigate, initialPage = null }) => {
     const [page, setPage] = useState(initialPage || "home");
     const navigate = (newPage) => setPage(newPage);
 
     const renderPage = () => {
         switch (page) {
-            case "MinSpeedToArriveOnTime":
-                return <MinSpeedToArriveOnTime navigate={navigate} />;
-            case "Search2DMatrix":
-                return <Search2DMatrix navigate={navigate} />;
-            case "PeakIndexInMountainArray":
-                return <PeakIndexInMountainArray navigate={navigate} />;
-            case "FindFirstAndLastPosition":
-                return <FindFirstAndLastPosition navigate={navigate} />;
-            case "FindMinimumInRotatedSortedArray":
-                return <FindMinimumInRotatedSortedArray navigate={navigate} />;
-            case "SearchInRotatedSortedArray":
-                return <SearchInRotatedSortedArray navigate={navigate} />;
-            case "FindPeakElement":
-                return <FindPeakElement navigate={navigate} />;
-            case "MedianOfTwoSortedArrays":
-                return <MedianOfTwoSortedArrays navigate={navigate} />;
-            case "BinarySearchBasic":
-                return <BinarySearchBasic navigate={navigate} />;
+            case "MinSpeedToArriveOnTime": return <MinSpeedToArriveOnTime navigate={navigate} />;
+            case "Search2DMatrix": return <Search2DMatrix navigate={navigate} />;
+            case "PeakIndexInMountainArray": return <PeakIndexInMountainArray navigate={navigate} />;
+            case "FindFirstAndLastPosition": return <FindFirstAndLastPosition navigate={navigate} />;
+            case "FindMinimumInRotatedSortedArray": return <FindMinimumInRotatedSortedArray navigate={navigate} />;
+            case "SearchInRotatedSortedArray": return <SearchInRotatedSortedArray navigate={navigate} />;
+            case "FindPeakElement": return <FindPeakElement navigate={navigate} />;
+            case "MedianOfTwoSortedArrays": return <MedianOfTwoSortedArrays navigate={navigate} />;
+            case "BinarySearchBasic": return <BinarySearchBasic navigate={navigate} />;
             case "home":
             default:
                 return <BinarySearchAlgorithmList navigate={navigate} />;
@@ -370,7 +227,6 @@ const BinarySearchPage = ({ navigate: parentNavigate, initialPage = null }) => {
     };
 
     const PageWrapper = ({ children }) => (
-        // The wrapper with animations and styles remains the same
         <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-float" />
@@ -379,7 +235,6 @@ const BinarySearchPage = ({ navigate: parentNavigate, initialPage = null }) => {
             </div>
 
             <style>{`
-                /* All your animation CSS can remain unchanged here */
                 .animated-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; }
                 @keyframes gradient-animation { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
                 .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
@@ -397,7 +252,6 @@ const BinarySearchPage = ({ navigate: parentNavigate, initialPage = null }) => {
 
     return (
         <PageWrapper>
-            {/* Navigation to go back to the problem list within this category */}
             {page !== "home" && (
                 <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
                     <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
@@ -418,7 +272,6 @@ const BinarySearchPage = ({ navigate: parentNavigate, initialPage = null }) => {
                 </nav>
             )}
 
-            {/* Navigation to go back to the main category homepage */}
             {page === "home" && parentNavigate && (
                 <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
                     <div className="max-w-7xl px-6 w-full mx-auto">
@@ -432,7 +285,6 @@ const BinarySearchPage = ({ navigate: parentNavigate, initialPage = null }) => {
                     </div>
                 </nav>
             )}
-
             {renderPage()}
         </PageWrapper>
     );
