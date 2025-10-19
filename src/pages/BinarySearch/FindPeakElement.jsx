@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { ArrowLeft, Play, RotateCw, Pause, SkipBack, SkipForward, Mountain } from "lucide-react";
 import VisualizerPointer from "../../components/VisualizerPointer";
-import useModeHistorySwitch from "../../hooks/useModeHistorySwitch";
 
 const FindPeakElement = () => {
   const initialArray = [1, 2, 3, 1];
@@ -12,16 +11,17 @@ const FindPeakElement = () => {
   const [animSpeed, setAnimSpeed] = useState(1000);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const {
-    mode,
-    history,
-    currentStep,
-    setMode,
-    setHistory,
-    setCurrentStep,
-    goToPrevStep,
-    goToNextStep,
-  } = useModeHistorySwitch();
+  const [mode, setMode] = useState("input");
+  const [history, setHistory] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const goToPrevStep = useCallback(() => {
+    setCurrentStep((prev) => Math.max(0, prev - 1));
+  }, []);
+
+  const goToNextStep = useCallback(() => {
+    setCurrentStep((prev) => Math.min(history.length - 1, prev + 1));
+  }, [history.length]);
 
   // Generate history for finding peak element
   const generatePeakHistory = useCallback((arr) => {
@@ -155,13 +155,6 @@ const FindPeakElement = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-green-900 to-gray-900 text-white p-8">
       {/* Header */}
       <header className="mb-8">
-        <button
-          onClick={() => window.history.back()}
-          className="flex items-center gap-2 text-green-300 hover:text-green-100 transition-colors mb-4"
-        >
-          <ArrowLeft className="h-5 w-5" />
-          Back to Binary Search
-        </button>
         <div className="flex items-center gap-4 mb-4">
           <div className="p-3 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl shadow-lg">
             <Mountain className="h-8 w-8 text-white" />
@@ -172,10 +165,10 @@ const FindPeakElement = () => {
           </div>
         </div>
         <p className="text-gray-300 text-lg leading-relaxed max-w-4xl">
-          A peak element is an element that is strictly greater than its neighbors. Given a <strong>0-indexed</strong> integer array{" "}
-          <code className="px-2 py-1 bg-gray-800 rounded">nums</code>, find a peak element and return its index. 
-          If the array contains multiple peaks, return the index to <strong>any</strong> of them. 
-          You must write an algorithm that runs in <strong>O(log n)</strong> time.
+          A peak element is an element that is strictly greater than its neighbors. 
+          Given an integer array <code className="px-2 py-1 bg-gray-800 rounded">nums</code>, 
+          find a peak element, and return its index. You may imagine that{" "}
+          <code className="px-2 py-1 bg-gray-800 rounded">nums[-1] = nums[n] = -∞</code>.
         </p>
       </header>
 
@@ -183,17 +176,19 @@ const FindPeakElement = () => {
       {mode === "input" && (
         <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 mb-8 shadow-xl">
           <h2 className="text-2xl font-bold mb-4 text-green-300">Input Configuration</h2>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Array (comma-separated):
-            </label>
-            <input
-              type="text"
-              value={inputArray}
-              onChange={handleArrayChange}
-              className="w-full px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="e.g., 1,2,3,1"
-            />
+          <div className="flex gap-4 mb-4">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Array (comma-separated):
+              </label>
+              <input
+                type="text"
+                value={inputArray}
+                onChange={handleArrayChange}
+                className="w-full px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="e.g., 1,2,3,1"
+              />
+            </div>
           </div>
           <div className="flex gap-3">
             <button
@@ -204,7 +199,7 @@ const FindPeakElement = () => {
             </button>
             <button
               onClick={handleStart}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-semibold transition-all shadow-lg shadow-green-500/30"
+              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-600 to-teal-700 hover:from-green-700 hover:to-teal-800 rounded-lg font-semibold transition-all shadow-lg shadow-green-500/30"
             >
               <Play className="h-4 w-4" />
               Start Visualization
@@ -292,8 +287,8 @@ const FindPeakElement = () => {
 
               return (
                 <div key={index} className="flex flex-col items-center gap-2 relative">
-                  {isMid && <VisualizerPointer label="MID" color="bg-purple-500" />}
-                  {isLeft && <VisualizerPointer label="L" color="bg-blue-500" />}
+                  {isMid && <VisualizerPointer label="MID" color="bg-blue-500" />}
+                  {isLeft && <VisualizerPointer label="L" color="bg-green-500" />}
                   {isRight && <VisualizerPointer label="R" color="bg-orange-500" />}
                   
                   <div
@@ -301,9 +296,9 @@ const FindPeakElement = () => {
                       isPeak
                         ? "bg-gradient-to-br from-green-500 to-green-700 text-white shadow-lg shadow-green-500/50 scale-110 ring-4 ring-green-400"
                         : isMid
-                        ? "bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-lg shadow-purple-500/50 scale-105"
+                        ? "bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg shadow-blue-500/50 scale-105"
                         : isLeft || isRight
-                        ? "bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg shadow-blue-500/50"
+                        ? "bg-gradient-to-br from-green-500 to-green-700 text-white shadow-lg shadow-green-500/50"
                         : inRange
                         ? "bg-gray-700 text-white border-2 border-green-400"
                         : "bg-gray-800 text-gray-400 border border-gray-600"
@@ -322,11 +317,11 @@ const FindPeakElement = () => {
           {/* Legend */}
           <div className="mt-8 flex flex-wrap justify-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gradient-to-br from-blue-500 to-blue-700"></div>
+              <div className="w-4 h-4 rounded bg-gradient-to-br from-green-500 to-green-700"></div>
               <span className="text-sm text-gray-300">Left/Right Pointer</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gradient-to-br from-purple-500 to-purple-700"></div>
+              <div className="w-4 h-4 rounded bg-gradient-to-br from-blue-500 to-blue-700"></div>
               <span className="text-sm text-gray-300">Middle</span>
             </div>
             <div className="flex items-center gap-2">
@@ -334,7 +329,7 @@ const FindPeakElement = () => {
               <span className="text-sm text-gray-300">In Search Range</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gradient-to-br from-green-500 to-green-700"></div>
+              <div className="w-4 h-4 rounded bg-gradient-to-br from-green-500 to-green-700 ring-2 ring-green-400"></div>
               <span className="text-sm text-gray-300">Peak Found</span>
             </div>
           </div>

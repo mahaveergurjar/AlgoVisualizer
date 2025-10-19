@@ -12,6 +12,7 @@ import {
 // --- Import your specific tree algorithm visualizer components here ---
 import ConstructBinaryTree from "./ConstructBinaryTree.jsx";
 import LCAofDeepestLeaves from "./LCAofDeepestLeaves";
+import AVLTree from "./AVLTree.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -53,7 +54,24 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Depth-First Search (DFS)",
       timeComplexity: "O(n)",
     }
-
+    ,
+    {
+      name: "AVL Tree Visualizer",
+      number: "110",
+      icon: GitMerge,
+      description: "Visualize AVL tree insertions and rotations.",
+      page: "AVLTree",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Balanced Binary Search Tree",
+      timeComplexity: "O(log n)",
+    }
     // Add more tree algorithms here as you build them
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
 
@@ -229,6 +247,8 @@ const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <ConstructBinaryTree navigate={navigate} />;
       case "LCAofDeepestLeaves":
         return <LCAofDeepestLeaves navigate={navigate} />
+      case "AVLTree":
+        return <AVLTree navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

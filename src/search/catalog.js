@@ -23,7 +23,8 @@ export const problems = [
   // Sliding Window
   { label: "Max Consecutive Ones III", category: "SlidingWindows", subpage: "MaxConsecutiveOnesIII", keywords: ["sliding window", "ones", "1004"] },
   { label: "Sliding Window Maximum", category: "SlidingWindows", subpage: "SlidingWindowMaximum", keywords: ["sliding window", "deque", "maximum", "239"] },
-
+  { label: "Fruits Into Baskets", category: "SlidingWindows", subpage: "FruitsIntoBaskets", keywords: ["sliding window", "fruits", "baskets", "904"] },
+  
   // Linked List
   { label: "Linked List Cycle", category: "LinkedList", subpage: "LinkedListCycle", keywords: ["linked list", "cycle", "floyd", "141"] },
   { label: "Reverse Linked List", category: "LinkedList", subpage: "ReverseLinkedList", keywords: ["linked list", "reverse", "206"] },

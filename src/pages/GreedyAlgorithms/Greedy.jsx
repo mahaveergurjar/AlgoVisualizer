@@ -1,275 +1,106 @@
 import React, { useState } from "react";
-import {
-  ArrowLeft,
-  Type,
-  Text,
-  Search,
-  Repeat,
-  ArrowLeftRight,
-  AlignLeft,
-  CheckCircle2,
-  RefreshCw,
-  Code2,
+import { 
+  ArrowLeft, 
+  Filter, 
+  Star, 
+  Clock, 
+  Zap, 
+  ArrowRight, 
   TrendingUp,
-  Star,
-  Zap,
-  Clock,
-  Hash,
-  LetterText,
-  Scissors,
-  ArrowRight
+  Code2,
+  Brackets,
+  Users,
+  Target,
+  Circle,
+  GitBranch
 } from "lucide-react";
+import BestTimeStockII from "./BestTimeStockII";
+import TwoCityScheduling from "./TwoCityScheduling";
 
-import PalindromeCheck from "./PalindromeCheck.jsx";
-import ReverseString from "./ReverseString.jsx";
-import CountVowels from "./CountVowels.jsx";
-
-function AlgorithmList({ navigate }) {
+const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [filter, setFilter] = useState("all");
 
   const algorithms = [
     {
-      name: "Check Palindrome",
-      number: "1",
-      icon: ArrowLeftRight,
-      description: "Check if a string reads the same backward as forward.",
-      page: "PalindromeCheck",
-      difficulty: "Basic",
-      tier: "Tier 1",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
+      name: "Best Time to Buy and Sell Stock II",
+      number: "122",
+      icon: TrendingUp,
+      description: "Maximize profit by buying and selling stocks multiple times with greedy approach.",
+      page: "BestTimeStockII",
+      difficulty: "Medium",
+      tier: "Tier 2",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
       gradient: "from-green-500 to-emerald-500",
       iconColor: "text-green-400",
       iconBg: "bg-green-500/20",
       borderColor: "border-green-500/30",
-      technique: "Two Pointers",
+      technique: "Greedy Profit",
       timeComplexity: "O(n)",
-      platforms: ["All Platforms"],
-      tags: ["Beginner", "Two Pointers"]
+      platforms: ["LeetCode #122"],
+      tags: ["Stocks", "Profit Maximization"]
     },
     {
-      name: "Reverse String",
-      number: "2",
-      icon: RefreshCw,
-      description: "Reverse the characters in a string.",
-      page: "ReverseString",
-      difficulty: "Basic",
-      tier: "Tier 1",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
+      name: "Two City Scheduling",
+      number: "1029",
+      icon: Users,
+      description: "Schedule interviews for two cities minimizing total cost using greedy selection.",
+      page: "TwoCityScheduling",
+      difficulty: "Medium",
+      tier: "Tier 2",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
       gradient: "from-blue-500 to-cyan-500",
       iconColor: "text-blue-400",
       iconBg: "bg-blue-500/20",
       borderColor: "border-blue-500/30",
-      technique: "Two Pointers",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #344"],
-      tags: ["Beginner", "In-place"]
+      technique: "Cost Difference",
+      timeComplexity: "O(n log n)",
+      platforms: ["LeetCode #1029"],
+      tags: ["Scheduling", "Optimization"]
     },
     {
-      name: "Count Vowels",
-      number: "3",
-      icon: Hash,
-      description: "Count the number of vowels in a string.",
-      page: "CountVowels",
-      difficulty: "Basic",
-      tier: "Tier 1",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-purple-500 to-indigo-500",
-      iconColor: "text-purple-400",
-      iconBg: "bg-purple-500/20",
-      borderColor: "border-purple-500/30",
-      technique: "Traversal",
-      timeComplexity: "O(n)",
-      platforms: ["GfG"],
-      tags: ["Beginner", "Counting"]
-    },
-    {
-      name: "First Unique Character",
-      number: "4",
-      icon: CheckCircle2,
-      description: "Find the first non-repeating character in a string.",
-      page: "FirstUniqueChar",
-      difficulty: "Basic",
-      tier: "Tier 1",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
+      name: "Jump Game II",
+      number: "45",
+      icon: Target,
+      description: "Find minimum jumps to reach the end of array using greedy BFS approach.",
+      page: "JumpGameII",
+      difficulty: "Medium",
+      tier: "Tier 2",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
       gradient: "from-orange-500 to-amber-500",
       iconColor: "text-orange-400",
       iconBg: "bg-orange-500/20",
       borderColor: "border-orange-500/30",
-      technique: "Hashing",
+      technique: "Greedy BFS",
       timeComplexity: "O(n)",
-      platforms: ["LeetCode #387"],
-      tags: ["Beginner", "Hash Map"]
-    },
-    // TIER 2: EASY
-    {
-      name: "Valid Anagram",
-      number: "242",
-      icon: Repeat,
-      description: "Check if two strings are anagrams of each other.",
-      page: "ValidAnagram",
-      difficulty: "Easy",
-      tier: "Tier 2",
-      difficultyColor: "text-blue-400",
-      difficultyBg: "bg-blue-400/10",
-      difficultyBorder: "border-blue-400/30",
-      gradient: "from-teal-500 to-cyan-500",
-      iconColor: "text-teal-400",
-      iconBg: "bg-teal-500/20",
-      borderColor: "border-teal-500/30",
-      technique: "Hashing",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #242", "GfG"],
-      tags: ["Hashing", "Frequency"]
+      platforms: ["LeetCode #45"],
+      tags: ["Array Jumping", "BFS"]
     },
     {
-      name: "Longest Common Prefix",
-      number: "14",
-      icon: AlignLeft,
-      description: "Find the longest common prefix among an array of strings.",
-      page: "LongestCommonPrefix",
-      difficulty: "Easy",
-      tier: "Tier 2",
-      difficultyColor: "text-blue-400",
-      difficultyBg: "bg-blue-400/10",
-      difficultyBorder: "border-blue-400/30",
-      gradient: "from-violet-500 to-purple-500",
-      iconColor: "text-violet-400",
-      iconBg: "bg-violet-500/20",
-      borderColor: "border-violet-500/30",
-      technique: "String Matching",
-      timeComplexity: "O(n*m)",
-      platforms: ["LeetCode #14", "GfG"],
-      tags: ["Prefix", "Comparison"]
-    },
-    {
-      name: "String Compression",
-      number: "443",
-      icon: Scissors,
-      description: "Compress string using character counts.",
-      page: "StringCompression",
-      difficulty: "Easy",
-      tier: "Tier 2",
-      difficultyColor: "text-blue-400",
-      difficultyBg: "bg-blue-400/10",
-      difficultyBorder: "border-blue-400/30",
-      gradient: "from-pink-500 to-rose-500",
-      iconColor: "text-pink-400",
-      iconBg: "bg-pink-500/20",
-      borderColor: "border-pink-500/30",
-      technique: "Two Pointers",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #443"],
-      tags: ["Compression", "In-place"]
-    },
-    {
-      name: "Reverse Words",
-      number: "151",
-      icon: Text,
-      description: "Reverse the order of words in a string.",
-      page: "ReverseWords",
-      difficulty: "Easy",
-      tier: "Tier 2",
-      difficultyColor: "text-blue-400",
-      difficultyBg: "bg-blue-400/10",
-      difficultyBorder: "border-blue-400/30",
-      gradient: "from-cyan-500 to-blue-500",
-      iconColor: "text-cyan-400",
-      iconBg: "bg-cyan-500/20",
-      borderColor: "border-cyan-500/30",
-      technique: "String Manipulation",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #151", "GfG"],
-      tags: ["Words", "Parsing"]
-    },
-    // TIER 3: MEDIUM+
-    {
-      name: "Longest Substring Without Repeating",
-      number: "3",
-      icon: Search,
-      description: "Find length of longest substring without repeating characters.",
-      page: "LongestSubstring",
+      name: "Gas Station",
+      number: "134",
+      icon: Circle,
+      description: "Find starting gas station to complete circular route using greedy circuit check.",
+      page: "GasStation",
       difficulty: "Medium",
-      tier: "Tier 3",
+      tier: "Tier 2",
       difficultyColor: "text-yellow-400",
       difficultyBg: "bg-yellow-400/10",
       difficultyBorder: "border-yellow-400/30",
-      gradient: "from-emerald-500 to-teal-500",
-      iconColor: "text-emerald-400",
-      iconBg: "bg-emerald-500/20",
-      borderColor: "border-emerald-500/30",
-      technique: "Sliding Window",
+      gradient: "from-purple-500 to-indigo-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Circuit Check",
       timeComplexity: "O(n)",
-      platforms: ["LeetCode #3", "GfG"],
-      tags: ["Sliding Window", "Hash Set"]
-    },
-    {
-      name: "Longest Palindromic Substring",
-      number: "5",
-      icon: ArrowLeftRight,
-      description: "Find the longest palindromic substring in a string.",
-      page: "LongestPalindrome",
-      difficulty: "Medium",
-      tier: "Tier 3",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-fuchsia-500 to-purple-500",
-      iconColor: "text-fuchsia-400",
-      iconBg: "bg-fuchsia-500/20",
-      borderColor: "border-fuchsia-500/30",
-      technique: "Expand Around Center",
-      timeComplexity: "O(n²)",
-      platforms: ["LeetCode #5", "GfG"],
-      tags: ["Palindrome", "DP"]
-    },
-    {
-      name: "Group Anagrams",
-      number: "49",
-      icon: Repeat,
-      description: "Group strings that are anagrams of each other.",
-      page: "GroupAnagrams",
-      difficulty: "Medium",
-      tier: "Tier 3",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-amber-500 to-orange-500",
-      iconColor: "text-amber-400",
-      iconBg: "bg-amber-500/20",
-      borderColor: "border-amber-500/30",
-      technique: "Hashing",
-      timeComplexity: "O(n*k)",
-      platforms: ["LeetCode #49", "GfG"],
-      tags: ["Grouping", "Hash Map"]
-    },
-    {
-      name: "Minimum Window Substring",
-      number: "76",
-      icon: Search,
-      description: "Find minimum window containing all characters of target.",
-      page: "MinWindowSubstring",
-      difficulty: "Hard",
-      tier: "Tier 3",
-      difficultyColor: "text-red-400",
-      difficultyBg: "bg-red-400/10",
-      difficultyBorder: "border-red-400/30",
-      gradient: "from-red-500 to-rose-500",
-      iconColor: "text-red-400",
-      iconBg: "bg-red-500/20",
-      borderColor: "border-red-500/30",
-      technique: "Sliding Window",
-      timeComplexity: "O(n+m)",
-      platforms: ["LeetCode #76", "GfG"],
-      tags: ["Sliding Window", "Advanced"]
+      platforms: ["LeetCode #134"],
+      tags: ["Circular Route", "Optimization"]
     }
   ];
 
@@ -277,52 +108,53 @@ function AlgorithmList({ navigate }) {
     if (filter === "all") return true;
     if (filter === "beginner") return algo.tier === "Tier 1";
     if (filter === "easy") return algo.tier === "Tier 2";
-    if (filter === "intermediate") return algo.tier === "Tier 3";
     return true;
   });
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
       <header className="text-center mb-16 mt-8 relative">
-        <div className="absolute top-0 left-1/3 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
-        <div className="absolute top-10 right-1/3 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
+        <div className="absolute top-0 left-1/3 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
+        <div className="absolute top-10 right-1/3 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-6">
             <div className="relative">
-              <Type className="h-14 sm:h-16 w-14 sm:w-16 text-purple-400 animated-icon" />
+              <Zap className="h-14 sm:h-16 w-14 sm:w-16 text-pink-300 animated-icon" />
               <Zap className="h-5 w-5 text-pink-300 absolute -top-1 -right-1 animate-pulse" />
             </div>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 animated-gradient">
-              String Algorithms
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-pink-400 to-fuchsia-400 animated-gradient">
+
+            {/* <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 animated-gradient"> */}
+              Greedy Algorithms
             </h1>
           </div>
 
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
-            Master string manipulation with powerful techniques like{" "}
-            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
-              pattern matching
+            Master greedy optimization with powerful techniques like{" "}
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-pink-300">
+              local optimal choices
             </span>{" "}
             and{" "}
-            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-              sliding windows
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+              profit maximization
             </span>
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
-            <div className="px-4 py-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full border border-purple-500/30 backdrop-blur-sm">
+            <div className="px-4 py-2 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 rounded-full border border-amber-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
-                <Code2 className="h-3.5 w-3.5 text-purple-400" />
+                <Code2 className="h-3.5 w-3.5 text-amber-400" />
                 <span className="text-xs font-medium text-gray-300">
                   {algorithms.length} Problems
                 </span>
               </div>
             </div>
-            <div className="px-4 py-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full border border-blue-500/30 backdrop-blur-sm">
+            <div className="px-4 py-2 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-full border border-green-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-3.5 w-3.5 text-blue-400" />
+                <TrendingUp className="h-3.5 w-3.5 text-green-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  Multiple Techniques
+                  Optimal Solutions
                 </span>
               </div>
             </div>
@@ -336,7 +168,7 @@ function AlgorithmList({ navigate }) {
           onClick={() => setFilter("all")}
           className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
             filter === "all"
-              ? "bg-purple-500/20 border-purple-500/50 text-purple-300"
+              ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
           }`}
         >
@@ -356,21 +188,11 @@ function AlgorithmList({ navigate }) {
           onClick={() => setFilter("easy")}
           className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
             filter === "easy"
-              ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
-              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
-        >
-          Easy (Tier 2)
-        </button>
-        <button
-          onClick={() => setFilter("intermediate")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "intermediate"
               ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
           }`}
         >
-          Intermediate+ (Tier 3)
+          Medium (Tier 2)
         </button>
       </div>
 
@@ -401,9 +223,7 @@ function AlgorithmList({ navigate }) {
                       className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
-                        } transition-colors duration-300`}
+                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor} transition-colors duration-300`}
                       />
                     </div>
                     <div>
@@ -421,9 +241,7 @@ function AlgorithmList({ navigate }) {
                         </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${
-                          isHovered ? "text-white" : "text-gray-200"
-                        }`}
+                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"}`}
                       >
                         {algo.name}
                       </h2>
@@ -432,9 +250,7 @@ function AlgorithmList({ navigate }) {
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
-                    isHovered ? "text-gray-300" : "text-gray-400"
-                  }`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"}`}
                 >
                   {algo.description}
                 </p>
@@ -453,7 +269,7 @@ function AlgorithmList({ navigate }) {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-800">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1.5">
-                      <Star className="h-4 w-4 text-purple-400" />
+                      <Star className="h-4 w-4 text-amber-400" />
                       <span className="text-xs font-medium text-gray-400">
                         {algo.technique}
                       </span>
@@ -510,28 +326,58 @@ function AlgorithmList({ navigate }) {
 
       <div className="mt-12 text-center">
         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-full border border-gray-700 backdrop-blur-sm">
-          <TrendingUp className="h-4 w-4 text-purple-400" />
+          <TrendingUp className="h-4 w-4 text-green-400" />
           <span className="text-sm text-gray-400">
-            More string problems coming soon
+            More greedy problems coming soon
           </span>
         </div>
       </div>
     </div>
   );
-}
+};
 
-const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
+// Placeholder components for algorithm visualizers
+
+// Use distinct names for placeholders so they don't shadow real imports.
+const JumpGameIIPlaceholder = ({ navigate }) => (
+  <div className="text-center py-20">
+    <div className="text-2xl text-gray-400">Jump Game II Visualizer - Coming Soon</div>
+    <button 
+      onClick={() => navigate("home")}
+      className="mt-4 px-6 py-2 bg-amber-500 hover:bg-amber-600 rounded-lg transition-colors"
+    >
+      Back to Problems
+    </button>
+  </div>
+);
+
+const GasStationPlaceholder = ({ navigate }) => (
+  <div className="text-center py-20">
+    <div className="text-2xl text-gray-400">Gas Station Visualizer - Coming Soon</div>
+    <button 
+      onClick={() => navigate("home")}
+      className="mt-4 px-6 py-2 bg-amber-500 hover:bg-amber-600 rounded-lg transition-colors"
+    >
+      Back to Problems
+    </button>
+  </div>
+);
+
+const GreedyPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
-      case "PalindromeCheck":
-        return <PalindromeCheck navigate={navigate} />;
-      case "ReverseString":
-        return <ReverseString navigate={navigate} />;
-      case "CountVowels":
-        return <CountVowels navigate={navigate} />;
+      case "BestTimeStockII":
+        return <BestTimeStockII navigate={navigate} />;
+      case "TwoCityScheduling":
+        // Use the real imported TwoCityScheduling component from its file
+        return <TwoCityScheduling navigate={navigate} />;
+      case "JumpGameII":
+        return <JumpGameIIPlaceholder navigate={navigate} />;
+      case "GasStation":
+        return <GasStationPlaceholder navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -541,9 +387,9 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const PageWrapper = ({ children }) => (
     <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-float-delayed" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-500/20 rounded-full blur-3xl animate-float-delayed" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse-slow" />
       </div>
 
       <style>{`
@@ -565,7 +411,7 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
         }
         .animated-icon {
           animation: float-rotate 8s ease-in-out infinite;
-          filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.6));
+          filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.6));
         }
         @keyframes float-rotate {
           0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -612,9 +458,9 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
               Back to Problems
             </button>
             <div className="flex items-center gap-2">
-              <Type className="h-5 w-5 text-purple-400" />
+              <Brackets className="h-5 w-5 text-amber-400" />
               <span className="text-sm font-semibold text-gray-300">
-                String Algorithms
+                Greedy Algorithms
               </span>
             </div>
           </div>
@@ -641,4 +487,4 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
   );
 };
 
-export default StringPage;
+export default GreedyPage;

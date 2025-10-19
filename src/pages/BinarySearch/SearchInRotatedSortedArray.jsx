@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { ArrowLeft, Play, RotateCw, Pause, SkipBack, SkipForward, Search } from "lucide-react";
 import VisualizerPointer from "../../components/VisualizerPointer";
-import useModeHistorySwitch from "../../hooks/useModeHistorySwitch";
 
 const SearchInRotatedSortedArray = () => {
   const initialArray = [4, 5, 6, 7, 0, 1, 2];
@@ -15,16 +14,17 @@ const SearchInRotatedSortedArray = () => {
   const [animSpeed, setAnimSpeed] = useState(1000);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const {
-    mode,
-    history,
-    currentStep,
-    setMode,
-    setHistory,
-    setCurrentStep,
-    goToPrevStep,
-    goToNextStep,
-  } = useModeHistorySwitch();
+  const [mode, setMode] = useState("input");
+  const [history, setHistory] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const goToPrevStep = useCallback(() => {
+    setCurrentStep((prev) => Math.max(0, prev - 1));
+  }, []);
+
+  const goToNextStep = useCallback(() => {
+    setCurrentStep((prev) => Math.min(history.length - 1, prev + 1));
+  }, [history.length]);
 
   // Generate history for the algorithm
   const generateSearchHistory = useCallback((arr, tgt) => {
@@ -219,13 +219,6 @@ const SearchInRotatedSortedArray = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white p-8">
       {/* Header */}
       <header className="mb-8">
-        <button
-          onClick={() => window.history.back()}
-          className="flex items-center gap-2 text-blue-300 hover:text-blue-100 transition-colors mb-4"
-        >
-          <ArrowLeft className="h-5 w-5" />
-          Back to Binary Search
-        </button>
         <div className="flex items-center gap-4 mb-4">
           <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
             <Search className="h-8 w-8 text-white" />
