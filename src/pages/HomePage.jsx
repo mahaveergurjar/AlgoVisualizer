@@ -27,6 +27,7 @@ import {
   Search,
   Calculator,
   Hash,
+  Star
 } from "lucide-react";
 
 import ArrayPage from "./Arrays/Arrays.jsx";
@@ -52,6 +53,7 @@ import StringPage from "./Strings/Strings.jsx";
 import BitPage from "./BitManipulation/BitManipulation.jsx";
 import HashingPage from "./Hashing/Hashing.jsx";
 import MathsMiscPage from "./MathematicalMiscellaneous/MathematicalMiscellaneous.jsx";
+import StarredProblems from "./Starred/StarredProblems.jsx"; // <-- Add this import
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -61,6 +63,16 @@ const AlgorithmCategories = ({ navigate }) => {
 
   const categories = useMemo(
     () => [
+      {
+        name: "Starred Topics",
+        icon: Star,
+        description: "Review your saved problems and topics for easy access.",
+        page: "Starred", // This is the key we'll use for routing
+        gradient: "from-yellow-400 to-amber-500",
+        iconBg: "bg-yellow-400/20",
+        borderColor: "border-yellow-400/30",
+        iconColor: "text-yellow-300",
+      },
       {
         name: "Sorting",
         icon: ArrowDownUp,
@@ -666,6 +678,9 @@ const HomePage = () => {
 
   const renderPage = () => {
     switch (page) {
+      // ADD THE NEW CASE HERE
+      case "Starred":
+        return <StarredProblems navigate={navigate} />;
       case "Arrays":
         return <ArrayPage navigate={navigate} initialPage={initialSubPage} />;
       case "Strings":

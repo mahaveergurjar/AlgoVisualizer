@@ -406,7 +406,7 @@ const BubbleSortVisualizer = () => {
                     </svg>
                   </button>
                 </div>
-                <div className="flex gap-2 w-full lg:w-72 justify-center gap-4">
+                <div className="flex gap-2 w-full lg:w-72 justify-center ">
                   <div className="flex items-center gap-2 rounded-lg flex-shrink-0 lg:w-72 w-full">
                     <span className="text-sm font-semibold">Speed</span>
                     <input
