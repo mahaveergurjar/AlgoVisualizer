@@ -19,6 +19,12 @@ export const problems = [
   { label: "Product of Array Except Self", category: "Arrays", subpage: "ProductOfArrayExceptSelf", keywords: ["array", "product", "prefix", "suffix", "238", "except self", "division"] },
   { label: "Maximum Subarray", category: "Arrays", subpage: "MaximumSubarray", keywords: ["array", "kadane", "maximum subarray", "53", "subarray sum", "dynamic programming"] },
   { label: "Merge Intervals", category: "Arrays", subpage: "MergeIntervals", keywords: ["array", "intervals", "merge", "56", "overlapping", "sorting"] },
+  { label: "Array Sum ", category: "Arrays", subpage: "ArraySum", keywords:["array","Sum","traversal"]},
+  { label: "Count Zeroes",category: "Arrays", subpage: "CountZeros", keywords:["array","count","zeroes","traversal","counting"]},
+  { label: "Find Max Element",category: "Arrays", subpage: "FindMaxElement", keywords:["array","find","max","element","traversal","searching"]},
+  { label: "Find Min Element",category: "Arrays", subpage: "FindMinElement", keywords:["array","find","min","element","traversal","searching"]},
+  { label: "Move Zeroes to the end",category: "Arrays", subpage: "MoveZeros", keywords:["array","move","zeroes","end","traversal","rearranging"]},
+  { label: "Rotate array by k",category: "Arrays", subpage: "RotateArray", keywords:[""]},
 
   // Sliding Window
   { label: "Max Consecutive Ones III", category: "SlidingWindows", subpage: "MaxConsecutiveOnesIII", keywords: ["sliding window", "ones", "1004"] },
@@ -51,6 +57,8 @@ export const problems = [
 
   // Trees
   { label: "Construct Tree from Traversal", category: "Trees", subpage: "ConstructBinaryTree", keywords: ["tree", "binary tree", "preorder", "inorder", "105"] },
+  { label: "AVL Tree", category: "Trees", subpage: "AVLTree", keywords: ["tree", "AVL","Tree Traversal","Balanced Binary Search Tree"] },
+  { label: "LCA of Deepest leaves", category: "Trees", subpage: "LCAofDeepestLeaves", keywords: ["tree", "DFS","LCA","leaf","deepest"]},
 
   // Design
   { label: "LRU Cache", category: "Design", subpage: "LRUCache", keywords: ["design", "cache", "lru", "146", "hashmap", "linked list"] },
@@ -70,6 +78,11 @@ export const problems = [
   { label: "Factorial", category: "Recursion", subpage: "FactorialVisualizer", keywords: ["recursion", "factorial", "linear recursion", "call stack", "base case"] },
   { label: "N-Queens", category: "Recursion", subpage: "NQueensVisualizer", keywords: ["recursion", "n-queens", "backtracking", "chess", "constraint satisfaction", "queens"] },
   { label: "Binary Search (Recursive)", category: "Recursion", subpage: "BinarySearchRecursiveVisualizer", keywords: ["recursion", "binary search", "divide and conquer", "sorted array", "logarithmic", "search"] },
+
+  // String 
+  { label: "Count Vowels", category: "Strings", subpage: "CountVowels", keywords:["String","Vowels","Count","CountVowels","count vowels","Traversal","Counting"]},
+  { label: "Reverse String", category: "Strings", subpage: "ReverseString", keywords:["String","Reversal","344","Reverse","ReverseString","Two pointers"]},
+  { label: "Pallindromic String", category: "Strings", subpage: "PalindromeCheck", keywords:["String","Pallindromic","Pallindrome","Check","Two Pointers","PalindromeCheck"]},
 
   { 
     label: "Min Speed to Arrive on Time", 
