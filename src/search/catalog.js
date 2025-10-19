@@ -39,9 +39,10 @@ export const problems = [
   { label: "Largest Rectangle in Histogram", category: "Stack", subpage: "LargestRectangleHistogram", keywords: ["stack", "monotonic", "histogram", "84"] },
   { label: "Remove K Digits", category: "Stack", subpage: "RemoveKDigits", keywords: ["stack", "greedy", "402"] },
   { label: "Sum of Subarray Ranges", category: "Stack", subpage: "SubarrayRanges", keywords: ["stack", "monotonic", "ranges", "2104"] },
-  
+  {label: "Next Greater Element I", category: "Stack", subpage: "NextGreaterElementVisualizer", keywords: ["stack", "monotonic", "next greater", "496"] },
   // Queue
   { label: "Implement Queue using Stacks", category: "Queue", subpage: "QueuePage", keywords: ["queue", "stack", "design", "232"] },
+  { label: "Circular Queue", category: "Queue", subpage: "CircularQueueVisualizer", keywords: ["queue","circular queue","ring buffer","circular array","queue optimization","wrap around","modulo"]},
 
   // Sorting
   { label: "Bubble Sort", category: "Sorting", subpage: "BubbleSort", keywords: ["sorting", "bubble sort", "swap"] },
@@ -63,7 +64,10 @@ export const problems = [
   // Design
   { label: "LRU Cache", category: "Design", subpage: "LRUCache", keywords: ["design", "cache", "lru", "146", "hashmap", "linked list"] },
   { label: "LFU Cache", category: "Design", subpage: "LFUCache", keywords: ["design", "cache", "lfu", "460", "frequency", "linked list"] },
-
+  { label: "Design Hash Map", category: "Design", subpage: "DesignHashMap", keywords: ["design", "hash map", "put", "get", "remove", "706"] },
+  { label: "Design Linked List", category: "Design", subpage: "DesignLinkedList", keywords: ["design","Linked List","List","707"]},
+  { label: "Implement Trie (Prefix Tree)", category: "Design", subpage: "ImplementTrie", keywords: ["design", "trie", "prefix tree", "208"] },
+  { label: "Min Stack", category: "Design", subpage: "MinStack", keywords: ["design", "stack", "min", "155"] },
   // Queue problems
   { label: "Basic Queue (FIFO)", category: "Queue", subpage: "BasicQueue", keywords: ["queue", "fifo", "first in first out", "enqueue", "dequeue", "linear queue", "basic queue"]},
   { label: "Circular Queue", category: "Queue", subpage: "CircularQueue", keywords: ["circular queue", "ring buffer", "circular array", "queue optimization", "wrap around", "modulo"]},
@@ -157,5 +161,14 @@ export const problems = [
     category: "BitManipulation", 
     subpage: "CountingBits", 
     keywords: ["bit manipulation", "counting", "bits", "dp", "338"]
-  }
+  },
+  // Dynamic Programming 
+  { 
+    label: "Knapsack Problem", 
+    category: "DynamicProgramming", 
+    subpage: "KnapsackVisualizer", 
+    keywords: ["dynamic programming", "knapsack", "dp", "dynamic"]
+  },
+  
+
 ];
