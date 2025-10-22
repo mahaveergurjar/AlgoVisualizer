@@ -41,7 +41,7 @@ import TwoSum from "./TwoSum.jsx";
 import ThreeSum from "./3Sum.jsx";
 import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
 
-function AlgorithmList({ navigate }) {
+function AlgorithmList({ navigate, starredHook }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [filter, setFilter] = useState("all");
 
@@ -438,22 +438,52 @@ function AlgorithmList({ navigate }) {
         {filteredAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
           const Icon = algo.icon;
+          const isStarredItem = starredHook?.isStarred(algo.page, 'problem');
 
           return (
             <div
               key={algo.name}
-              onClick={() => navigate(algo.page)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className="group relative cursor-pointer animate-fade-in-up"
+              className="group relative animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
                 className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
               />
 
+              {/* Star Button */}
+              {starredHook && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    starredHook.toggleStar({
+                      type: 'problem',
+                      id: algo.page,
+                      label: algo.name,
+                      category: 'Arrays',
+                      subpage: algo.page,
+                      description: algo.description,
+                      difficulty: algo.difficulty,
+                      technique: algo.technique,
+                    });
+                  }}
+                  className="absolute top-4 right-4 z-20 p-2 rounded-lg bg-gray-900/90 border border-gray-700/50 hover:border-yellow-500/50 transition-all duration-300 hover:scale-110 backdrop-blur-sm"
+                  title={isStarredItem ? 'Remove from starred' : 'Add to starred'}
+                >
+                  <Star
+                    className={`h-4 w-4 transition-all duration-300 ${
+                      isStarredItem
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-gray-400 hover:text-yellow-400'
+                    }`}
+                  />
+                </button>
+              )}
+
               <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                onClick={() => navigate(algo.page)}
+                className={`relative cursor-pointer bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
@@ -580,7 +610,7 @@ function AlgorithmList({ navigate }) {
   );
 }
 
-const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
+const ArrayPage = ({ navigate: parentNavigate, initialPage = null, starredHook }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
@@ -625,7 +655,7 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
      
       case "home":
       default:
-        return <AlgorithmList navigate={navigate} />;
+        return <AlgorithmList navigate={navigate} starredHook={starredHook} />;
     }
   };
 

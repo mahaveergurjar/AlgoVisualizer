@@ -22,6 +22,8 @@ import {
   Navigation,
   Type,
   Hash,
+  Star,
+  BookMarked,
 } from "lucide-react";
 
 import ArrayPage from "./Arrays/Arrays.jsx";
@@ -43,12 +45,14 @@ import GraphsPage from "./Graphs/Graphs.jsx";
 import StringPage from "./Strings/Strings.jsx";
 import BitPage from "./BitManipulation/BitManipulation.jsx";
 import HashingPage from "./Hashing/Hashing.jsx";
+import useStarredItems from "../hooks/useStarredItems";
 
-const AlgorithmCategories = ({ navigate }) => {
+const AlgorithmCategories = ({ navigate, starredHook }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const inputRef = useRef(null);
+  const [showStarredOnly, setShowStarredOnly] = useState(false);
 
   const categories = useMemo(
     () => [
@@ -469,16 +473,49 @@ const AlgorithmCategories = ({ navigate }) => {
         </div>
       </header>
 
+      {/* Starred Topics Filter */}
+      <div className="flex items-center justify-between mb-6">
+        <button
+          onClick={() => setShowStarredOnly(!showStarredOnly)}
+          className={`group flex items-center gap-2 px-6 py-3 rounded-xl border transition-all duration-300 ${
+            showStarredOnly
+              ? 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border-yellow-500/50 shadow-lg shadow-yellow-500/20'
+              : 'bg-gray-900/50 border-gray-700/50 hover:border-yellow-500/50 hover:bg-yellow-500/10'
+          }`}
+        >
+          <Star
+            className={`h-5 w-5 transition-all duration-300 ${
+              showStarredOnly
+                ? 'fill-yellow-400 text-yellow-400'
+                : 'text-gray-400 group-hover:text-yellow-400'
+            }`}
+          />
+          <span className={`font-medium ${showStarredOnly ? 'text-yellow-100' : 'text-gray-300'}`}>
+            {showStarredOnly ? 'Show All Topics' : 'Show Starred Topics'}
+          </span>
+          {starredHook.getStarredCount() > 0 && (
+            <span className="px-2 py-1 text-xs font-bold rounded-full bg-yellow-400/20 text-yellow-200 border border-yellow-400/30">
+              {starredHook.getStarredByType('category').length}
+            </span>
+          )}
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-        {categories.map((cat, index) => {
+        {categories
+          .filter((cat) => {
+            if (!showStarredOnly) return true;
+            return starredHook.isStarred(cat.page, 'category');
+          })
+          .map((cat, index) => {
           const isPlaceholder = cat.page === "placeholder";
           const isHovered = hoveredIndex === index;
           const Icon = cat.icon;
+          const isStarredItem = starredHook.isStarred(cat.page, 'category');
 
           return (
             <div
               key={cat.name}
-              onClick={() => !isPlaceholder && navigate(cat.page)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className={`group relative h-40 sm:h-48 transition-all duration-500 transform animate-fade-in-up ${
@@ -495,8 +532,37 @@ const AlgorithmCategories = ({ navigate }) => {
                 className={`absolute -inset-2 rounded-3xl bg-gradient-to-br ${cat.gradient} opacity-0 group-hover:opacity-25 transition-all duration-500 blur-md`}
               />
 
+              {/* Star Button */}
+              {!isPlaceholder && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    starredHook.toggleStar({
+                      type: 'category',
+                      id: cat.page,
+                      label: cat.name,
+                      category: cat.page,
+                      description: cat.description,
+                      gradient: cat.gradient,
+                      iconName: cat.name, // Store icon reference
+                    });
+                  }}
+                  className="absolute top-3 right-3 z-20 p-2 rounded-lg bg-gray-900/80 border border-gray-700/50 hover:border-yellow-500/50 transition-all duration-300 hover:scale-110 backdrop-blur-sm"
+                  title={isStarredItem ? 'Remove from starred' : 'Add to starred'}
+                >
+                  <Star
+                    className={`h-4 w-4 transition-all duration-300 ${
+                      isStarredItem
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-gray-400 hover:text-yellow-400'
+                    }`}
+                  />
+                </button>
+              )}
+
               {/* Main card container */}
               <div
+                onClick={() => !isPlaceholder && navigate(cat.page)}
                 className={`relative bg-gray-900/95 backdrop-blur-sm rounded-3xl p-5 sm:p-6 border ${
                   cat.borderColor
                 } transition-all duration-500 ${
@@ -588,6 +654,23 @@ const AlgorithmCategories = ({ navigate }) => {
         })}
       </div>
 
+      {/* Empty State for Starred Filter */}
+      {showStarredOnly && starredHook.getStarredByType('category').length === 0 && (
+        <div className="text-center py-16">
+          <div className="inline-block p-6 bg-gray-900/50 border border-gray-700/50 rounded-2xl">
+            <Star className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-gray-300 mb-2">No Starred Topics Yet</h3>
+            <p className="text-gray-500 mb-4">Click the star icon on any topic card to bookmark it for later review</p>
+            <button
+              onClick={() => setShowStarredOnly(false)}
+              className="px-6 py-2 bg-blue-600/80 hover:bg-blue-600 text-white rounded-lg transition-colors"
+            >
+              Browse All Topics
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="mt-16 text-center">
         <p className="text-gray-600 text-sm">
           More categories coming soon • Built with React & Tailwind CSS
@@ -600,6 +683,8 @@ const AlgorithmCategories = ({ navigate }) => {
 const HomePage = () => {
   const [page, setPage] = useState("home");
   const [initialSubPage, setInitialSubPage] = useState(null);
+  const starredHook = useStarredItems(); // Initialize the starred items hook
+  
   const navigate = (newPage) => {
     if (typeof newPage === "string") {
       setPage(newPage);
@@ -615,7 +700,7 @@ const HomePage = () => {
   const renderPage = () => {
     switch (page) {
       case "Arrays":
-        return <ArrayPage navigate={navigate} initialPage={initialSubPage} />;
+        return <ArrayPage navigate={navigate} initialPage={initialSubPage} starredHook={starredHook} />;
       case "Strings":
         return <StringPage navigate={navigate} initialPage={initialSubPage} />;
       case "Hashing":
@@ -663,7 +748,7 @@ const HomePage = () => {
         return <BitPage navigate={navigate} initialPage={initialSubPage} />;
       case "home":
       default:
-        return <AlgorithmCategories navigate={navigate} />;
+        return <AlgorithmCategories navigate={navigate} starredHook={starredHook} />;
     }
   };
 
