@@ -96,37 +96,37 @@ export const ColorIslands = () => {
                 
                 // BFS floodFill implementation
                 const queue = [];
-                addState({ line: 16, currentPos: { row: i, col: j }, explanation: `Initializing queue for flood fill.` });
+                addState({ line: 18, currentPos: { row: i, col: j }, explanation: `Initializing queue for flood fill.` });
 
                 queue.push([i, j]);
-                addState({ line: 17, currentPos: { row: i, col: j }, explanation: `Adding start cell (${i},${j}) to queue.` });
+                addState({ line: 19, currentPos: { row: i, col: j }, explanation: `Adding start cell (${i},${j}) to queue.` });
                 
                 grid[i][j] = newColor;
-                addState({ line: 18, currentPos: { row: i, col: j }, explanation: `Coloring cell (${i},${j}).` });
+                addState({ line: 20, currentPos: { row: i, col: j }, explanation: `Coloring cell (${i},${j}).` });
 
-                addState({ line: 20, explanation: `Starting to process the queue for island ${islandCount}.` });
+                addState({ line: 22, explanation: `Starting to process the queue for island ${islandCount}.` });
                 while (queue.length > 0) {
                     const [r, c] = queue.shift();
-                    addState({ line: 21, currentPos: { row: r, col: c }, explanation: `Polling cell (${r},${c}) from queue.` });
+                    addState({ line: 23, currentPos: { row: r, col: c }, explanation: `Polling cell (${r},${c}) from queue.` });
 
                     const dr = [-1, 1, 0, 0];
                     const dc = [0, 0, -1, 1];
 
-                    addState({ line: 27, currentPos: { row: r, col: c }, explanation: `Iterating through neighbors of (${r},${c}).` });
+                    addState({ line: 30, currentPos: { row: r, col: c }, explanation: `Iterating through neighbors of (${r},${c}).` });
                     for (let k = 0; k < 4; k++) {
                         const nr = r + dr[k];
                         const nc = c + dc[k];
                         
-                        addState({ line: 31, currentPos: { row: nr, col: nc, noRing: true }, explanation: `Checking neighbor (${nr},${nc}).` });
+                        addState({ line: 33, currentPos: { row: nr, col: nc, noRing: true }, explanation: `Checking neighbor (${nr},${nc}).` });
                         if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE && grid[nr][nc] === 1) {
                             grid[nr][nc] = newColor;
-                            addState({ line: 32, currentPos: { row: nr, col: nc }, explanation: `Coloring neighbor (${nr},${nc}).` });
+                            addState({ line: 35, currentPos: { row: nr, col: nc }, explanation: `Coloring neighbor (${nr},${nc}).` });
                             
                             queue.push([nr, nc]);
-                            addState({ line: 33, currentPos: { row: nr, col: nc }, explanation: `Adding neighbor (${nr},${nc}) to queue.` });
+                            addState({ line: 36, currentPos: { row: nr, col: nc }, explanation: `Adding neighbor (${nr},${nc}) to queue.` });
                         }
                     }
-                    addState({ line: 20, explanation: `Queue length is now ${queue.length}. Checking while condition.` });
+                    addState({ line: 22, explanation: `Queue length is now ${queue.length}. Checking while condition.` });
                 }
                 addState({ line: 11, currentPos: { row: i, col: j }, explanation: `Finished floodFill for island ${islandCount}.` });
             }
@@ -251,13 +251,16 @@ void floodFill(int[][] grid, int r, int c, int color) {
     const lines = code.split("\n");
 
     const getWordColor = (token) => {
-      if (/^(void|int|if|return|true|false|for|new|while)$/.test(token)) {
+      // Keywords
+      if (/^(void|int|if|return|true|false|for|new|while|class|public|private|protected|static|final|this|super|break|continue|switch|case|default|try|catch|finally|throw|throws|import|package|null|extends|implements|interface|enum)$/.test(token)) {
         return "text-purple-400 font-semibold";
       }
-      if (/^(Queue|LinkedList)$/.test(token)) {
+      // Primitive Types and Common Classes
+      if (/^(Queue|LinkedList|int|String|boolean|char|float|double|long|short|byte|void|System|Math)$/.test(token)) {
         return "text-teal-300";
       }
-      if (/^(colorIslands|floodFill|add|poll|isEmpty)$/.test(token)) {
+      // Common Function/Method Names
+      if (/^(colorIslands|floodFill|add|poll|isEmpty|length|map|push|shift|test|split|padStart|toString|setInterval|clearInterval|addEventListener|removeEventListener|log|out|println)$/.test(token)) {
         return "text-blue-400";
       }
       return "text-gray-300";
@@ -295,7 +298,7 @@ void floodFill(int[][] grid, int r, int c, int color) {
           continue;
         }
         
-        if (/[()[\\]{};.,]/.test(char)) {
+        if (char === '(' || char === ')' || char === '[' || char === ']' || char === '{' || char === '}' || char === ';' || char === '.' || char === ',') {
           tokens.push({ text: char, type: "punctuation" });
           i++;
           continue;
