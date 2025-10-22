@@ -23,6 +23,10 @@ import {
   MoveRight,
   Eye,
   ArrowRight,
+  Calculator,
+  Merge,
+  Layers,
+  RotateCw,
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
@@ -30,7 +34,6 @@ import TrappingRainWater from "./TrappingRainWater.jsx";
 import ContainerWithMostWater from "./ContainerWithMostWater.jsx";
 import MaxConsecutiveOnesIII from "./MaxConsecutiveOnesIII.jsx";
 import SubarrayRanges from "./SubarrayRanges.jsx";
-//adding absolute beginner friendly problems for progressive learning (beginners)
 import FindMaxElement from "./FindMaxElement.jsx";
 import FindMinElement from "./FindMinElement.jsx";
 import MoveZeros from "./MoveZeros.jsx";
@@ -39,7 +42,16 @@ import ArraySum from "./ArraySum.jsx";
 import ReverseArray from "./ReverseArray.jsx";
 import TwoSum from "./TwoSum.jsx";
 import ThreeSum from "./3Sum.jsx";
+import FourSum from "./4Sum.jsx";
+
 import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
+import SquaresOfSortedArray from "./SquaresOfSortedArray.tsx";
+import ProductOfArrayExceptSelf from "./ProductOfArrayExceptSelf.jsx";
+import MaximumSubarray from "./MaximumSubarray.jsx";
+import MergeIntervals from "./MergeIntervals.jsx";
+import RotateArray from "./RotateArray.jsx"; // Corrected import statement
+import MaximumGap from "./MaximumGap.jsx";
+import FourSum from "./4-sum.jsx"; // Corrected import statement
 
 function AlgorithmList({ navigate, starredHook }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -147,6 +159,27 @@ function AlgorithmList({ navigate, starredHook }) {
       platforms: ["LeetCode #1", "GfG"],
       tags: ["Hashing", "Pairs"],
     },
+    {
+      name: "Squares of a Sorted Array",
+      number: "977",
+      icon: ArrowUpDown, // Certifique-se que ArrowUpDown está importado de lucide-react no topo do arquivo
+      description:
+        "Square each number and return the array sorted in non-decreasing order.",
+      page: "SquaresOfSortedArray",
+      difficulty: "Easy",
+      tier: "Tier 2",
+      difficultyColor: "text-blue-400",
+      difficultyBg: "bg-blue-400/10",
+      difficultyBorder: "border-blue-400/30",
+      gradient: "from-teal-500 to-cyan-500",
+      iconColor: "text-teal-400",
+      iconBg: "bg-teal-500/20",
+      borderColor: "border-teal-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #977"],
+      tags: ["Two Pointers", "Sorting"],
+    },
 
     {
       name: "Move Zeros",
@@ -169,24 +202,25 @@ function AlgorithmList({ navigate, starredHook }) {
       tags: ["Two Pointers", "Partitioning"],
     },
     {
-      name: "Move Zeros to End",
-      number: "283",
+      name: "Maximum Gap",
+      number: "164",
       icon: MoveRight,
-      description: "Move all zeros to the end while maintaining order.",
-      page: "MoveZeros",
-      difficulty: "Easy",
+      description:
+        "Find the Maximum gap between two successive element in its sorted form ",
+      page: "MaximumGap",
+      difficulty: "Medium",
       tier: "Tier 2",
-      difficultyColor: "text-blue-400",
-      difficultyBg: "bg-blue-400/10",
-      difficultyBorder: "border-blue-400/30",
-      gradient: "from-purple-500 to-pink-500",
-      iconColor: "text-purple-400",
-      iconBg: "bg-purple-500/20",
-      borderColor: "border-purple-500/30",
-      technique: "Two Pointers",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #283"],
-      tags: ["Two Pointers", "In-place"],
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-amber-500 to-orange-500",
+      iconColor: "text-amber-400",
+      iconBg: "bg-amber-500/20",
+      borderColor: "border-amber-500/30",
+      technique: "Sorting, Traversal",
+      timeComplexity: "O(n log n)",
+      platforms: ["LeetCode #164"],
+      tags: ["Sorting", "Traversal"],
     },
     {
       name: "Count Zeros in Array",
@@ -330,6 +364,111 @@ function AlgorithmList({ navigate, starredHook }) {
       timeComplexity: "O(n²)",
       platforms: ["LeetCode #15", "GfG"],
       tags: ["Two Pointers", "Sorting", "Triplets"],
+    },
+    {
+      name: "Product of Array Except Self",
+      number: "238",
+      icon: Calculator,
+      description:
+        "Return an array where each element is the product of all elements except itself, without using division.",
+      page: "ProductOfArrayExceptSelf",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-indigo-500 to-purple-500",
+      iconColor: "text-indigo-400",
+      iconBg: "bg-indigo-500/20",
+      borderColor: "border-indigo-500/30",
+      technique: "Prefix & Suffix Products",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #238", "GfG"],
+      tags: ["Array", "Prefix Sum", "Important"],
+    },
+    {
+      name: "Maximum Subarray",
+      number: "53",
+      icon: TrendingUp,
+      description:
+        "Find the contiguous subarray with the largest sum using Kadane's Algorithm.",
+      page: "MaximumSubarray",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-green-500 to-teal-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Kadane's Algorithm",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #53", "GfG"],
+      tags: ["DP", "Kadane", "Classic"],
+    },
+    {
+      name: "Merge Intervals",
+      number: "56",
+      icon: Merge,
+      description:
+        "Merge all overlapping intervals and return an array of non-overlapping intervals.",
+      page: "MergeIntervals",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-orange-500 to-red-500",
+      iconColor: "text-orange-400",
+      iconBg: "bg-orange-500/20",
+      borderColor: "border-orange-500/30",
+      technique: "Sorting + Greedy",
+      timeComplexity: "O(n log n)",
+      platforms: ["LeetCode #56", "GfG"],
+      tags: ["Intervals", "Sorting", "Important"],
+    },
+    {
+      name: "Rotate Array",
+      number: "189",
+      icon: RotateCcw,
+      description:
+        "Rotate the array to the right by k steps in-place with O(1) extra space.",
+      page: "RotateArray",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Reverse Algorithm",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #189", "GfG"],
+      tags: ["Array", "In-place", "Rotation"],
+    },
+    {
+      name: "4-Sum",
+      number: "18",
+      icon: Layers,
+      description:
+        "Find all unique quadruplets in the array which give the sum of target.",
+      page: "4-Sum",
+      difficulty: "Medium",
+      tier: "Tier 3",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-amber-500 to-orange-500",
+      iconColor: "text-amber-400",
+      iconBg: "bg-amber-500/20",
+      borderColor: "border-amber-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n³)",
+      platforms: ["LeetCode #18", "GfG"],
+      tags: ["Two Pointers", "Sorting", "Triplets", "Quadruplets"],
     },
   ];
 
@@ -635,6 +774,12 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null, starredHook }
         return <MoveZeros navigate={navigate} />;
       case "CountZeros":
         return <CountZeros navigate={navigate} />;
+      case "SquaresOfSortedArray":
+        return <SquaresOfSortedArray navigate={navigate} />;
+      case "MaximumGap":
+        return <MaximumGap navigate={navigate} />;
+      case "4-Sum":
+        return <FourSum navigate={navigate} />;
 
       // Existing problems
       case "TrappingRainWater":
@@ -651,8 +796,13 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null, starredHook }
         return <SplitArrayLargestSum navigate={navigate} />;
       case "ThreeSum":
         return <ThreeSum navigate={navigate} />;
+      case "ProductOfArrayExceptSelf":
+        return <ProductOfArrayExceptSelf navigate={navigate} />;
+      case "MaximumSubarray":
+        return <MaximumSubarray navigate={navigate} />;
+      case "MergeIntervals":
+        return <MergeIntervals navigate={navigate} />;
 
-     
       case "home":
       default:
         return <AlgorithmList navigate={navigate} starredHook={starredHook} />;

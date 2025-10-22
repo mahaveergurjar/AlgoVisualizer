@@ -20,6 +20,8 @@ import {
   Wrench,
   ArrowDownUp,
   Navigation,
+  Target,
+  CheckCircle,
   Type,
   Hash,
   Star,
@@ -42,6 +44,8 @@ import BinarySearchPage from "./BinarySearch/BinarySearch.jsx";
 import DPPage from "./DynamicProgramming/DynamicProgramming.jsx";
 import ScrollToTop from "../components/ScrollToTop";
 import GraphsPage from "./Graphs/Graphs.jsx";
+import GreedyPage from "./GreedyAlgorithms/Greedy.jsx";
+import BacktrackingPage from "./Backtracking/Backtracking.jsx";
 import StringPage from "./Strings/Strings.jsx";
 import BitPage from "./BitManipulation/BitManipulation.jsx";
 import HashingPage from "./Hashing/Hashing.jsx";
@@ -216,6 +220,28 @@ const AlgorithmCategories = ({ navigate, starredHook }) => {
         gradient: "from-purple-500 to-pink-600",
         iconBg: "bg-purple-500/20",
         borderColor: "border-purple-500/30",
+        iconColor: "text-purple-400",
+      },
+      {
+        name: "Greedy Algorithms",
+        icon: CheckCircle,
+        description:
+          "Make locally optimal choices in the hope of finding a global optimum.",
+        page: "GreedyPage",
+        gradient: "from-rose-500 to-pink-600",
+        iconBg: "bg-rose-500/20",
+        borderColor: "border-rose-500/30",
+        iconColor: "text-rose-400",
+      },
+      {
+        name: "Backtracking",
+        icon: ArrowLeft,
+        description:
+          "Exploring all possible solutions by trying and undoing choices efficiently.",
+        page: "BacktrackingPage",
+        gradient: "from-orange-500 to-amber-600",
+        iconBg: "bg-purple-400/20",
+        borderColor: "border-purple-400/30",
         iconColor: "text-purple-400",
       },
       {
@@ -742,6 +768,12 @@ const HomePage = () => {
         );
       case "Graphs":
         return <GraphsPage navigate={navigate} initialPage={initialSubPage} />;
+      case "GreedyPage":
+        return <GreedyPage navigate={navigate} initialPage={initialSubPage} />;
+      case "BacktrackingPage":
+        return (
+          <BacktrackingPage navigate={navigate} initialPage={initialSubPage} />
+        );  
       case "DynamicProgramming":
         return <DPPage navigate={navigate} initialPage={initialSubPage} />;
       case "BitManipulation":

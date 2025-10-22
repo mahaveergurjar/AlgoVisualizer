@@ -15,8 +15,10 @@ import {
   FileText,
   Clock,
   CheckCircle,
+  XCircle,
   Terminal,
   Activity,
+  SearchCode,
 } from "lucide-react";
 
 // A standardized Pointer component for the visualizer
@@ -24,20 +26,20 @@ const VisualizerPointer = ({
   index,
   total,
   label,
-  color = "green",
+  color = "blue",
   position = "bottom",
 }) => {
   if (index === null || index < 0 || index >= total) return null;
   const left = `${((index + 0.5) / total) * 100}%`;
   const colorClasses = {
-    green: "border-b-green-400 text-green-400",
-    red: "border-b-red-400 text-red-400",
     blue: "border-b-blue-400 text-blue-400",
+    purple: "border-b-purple-400 text-purple-400",
+    red: "border-b-red-400 text-red-400",
   };
   const topColorClasses = {
-    green: "border-t-green-400 text-green-400",
-    red: "border-t-red-400 text-red-400",
     blue: "border-t-blue-400 text-blue-400",
+    purple: "border-t-purple-400 text-purple-400",
+    red: "border-t-red-400 text-red-400",
   };
 
   return (
@@ -73,9 +75,12 @@ const VisualizerPointer = ({
   );
 };
 
-const FindMinimumInRotatedSortedArray = () => {
-  const [arrInput, setArrInput] = useState("4,5,6,7,0,1,2");
+const BinarySearchBasic = () => {
+  const [arrInput, setArrInput] = useState("-1,0,3,5,9,12");
+  const [targetInput, setTargetInput] = useState("9");
+
   const [array, setArray] = useState([]);
+  const [target, setTarget] = useState(0);
 
   const [history, setHistory] = useState([]);
   const [currentStep, setCurrentStep] = useState(-1);
@@ -88,62 +93,85 @@ const FindMinimumInRotatedSortedArray = () => {
   const state = history[currentStep] || {};
 
   const load = useCallback(() => {
-    const arr = arrInput.split(",").map((s) => parseInt(s.trim(), 10));
-    if (arr.some(isNaN) || arr.length === 0) {
+    const arr = arrInput
+      .split(",")
+      .map((s) => parseInt(s.trim(), 10))
+      .filter((n) => !isNaN(n));
+    // Binary search requires a sorted array
+    arr.sort((a, b) => a - b);
+    const tgt = parseInt(targetInput, 10);
+    if (arr.length === 0 || isNaN(tgt)) {
       alert("Invalid input");
       return;
     }
+
     setArray(arr);
+    setTarget(tgt);
 
     const newHistory = [];
-    const add = (s) => newHistory.push({ array: arr, ...s });
+    const add = (s) => newHistory.push({ array: arr, target: tgt, ...s });
 
-    let l = 0,
-      r = arr.length - 1;
-    add({ l, r, mid: null, message: "Initialize search pointers.", line: 2 });
-    while (l < r) {
-      const mid = Math.floor((l + r) / 2);
+    let left = 0,
+      right = arr.length - 1;
+    add({
+      left,
+      right,
+      mid: null,
+      message: `Initialize search for ${tgt}. Range is [${left}, ${right}].`,
+      line: 2,
+    });
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
       add({
-        l,
-        r,
+        left,
+        right,
         mid,
-        message: `Check if arr[mid] (${arr[mid]}) > arr[r] (${arr[r]})`,
+        message: `Checking middle element at index ${mid}. Value is ${arr[mid]}.`,
         line: 4,
       });
-      if (arr[mid] > arr[r]) {
-        l = mid + 1;
+      if (arr[mid] === tgt) {
         add({
-          l,
-          r,
+          left,
+          right,
           mid,
-          message: "Condition is true. Minimum must be in the right half.",
+          foundIndex: mid,
+          message: `Target ${tgt} found at index ${mid}!`,
           line: 5,
         });
-      } else {
-        r = mid;
+        setHistory(newHistory);
+        setCurrentStep(0);
+        setIsLoaded(true);
+        return;
+      } else if (arr[mid] < tgt) {
         add({
-          l,
-          r,
+          left,
+          right,
           mid,
-          message:
-            "Condition is false. Minimum is in the left half (including mid).",
+          message: `${arr[mid]} < ${tgt}. Search in the right half.`,
           line: 6,
         });
+        left = mid + 1;
+      } else {
+        add({
+          left,
+          right,
+          mid,
+          message: `${arr[mid]} > ${tgt}. Search in the left half.`,
+          line: 7,
+        });
+        right = mid - 1;
       }
     }
     add({
-      l,
-      r,
-      mid: l,
-      result: arr[l],
-      message: `Loop terminates. Minimum found at index ${l}.`,
-      line: 8,
+      foundIndex: -1,
+      message: `Target ${tgt} not found in the array.`,
+      line: 9,
     });
 
     setHistory(newHistory);
     setCurrentStep(0);
     setIsLoaded(true);
-  }, [arrInput]);
+  }, [arrInput, targetInput]);
 
   const resetAll = () => {
     setIsLoaded(false);
@@ -200,31 +228,32 @@ const FindMinimumInRotatedSortedArray = () => {
 
   const codeContent = useMemo(
     () => ({
-      1: `int findMin(vector<int>& nums) {`,
-      2: `    int l = 0, r = nums.size() - 1;`,
-      3: `    while (l < r) {`,
-      4: `        int mid = l + (r - l) / 2;`,
-      5: `        if (nums[mid] > nums[r]) l = mid + 1;`,
-      6: `        else r = mid;`,
-      7: `    }`,
-      8: `    return nums[l];`,
-      9: `}`,
+      1: `int search(vector<int>& nums, int target) {`,
+      2: `    int left = 0, right = nums.size() - 1;`,
+      3: `    while (left <= right) {`,
+      4: `        int mid = left + (right - left) / 2;`,
+      5: `        if (nums[mid] == target) return mid;`,
+      6: `        if (nums[mid] < target) left = mid + 1;`,
+      7: `        else right = mid - 1;`,
+      8: `    }`,
+      9: `    return -1;`,
+      10: `}`,
     }),
     []
   );
 
   const arrayToDisplay = state.array || array;
-  const { line, l, r, mid, result, message } = state;
+  const { line, left, right, mid, foundIndex, message } = state;
 
   return (
     <div className="px-4 py-8 max-w-7xl mx-auto relative">
       <header className="relative z-10 mb-12 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-emerald-400 to-green-300">
-          Find Minimum in Rotated Sorted Array
+        <h1 className="text-4xl sm:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-blue-400 to-cyan-300">
+          Binary Search
         </h1>
         <p className="text-gray-400 mt-3 text-base max-w-2xl mx-auto">
-          Visualizing an efficient binary search to find the pivot point or
-          minimum element in logarithmic time.
+          Visualizing the classic algorithm for finding an item from a sorted
+          array of items in O(log n) time.
         </p>
       </header>
 
@@ -235,14 +264,22 @@ const FindMinimumInRotatedSortedArray = () => {
             value={arrInput}
             onChange={(e) => setArrInput(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm"
-            placeholder="Rotated Sorted Array"
+            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
+            placeholder="Array (comma-separated)"
+          />
+          <input
+            type="text"
+            value={targetInput}
+            onChange={(e) => setTargetInput(e.target.value)}
+            disabled={isLoaded}
+            className="w-full md:w-48 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
+            placeholder="Target"
           />
 
           {!isLoaded ? (
             <button
               onClick={load}
-              className="px-5 py-3 rounded-xl bg-green-500/20 hover:bg-green-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+              className="px-5 py-3 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/40 transition text-white font-bold shadow-lg cursor-pointer"
             >
               Load & Visualize
             </button>
@@ -252,31 +289,27 @@ const FindMinimumInRotatedSortedArray = () => {
                 <button
                   onClick={stepBackward}
                   disabled={currentStep <= 0}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-green-600 disabled:opacity-40 transition shadow"
+                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-cyan-600 disabled:opacity-40 transition shadow"
                 >
                   <ArrowLeft size={16} />
                 </button>
-
                 <button
                   onClick={togglePlay}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-green-600 transition shadow"
+                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-cyan-600 transition shadow"
                 >
                   {isPlaying ? <Pause size={16} /> : <Play size={16} />}
                 </button>
-
                 <button
                   onClick={stepForward}
                   disabled={currentStep >= history.length - 1}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-green-600 disabled:opacity-40 transition shadow"
+                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-cyan-600 disabled:opacity-40 transition shadow"
                 >
                   <ArrowRight size={16} />
                 </button>
               </div>
-
               <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow-inner">
                 {currentStep + 1}/{history.length}
               </div>
-
               <div className="flex items-center gap-2 ml-2">
                 <label className="text-sm text-gray-300">Speed</label>
                 <input
@@ -285,12 +318,10 @@ const FindMinimumInRotatedSortedArray = () => {
                   max={1500}
                   step={50}
                   value={speed}
-                  // Note: Changed onChange logic to match the target example
                   onChange={(e) => setSpeed(parseInt(e.target.value, 10))}
                   className="w-36"
                 />
               </div>
-
               <button
                 onClick={resetAll}
                 className="ml-3 px-4 py-2 rounded-xl bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold shadow"
@@ -304,12 +335,12 @@ const FindMinimumInRotatedSortedArray = () => {
 
       {!isLoaded ? (
         <div className="mt-12 text-center text-gray-500 animate-pulse">
-          Enter a rotated sorted array to begin the visualization.
+          Enter a sorted array and a target to begin the visualization.
         </div>
       ) : (
         <main className="grid grid-cols-1 lg:grid-cols-5 gap-6 relative z-10 animate-[fadeIn_0.5s_ease-in-out]">
           <aside className="lg:col-span-2 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
-            <h3 className="text-green-300 flex items-center gap-2 font-semibold mb-3 text-lg">
+            <h3 className="text-cyan-300 flex items-center gap-2 font-semibold mb-3 text-lg">
               <FileText size={18} /> Algorithm Steps
             </h3>
             <pre className="bg-gray-950/70 rounded-lg border border-gray-800 p-3 font-mono text-sm max-h-[60vh] overflow-y-auto">
@@ -317,7 +348,7 @@ const FindMinimumInRotatedSortedArray = () => {
                 <div
                   key={ln}
                   className={`flex items-start rounded-sm transition-colors ${
-                    line === parseInt(ln, 10) ? "bg-green-500/10" : ""
+                    line === parseInt(ln, 10) ? "bg-cyan-500/10" : ""
                   }`}
                 >
                   <span className="text-gray-600 w-8 mr-3 text-right select-none pt-0.5">
@@ -331,7 +362,7 @@ const FindMinimumInRotatedSortedArray = () => {
 
           <section className="lg:col-span-3 flex flex-col gap-6">
             <div className="relative p-6 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
-              <h3 className="text-lg font-semibold text-green-300 mb-4 text-center">
+              <h3 className="text-lg font-semibold text-cyan-300 mb-4 text-center">
                 Array Visualization
               </h3>
               <div className="relative h-24 w-full">
@@ -347,7 +378,9 @@ const FindMinimumInRotatedSortedArray = () => {
                   >
                     <div
                       className={`w-12 h-12 flex items-center justify-center rounded-lg font-bold transition-all duration-300 ${
-                        l <= r && index >= l && index <= r
+                        index === foundIndex
+                          ? "bg-green-500 scale-110 ring-2 ring-green-300"
+                          : left <= right && index >= left && index <= right
                           ? "bg-gray-700"
                           : "bg-gray-800 text-gray-500"
                       }`}
@@ -358,13 +391,13 @@ const FindMinimumInRotatedSortedArray = () => {
                   </div>
                 ))}
                 <VisualizerPointer
-                  index={l}
+                  index={left}
                   total={arrayToDisplay.length}
                   label="L"
                   color="red"
                 />
                 <VisualizerPointer
-                  index={r}
+                  index={right}
                   total={arrayToDisplay.length}
                   label="R"
                   color="red"
@@ -373,7 +406,7 @@ const FindMinimumInRotatedSortedArray = () => {
                   index={mid}
                   total={arrayToDisplay.length}
                   label="MID"
-                  color="green"
+                  color="purple"
                   position="top"
                 />
               </div>
@@ -394,41 +427,64 @@ const FindMinimumInRotatedSortedArray = () => {
                   <Terminal size={16} /> Pointers
                 </h4>
                 <div className="text-3xl font-mono text-red-300">
-                  L={l ?? "-"} | R={r ?? "-"}
+                  L={left ?? "-"} | R={right ?? "-"}
                 </div>
               </div>
               <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
-                <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-green-300">
+                <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-purple-300">
                   <Code size={16} /> Mid Value
                 </h4>
-                <div className="text-3xl font-mono text-green-300">
+                <div className="text-3xl font-mono text-purple-300">
                   {mid !== null ? arrayToDisplay[mid] : "-"}
                 </div>
               </div>
               <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
-                <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-emerald-300">
-                  <CheckCircle size={16} /> Minimum
+                <h4
+                  className={`font-semibold flex items-center justify-center gap-2 mb-2 ${
+                    foundIndex != null && foundIndex !== -1
+                      ? "text-green-300"
+                      : "text-red-300"
+                  }`}
+                >
+                  {foundIndex != null && foundIndex !== -1 ? (
+                    <CheckCircle size={16} />
+                  ) : (
+                    <XCircle size={16} />
+                  )}{" "}
+                  Result
                 </h4>
-                <div className="text-3xl font-bold text-emerald-300">
-                  {result ?? "..."}
+                <div
+                  className={`text-3xl font-bold ${
+                    foundIndex != null && foundIndex !== -1
+                      ? "text-green-400"
+                      : "text-red-400"
+                  }`}
+                >
+                  {isLoaded
+                    ? foundIndex != null
+                      ? foundIndex !== -1
+                        ? `Index: ${foundIndex}`
+                        : "Not Found"
+                      : "..."
+                    : "-"}
                 </div>
               </div>
             </div>
 
             <div className="p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
-              <h4 className="text-green-300 font-semibold flex items-center gap-2 mb-2">
+              <h4 className="text-cyan-300 font-semibold flex items-center gap-2 mb-2">
                 <Clock size={16} /> Complexity
               </h4>
               <div className="text-sm text-gray-300 space-y-1">
                 <div>
                   <strong>Time:</strong>{" "}
-                  <span className="font-mono text-cyan-300">O(log n)</span> -
-                  The search space is halved in each step.
+                  <span className="font-mono text-teal-300">O(log n)</span> -
+                  Search space is halved at each step.
                 </div>
                 <div>
                   <strong>Space:</strong>{" "}
-                  <span className="font-mono text-cyan-300">O(1)</span> - No
-                  extra space is used besides pointers.
+                  <span className="font-mono text-teal-300">O(1)</span> -
+                  Constant extra space for pointers.
                 </div>
               </div>
             </div>
@@ -440,4 +496,4 @@ const FindMinimumInRotatedSortedArray = () => {
   );
 };
 
-export default FindMinimumInRotatedSortedArray;
+export default BinarySearchBasic;
