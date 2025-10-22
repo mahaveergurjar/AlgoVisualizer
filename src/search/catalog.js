@@ -76,6 +76,7 @@ export const problems = [
   // Pathfinding problems
   { label: "Rat in Maze", category: "Pathfinding", subpage: "RatInMaze", keywords: ["pathfinding", "maze", "rat", "bfs", "dfs", "backtracking", "graph traversal"]},
   { label: "Flood Fill", category: "Pathfinding", subpage: "FloodFill", keywords: ["pathfinding", "flood fill", "bucket tool", "bfs", "graph traversal"]},
+  { label: "Color Islands", category: "Pathfinding", subpage: "ColorIslands", keywords: ["pathfinding", "color islands", "flood fill", "200"] },
   
   // Recursion problems
   { label: "Subset Sum", category: "Recursion", subpage: "SubsetSumVisualizer", keywords: ["recursion", "subset", "sum", "backtracking", "dynamic programming"] },
