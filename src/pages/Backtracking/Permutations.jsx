@@ -648,7 +648,7 @@ const PermutationsVisualizer = () => {
               <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full">N=5 → 120 permutations</span>
             </div>
             <p className="mt-4">
-              <strong>Note:</strong> Large inputs (N>5) are automatically limited for optimal visualization performance.
+              <strong>Note:</strong> Large inputs (N {">"} 5) are automatically limited for optimal visualization performance.
             </p>
           </div>
         </div>
