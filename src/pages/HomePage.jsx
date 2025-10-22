@@ -23,6 +23,8 @@ import {
   Target,
   CheckCircle,
   Type,
+  ScanLine,
+  Search,
   Hash,
 } from "lucide-react";
 
@@ -32,6 +34,7 @@ import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
 import HeapsPage from "./Heaps/Heaps.jsx";
+import SearchingPage from "./Searching/Searching.jsx"
 import DesignPage from "./Design/Design.jsx";
 import RecursionPage from "./Recursion/Recursion.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
@@ -97,6 +100,16 @@ const AlgorithmCategories = ({ navigate }) => {
         iconBg: "bg-purple-500/20",
         borderColor: "border-purple-500/30",
         iconColor: "text-purple-400",
+      },
+      {
+        name: "Searching",
+        icon: Search,
+        description: "Find elements using efficient search logic.",
+        page: "Searching",
+        gradient: "from-teal-500 to-emerald-600",
+        iconBg: "bg-teal-500/20",
+        borderColor: "border-teal-500/30",
+        iconColor: "text-teal-400",
       },
       {
         name: "Hashing",
@@ -661,6 +674,8 @@ const HomePage = () => {
         return <StackPage navigate={navigate} initialPage={initialSubPage} />;
       case "Sorting":
         return <SortingPage navigate={navigate} initialPage={initialSubPage} />;
+      case "Searching":
+        return <SearchingPage navigate={navigate} initialPage={initialSubPage} />;
       case "Trees":
         return <TreesPage navigate={navigate} initialPage={initialSubPage} />;
       case "Design":
