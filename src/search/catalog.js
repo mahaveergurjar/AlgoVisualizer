@@ -19,6 +19,12 @@ export const problems = [
   { label: "Product of Array Except Self", category: "Arrays", subpage: "ProductOfArrayExceptSelf", keywords: ["array", "product", "prefix", "suffix", "238", "except self", "division"] },
   { label: "Maximum Subarray", category: "Arrays", subpage: "MaximumSubarray", keywords: ["array", "kadane", "maximum subarray", "53", "subarray sum", "dynamic programming"] },
   { label: "Merge Intervals", category: "Arrays", subpage: "MergeIntervals", keywords: ["array", "intervals", "merge", "56", "overlapping", "sorting"] },
+  { label: "Array Sum ", category: "Arrays", subpage: "ArraySum", keywords:["array","Sum","traversal"]},
+  { label: "Count Zeroes",category: "Arrays", subpage: "CountZeros", keywords:["array","count","zeroes","traversal","counting"]},
+  { label: "Find Max Element",category: "Arrays", subpage: "FindMaxElement", keywords:["array","find","max","element","traversal","searching"]},
+  { label: "Find Min Element",category: "Arrays", subpage: "FindMinElement", keywords:["array","find","min","element","traversal","searching"]},
+  { label: "Move Zeroes to the end",category: "Arrays", subpage: "MoveZeros", keywords:["array","move","zeroes","end","traversal","rearranging"]},
+  { label: "Rotate array by k",category: "Arrays", subpage: "RotateArray", keywords:[""]},
   {label:"4-sum", category:"Arrays", subpage:"FourSum", keywords:["array", "two pointers", "four sum", "4sum", "quadruplet", "18"]},
 
   // Sliding Window
@@ -34,9 +40,10 @@ export const problems = [
   { label: "Largest Rectangle in Histogram", category: "Stack", subpage: "LargestRectangleHistogram", keywords: ["stack", "monotonic", "histogram", "84"] },
   { label: "Remove K Digits", category: "Stack", subpage: "RemoveKDigits", keywords: ["stack", "greedy", "402"] },
   { label: "Sum of Subarray Ranges", category: "Stack", subpage: "SubarrayRanges", keywords: ["stack", "monotonic", "ranges", "2104"] },
-  
+  {label: "Next Greater Element I", category: "Stack", subpage: "NextGreaterElementVisualizer", keywords: ["stack", "monotonic", "next greater", "496"] },
   // Queue
   { label: "Implement Queue using Stacks", category: "Queue", subpage: "QueuePage", keywords: ["queue", "stack", "design", "232"] },
+  { label: "Circular Queue", category: "Queue", subpage: "CircularQueueVisualizer", keywords: ["queue","circular queue","ring buffer","circular array","queue optimization","wrap around","modulo"]},
 
   // Sorting
   { label: "Bubble Sort", category: "Sorting", subpage: "BubbleSort", keywords: ["sorting", "bubble sort", "swap"] },
@@ -52,17 +59,23 @@ export const problems = [
 
   // Trees
   { label: "Construct Tree from Traversal", category: "Trees", subpage: "ConstructBinaryTree", keywords: ["tree", "binary tree", "preorder", "inorder", "105"] },
+  { label: "AVL Tree", category: "Trees", subpage: "AVLTree", keywords: ["tree", "AVL","Tree Traversal","Balanced Binary Search Tree"] },
+  { label: "LCA of Deepest leaves", category: "Trees", subpage: "LCAofDeepestLeaves", keywords: ["tree", "DFS","LCA","leaf","deepest"]},
 
   // Design
   { label: "LRU Cache", category: "Design", subpage: "LRUCache", keywords: ["design", "cache", "lru", "146", "hashmap", "linked list"] },
   { label: "LFU Cache", category: "Design", subpage: "LFUCache", keywords: ["design", "cache", "lfu", "460", "frequency", "linked list"] },
-
+  { label: "Design Hash Map", category: "Design", subpage: "DesignHashMap", keywords: ["design", "hash map", "put", "get", "remove", "706"] },
+  { label: "Design Linked List", category: "Design", subpage: "DesignLinkedList", keywords: ["design","Linked List","List","707"]},
+  { label: "Implement Trie (Prefix Tree)", category: "Design", subpage: "ImplementTrie", keywords: ["design", "trie", "prefix tree", "208"] },
+  { label: "Min Stack", category: "Design", subpage: "MinStack", keywords: ["design", "stack", "min", "155"] },
   // Queue problems
   { label: "Basic Queue (FIFO)", category: "Queue", subpage: "BasicQueue", keywords: ["queue", "fifo", "first in first out", "enqueue", "dequeue", "linear queue", "basic queue"]},
   { label: "Circular Queue", category: "Queue", subpage: "CircularQueue", keywords: ["circular queue", "ring buffer", "circular array", "queue optimization", "wrap around", "modulo"]},
   
   // Pathfinding problems
   { label: "Rat in Maze", category: "Pathfinding", subpage: "RatInMaze", keywords: ["pathfinding", "maze", "rat", "bfs", "dfs", "backtracking", "graph traversal"]},
+  { label: "Flood Fill", category: "Pathfinding", subpage: "FloodFill", keywords: ["pathfinding", "flood fill", "bucket tool", "bfs", "graph traversal"]},
   
   // Recursion problems
   { label: "Subset Sum", category: "Recursion", subpage: "SubsetSumVisualizer", keywords: ["recursion", "subset", "sum", "backtracking", "dynamic programming"] },
@@ -71,6 +84,11 @@ export const problems = [
   { label: "Factorial", category: "Recursion", subpage: "FactorialVisualizer", keywords: ["recursion", "factorial", "linear recursion", "call stack", "base case"] },
   { label: "N-Queens", category: "Recursion", subpage: "NQueensVisualizer", keywords: ["recursion", "n-queens", "backtracking", "chess", "constraint satisfaction", "queens"] },
   { label: "Binary Search (Recursive)", category: "Recursion", subpage: "BinarySearchRecursiveVisualizer", keywords: ["recursion", "binary search", "divide and conquer", "sorted array", "logarithmic", "search"] },
+
+  // String 
+  { label: "Count Vowels", category: "Strings", subpage: "CountVowels", keywords:["String","Vowels","Count","CountVowels","count vowels","Traversal","Counting"]},
+  { label: "Reverse String", category: "Strings", subpage: "ReverseString", keywords:["String","Reversal","344","Reverse","ReverseString","Two pointers"]},
+  { label: "Pallindromic String", category: "Strings", subpage: "PalindromeCheck", keywords:["String","Pallindromic","Pallindrome","Check","Two Pointers","PalindromeCheck"]},
 
   { 
     label: "Min Speed to Arrive on Time", 

@@ -12,6 +12,7 @@ import {
 
 import RatInMaze from "./RatInMaze.jsx";
 import BFSVisualizer from "./BFS";
+import { FloodFill } from "./FloodFill.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -34,7 +35,25 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-purple-500/30",
       technique: "BFS & DFS",
       timeComplexity: "O(4^(N*M))",
-    }
+    },
+    {
+      name: "Flood Fill",
+      number: "N/A",
+      icon: Zap,
+      description:
+        "Fill an area with a color starting from a seed point. Implemented using BFS.",
+      page: "FloodFill",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-green-500 to-cyan-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "BFS",
+      timeComplexity: "O(N*M)",
+    },
   ];
 
   return (
@@ -187,6 +206,8 @@ const PathfindingPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <RatInMaze navigate={navigate} />;
       case "BFS":
         return <BFSVisualizer navigate={navigate} />;
+      case "FloodFill":
+        return <FloodFill navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
