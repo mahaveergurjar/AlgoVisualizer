@@ -8,10 +8,13 @@ import {
   Star,
   Zap,
   MapPin,
+  Grid
 } from "lucide-react";
 
 import RatInMaze from "./RatInMaze.jsx";
 import BFSVisualizer from "./BFS";
+import { FloodFill } from "./FloodFill.jsx";
+import { ColorIslands } from "./ColorIslands.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -34,7 +37,43 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-purple-500/30",
       technique: "BFS & DFS",
       timeComplexity: "O(4^(N*M))",
-    }
+    },
+    {
+      name: "Flood Fill",
+      number: "N/A",
+      icon: Zap,
+      description:
+        "Fill an area with a color starting from a seed point. Implemented using BFS.",
+      page: "FloodFill",
+      difficulty: "Easy",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-green-500 to-cyan-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "BFS",
+      timeComplexity: "O(N*M)",
+    },
+    {
+      name: "Color Islands",
+      number: "200",
+      icon: Grid,
+      description:
+        "Identify and color each island in a 2D grid with a unique color using Flood Fill.",
+      page: "ColorIslands",
+      difficulty: "Medium",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-blue-500 to-indigo-500",
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/20",
+      borderColor: "border-blue-500/30",
+      technique: "Flood Fill (BFS)",
+      timeComplexity: "O(N*M)",
+    },
   ];
 
   return (
@@ -187,6 +226,10 @@ const PathfindingPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <RatInMaze navigate={navigate} />;
       case "BFS":
         return <BFSVisualizer navigate={navigate} />;
+      case "FloodFill":
+        return <FloodFill navigate={navigate} />;
+      case "ColorIslands":
+        return <ColorIslands navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

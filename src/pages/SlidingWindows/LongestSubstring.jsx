@@ -18,6 +18,10 @@ import {
   Maximize2,
   Target,
   Gauge,
+  Hash,
+  Search,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 
@@ -51,6 +55,7 @@ const Pointer = ({ index, containerId, color, label }) => {
     red: { bg: "bg-red-500", text: "text-red-500" },
     blue: { bg: "bg-blue-500", text: "text-blue-500" },
     green: { bg: "bg-green-500", text: "text-green-500" },
+    purple: { bg: "bg-purple-500", text: "text-purple-500" },
   };
 
   return (
@@ -66,7 +71,8 @@ const Pointer = ({ index, containerId, color, label }) => {
         className={`w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent ${colors[color].bg}`}
         style={{ 
           borderBottomColor: color === "red" ? "#ef4444" : 
-                          color === "blue" ? "#3b82f6" : "#10b981" 
+                          color === "blue" ? "#3b82f6" : 
+                          color === "green" ? "#10b981" : "#8b5cf6"
         }}
       />
       <div
@@ -78,32 +84,31 @@ const Pointer = ({ index, containerId, color, label }) => {
   );
 };
 
-const SlidingWindowMaximum = () => {
+const LongestSubstring = () => {
   const [mode, setMode] = useState("optimal");
   const [history, setHistory] = useState([]);
   const [currentStep, setCurrentStep] = useState(-1);
-  const [numsInput, setNumsInput] = useState("1,3,-1,-3,5,3,6,7");
-  const [kInput, setKInput] = useState("3");
+  const [inputString, setInputString] = useState("abcabcbb");
   const [isLoaded, setIsLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1000);
   const [windowStyle, setWindowStyle] = useState({});
   const visualizerRef = useRef(null);
 
-  const generateBruteForceHistory = useCallback((nums, k) => {
+  const generateBruteForceHistory = useCallback((s) => {
     const newHistory = [];
-    const result = [];
+    let maxLength = 0;
     let stepCount = 0;
 
     const addState = (props) => {
       newHistory.push({
-        nums,
-        k,
-        result: [...result],
-        windowStart: null,
-        windowEnd: null,
-        currentMax: null,
-        comparingIndex: null,
+        s: s.split(''),
+        maxLength,
+        currentStart: null,
+        currentEnd: null,
+        currentChars: new Set(),
+        duplicateIndex: null,
+        duplicateChar: null,
         explanation: "",
         step: stepCount++,
         ...props,
@@ -112,72 +117,108 @@ const SlidingWindowMaximum = () => {
 
     addState({
       line: 3,
-      explanation: `Starting brute force approach. Array has ${nums.length} elements, window size k = ${k}`,
+      explanation: `Starting brute force approach. String length: ${s.length}`,
     });
 
-    for (let i = 0; i <= nums.length - k; i++) {
+    for (let start = 0; start < s.length; start++) {
+      let currentChars = new Set();
+      let foundDuplicate = false;
+      
       addState({
         line: 4,
-        windowStart: i,
-        windowEnd: i + k - 1,
-        currentIndex: i,
-        explanation: `Checking window from index ${i} to ${i + k - 1}`,
+        currentStart: start,
+        currentEnd: start,
+        currentChars: new Set([s[start]]),
+        explanation: `Starting new substring at index ${start} with character '${s[start]}'`,
       });
 
-      let maxVal = -Infinity;
-      addState({
-        line: 5,
-        windowStart: i,
-        windowEnd: i + k - 1,
-        currentMax: null,
-        currentIndex: i,
-        comparingIndex: i,
-        explanation: `Initialize max for this window.`,
-      });
+      currentChars.add(s[start]);
 
-      for (let j = i; j < i + k; j++) {
+      for (let end = start; end < s.length; end++) {
+        // Reset duplicate state for each iteration
+        foundDuplicate = false;
+        let duplicateChar = null;
+
         addState({
-          line: 6,
-          windowStart: i,
-          windowEnd: i + k - 1,
-          currentMax: maxVal === -Infinity ? null : maxVal,
-          currentIndex: i,
-          comparingIndex: j,
-          explanation: `Comparing: current max = ${
-            maxVal === -Infinity ? "-∞" : maxVal
-          }, nums[${j}] = ${nums[j]}`,
+          line: 5,
+          currentStart: start,
+          currentEnd: end,
+          currentChars: new Set(currentChars),
+          explanation: `Checking substring from ${start} to ${end}: "${s.substring(start, end + 1)}"`,
         });
 
-        if (nums[j] > maxVal) {
-          maxVal = nums[j];
+        // Check if current character already exists
+        if (end > start && currentChars.has(s[end])) {
+          foundDuplicate = true;
+          duplicateChar = s[end];
           addState({
-            line: 7,
-            windowStart: i,
-            windowEnd: i + k - 1,
-            currentMax: maxVal,
-            currentIndex: i,
-            comparingIndex: j,
-            explanation: `Found new max: ${maxVal} at index ${j}`,
+            line: 6,
+            currentStart: start,
+            currentEnd: end,
+            currentChars: new Set(currentChars),
+            duplicateIndex: end,
+            duplicateChar: duplicateChar,
+            explanation: `Found duplicate character '${duplicateChar}' at index ${end}. Cannot extend further.`,
           });
+          break;
+        }
+
+        // Add current character to set (if not start index which was already added)
+        if (end > start) {
+          currentChars.add(s[end]);
+          addState({
+            line: 8,
+            currentStart: start,
+            currentEnd: end,
+            currentChars: new Set(currentChars),
+            explanation: `Added '${s[end]}' to substring. Current unique characters: ${Array.from(currentChars).join(', ')}`,
+          });
+        }
+
+        // Calculate current length and update max if needed
+        const currentLength = end - start + 1;
+        if (currentLength > maxLength) {
+          maxLength = currentLength;
+          addState({
+            line: 9,
+            currentStart: start,
+            currentEnd: end,
+            currentChars: new Set(currentChars),
+            maxLength,
+            explanation: `New maximum length found: ${maxLength} (substring: "${s.substring(start, end + 1)}")`,
+            justUpdatedMax: true,
+          });
+        } else {
+          addState({
+            line: 9,
+            currentStart: start,
+            currentEnd: end,
+            currentChars: new Set(currentChars),
+            explanation: `Current length: ${currentLength}, max remains: ${maxLength}`,
+          });
+        }
+
+        // If we found a duplicate in this iteration, break
+        if (foundDuplicate) {
+          break;
         }
       }
 
-      result.push(maxVal);
+      // Add state after inner loop completes
+      const finalLength = newHistory[newHistory.length - 1].currentEnd - start + 1;
       addState({
-        line: 9,
-        windowStart: i,
-        windowEnd: i + k - 1,
-        currentMax: maxVal,
-        currentIndex: i,
-        explanation: `Window maximum is ${maxVal}. Added to result.`,
-        justAddedToResult: true,
+        line: 11,
+        currentStart: start,
+        currentEnd: newHistory[newHistory.length - 1].currentEnd,
+        currentChars: new Set(),
+        explanation: `Completed checking substrings starting at index ${start}. Max length so far: ${maxLength}`,
       });
     }
 
     addState({
-      line: 11,
+      line: 13,
       finished: true,
-      explanation: `Completed! Result: [${result.join(", ")}]`,
+      explanation: `Completed! Longest substring without repeating characters has length: ${maxLength}`,
     });
 
     setHistory(newHistory);
@@ -185,21 +226,22 @@ const SlidingWindowMaximum = () => {
     setIsLoaded(true);
   }, []);
 
-  const generateOptimalHistory = useCallback((nums, k) => {
+  const generateOptimalHistory = useCallback((s) => {
     const newHistory = [];
-    const result = [];
-    const deque = [];
+    let maxLength = 0;
+    let left = 0;
+    const charIndexMap = new Map();
     let stepCount = 0;
 
     const addState = (props) => {
       newHistory.push({
-        nums,
-        k,
-        result: [...result],
-        deque: [...deque],
-        windowStart: null,
-        windowEnd: null,
-        currentIndex: null,
+        s: s.split(''),
+        maxLength,
+        left,
+        right: null,
+        charIndexMap: new Map(charIndexMap),
+        duplicateChar: null,
+        duplicateIndex: null,
         explanation: "",
         step: stepCount++,
         ...props,
@@ -208,92 +250,71 @@ const SlidingWindowMaximum = () => {
 
     addState({
       line: 3,
-      explanation: `Starting optimal approach using Deque. Array has ${nums.length} elements, window size k = ${k}`,
+      explanation: `Starting optimal sliding window approach. String length: ${s.length}`,
     });
 
-    for (let i = 0; i < nums.length; i++) {
+    for (let right = 0; right < s.length; right++) {
       addState({
         line: 5,
-        currentIndex: i,
-        windowStart: Math.max(0, i - k + 1),
-        windowEnd: i,
-        explanation: `Processing index ${i}, value = ${nums[i]}`,
+        left,
+        right,
+        explanation: `Processing character '${s[right]}' at index ${right}`,
       });
 
-      addState({
-        line: 7,
-        currentIndex: i,
-        windowStart: Math.max(0, i - k + 1),
-        windowEnd: i,
-        explanation: `Check if deque front is outside window (i - k + 1 = ${
-          i - k + 1
-        })`,
-      });
-
-      while (deque.length > 0 && deque[0] < i - k + 1) {
-        const removed = deque.shift();
+      if (charIndexMap.has(s[right])) {
+        const prevIndex = charIndexMap.get(s[right]);
         addState({
-          line: 8,
-          currentIndex: i,
-          windowStart: Math.max(0, i - k + 1),
-          windowEnd: i,
-          removedFromFront: removed,
-          explanation: `Removed index ${removed} from deque front (outside window)`,
+          line: 6,
+          left,
+          right,
+          duplicateChar: s[right],
+          duplicateIndex: prevIndex,
+          explanation: `Found duplicate character '${s[right]}' previously at index ${prevIndex}`,
+        });
+
+        left = Math.max(left, prevIndex + 1);
+        addState({
+          line: 7,
+          left,
+          right,
+          explanation: `Moving left pointer to ${left} (max of current left ${left} and ${prevIndex + 1})`,
         });
       }
 
+      charIndexMap.set(s[right], right);
       addState({
-        line: 11,
-        currentIndex: i,
-        windowStart: Math.max(0, i - k + 1),
-        windowEnd: i,
-        explanation: `Remove elements smaller than or equal to ${nums[i]} from deque back`,
+        line: 9,
+        left,
+        right,
+        justAddedToMap: right,
+        explanation: `Added/updated '${s[right]}' in map with index ${right}`,
       });
 
-      while (deque.length > 0 && nums[deque[deque.length - 1]] <= nums[i]) {
-        const removed = deque.pop();
+      const currentLength = right - left + 1;
+      if (currentLength > maxLength) {
+        maxLength = currentLength;
         addState({
-          line: 12,
-          currentIndex: i,
-          windowStart: Math.max(0, i - k + 1),
-          windowEnd: i,
-          removedFromBack: removed,
-          explanation: `Removed index ${removed} (value ${nums[removed]}) from back because ${nums[i]} is larger or equal`,
+          line: 10,
+          left,
+          right,
+          maxLength,
+          explanation: `New maximum length: ${maxLength} (window [${left}, ${right}]: "${s.substring(left, right + 1)}")`,
+          justUpdatedMax: true,
         });
-      }
-
-      deque.push(i);
-      addState({
-        line: 15,
-        currentIndex: i,
-        windowStart: Math.max(0, i - k + 1),
-        windowEnd: i,
-        justAddedToDeque: i,
-        explanation: `Added index ${i} to deque back. Deque now: [${deque.join(
-          ", "
-        )}]`,
-      });
-
-      if (i >= k - 1) {
-        const maxVal = nums[deque[0]];
-        result.push(maxVal);
+      } else {
         addState({
-          line: 18,
-          currentIndex: i,
-          windowStart: i - k + 1,
-          windowEnd: i,
-          justAddedToResult: true,
-          explanation: `Window [${
-            i - k + 1
-          }, ${i}] complete. Maximum = ${maxVal} at index ${deque[0]}`,
+          line: 10,
+          left,
+          right,
+          explanation: `Current window length: ${currentLength}, max remains ${maxLength}`,
         });
       }
     }
 
     addState({
-      line: 21,
+      line: 12,
       finished: true,
-      explanation: `Completed! Result: [${result.join(", ")}]`,
+      explanation: `Completed! Longest substring without repeating characters has length: ${maxLength}`,
     });
 
     setHistory(newHistory);
@@ -331,53 +352,35 @@ const SlidingWindowMaximum = () => {
     setIsPlaying(false);
   }, []);
 
-  const loadArray = () => {
-    const nums = numsInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map(Number);
-    const k = parseInt(kInput, 10);
-
-    if (nums.some(isNaN) || nums.length === 0) {
-      alert("Invalid array input. Please use comma-separated numbers.");
-      return;
-    }
-
-    if (isNaN(k) || k <= 0 || k > nums.length) {
-      alert(`Invalid k value. Must be between 1 and ${nums.length}`);
+  const loadString = () => {
+    if (!inputString.trim()) {
+      alert("Please enter a valid string.");
       return;
     }
 
     setIsLoaded(true);
     if (mode === "brute-force") {
-      generateBruteForceHistory(nums, k);
+      generateBruteForceHistory(inputString);
     } else {
-      generateOptimalHistory(nums, k);
+      generateOptimalHistory(inputString);
     }
   };
 
-  const generateRandomArray = () => {
-    const length = Math.floor(Math.random() * 5) + 8; // 8-15 elements
-    const array = Array(length)
-      .fill()
-      .map(() => Math.floor(Math.random() * 20) - 5); // Values between -5 and 15
-    
-    setNumsInput(array.join(','));
-    setKInput(Math.floor(Math.random() * 4) + 2); // k between 2-6
+  const generateRandomString = () => {
+    const chars = 'abcdefghijklmnopqrstuvwxyz';
+    const length = Math.floor(Math.random() * 6) + 6; // 6-12 characters
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setInputString(result);
     resetVisualization();
   };
 
   const parseInput = useCallback(() => {
-    const nums = numsInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map(Number);
-    const k = parseInt(kInput, 10);
-    if (nums.some(isNaN) || isNaN(k) || k <= 0) throw new Error("Invalid input");
-    return { nums, k };
-  }, [numsInput, kInput]);
+    if (!inputString.trim()) throw new Error("Invalid input");
+    return inputString;
+  }, [inputString]);
 
   const handleModeChange = useModeHistorySwitch({
     mode,
@@ -385,8 +388,8 @@ const SlidingWindowMaximum = () => {
     isLoaded,
     parseInput,
     generators: {
-      "brute-force": ({ nums, k }) => generateBruteForceHistory(nums, k),
-      optimal: ({ nums, k }) => generateOptimalHistory(nums, k),
+      "brute-force": (s) => generateBruteForceHistory(s),
+      optimal: (s) => generateOptimalHistory(s),
     },
     setCurrentStep,
     onError: () => {},
@@ -431,13 +434,13 @@ const SlidingWindowMaximum = () => {
   const state = history[currentStep] || {};
 
   useEffect(() => {
-    if (isLoaded && state.windowStart !== null && state.windowEnd !== null) {
-      const container = document.getElementById("array-container");
+    if (isLoaded && state.currentStart !== null && state.currentEnd !== null) {
+      const container = document.getElementById("string-container");
       const startEl = document.getElementById(
-        `array-container-element-${state.windowStart}`
+        `string-container-element-${state.currentStart}`
       );
       const endEl = document.getElementById(
-        `array-container-element-${state.windowEnd}`
+        `string-container-element-${state.currentEnd}`
       );
 
       if (container && startEl && endEl) {
@@ -451,8 +454,8 @@ const SlidingWindowMaximum = () => {
           bottom: "-8px",
           left: `${startRect.left - containerRect.left - 8}px`,
           width: `${endRect.right - startRect.left + 16}px`,
-          backgroundColor: "rgba(56, 189, 248, 0.1)",
-          border: "2px solid rgba(56, 189, 248, 0.5)",
+          backgroundColor: state.duplicateIndex !== undefined ? "rgba(239, 68, 68, 0.1)" : "rgba(56, 189, 248, 0.1)",
+          border: `2px solid ${state.duplicateIndex !== undefined ? "rgba(239, 68, 68, 0.5)" : "rgba(56, 189, 248, 0.5)"}`,
           borderRadius: "12px",
           transition: "all 300ms ease-out",
           opacity: 1,
@@ -461,7 +464,7 @@ const SlidingWindowMaximum = () => {
     } else {
       setWindowStyle({ opacity: 0 });
     }
-  }, [currentStep, isLoaded, state.windowStart, state.windowEnd]);
+  }, [currentStep, isLoaded, state.currentStart, state.currentEnd, state.duplicateIndex]);
 
   const CodeLine = ({ lineNum, content }) => (
     <div
@@ -481,66 +484,68 @@ const SlidingWindowMaximum = () => {
   );
 
   const bruteForceCode = [
-    { line: 1, content: "vector<int> maxSlidingWindow(vector<int>& nums, int k) {" },
-    { line: 2, content: "    vector<int> result;" },
-    { line: 3, content: "    int n = nums.size();" },
-    { line: 4, content: "    for (int i = 0; i <= n - k; i++) {" },
-    { line: 5, content: "        int maxVal = nums[i];" },
-    { line: 6, content: "        for (int j = i; j < i + k; j++) {" },
-    { line: 7, content: "            maxVal = max(maxVal, nums[j]);" },
-    { line: 8, content: "        }" },
-    { line: 9, content: "        result.push_back(maxVal);" },
-    { line: 10, content: "    }" },
-    { line: 11, content: "    return result;" },
-    { line: 12, content: "}" },
+    { line: 1, content: "int lengthOfLongestSubstring(string s) {" },
+    { line: 2, content: "    int maxLength = 0;" },
+    { line: 3, content: "    int n = s.length();" },
+    { line: 4, content: "    for (int start = 0; start < n; start++) {" },
+    { line: 5, content: "        for (int end = start; end < n; end++) {" },
+    { line: 6, content: "            if (hasDuplicate(s, start, end)) {" },
+    { line: 7, content: "                break;" },
+    { line: 8, content: "            }" },
+    { line: 9, content: "            maxLength = max(maxLength, end - start + 1);" },
+    { line: 10, content: "        }" },
+    { line: 11, content: "    }" },
+    { line: 12, content: "    return maxLength;" },
+    { line: 13, content: "}" },
   ];
 
   const optimalCode = [
-    { line: 1, content: "vector<int> maxSlidingWindow(vector<int>& nums, int k) {" },
-    { line: 2, content: "    vector<int> result;" },
-    { line: 3, content: "    deque<int> dq;" },
-    { line: 4, content: "    int n = nums.size();" },
-    { line: 5, content: "    for (int i = 0; i < n; i++) {" },
-    { line: 6, content: "        // Remove out-of-window elements" },
-    { line: 7, content: "        while (!dq.empty() && dq.front() < i - k + 1) {" },
-    { line: 8, content: "            dq.pop_front();" },
-    { line: 9, content: "        }" },
-    { line: 10, content: "        // Remove smaller elements" },
-    { line: 11, content: "        while (!dq.empty() && nums[dq.back()] <= nums[i]) {" },
-    { line: 12, content: "            dq.pop_back();" },
-    { line: 13, content: "        }" },
-    { line: 14, content: "        // Add current index" },
-    { line: 15, content: "        dq.push_back(i);" },
-    { line: 16, content: "        // Add to result if window is complete" },
-    { line: 17, content: "        if (i >= k - 1) {" },
-    { line: 18, content: "            result.push_back(nums[dq.front()]);" },
-    { line: 19, content: "        }" },
-    { line: 20, content: "    }" },
-    { line: 21, content: "    return result;" },
-    { line: 22, content: "}" },
+    { line: 1, content: "int lengthOfLongestSubstring(string s) {" },
+    { line: 2, content: "    int maxLength = 0;" },
+    { line: 3, content: "    int left = 0;" },
+    { line: 4, content: "    unordered_map<char, int> charIndex;" },
+    { line: 5, content: "    for (int right = 0; right < s.length(); right++) {" },
+    { line: 6, content: "        if (charIndex.find(s[right]) != charIndex.end()) {" },
+    { line: 7, content: "            left = max(left, charIndex[s[right]] + 1);" },
+    { line: 8, content: "        }" },
+    { line: 9, content: "        charIndex[s[right]] = right;" },
+    { line: 10, content: "        maxLength = max(maxLength, right - left + 1);" },
+    { line: 11, content: "    }" },
+    { line: 12, content: "    return maxLength;" },
+    { line: 13, content: "}" },
   ];
 
   const getCellColor = (index) => {
-    const num = state.nums?.[index];
-    const isComparing = state.comparingIndex === index;
-    const isCurrentMax = mode === "brute-force" && 
-                        num === state.currentMax && 
-                        index <= state.comparingIndex;
-    const isDequeIndex = mode === "optimal" && state.deque?.includes(index);
-    const isDequeFront = mode === "optimal" && state.deque?.[0] === index;
-    const isCurrentIndex = state.currentIndex === index;
-    const isInWindow = index >= state.windowStart && index <= state.windowEnd;
+    if (mode === "brute-force") {
+      const isInWindow = index >= state.currentStart && index <= state.currentEnd;
+      const isDuplicate = index === state.duplicateIndex;
+      const isStart = index === state.currentStart;
+      const isEnd = index === state.currentEnd;
 
-    if (isCurrentIndex) {
-      return "bg-gradient-to-br from-yellow-400 to-amber-500 text-gray-900 border-yellow-400 shadow-lg shadow-yellow-500/50";
-    } else if (isDequeFront) {
-      return "bg-gradient-to-br from-green-400 to-emerald-500 text-white border-green-400 shadow-lg shadow-green-500/50";
-    } else if (isDequeIndex) {
-      return "bg-gradient-to-br from-cyan-400 to-blue-500 text-white border-cyan-400 shadow-lg shadow-cyan-500/50";
-    } else if (isCurrentMax || isComparing) {
-      return "bg-gradient-to-br from-pink-400 to-rose-500 text-white border-pink-400 shadow-lg shadow-pink-500/50";
-    } else if (isInWindow) {
-      return "bg-gray-600 border-blue-400 shadow-lg";
+      if (isDuplicate) {
+        return "bg-gradient-to-br from-red-400 to-rose-500 text-white border-red-400 shadow-lg shadow-red-500/50";
+      } else if (isStart) {
+        return "bg-gradient-to-br from-green-400 to-emerald-500 text-white border-green-400 shadow-lg shadow-green-500/50";
+      } else if (isEnd) {
+        return "bg-gradient-to-br from-yellow-400 to-amber-500 text-gray-900 border-yellow-400 shadow-lg shadow-yellow-500/50";
+      } else if (isInWindow) {
+        return "bg-gray-600 border-blue-400 shadow-lg";
+      }
+    } else {
+      const isInWindow = index >= state.left && index <= state.right;
+      const isDuplicate = index === state.duplicateIndex;
+      const isLeftPointer = index === state.left;
+      const isRightPointer = index === state.right;
+
+      if (isDuplicate) {
+        return "bg-gradient-to-br from-red-400 to-rose-500 text-white border-red-400 shadow-lg shadow-red-500/50";
+      } else if (isLeftPointer) {
+        return "bg-gradient-to-br from-green-400 to-emerald-500 text-white border-green-400 shadow-lg shadow-green-500/50";
+      } else if (isRightPointer) {
+        return "bg-gradient-to-br from-yellow-400 to-amber-500 text-gray-900 border-yellow-400 shadow-lg shadow-yellow-500/50";
+      } else if (isInWindow) {
+        return "bg-gray-600 border-blue-400 shadow-lg";
+      }
     }
     return "bg-gray-700/50 border-gray-600 hover:bg-gray-600/50";
   };
@@ -552,12 +557,12 @@ const SlidingWindowMaximum = () => {
       className="p-4 max-w-7xl mx-auto focus:outline-none"
     >
       <header className="text-center mb-6">
-        <h1 className="text-5xl font-bold text-blue-400 flex items-center justify-center gap-3">
+        <h1 className="text-4xl font-bold text-blue-400 flex items-center justify-center gap-3">
           <Maximize2 size={28} />
-          Sliding Window Maximum
+          Longest Substring Without Repeating Characters
         </h1>
         <p className="text-lg text-gray-400 mt-2">
-          Find the maximum value in each sliding window of size k (LeetCode #239)
+          Find the length of the longest substring without repeating characters (LeetCode #3)
         </p>
       </header>
 
@@ -565,30 +570,17 @@ const SlidingWindowMaximum = () => {
       <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl shadow-2xl border border-gray-700/50 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
         <div className="flex flex-col md:flex-row gap-4 flex-grow">
           <div className="flex items-center gap-4 flex-grow">
-            <label htmlFor="array-input" className="font-medium text-gray-300 font-mono hidden md:block">
-              Array:
+            <label htmlFor="string-input" className="font-medium text-gray-300 font-mono hidden md:block">
+              String:
             </label>
             <input
-              id="array-input"
+              id="string-input"
               type="text"
-              value={numsInput}
-              onChange={(e) => setNumsInput(e.target.value)}
+              value={inputString}
+              onChange={(e) => setInputString(e.target.value)}
               disabled={isLoaded}
-              placeholder="e.g., 1,3,-1,-3,5,3,6,7"
+              placeholder="e.g., abcabcbb"
               className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <label htmlFor="k-input" className="font-medium text-gray-300 font-mono">
-              k:
-            </label>
-            <input
-              id="k-input"
-              type="number"
-              value={kInput}
-              onChange={(e) => setKInput(e.target.value)}
-              disabled={isLoaded}
-              className="font-mono bg-gray-900 border border-gray-600 rounded-lg p-3 w-20 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
             />
           </div>
         </div>
@@ -597,16 +589,16 @@ const SlidingWindowMaximum = () => {
           {!isLoaded ? (
             <>
               <button
-                onClick={loadArray}
+                onClick={loadString}
                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
               >
                 Load & Visualize
               </button>
               <button
-                onClick={generateRandomArray}
+                onClick={generateRandomString}
                 className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
               >
-                Random Array
+                Random String
               </button>
             </>
           ) : (
@@ -688,7 +680,7 @@ const SlidingWindowMaximum = () => {
               : "border-transparent text-gray-400 hover:text-gray-300"
           }`}
         >
-          Brute Force O(n·k)
+          Brute Force O(n²)
         </div>
         <div
           onClick={() => handleModeChange("optimal")}
@@ -698,7 +690,7 @@ const SlidingWindowMaximum = () => {
               : "border-transparent text-gray-400 hover:text-gray-300"
           }`}
         >
-          Optimal O(n) - Deque
+          Optimal O(n) - Sliding Window
         </div>
       </div>
 
@@ -727,41 +719,42 @@ const SlidingWindowMaximum = () => {
 
           {/* Enhanced Visualization Panels */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Array Visualization */}
+            {/* String Visualization */}
             <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
               <h3 className="font-bold text-lg text-gray-300 mb-6 flex items-center gap-2">
                 <Grid size={20} />
-                Array Visualization
-                {state.nums?.length > 0 && (
+                String Visualization
+                {state.s?.length > 0 && (
                   <span className="text-sm text-gray-400 ml-2">
-                    ({state.nums.length} elements, k = {state.k})
+                    ({state.s.length} characters)
                   </span>
                 )}
               </h3>
               
               <div className="flex flex-col items-center space-y-6">
-                {/* Array with indices */}
-                <div className="relative" id="array-container">
+                {/* String with indices */}
+                <div className="relative" id="string-container">
                   {/* Column headers */}
                   <div className="flex gap-2 mb-2 justify-center">
-                    {state.nums?.map((_, index) => (
-                      <div key={index} className="w-14 text-center text-xs text-gray-500 font-mono">
+                    {state.s?.map((_, index) => (
+                      <div key={index} className="w-12 text-center text-xs text-gray-500 font-mono">
                         {index}
                       </div>
                     ))}
                   </div>
                   
-                  {/* Array elements */}
+                  {/* String elements */}
                   <div className="flex gap-2 justify-center">
-                    {state.nums?.map((num, index) => (
+                    {state.s?.map((char, index) => (
                       <div
                         key={index}
-                        id={`array-container-element-${index}`}
-                        className={`w-14 h-14 rounded-lg border-2 flex items-center justify-center font-bold text-xl transition-all duration-500 transform ${getCellColor(index)} ${
-                          (index >= state.windowStart && index <= state.windowEnd) ? 'scale-110' : 'scale-100'
+                        id={`string-container-element-${index}`}
+                        className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center font-bold text-xl transition-all duration-500 transform ${getCellColor(index)} ${
+                          ((mode === "brute-force" && index >= state.currentStart && index <= state.currentEnd) ||
+                           (mode === "optimal" && index >= state.left && index <= state.right)) ? 'scale-110' : 'scale-100'
                         }`}
                       >
-                        {num}
+                        {char}
                       </div>
                     ))}
                   </div>
@@ -770,89 +763,138 @@ const SlidingWindowMaximum = () => {
                   <div style={windowStyle} />
 
                   {/* Pointers */}
-                  {state.windowStart !== null && (
-                    <Pointer
-                      index={state.windowStart}
-                      containerId="array-container"
-                      color="red"
-                      label="start"
-                    />
-                  )}
-                  {state.currentIndex !== null && (
-                    <Pointer
-                      index={state.currentIndex}
-                      containerId="array-container"
-                      color="green"
-                      label="current"
-                    />
+                  {mode === "brute-force" ? (
+                    <>
+                      {state.currentStart !== null && (
+                        <Pointer
+                          index={state.currentStart}
+                          containerId="string-container"
+                          color="green"
+                          label="start"
+                        />
+                      )}
+                      {state.currentEnd !== null && (
+                        <Pointer
+                          index={state.currentEnd}
+                          containerId="string-container"
+                          color="blue"
+                          label="end"
+                        />
+                      )}
+                      {state.duplicateIndex !== null && (
+                        <Pointer
+                          index={state.duplicateIndex}
+                          containerId="string-container"
+                          color="red"
+                          label="duplicate"
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {state.left !== null && (
+                        <Pointer
+                          index={state.left}
+                          containerId="string-container"
+                          color="green"
+                          label="left"
+                        />
+                      )}
+                      {state.right !== null && (
+                        <Pointer
+                          index={state.right}
+                          containerId="string-container"
+                          color="blue"
+                          label="right"
+                        />
+                      )}
+                      {state.duplicateIndex !== null && (
+                        <Pointer
+                          index={state.duplicateIndex}
+                          containerId="string-container"
+                          color="red"
+                          label="duplicate"
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Deque Visualization (Optimal Mode) */}
+            {/* Character Map Visualization (Optimal Mode) */}
             {mode === "optimal" && (
               <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-blue-700/50">
                 <h3 className="font-bold text-lg text-blue-300 mb-3 flex items-center gap-2">
-                  <Layers size={20} />
-                  Deque (Front → Back)
+                  <Hash size={20} />
+                  Character Index Map
                 </h3>
                 <div className="flex gap-3 min-h-[4rem] bg-gray-900/50 p-4 rounded-lg flex-wrap items-center justify-center">
-                  {state.deque?.length > 0 ? (
-                    state.deque.map((idx, pos) => (
-                      <div key={pos} className="flex flex-col items-center">
+                  {state.charIndexMap && Array.from(state.charIndexMap.entries()).length > 0 ? (
+                    Array.from(state.charIndexMap.entries()).map(([char, index]) => (
+                      <div key={char} className="flex flex-col items-center">
                         <div
                           className={`w-16 h-16 flex flex-col items-center justify-center font-mono font-bold rounded-lg shadow-lg border-2 transition-all ${
-                            pos === 0
-                              ? "bg-gradient-to-br from-green-400 to-emerald-500 border-green-400 scale-110 text-white"
+                            index === state.right
+                              ? "bg-gradient-to-br from-yellow-400 to-amber-500 border-yellow-400 scale-110 text-gray-900"
                               : "bg-gradient-to-br from-cyan-400 to-blue-500 border-cyan-400 text-white"
                           }`}
                         >
-                          <span className="text-xs opacity-80">idx</span>
-                          <span className="text-lg">{idx}</span>
+                          <span className="text-xs opacity-80">{char}</span>
+                          <span className="text-lg">{index}</span>
                         </div>
                         <span className="text-xs text-gray-300 mt-1">
-                          val: {state.nums[idx]}
+                          index
                         </span>
-                        {pos === 0 && (
-                          <span className="text-xs text-green-400 font-bold mt-1">
-                            MAX
-                          </span>
-                        )}
                       </div>
                     ))
                   ) : (
                     <span className="text-gray-400 italic text-sm">
-                      Deque is empty
+                      Character map is empty
                     </span>
                   )}
                 </div>
               </div>
             )}
 
-            {/* Result Array */}
+            {/* Current Substring Visualization */}
             <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-purple-700/50">
               <h3 className="font-bold text-lg text-purple-300 mb-3 flex items-center gap-2">
-                <TrendingUp size={20} />
-                Result Array
+                <Eye size={20} />
+                Current Substring
+                {((mode === "brute-force" && state.currentStart !== null && state.currentEnd !== null) ||
+                  (mode === "optimal" && state.left !== null && state.right !== null)) && (
+                  <span className="text-sm text-purple-200 ml-2">
+                    Length: {mode === "brute-force" ? state.currentEnd - state.currentStart + 1 : state.right - state.left + 1}
+                  </span>
+                )}
               </h3>
               <div className="flex gap-3 min-h-[4rem] bg-gray-900/50 p-4 rounded-lg flex-wrap items-center justify-center">
-                {state.result?.length > 0 ? (
-                  state.result.map((val, index) => (
+                {mode === "brute-force" && state.currentStart !== null && state.currentEnd !== null ? (
+                  state.s.slice(state.currentStart, state.currentEnd + 1).map((char, index) => (
                     <div
                       key={index}
-                      className={`w-14 h-14 flex items-center justify-center font-mono text-lg font-bold rounded-lg shadow-lg border-2 transition-all ${
-                        state.justAddedToResult && index === state.result.length - 1
-                          ? "bg-gradient-to-br from-pink-400 to-rose-500 border-pink-400 scale-110 text-white animate-bounce"
-                          : "bg-gradient-to-br from-purple-400 to-indigo-500 border-purple-400 text-white"
+                      className={`w-12 h-12 flex items-center justify-center font-mono text-lg font-bold rounded-lg shadow-lg border-2 transition-all ${
+                        "bg-gradient-to-br from-purple-400 to-indigo-500 border-purple-400 text-white"
                       }`}
                     >
-                      {val}
+                      {char}
+                    </div>
+                  ))
+                ) : mode === "optimal" && state.left !== null && state.right !== null ? (
+                  state.s.slice(state.left, state.right + 1).map((char, index) => (
+                    <div
+                      key={index}
+                      className={`w-12 h-12 flex items-center justify-center font-mono text-lg font-bold rounded-lg shadow-lg border-2 transition-all ${
+                        "bg-gradient-to-br from-purple-400 to-indigo-500 border-purple-400 text-white"
+                      }`}
+                    >
+                      {char}
                     </div>
                   ))
                 ) : (
                   <span className="text-gray-400 italic text-sm">
-                    No results yet
+                    No active substring
                   </span>
                 )}
               </div>
@@ -866,35 +908,57 @@ const SlidingWindowMaximum = () => {
                   Current State
                 </h3>
                 <div className="space-y-2 text-sm">
-                  <p>
-                    Window Start: <span className="font-mono font-bold text-amber-400">
-                      {state.windowStart ?? "N/A"}
-                    </span>
-                  </p>
-                  <p>
-                    Current Index: <span className="font-mono font-bold text-yellow-400">
-                      {state.currentIndex ?? "N/A"}
-                    </span>
-                  </p>
-                  {mode === "brute-force" && state.comparingIndex !== null && (
-                    <p>
-                      Comparing Index: <span className="font-mono font-bold text-cyan-400">
-                        {state.comparingIndex}
-                      </span>
-                    </p>
+                  {mode === "brute-force" ? (
+                    <>
+                      <p>
+                        Window: <span className="font-mono font-bold text-amber-400">
+                          [{state.currentStart}, {state.currentEnd}]
+                        </span>
+                      </p>
+                      <p>
+                        Window Length: <span className="font-mono font-bold text-cyan-400">
+                          {state.currentStart !== null && state.currentEnd !== null ? state.currentEnd - state.currentStart + 1 : "N/A"}
+                        </span>
+                      </p>
+                      <p>
+                        Max Length: <span className="font-mono font-bold text-green-400">
+                          {state.maxLength}
+                        </span>
+                      </p>
+                      {state.duplicateChar && (
+                        <p>
+                          Duplicate: <span className="font-mono font-bold text-red-400">
+                            '{state.duplicateChar}' at index {state.duplicateIndex}
+                          </span>
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p>
+                        Window: <span className="font-mono font-bold text-amber-400">
+                          [{state.left}, {state.right}]
+                        </span>
+                      </p>
+                      <p>
+                        Window Length: <span className="font-mono font-bold text-cyan-400">
+                          {state.left !== null && state.right !== null ? state.right - state.left + 1 : "N/A"}
+                        </span>
+                      </p>
+                      <p>
+                        Max Length: <span className="font-mono font-bold text-green-400">
+                          {state.maxLength}
+                        </span>
+                      </p>
+                      {state.duplicateChar && (
+                        <p>
+                          Duplicate: <span className="font-mono font-bold text-red-400">
+                            '{state.duplicateChar}' at index {state.duplicateIndex}
+                          </span>
+                        </p>
+                      )}
+                    </>
                   )}
-                  {mode === "brute-force" && (
-                    <p>
-                      Current Max: <span className="font-mono font-bold text-pink-400">
-                        {state.currentMax ?? "N/A"}
-                      </span>
-                    </p>
-                  )}
-                  <p>
-                    Result Size: <span className="font-mono font-bold text-green-400">
-                      {state.result?.length ?? 0}
-                    </span>
-                  </p>
                 </div>
               </div>
               
@@ -924,11 +988,11 @@ const SlidingWindowMaximum = () => {
                   </h4>
                   <div className="space-y-3">
                     <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                      <strong className="text-teal-300 font-mono block mb-1">O(n · k)</strong>
+                      <strong className="text-teal-300 font-mono block mb-1">O(n³)</strong>
                       <p className="text-gray-400 text-sm">
-                        For each of the (n - k + 1) windows, we iterate through k
-                        elements to find the maximum. This results in approximately
-                        n · k operations for large arrays.
+                        We check all possible substrings (O(n²)) and for each substring, 
+                        we check for duplicates which takes O(n) time in worst case.
+                        This results in O(n³) time complexity.
                       </p>
                     </div>
                   </div>
@@ -940,11 +1004,10 @@ const SlidingWindowMaximum = () => {
                   </h4>
                   <div className="space-y-3">
                     <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                      <strong className="text-teal-300 font-mono block mb-1">O(1)</strong>
+                      <strong className="text-teal-300 font-mono block mb-1">O(min(n, m))</strong>
                       <p className="text-gray-400 text-sm">
-                        We only use a constant amount of extra space (excluding the
-                        result array) - just variables for tracking the maximum
-                        value and loop indices.
+                        We need space to store the character set for the current substring. 
+                        In worst case, this is the size of the character set (m) or the string length (n).
                       </p>
                     </div>
                   </div>
@@ -961,9 +1024,8 @@ const SlidingWindowMaximum = () => {
                     <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
                       <strong className="text-teal-300 font-mono block mb-1">O(n)</strong>
                       <p className="text-gray-400 text-sm">
-                        Each element is added to the deque exactly once and removed
-                        at most once. This gives us 2n operations in total, which
-                        simplifies to O(n) linear time complexity.
+                        Each character is visited exactly once by the right pointer, and the left pointer 
+                        moves only forward. This gives us O(n) time complexity.
                       </p>
                     </div>
                   </div>
@@ -975,11 +1037,10 @@ const SlidingWindowMaximum = () => {
                   </h4>
                   <div className="space-y-3">
                     <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                      <strong className="text-teal-300 font-mono block mb-1">O(k)</strong>
+                      <strong className="text-teal-300 font-mono block mb-1">O(min(n, m))</strong>
                       <p className="text-gray-400 text-sm">
-                        The deque will store at most k elements at any time. The
-                        result array also stores n - k + 1 elements. Thus, the space
-                        complexity is O(k).
+                        We store characters in a hash map. The space required is bounded by the size of 
+                        the character set (m) or the string length (n), whichever is smaller.
                       </p>
                     </div>
                   </div>
@@ -991,18 +1052,17 @@ const SlidingWindowMaximum = () => {
       ) : (
         <div className="text-center py-16 bg-gray-800/50 rounded-xl border border-gray-700/50">
           <div className="text-gray-500 text-lg mb-4">
-            Enter an array and k value to start the visualization
+            Enter a string to start the visualization
           </div>
           <div className="text-gray-600 text-sm max-w-2xl mx-auto space-y-2">
             <div className="flex items-center justify-center gap-4 text-xs mb-4">
-              <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full">Array Format: 1,3,-1,-3,5,3,6,7</span>
-              <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full">k: window size</span>
+              <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full">Examples: abcabcbb, bbbbb, pwwkew</span>
             </div>
             <p>
-              <strong>Example:</strong> Array: "1,3,-1,-3,5,3,6,7", k: 3 → Returns [3,3,5,5,6,7]
+              <strong>Example:</strong> "abcabcbb" → Longest substring is "abc" with length 3
             </p>
             <p className="text-gray-500">
-              Find the maximum value in each sliding window of size k as it moves through the array.
+              Find the length of the longest substring without repeating characters using either brute force or optimal sliding window approach.
             </p>
           </div>
         </div>
@@ -1011,4 +1071,4 @@ const SlidingWindowMaximum = () => {
   );
 };
 
-export default SlidingWindowMaximum;
+export default LongestSubstring;
