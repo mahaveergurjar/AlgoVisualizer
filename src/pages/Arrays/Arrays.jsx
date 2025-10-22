@@ -51,6 +51,7 @@ import MaximumSubarray from "./MaximumSubarray.jsx";
 import MergeIntervals from "./MergeIntervals.jsx";
 import RotateArray from "./RotateArray.jsx"; // Corrected import statement
 import MaximumGap from "./MaximumGap.jsx";
+import FindSecondLargestElement from "./SecondLargestElement.jsx";
 // import FourSum from "./4-sum.jsx"; // Corrected import statement
 
 function AlgorithmList({ navigate }) {
@@ -470,6 +471,27 @@ function AlgorithmList({ navigate }) {
       platforms: ["LeetCode #18", "GfG"],
       tags: ["Two Pointers", "Sorting", "Triplets", "Quadruplets"],
     },
+    {
+      name: "Find Second Largest Element",
+      number: "1985",
+      icon: Star,
+      description:
+        "Visualize how to find the second largest element in an array efficiently using a single traversal.",
+      page: "SecondLargestElement",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-green-500 to-emerald-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Traversal",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #1985", "GfG", "InterviewBit"],
+      tags: ["Array", "Traversal", "Comparison", "Max Element"],
+    },
   ];
 
   const filteredAlgorithms = algorithms.filter((algo) => {
@@ -772,6 +794,10 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <MaximumSubarray navigate={navigate} />;
       case "MergeIntervals":
         return <MergeIntervals navigate={navigate} />;
+      case "SecondLargestElement":
+        return <FindSecondLargestElement navigate={navigate} />;
+
+    
 
       case "home":
       default:
