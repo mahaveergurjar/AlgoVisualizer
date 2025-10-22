@@ -51,7 +51,7 @@ import MaximumSubarray from "./MaximumSubarray.jsx";
 import MergeIntervals from "./MergeIntervals.jsx";
 import RotateArray from "./RotateArray.jsx"; // Corrected import statement
 import MaximumGap from "./MaximumGap.jsx";
-import FourSum from "./4-sum.jsx"; // Corrected import statement
+// import FourSum from "./4-sum.jsx"; // Corrected import statement
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
