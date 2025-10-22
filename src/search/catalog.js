@@ -26,6 +26,7 @@ export const problems = [
   { label: "Move Zeroes to the end",category: "Arrays", subpage: "MoveZeros", keywords:["array","move","zeroes","end","traversal","rearranging"]},
   { label: "Rotate array by k",category: "Arrays", subpage: "RotateArray", keywords:[""]},
   {label:"4-sum", category:"Arrays", subpage:"FourSum", keywords:["array", "two pointers", "four sum", "4sum", "quadruplet", "18"]},
+  {label:"Second Largest Element ",category:"Arrays",subpage:"SecondLargestElement",keywords:["array","traversal","largest","second","compare"]},
 
   // Sliding Window
   { label: "Max Consecutive Ones III", category: "SlidingWindows", subpage: "MaxConsecutiveOnesIII", keywords: ["sliding window", "ones", "1004"] },
