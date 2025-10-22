@@ -42,7 +42,6 @@ import ArraySum from "./ArraySum.jsx";
 import ReverseArray from "./ReverseArray.jsx";
 import TwoSum from "./TwoSum.jsx";
 import ThreeSum from "./3Sum.jsx";
-import FourSum from "./4Sum.jsx";
 
 import SplitArrayLargestSum from "./SplitArrayLargestSum.jsx";
 import SquaresOfSortedArray from "./SquaresOfSortedArray.tsx";
@@ -50,8 +49,7 @@ import ProductOfArrayExceptSelf from "./ProductOfArrayExceptSelf.jsx";
 import MaximumSubarray from "./MaximumSubarray.jsx";
 import MergeIntervals from "./MergeIntervals.jsx";
 import RotateArray from "./RotateArray.jsx"; // Corrected import statement
-import MaximumGap from "./MaximumGap.jsx";
-import FourSum from "./4-sum.jsx"; // Corrected import statement
+import FourSum from "./4Sum.jsx"; // Corrected import statement
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -200,27 +198,6 @@ function AlgorithmList({ navigate }) {
       timeComplexity: "O(n)",
       platforms: ["LeetCode #283", "GfG"],
       tags: ["Two Pointers", "Partitioning"],
-    },
-    {
-      name: "Maximum Gap",
-      number: "164",
-      icon: MoveRight,
-      description:
-        "Find the Maximum gap between two successive element in its sorted form ",
-      page: "MaximumGap",
-      difficulty: "Medium",
-      tier: "Tier 2",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-amber-500 to-orange-500",
-      iconColor: "text-amber-400",
-      iconBg: "bg-amber-500/20",
-      borderColor: "border-amber-500/30",
-      technique: "Sorting, Traversal",
-      timeComplexity: "O(n log n)",
-      platforms: ["LeetCode #164"],
-      tags: ["Sorting", "Traversal"],
     },
     {
       name: "Count Zeros in Array",
@@ -454,7 +431,7 @@ function AlgorithmList({ navigate }) {
       number: "18",
       icon: Layers,
       description:
-        "Find all unique quadruplets in the array which give the sum of target.",
+        "Find all unique quadruplets in the array which give the sum of the target.",
       page: "4-Sum",
       difficulty: "Medium",
       tier: "Tier 3",
@@ -746,8 +723,6 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <CountZeros navigate={navigate} />;
       case "SquaresOfSortedArray":
         return <SquaresOfSortedArray navigate={navigate} />;
-      case "MaximumGap":
-        return <MaximumGap navigate={navigate} />;
       case "4-Sum":
         return <FourSum navigate={navigate} />;
 
