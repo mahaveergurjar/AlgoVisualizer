@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import PermutationsVisualizer from "./Permutations.jsx"
 import WordSearchVisualizer from "./WordSearch.jsx"
-
+import SudokuSolver from "./SudokuSolver.jsx";
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [filter, setFilter] = useState("all");
@@ -104,6 +104,26 @@ const AlgorithmList = ({ navigate }) => {
       timeComplexity: "O(4^N/√N)",
       platforms: ["LeetCode #22", "GfG"],
       tags: ["Parentheses", "Balanced", "Catalan"]
+    },
+    {
+      name: "Sudoku Solver",
+      number: "37",
+      icon: Puzzle,
+      description: "Solve a 9x9 Sudoku puzzle by filling empty cells using backtracking.",
+      page: "SudokuSolver",
+      difficulty: "Hard",
+      tier: "Tier 3",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-blue-500 to-indigo-500",
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/20",
+      borderColor: "border-blue-500/30",
+      technique: "Backtracking",
+      timeComplexity: "O(9^(N*N))",
+      platforms: ["LeetCode #37", "GfG"],
+      tags: ["Grid", "Recursion", "Matrix"]
     }
   ];
 
@@ -111,7 +131,7 @@ const AlgorithmList = ({ navigate }) => {
     if (filter === "all") return true;
     if (filter === "medium") return algo.tier === "Tier 2";
     if (filter === "hard") return algo.tier === "Tier 3";
-    return true;
+    return false;
   });
 
   return (
@@ -356,15 +376,7 @@ const BacktrackingPage = ({ navigate: parentNavigate, initialPage = null }) => {
           </button>
         </div>;
       case "SudokuSolver":
-        return <div className="text-center py-20">
-          <div className="text-2xl text-gray-400">Sudoku Solver Visualizer - Coming Soon</div>
-          <button 
-            onClick={() => navigate("home")}
-            className="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors"
-          >
-            Back to Problems
-          </button>
-        </div>;
+        return <SudokuSolver navigate={navigate} />;
       case "PermutationsVisualizer":
         return <PermutationsVisualizer />;
       case "CombinationSum":
