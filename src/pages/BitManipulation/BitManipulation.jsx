@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import {
   ArrowLeft,
-  Droplets,
-  Container,
-  ToggleRight,
-  ArrowUpDown,
   Brackets,
   Code2,
   Clock,
@@ -16,107 +12,33 @@ import {
   FlipHorizontal,
 } from "lucide-react";
 
+// --- Import your specific algorithm visualizer components ---
 import SingleNumberVisualizer from "./SingleNumber.jsx";
 import NumberOf1Bits from "./NumberOf1Bits.jsx";
 import CountingBits from "./CountingBits.jsx";
 import ReverseBits from "./ReverseBits.jsx";
 import PowerOfTwo from "./PowerOfTwo.jsx";
 
+// --- ✅ Import the master catalog and your StarButton ---
+import { problems as PROBLEM_CATALOG } from '../../search/catalog';
+import StarButton from '../../components/StarButton';
+
+// ✅ (Optional but Recommended) Default values for visual properties
+const defaultVisuals = {
+  icon: Binary,
+  gradient: "from-gray-700 to-gray-800",
+  borderColor: "border-gray-600",
+  iconBg: "bg-gray-700/20",
+  iconColor: "text-gray-300",
+};
+
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const algorithms = [
-    {
-      name: "Single Number",
-      number: "136",
-      icon: Zap,
-      description:
-        "Given a non-empty array of integers where every element appears twice except for one, find the single one using linear time and constant space.",
-      page: "SingleNumber",
-      difficulty: "Easy",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-cyan-400 to-indigo-500",
-      iconColor: "text-cyan-400",
-      iconBg: "bg-cyan-500/10",
-      borderColor: "border-cyan-500/30",
-      technique: "Bit Manipulation (XOR)",
-      timeComplexity: "O(N)",
-    },
-    {
-      name: "Reverse Bits",
-      number: "190",
-      icon: FlipHorizontal,
-      description:
-        "Reverse the bits of a given 32-bit unsigned integer using bit manipulation techniques.",
-      page: "ReverseBits",
-      difficulty: "Easy",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-indigo-500 to-violet-500",
-      iconColor: "text-indigo-400",
-      iconBg: "bg-indigo-500/10",
-      borderColor: "border-indigo-500/30",
-      technique: "Bit Manipulation",
-      timeComplexity: "O(1)",
-    },
-    {
-      name: "Number of 1 Bits",
-      number: "191",
-      icon: Hash,
-      description:
-        "Count the number of set bits (1's) in the binary representation of a positive integer.",
-      page: "NumberOf1Bits",
-      difficulty: "Easy",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-cyan-500 to-blue-500",
-      iconColor: "text-cyan-400",
-      iconBg: "bg-cyan-500/10",
-      borderColor: "border-cyan-500/30",
-      technique: "Bit Manipulation",
-      timeComplexity: "O(1)",
-    },
-    {
-      name: "Power of Two",
-      number: "231",
-      icon: Zap,
-      description:
-        "Determine if an integer is a power of two using the clever bit trick: n & (n-1) == 0.",
-      page: "PowerOfTwo",
-      difficulty: "Easy",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-yellow-500 to-orange-500",
-      iconColor: "text-yellow-400",
-      iconBg: "bg-yellow-500/10",
-      borderColor: "border-yellow-500/30",
-      technique: "Bit Manipulation",
-      timeComplexity: "O(1)",
-    },
-    {
-      name: "Counting Bits",
-      number: "338",
-      icon: Binary,
-      description:
-        "Return an array where each element represents the number of 1's in the binary representation of numbers from 0 to n.",
-      page: "CountingBits",
-      difficulty: "Easy",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-purple-500 to-pink-500",
-      iconColor: "text-purple-400",
-      iconBg: "bg-purple-500/10",
-      borderColor: "border-purple-500/30",
-      technique: "Bit Manipulation (DP)",
-      timeComplexity: "O(N)",
-    },
-  ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
+  // ✅ Get Bit Manipulation problems directly from the master catalog
+  const bitManipulationAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'BitManipulation');
+
+  // ❌ The local 'algorithms' array has been DELETED.
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -127,11 +49,11 @@ const AlgorithmList = ({ navigate }) => {
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-6">
             <div className="relative">
-              <Brackets className="h-14 sm:h-16 w-14 sm:w-16 text-cyan-400 animated-icon" />
+              <Binary className="h-14 sm:h-16 w-14 sm:w-16 text-cyan-400 animated-icon" />
               <Zap className="h-5 w-5 text-teal-300 absolute -top-1 -right-1 animate-pulse" />
             </div>
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-400 to-indigo-500 animated-gradient">
-              Bit Manipulation Algorithms
+              Bit Manipulation
             </h1>
           </div>
 
@@ -151,7 +73,7 @@ const AlgorithmList = ({ navigate }) => {
               <div className="flex items-center gap-2">
                 <Code2 className="h-3.5 w-3.5 text-cyan-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  {algorithms.length} Problems
+                  {bitManipulationAlgorithms.length} Problems
                 </span>
               </div>
             </div>
@@ -168,34 +90,34 @@ const AlgorithmList = ({ navigate }) => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-        {algorithms.map((algo, index) => {
+        {bitManipulationAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
-          const Icon = algo.icon;
+          const Icon = algo.icon || defaultVisuals.icon;
 
           return (
             <div
-              key={algo.name}
-              onClick={() => navigate(algo.page)}
+              key={algo.subpage} // ✅ Use subpage
+              onClick={() => navigate(algo.subpage)} // ✅ Use subpage
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className="group relative cursor-pointer animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient || defaultVisuals.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
               />
 
               <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor || defaultVisuals.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                      className={`p-3 ${algo.iconBg || defaultVisuals.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
                         className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
+                          isHovered ? "text-white" : (algo.iconColor || defaultVisuals.iconColor)
                         } transition-colors duration-300`}
                       />
                     </div>
@@ -215,10 +137,16 @@ const AlgorithmList = ({ navigate }) => {
                           isHovered ? "text-white" : "text-gray-200"
                         }`}
                       >
-                        {algo.name}
+                        {algo.label} {/* ✅ Use label */}
                       </h2>
                     </div>
                   </div>
+                  
+                  {/* ✅ Add the StarButton here */}
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <StarButton problemId={algo.subpage} />
+                  </div>
+
                 </div>
 
                 <p
@@ -274,22 +202,19 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
+// ✅ This part remains completely the same as before.
 const BitPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
-      case "SingleNumber":
-        return <SingleNumberVisualizer navigate={navigate} />;
-      case "NumberOf1Bits":
-        return <NumberOf1Bits navigate={navigate} />;
-      case "CountingBits":
-        return <CountingBits navigate={navigate} />;
-      case "ReverseBits":
-        return <ReverseBits navigate={navigate} />;
-      case "PowerOfTwo":
-        return <PowerOfTwo navigate={navigate} />;
+      case "SingleNumber": return <SingleNumberVisualizer navigate={navigate} />;
+      case "NumberOf1Bits": return <NumberOf1Bits navigate={navigate} />;
+      case "CountingBits": return <CountingBits navigate={navigate} />;
+      case "ReverseBits": return <ReverseBits navigate={navigate} />;
+      case "PowerOfTwo": return <PowerOfTwo navigate={navigate} />;
+      case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
     }
@@ -304,47 +229,16 @@ const BitPage = ({ navigate: parentNavigate, initialPage = null }) => {
       </div>
 
       <style>{`
-        .animated-gradient {
-          background-size: 200% auto;
-          animation: gradient-animation 4s ease-in-out infinite;
-        }
-        @keyframes gradient-animation {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0;
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animated-icon {
-          animation: float-rotate 8s ease-in-out infinite;
-          filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6));
-        }
-        @keyframes float-rotate {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          33% { transform: translateY(-8px) rotate(120deg); }
-          66% { transform: translateY(-4px) rotate(240deg); }
-        }
-        .animate-pulse-slow, .animate-pulse-slow-delayed {
-          animation: pulse-slow 4s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.6; }
-        }
-        .animate-float, .animate-float-delayed {
-          animation: float 20s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
-        }
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(30px, -30px) scale(1.1); }
-        }
+        .animated-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; }
+        @keyframes gradient-animation { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animated-icon { animation: float-rotate 8s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.6)); }
+        @keyframes float-rotate { 0%, 100% { transform: translateY(0) rotate(0deg); } 33% { transform: translateY(-8px) rotate(120deg); } 66% { transform: translateY(-4px) rotate(240deg); } }
+        .animate-pulse-slow, .animate-pulse-slow-delayed { animation: pulse-slow 4s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
+        @keyframes pulse-slow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+        .animate-float, .animate-float-delayed { animation: float 20s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.1); } }
       `}</style>
 
       <div className="relative z-10">{children}</div>
@@ -364,9 +258,9 @@ const BitPage = ({ navigate: parentNavigate, initialPage = null }) => {
               Back to Problems
             </button>
             <div className="flex items-center gap-2">
-              <Brackets className="h-5 w-5 text-cyan-400" />
+              <Binary className="h-5 w-5 text-cyan-400" />
               <span className="text-sm font-semibold text-gray-300">
-                Bit Manipulation Algorithms
+                Bit Manipulation
               </span>
             </div>
           </div>
