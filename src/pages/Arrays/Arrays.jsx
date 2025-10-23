@@ -50,6 +50,7 @@ import MaximumSubarray from "./MaximumSubarray.jsx";
 import MergeIntervals from "./MergeIntervals.jsx";
 import RotateArray from "./RotateArray.jsx"; // Corrected import statement
 import FourSum from "./4Sum.jsx"; // Corrected import statement
+import MaximumGap from "./MaximumGap.jsx"; // impoted done
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -95,6 +96,27 @@ function AlgorithmList({ navigate }) {
       timeComplexity: "O(n)",
       platforms: ["All Platforms"],
       tags: ["Beginner", "Traversal"],
+    },
+    {
+      name: "Maximum Gap",
+      number: "164",
+      icon: MoveRight,
+      description:
+        "Find the Maximum gap between two successive element in its sorted form ",
+      page: "MaximumGap",
+      difficulty: "Medium",
+      tier: "Tier 2",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-amber-500 to-orange-500",
+      iconColor: "text-amber-400",
+      iconBg: "bg-amber-500/20",
+      borderColor: "border-amber-500/30",
+      technique: "Sorting, Traversal",
+      timeComplexity: "O(n log n)",
+      platforms: ["LeetCode #164"],
+      tags: ["Sorting", "Traversal"],
     },
     {
       name: "Array Sum",
@@ -725,6 +747,8 @@ const ArrayPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <SquaresOfSortedArray navigate={navigate} />;
       case "4-Sum":
         return <FourSum navigate={navigate} />;
+      case "MaximumGap":
+        return <MaximumGap navigate={navigate} />;
 
       // Existing problems
       case "TrappingRainWater":
