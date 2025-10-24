@@ -12,10 +12,12 @@ import {
   Users,
   Target,
   Circle,
-  GitBranch
+  GitBranch,
+  Cookie
 } from "lucide-react";
 import BestTimeStockII from "./BestTimeStockII";
 import TwoCityScheduling from "./TwoCityScheduling";
+import AssignCookies from "./AssignCookies";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -61,6 +63,26 @@ const AlgorithmList = ({ navigate }) => {
       timeComplexity: "O(n log n)",
       platforms: ["LeetCode #1029"],
       tags: ["Scheduling", "Optimization"]
+    },
+    {
+      name: "Assign Cookies",
+      number: "455",
+      icon: Cookie,
+      description: "Distribute cookies to children to maximize contentment using a greedy approach.",
+      page: "AssignCookies",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-amber-500 to-yellow-500",
+      iconColor: "text-amber-400",
+      iconBg: "bg-amber-500/20",
+      borderColor: "border-amber-500/30",
+      technique: "Greedy Sorting",
+      timeComplexity: "O(n log n)",
+      platforms: ["LeetCode #455"],
+      tags: ["Greedy", "Sorting", "Array"]
     },
     {
       name: "Jump Game II",
@@ -374,6 +396,8 @@ const GreedyPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "TwoCityScheduling":
         // Use the real imported TwoCityScheduling component from its file
         return <TwoCityScheduling navigate={navigate} />;
+      case "AssignCookies":
+        return <AssignCookies navigate={navigate} />;
       case "JumpGameII":
         return <JumpGameIIPlaceholder navigate={navigate} />;
       case "GasStation":
