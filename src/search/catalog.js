@@ -56,7 +56,8 @@ export const problems = [
   { label: "Selection Sort", category: "Sorting", subpage: "SelectionSort", keywords: ["sorting", "selection sort", "select min", "in-place"] },
   { label: "Shell Sort", category: "Sorting", subpage: "ShellSort", keywords: ["sorting", "shell sort", "gap sequence", "insertion", "optimization"] },
 
-
+  {label: "Lemonade Change", category: "GreedyPage", subpage: "LemonadeChange", keywords: ["Traversal", "lemonade","860","Greedy"]},
+  
   // Trees
   { label: "Construct Tree from Traversal", category: "Trees", subpage: "ConstructBinaryTree", keywords: ["tree", "binary tree", "preorder", "inorder", "105"] },
   { label: "AVL Tree", category: "Trees", subpage: "AVLTree", keywords: ["tree", "AVL","Tree Traversal","Balanced Binary Search Tree"] },
