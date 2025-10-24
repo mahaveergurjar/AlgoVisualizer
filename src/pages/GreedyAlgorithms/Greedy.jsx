@@ -12,10 +12,12 @@ import {
   Users,
   Target,
   Circle,
-  GitBranch
+  GitBranch,
+  Banknote
 } from "lucide-react";
 import BestTimeStockII from "./BestTimeStockII";
 import TwoCityScheduling from "./TwoCityScheduling";
+import LemonadeChange from "./LemonadeChanges";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -61,6 +63,26 @@ const AlgorithmList = ({ navigate }) => {
       timeComplexity: "O(n log n)",
       platforms: ["LeetCode #1029"],
       tags: ["Scheduling", "Optimization"]
+    },
+    {
+      name: "Lemonade Change",
+      number: "860",
+      icon: Banknote,
+      description: "Schedule interviews for two cities minimizing total cost using greedy selection.",
+      page: "LemonadeChange",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-pink-400",
+      iconBg: "bg-pink-500/20",
+      borderColor: "border-pink-500/30",
+      technique: "Traversal",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #860"],
+      tags: ["Traversal","Greedy"]
     },
     {
       name: "Jump Game II",
@@ -378,6 +400,8 @@ const GreedyPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <JumpGameIIPlaceholder navigate={navigate} />;
       case "GasStation":
         return <GasStationPlaceholder navigate={navigate} />;
+      case "LemonadeChange":
+        return <LemonadeChange navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
