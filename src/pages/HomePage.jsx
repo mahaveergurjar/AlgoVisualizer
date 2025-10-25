@@ -50,6 +50,7 @@ import BacktrackingPage from "./Backtracking/Backtracking.jsx";
 import StringPage from "./Strings/Strings.jsx";
 import BitPage from "./BitManipulation/BitManipulation.jsx";
 import HashingPage from "./Hashing/Hashing.jsx";
+import ReviewLater from "./ReviewLater.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -708,6 +709,8 @@ const HomePage = () => {
         return <DPPage navigate={navigate} initialPage={initialSubPage} />;
       case "BitManipulation":
         return <BitPage navigate={navigate} initialPage={initialSubPage} />;
+      case "ReviewLater":
+        return <ReviewLater navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmCategories navigate={navigate} />;

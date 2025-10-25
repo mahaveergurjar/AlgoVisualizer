@@ -51,6 +51,7 @@ import MaximumSubarray from "./MaximumSubarray.jsx";
 import MergeIntervals from "./MergeIntervals.jsx";
 import RotateArray from "./RotateArray.jsx"; // Corrected import statement
 import MaximumGap from "./MaximumGap.jsx";
+import StarButton from "../../components/StarButton.jsx";
 // import FourSum from "./4-sum.jsx"; // Corrected import statement
 
 function AlgorithmList({ navigate }) {
@@ -628,6 +629,11 @@ function AlgorithmList({ navigate }) {
                       </h2>
                     </div>
                   </div>
+                  <StarButton
+                    algorithmId={algo.name}
+                    algorithmName={algo.name}
+                    category="Arrays"
+                  />
                 </div>
 
                 <p
