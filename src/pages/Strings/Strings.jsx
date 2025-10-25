@@ -27,6 +27,8 @@ import ValidAnagramVisualizer from "./ValidAnagram.jsx";
 import LongestCommonPrefixVisualizer from "./LongestCP.jsx";
 import ReverseWordsVisualizer from "./ReverseWords.jsx";
 import StringCompressionVisualizer from "./StringCompression.jsx";
+import IsSubsequence from "./IsSubSequence.jsx";
+
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -308,6 +310,8 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <ReverseWordsVisualizer navigate={navigate} />;
       case "StringCompression":
         return <StringCompressionVisualizer navigate={navigate} />;
+      case "IsSubsequence":
+        return <IsSubsequence navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
