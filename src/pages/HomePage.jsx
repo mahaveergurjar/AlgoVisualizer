@@ -289,7 +289,7 @@ const AlgorithmCategories = ({ navigate }) => {
     const problemItems = PROBLEM_CATALOG.map((p) => ({
       type: "problem",
       ...p,
-    }));
+    })).filter(p => p.category && p.subpage); // Ensure items are valid
     return [...categoryItems, ...problemItems];
   }, [categories]);
 
