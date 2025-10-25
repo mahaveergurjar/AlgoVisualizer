@@ -23,6 +23,8 @@ import {
 import PalindromeCheck from "./PalindromeCheck.jsx";
 import ReverseString from "./ReverseString.jsx";
 import CountVowels from "./CountVowels.jsx";
+import IsSubsequence from "./IsSubSequence.jsx";
+
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -108,6 +110,26 @@ function AlgorithmList({ navigate }) {
       timeComplexity: "O(n)",
       platforms: ["LeetCode #387"],
       tags: ["Beginner", "Hash Map"]
+    },
+    {
+      name: "Is Subsequence",
+      number: "392",
+      icon: LetterText,
+      description: "Return true if s is a subsequence of t.",
+      page: "IsSubsequence",
+      difficulty: "Basic",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-green-400 to-emerald-400",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Two Pointers",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #392"],
+      tags: ["Beginner", "Two Pointers"]
     },
     // TIER 2: EASY
     {
@@ -532,6 +554,8 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <ReverseString navigate={navigate} />;
       case "CountVowels":
         return <CountVowels navigate={navigate} />;
+      case "IsSubsequence":
+        return <IsSubsequence navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
