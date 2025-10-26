@@ -19,7 +19,6 @@ import {
 import ConstructBinaryTree from "./ConstructBinaryTree.jsx";
 import LCAofDeepestLeaves from "./LCAofDeepestLeaves";
 import AVLTree from "./AVLTree.jsx";
-import ValidateBST from "./ValidateBST.jsx";
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from "../../search/catalog";
