@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import {
   ArrowLeft,
-  Droplets,
-  Container,
-  ToggleRight,
-  ArrowUpDown,
-  FileText,
-  Coins,
-  Edit3,
   Brackets,
   Code2,
   Clock,
@@ -23,102 +16,26 @@ import CoinChangeVisualizer from "./CoinChange.jsx";
 import EditDistanceVisualizer from "./EditDistance.jsx";
 import LISVisualizer from "./LISubsequence.jsx";
 
+// --- ✅ Import the master catalog and your StarButton ---
+import { problems as PROBLEM_CATALOG } from '../../search/catalog';
+import StarButton from '../../components/StarButton';
+
+// ✅ (Optional but Recommended) Default values for visual properties
+const defaultVisuals = {
+  icon: Brackets,
+  gradient: "from-gray-700 to-gray-800",
+  borderColor: "border-gray-600",
+  iconBg: "bg-gray-700/20",
+  iconColor: "text-gray-300",
+};
+
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const algorithms = [
-    {
-      name: "0/1 Knapsack",
-      number: "416", // LeetCode problem: Partition Equal Subset Sum
-      icon: TrendingUp,
-      description:
-        "Given weights and values of N items, and a maximum capacity W, determine the maximum value that can be put in a knapsack of capacity W. Each item can be selected at most once.",
-      page: "KnapSack",
-      difficulty: "Medium",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-yellow-400 to-orange-500",
-      iconColor: "text-yellow-400",
-      iconBg: "bg-yellow-500/20",
-      borderColor: "border-yellow-500/30",
-      technique: "Dynamic Programming",
-      timeComplexity: "O(N × W)"
-    },
-    {
-    name: "Longest Common Subsequence",
-    number: "1143",
-    icon: FileText,
-    description:
-    "Given two strings, find the length of their longest common subsequence. A subsequence is a sequence that appears in the same relative order, but not necessarily contiguous.",
-    page: "LCS",
-    difficulty: "Medium",
-    difficultyColor: "text-cyan-400",
-    difficultyBg: "bg-cyan-400/10",
-    difficultyBorder: "border-cyan-400/30",
-    gradient: "from-cyan-400 to-blue-400",
-    iconColor: "text-cyan-400",
-    iconBg: "bg-cyan-500/20",
-    borderColor: "border-cyan-500/30",
-    technique: "Dynamic Programming",
-    timeComplexity: "O(M × N)"
-    },
-    {
-    name: "Coin Change",
-    number: "322",
-    icon: Coins,
-    description:
-    "Given an array of coin denominations and a target amount, find the minimum number of coins needed to make up that amount. If impossible, return -1.",
-    page: "CoinChange",
-    difficulty: "Medium",
-    difficultyColor: "text-amber-400",
-    difficultyBg: "bg-amber-400/10",
-    difficultyBorder: "border-amber-400/30",
-    gradient: "from-amber-400 to-orange-400",
-    iconColor: "text-amber-400",
-    iconBg: "bg-amber-500/20",
-    borderColor: "border-amber-500/30",
-    technique: "Dynamic Programming",
-    timeComplexity: "O(Amount × Coins)"
-    },
-    {
-    name: "Edit Distance",
-    number: "72",
-    icon: Edit3,
-    description:
-    "Given two strings, find the minimum number of operations (insert, delete, replace) required to convert one string into another. Also known as Levenshtein Distance.",
-    page: "EditDistance",
-    difficulty: "Hard",
-    difficultyColor: "text-red-400",
-    difficultyBg: "bg-red-400/10",
-    difficultyBorder: "border-red-400/30",
-    gradient: "from-purple-400 to-pink-400",
-    iconColor: "text-purple-400",
-    iconBg: "bg-purple-500/20",
-    borderColor: "border-purple-500/30",
-    technique: "Dynamic Programming",
-    timeComplexity: "O(M × N)"
-   },
-   {
-    name: "Longest Increasing Subsequence",
-    number: "300",
-    icon: TrendingUp,
-    description:
-    "Given an integer array, find the length of the longest strictly increasing subsequence. Elements don't need to be contiguous but must maintain their relative order.",
-    page: "LIS",
-    difficulty: "Medium",
-    difficultyColor: "text-green-400",
-    difficultyBg: "bg-green-400/10",
-    difficultyBorder: "border-green-400/30",
-    gradient: "from-green-400 to-teal-400",
-    iconColor: "text-green-400",
-    iconBg: "bg-green-500/20",
-    borderColor: "border-green-500/30",
-    technique: "Dynamic Programming",
-    timeComplexity: "O(N²)"
-    }
+  // ✅ Get DP problems directly from the master catalog
+  const dpAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'DynamicProgramming');
 
-  ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
+  // ❌ The local 'algorithms' array has been DELETED.
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -140,22 +57,21 @@ const AlgorithmList = ({ navigate }) => {
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
             Master classic dynamic programming problems with techniques like{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
-              0/1 Knapsack DP
+              0/1 Knapsack
             </span>{" "}
             and{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
               subset sum optimization
             </span>
-            , and visualize how the DP table fills step by step.
+            .
           </p>
-
 
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
             <div className="px-4 py-2 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-full border border-amber-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
                 <Code2 className="h-3.5 w-3.5 text-amber-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  {algorithms.length} Problems
+                  {dpAlgorithms.length} Problems
                 </span>
               </div>
             </div>
@@ -172,33 +88,33 @@ const AlgorithmList = ({ navigate }) => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-        {algorithms.map((algo, index) => {
+        {dpAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
-          const Icon = algo.icon;
+          const Icon = algo.icon || defaultVisuals.icon;
 
           return (
             <div
-              key={algo.name}
-              onClick={() => navigate(algo.page)}
+              key={algo.subpage} // ✅ Use subpage
+              onClick={() => navigate(algo.subpage)} // ✅ Use subpage
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className="group relative cursor-pointer animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient || defaultVisuals.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
               />
 
               <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor || defaultVisuals.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                      className={`p-3 ${algo.iconBg || defaultVisuals.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor
+                        className={`h-10 w-10 ${isHovered ? "text-white" : (algo.iconColor || defaultVisuals.iconColor)
                           } transition-colors duration-300`}
                       />
                     </div>
@@ -217,10 +133,16 @@ const AlgorithmList = ({ navigate }) => {
                         className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"
                           }`}
                       >
-                        {algo.name}
+                        {algo.label} {/* ✅ Use label */}
                       </h2>
                     </div>
                   </div>
+
+                  {/* ✅ Add the StarButton here */}
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <StarButton problemId={algo.subpage} />
+                  </div>
+
                 </div>
 
                 <p
@@ -309,47 +231,16 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
       </div>
 
       <style>{`
-        .animated-gradient {
-          background-size: 200% auto;
-          animation: gradient-animation 4s ease-in-out infinite;
-        }
-        @keyframes gradient-animation {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0;
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animated-icon {
-          animation: float-rotate 8s ease-in-out infinite;
-          filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6));
-        }
-        @keyframes float-rotate {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          33% { transform: translateY(-8px) rotate(120deg); }
-          66% { transform: translateY(-4px) rotate(240deg); }
-        }
-        .animate-pulse-slow, .animate-pulse-slow-delayed {
-          animation: pulse-slow 4s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.6; }
-        }
-        .animate-float, .animate-float-delayed {
-          animation: float 20s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
-        }
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(30px, -30px) scale(1.1); }
-        }
+        .animated-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; }
+        @keyframes gradient-animation { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animated-icon { animation: float-rotate 8s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6)); }
+        @keyframes float-rotate { 0%, 100% { transform: translateY(0) rotate(0deg); } 33% { transform: translateY(-8px) rotate(120deg); } 66% { transform: translateY(-4px) rotate(240deg); } }
+        .animate-pulse-slow, .animate-pulse-slow-delayed { animation: pulse-slow 4s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
+        @keyframes pulse-slow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+        .animate-float, .animate-float-delayed { animation: float 20s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.1); } }
       `}</style>
       <div className="relative z-10">{children}</div>
     </div>
@@ -357,7 +248,6 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
 
   return (
     <PageWrapper>
-      {/* Navigation to go back to the problem list within this category */}
       {page !== "home" && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
@@ -377,8 +267,6 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
           </div>
         </nav>
       )}
-
-      {/* Navigation to go back to the main category homepage */}
       {page === "home" && parentNavigate && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto">
@@ -392,7 +280,6 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
           </div>
         </nav>
       )}
-
       {renderPage()}
     </PageWrapper>
   );
