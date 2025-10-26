@@ -19,6 +19,7 @@ import {
 import BestTimeStockII from "./BestTimeStockII";
 import TwoCityScheduling from "./TwoCityScheduling";
 import LemonadeChange from "./LemonadeChanges";
+import JobScheduling from "./JobScheduling.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
