@@ -1,27 +1,24 @@
-// Trees.jsx
+// Searching.jsx
 import React, { useState } from "react";
 import { 
   ArrowLeft, 
-  Star, 
-  Clock, 
+  Search,
   Zap, 
   ArrowRight, 
   TrendingUp,
   Code2,
-  TreePine,
-  Network,
-  Binary,
-  Layers,
-  GitBranch,
-  GitMerge,
-  TreeDeciduous,
-  Cpu,
-  Power
+  Brackets,
+  Filter,
+  Clock,
+  Star,
+  Scan,
+  Navigation
 } from "lucide-react";
-import ValidateBST from "./validBST.jsx";
-import ConstructTree from "./ConstructBinaryTree.jsx";
-import LCAofDeepestLeaves from "./LCAofDeepestLeaves.jsx";
-import AVLTree from "./AVLTree.jsx";
+
+import LinearSearch from "./LinearSearch.jsx";
+import ExponentialSearch from "./ExponentialSearch.jsx";
+import SmallestLetter from "./SmallestLetter.jsx";
+import UnknownSizeSearch from "./UnknownSizeSearch.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -29,140 +26,179 @@ const AlgorithmList = ({ navigate }) => {
 
   const algorithms = [
     {
-      name: "Construct Tree from Traversal",
-      number: "105",
-      icon: GitMerge,
-      description: "Construct binary tree from preorder and inorder traversal sequences.",
-      page: "ConstructTree",
-      difficulty: "Medium",
-      tier: "Tier 2",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-emerald-500 to-green-500",
-      iconColor: "text-emerald-400",
-      iconBg: "bg-emerald-500/20",
-      borderColor: "border-emerald-500/30",
-      technique: "Divide & Conquer",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #105", "GfG"],
-      tags: ["Binary Tree", "Traversal", "Recursion"]
-    },
-    {
-      name: "Validate BST",
-      number: "98",
-      icon: TreePine,
-      description: "Determine if a binary tree is a valid binary search tree.",
-      page: "ValidateBST",
-      difficulty: "Medium",
-      tier: "Tier 2",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-green-500 to-lime-500",
-      iconColor: "text-green-400",
-      iconBg: "bg-green-500/20",
-      borderColor: "border-green-500/30",
-      technique: "DFS Traversal",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #98", "GfG"],
-      tags: ["BST", "Validation", "DFS"]
-    },
-    {
-      name: "LCA of Deepest Leaves",
-      number: "1123",
-      icon: Layers,
-      description: "Find the lowest common ancestor of the deepest leaves in a binary tree.",
-      page: "LCAofDeepestLeaves",
-      difficulty: "Medium",
-      tier: "Tier 2",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-lime-500 to-emerald-500",
-      iconColor: "text-lime-400",
-      iconBg: "bg-lime-500/20",
-      borderColor: "border-lime-500/30",
-      technique: "Postorder DFS",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #1123", "GfG"],
-      tags: ["LCA", "Binary Tree", "DFS"]
-    },
-    {
-      name: "Balance BST (AVL Tree)",
-      number: "1382",
-      icon: GitBranch,
-      description: "Convert any Binary Search Tree to a balanced AVL Tree",
-      page: "AVLTree",
+      name: "Linear Search",
+      number: "101",
+      icon: Scan,
+      description: "Sequentially check each element until the target is found. Simple but effective for small datasets.",
+      page: "LinearSearch",
       difficulty: "Easy",
       tier: "Tier 1",
       difficultyColor: "text-green-400",
       difficultyBg: "bg-green-400/10",
       difficultyBorder: "border-green-400/30",
+      gradient: "from-green-500 to-emerald-500",
+      iconColor: "text-green-400",
+      iconBg: "bg-green-500/20",
+      borderColor: "border-green-500/30",
+      technique: "Sequential Scan",
+      timeComplexity: "O(n)",
+      spaceComplexity: "O(1)",
+      platforms: ["All Platforms", "Basic DS"],
+      tags: ["Beginner", "Unsorted Arrays", "Simple"]
+    },
+    {
+      name: "Exponential Search",
+      number: "102",
+      icon: Zap,
+      description: "Find range exponentially and then perform binary search. Great for unbounded or infinite arrays.",
+      page: "ExponentialSearch",
+      difficulty: "Medium",
+      tier: "Tier 2",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
       gradient: "from-teal-500 to-cyan-500",
       iconColor: "text-teal-400",
       iconBg: "bg-teal-500/20",
       borderColor: "border-teal-500/30",
-      technique: "Tree Rotation",
+      technique: "Range Finding + Binary Search",
       timeComplexity: "O(log n)",
-      platforms: ["LeetCode #1382","GfG"],
-      tags: ["AVL", "Balanced BST", "Rotations"]
+      spaceComplexity: "O(1)",
+      platforms: ["GfG", "Interview Questions"],
+      tags: ["Unbounded Search", "Sorted Arrays", "Efficient"]
+    },
+    {
+      name: "Find Smallest Letter Greater Than Target",
+      number: "744",
+      icon: Search,
+      description: "Find the smallest character in letters that is lexicographically greater than target.",
+      page: "SmallestLetter",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-emerald-500 to-green-500",
+      iconColor: "text-emerald-400",
+      iconBg: "bg-emerald-500/20",
+      borderColor: "border-emerald-500/30",
+      technique: "Linear Search",
+      timeComplexity: "O(n)",
+      spaceComplexity: "O(1)",
+      platforms: ["LeetCode #744"],
+      tags: ["Character Array", "Linear Scan", "Lexicographical"]
+    },
+    {
+      name: "Search in Sorted Array of Unknown Size",
+      number: "702",
+      icon: Navigation,
+      description: "Search target in a sorted array of unknown size using exponential search approach.",
+      page: "UnknownSizeSearch",
+      difficulty: "Medium",
+      tier: "Tier 2",
+      difficultyColor: "text-yellow-400",
+      difficultyBg: "bg-yellow-400/10",
+      difficultyBorder: "border-yellow-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "Exponential Search",
+      timeComplexity: "O(log n)",
+      spaceComplexity: "O(1)",
+      platforms: ["LeetCode #702"],
+      tags: ["Unbounded Array", "Exponential Range", "Interview"]
+    },
+    {
+      name: "Kth Missing Positive Number",
+      number: "1539",
+      icon: Filter,
+      description: "Find the kth positive integer that is missing from a sorted array.",
+      page: "KthMissing",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-blue-500 to-indigo-500",
+      iconColor: "text-blue-400",
+      iconBg: "bg-blue-500/20",
+      borderColor: "border-blue-500/30",
+      technique: "Linear Search",
+      timeComplexity: "O(n)",
+      spaceComplexity: "O(1)",
+      platforms: ["LeetCode #1539"],
+      tags: ["Missing Numbers", "Linear Scan", "Sorted Array"]
+    },
+    {
+      name: "Special Array With X Elements",
+      number: "1608",
+      icon: Zap,
+      description: "Find if there exists a number x where exactly x elements are greater than or equal to x.",
+      page: "SpecialArray",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Linear Search",
+      timeComplexity: "O(n)",
+      spaceComplexity: "O(1)",
+      platforms: ["LeetCode #1608"],
+      tags: ["Special Array", "Linear Check", "Counting"]
     }
   ];
 
   const filteredAlgorithms = algorithms.filter(algo => {
     if (filter === "all") return true;
-    if (filter === "easy") return algo.tier === "Tier 1";
-    if (filter === "medium") return algo.tier === "Tier 2";
-    if (filter === "hard") return algo.tier === "Tier 3";
+    if (filter === "beginner") return algo.tier === "Tier 1";
+    if (filter === "easy") return algo.tier === "Tier 2";
     return true;
   });
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
       <header className="text-center mb-16 mt-8 relative">
-        <div className="absolute top-0 left-1/3 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
-        <div className="absolute top-10 right-1/3 w-80 h-80 bg-green-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
+        <div className="absolute top-0 left-1/3 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
+        <div className="absolute top-10 right-1/3 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-6">
             <div className="relative">
-              <svg className="h-14 sm:h-16 w-14 sm:w-16 text-emerald-400 animated-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-              <TreeDeciduous className="h-5 w-5 text-green-300 absolute -top-1 -right-1 animate-pulse" />
+              <Search className="h-14 sm:h-16 w-14 sm:w-16 text-teal-400 animated-icon" />
+              <Zap className="h-5 w-5 text-emerald-300 absolute -top-1 -right-1 animate-pulse" />
             </div>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-green-400 to-lime-400 animated-gradient">
-              Tree Algorithms
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-emerald-400 to-green-400 animated-gradient">
+              Search Algorithms
             </h1>
           </div>
 
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
-            Master hierarchical data structures with essential{" "}
-            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-400">
-              tree traversal
+            Master essential search techniques with focus on{" "}
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">
+              Linear and Exponential Search
             </span>{" "}
-            and{" "}
-            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-teal-400">
-              balancing techniques
-            </span>{" "}
-            for efficient problem-solving.
+            through practical LeetCode problems
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
-            <div className="px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-full border border-emerald-500/30 backdrop-blur-sm">
+            <div className="px-4 py-2 bg-gradient-to-r from-teal-500/10 to-emerald-500/10 rounded-full border border-teal-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
-                <Code2 className="h-3.5 w-3.5 text-emerald-400" />
+                <Code2 className="h-3.5 w-3.5 text-teal-400" />
                 <span className="text-xs font-medium text-gray-300">
                   {algorithms.length} Problems
                 </span>
               </div>
             </div>
-            <div className="px-4 py-2 bg-gradient-to-r from-lime-500/10 to-teal-500/10 rounded-full border border-lime-500/30 backdrop-blur-sm">
+            <div className="px-4 py-2 bg-gradient-to-r from-green-500/10 to-lime-500/10 rounded-full border border-green-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-3.5 w-3.5 text-lime-400" />
+                <TrendingUp className="h-3.5 w-3.5 text-green-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  Hierarchical Structures
+                  4 LeetCode Problems
                 </span>
               </div>
             </div>
@@ -176,41 +212,31 @@ const AlgorithmList = ({ navigate }) => {
           onClick={() => setFilter("all")}
           className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
             filter === "all"
-              ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
+              ? "bg-teal-500/20 border-teal-500/50 text-teal-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
           }`}
         >
           All Problems
         </button>
         <button
-          onClick={() => setFilter("easy")}
+          onClick={() => setFilter("beginner")}
           className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "easy"
+            filter === "beginner"
               ? "bg-green-500/20 border-green-500/50 text-green-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
           }`}
         >
-          Easy (Tier 1)
+          Beginner (Tier 1)
         </button>
         <button
-          onClick={() => setFilter("medium")}
+          onClick={() => setFilter("easy")}
           className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "medium"
-              ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300"
+            filter === "easy"
+              ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
           }`}
         >
-          Medium (Tier 2)
-        </button>
-        <button
-          onClick={() => setFilter("hard")}
-          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "hard"
-              ? "bg-red-500/20 border-red-500/50 text-red-300"
-              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
-          }`}
-        >
-          Hard (Tier 3)
+          Easy+ (Tier 2)
         </button>
       </div>
 
@@ -344,9 +370,9 @@ const AlgorithmList = ({ navigate }) => {
 
       <div className="mt-12 text-center">
         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-full border border-gray-700 backdrop-blur-sm">
-          <TrendingUp className="h-4 w-4 text-emerald-400" />
+          <TrendingUp className="h-4 w-4 text-green-400" />
           <span className="text-sm text-gray-400">
-            More tree problems coming soon
+            Focused on Linear and Exponential Search with LeetCode problems
           </span>
         </div>
       </div>
@@ -354,20 +380,40 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
+const SearchingPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
-      case "ConstructTree":
-        return <ConstructTree />;
-      case "ValidateBST":
-        return <ValidateBST />
-      case "LCAofDeepestLeaves":
-        return <LCAofDeepestLeaves />;
-      case "AVLTree":
-        return <AVLTree />;
+      case "LinearSearch":
+        return <LinearSearch navigate={navigate} />;
+      case "ExponentialSearch":
+        return <ExponentialSearch navigate={navigate} />;
+      case "SmallestLetter":
+        return <SmallestLetter navigate={navigate} />;
+      case "UnknownSizeSearch":
+        return <UnknownSizeSearch navigate={navigate} />;
+      case "KthMissing":
+        return <div className="text-center py-20">
+          <div className="text-2xl text-gray-400">LeetCode 1539 - Kth Missing Number - Coming Soon</div>
+          <button 
+            onClick={() => navigate("home")}
+            className="mt-4 px-6 py-2 bg-teal-500 hover:bg-teal-600 rounded-lg transition-colors"
+          >
+            Back to Problems
+          </button>
+        </div>;
+      case "SpecialArray":
+        return <div className="text-center py-20">
+          <div className="text-2xl text-gray-400">LeetCode 1608 - Special Array - Coming Soon</div>
+          <button 
+            onClick={() => navigate("home")}
+            className="mt-4 px-6 py-2 bg-teal-500 hover:bg-teal-600 rounded-lg transition-colors"
+          >
+            Back to Problems
+          </button>
+        </div>;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -377,9 +423,9 @@ const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const PageWrapper = ({ children }) => (
     <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-3xl animate-float-delayed" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-lime-500/10 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-float-delayed" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse-slow" />
       </div>
 
       <style>{`
@@ -401,7 +447,7 @@ const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
         }
         .animated-icon {
           animation: float-rotate 8s ease-in-out infinite;
-          filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.6));
+          filter: drop-shadow(0 0 20px rgba(45, 212, 191, 0.6));
         }
         @keyframes float-rotate {
           0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -448,9 +494,9 @@ const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
               Back to Problems
             </button>
             <div className="flex items-center gap-2">
-              <TreePine className="h-5 w-5 text-emerald-400" />
+              <Brackets className="h-5 w-5 text-teal-400" />
               <span className="text-sm font-semibold text-gray-300">
-                Tree Algorithms
+                Search Algorithms
               </span>
             </div>
           </div>
@@ -477,4 +523,4 @@ const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
   );
 };
 
-export default TreesPage;
+export default SearchingPage;

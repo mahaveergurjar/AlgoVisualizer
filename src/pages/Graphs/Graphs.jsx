@@ -20,35 +20,6 @@ import Dijkstra from "./Dijkstra.jsx";
 import TopologicalSort from "./TopologicalSort.jsx";
 import Kruskal from "./Kruskal.jsx";
 
-const PlaceholderVisualizer = ({ name, navigate }) => (
-  <div className="bg-gray-950 text-white min-h-screen flex flex-col">
-    <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
-      <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
-        <button
-          onClick={() => navigate("home")}
-          className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 border border-gray-700 hover:border-gray-600 cursor-pointer"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Problems
-        </button>
-        <div className="flex items-center gap-2">
-          <Network className="h-5 w-5 text-blue-400" />
-          <span className="text-sm font-semibold text-gray-300">
-            Graph Algorithms
-          </span>
-        </div>
-      </div>
-    </nav>
-    <div className="flex-1 flex items-center justify-center">
-      <div className="text-center">
-        <Network className="h-16 w-16 text-blue-400 mx-auto mb-4" />
-        <h1 className="text-3xl font-bold text-gray-400 mb-2">{name} Visualizer</h1>
-        <p className="text-lg text-gray-500">Coming soon!</p>
-      </div>
-    </div>
-  </div>
-);
-
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -331,10 +302,6 @@ const GraphsPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <Kruskal navigate={navigate} />;
       case "TopologicalSort":
         return <TopologicalSort navigate={navigate} />;
-      case "UnionFind":
-        return <PlaceholderVisualizer name="Union-Find" navigate={navigate} />;
-      case "MST":
-        return <PlaceholderVisualizer name="Minimum Spanning Tree" navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
