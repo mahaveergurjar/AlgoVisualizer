@@ -33,7 +33,16 @@ class BinaryTreeNode {
 }
 
 // TreeNode Component for Visualization
-const TreeNode = ({ node, x, y, isHighlighted = false, isCurrent = false, isRoot = false, isValid = null, range = null }) => {
+const TreeNode = ({
+  node,
+  x,
+  y,
+  isHighlighted = false,
+  isCurrent = false,
+  isRoot = false,
+  isValid = null,
+  range = null,
+}) => {
   if (!node) return null;
 
   const getNodeColor = () => {
@@ -66,7 +75,7 @@ const TreeNode = ({ node, x, y, isHighlighted = false, isCurrent = false, isRoot
         strokeWidth={2}
         className="transition-all duration-300"
       />
-      
+
       {/* Node value */}
       <text
         x={x}
@@ -90,7 +99,7 @@ const TreeNode = ({ node, x, y, isHighlighted = false, isCurrent = false, isRoot
           [{range.min}, {range.max}]
         </text>
       )}
-      
+
       {/* Highlight effect */}
       {isCurrent && (
         <circle
@@ -133,14 +142,17 @@ const TreeVisualization = ({ tree, traversalState }) => {
     };
 
     updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
   // Calculate tree depth for proper spacing
   const calculateTreeDepth = (node) => {
     if (!node) return 0;
-    return 1 + Math.max(calculateTreeDepth(node.left), calculateTreeDepth(node.right));
+    return (
+      1 +
+      Math.max(calculateTreeDepth(node.left), calculateTreeDepth(node.right))
+    );
   };
 
   const calculateNodePositions = (node, level = 0, position = 0) => {
@@ -149,12 +161,16 @@ const TreeVisualization = ({ tree, traversalState }) => {
     const depth = calculateTreeDepth(tree);
     const levelHeight = dimensions.height / (depth + 1);
     const y = 60 + level * levelHeight;
-    
+
     // Calculate x position based on binary tree positioning
     const x = (position + 0.5) * (dimensions.width / Math.pow(2, level));
 
-    const leftResult = node.left ? calculateNodePositions(node.left, level + 1, position * 2) : { nodes: [] };
-    const rightResult = node.right ? calculateNodePositions(node.right, level + 1, position * 2 + 1) : { nodes: [] };
+    const leftResult = node.left
+      ? calculateNodePositions(node.left, level + 1, position * 2)
+      : { nodes: [] };
+    const rightResult = node.right
+      ? calculateNodePositions(node.right, level + 1, position * 2 + 1)
+      : { nodes: [] };
 
     const nodes = [
       {
@@ -166,10 +182,10 @@ const TreeVisualization = ({ tree, traversalState }) => {
         isCurrent: traversalState?.processingNode === node.val,
         isRoot: level === 0,
         isValid: traversalState?.nodeValidity?.[node.val],
-        range: traversalState?.nodeRanges?.[node.val]
+        range: traversalState?.nodeRanges?.[node.val],
       },
       ...leftResult.nodes,
-      ...rightResult.nodes
+      ...rightResult.nodes,
     ];
 
     return { nodes };
@@ -177,7 +193,13 @@ const TreeVisualization = ({ tree, traversalState }) => {
 
   const { nodes } = calculateNodePositions(tree);
 
-  const renderEdges = (node, parentX = null, parentY = null, level = 0, position = 0) => {
+  const renderEdges = (
+    node,
+    parentX = null,
+    parentY = null,
+    level = 0,
+    position = 0
+  ) => {
     if (!node) return [];
 
     const depth = calculateTreeDepth(tree);
@@ -188,8 +210,9 @@ const TreeVisualization = ({ tree, traversalState }) => {
     const edges = [];
 
     if (parentX !== null && parentY !== null) {
-      const isValid = traversalState?.edgeValidity?.[`${parentX}-${parentY}-${x}-${y}`];
-      
+      const isValid =
+        traversalState?.edgeValidity?.[`${parentX}-${parentY}-${x}-${y}`];
+
       edges.push(
         <line
           key={`edge-${node.val}-${parentX}-${parentY}`}
@@ -205,8 +228,12 @@ const TreeVisualization = ({ tree, traversalState }) => {
       );
     }
 
-    const leftEdges = node.left ? renderEdges(node.left, x, y, level + 1, position * 2) : [];
-    const rightEdges = node.right ? renderEdges(node.right, x, y, level + 1, position * 2 + 1) : [];
+    const leftEdges = node.left
+      ? renderEdges(node.left, x, y, level + 1, position * 2)
+      : [];
+    const rightEdges = node.right
+      ? renderEdges(node.right, x, y, level + 1, position * 2 + 1)
+      : [];
 
     return [...edges, ...leftEdges, ...rightEdges];
   };
@@ -222,7 +249,7 @@ const TreeVisualization = ({ tree, traversalState }) => {
           </span>
         )}
       </h3>
-      
+
       <div className="flex justify-center">
         <svg
           ref={svgRef}
@@ -232,10 +259,13 @@ const TreeVisualization = ({ tree, traversalState }) => {
         >
           {/* Render edges first */}
           {tree && renderEdges(tree)}
-          
+
           {/* Render nodes on top */}
           {nodes.map((nodeData, index) => (
-            <TreeNode key={`node-${nodeData.node.val}-${index}`} {...nodeData} />
+            <TreeNode
+              key={`node-${nodeData.node.val}-${index}`}
+              {...nodeData}
+            />
           ))}
         </svg>
       </div>
@@ -278,15 +308,21 @@ const RangeVisualization = ({ currentNode, currentRange, comparison }) => {
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="bg-gray-700/50 p-3 rounded-lg">
             <div className="text-gray-400 text-sm">Minimum</div>
-            <div className="font-mono text-lg text-red-400">{currentRange.min}</div>
+            <div className="font-mono text-lg text-red-400">
+              {currentRange.min}
+            </div>
           </div>
           <div className="bg-gray-700/50 p-3 rounded-lg border-2 border-amber-400">
             <div className="text-gray-400 text-sm">Current Value</div>
-            <div className="font-mono text-lg text-amber-400">{currentNode}</div>
+            <div className="font-mono text-lg text-amber-400">
+              {currentNode}
+            </div>
           </div>
           <div className="bg-gray-700/50 p-3 rounded-lg">
             <div className="text-gray-400 text-sm">Maximum</div>
-            <div className="font-mono text-lg text-green-400">{currentRange.max}</div>
+            <div className="font-mono text-lg text-green-400">
+              {currentRange.max}
+            </div>
           </div>
         </div>
 
@@ -294,15 +330,31 @@ const RangeVisualization = ({ currentNode, currentRange, comparison }) => {
           <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 p-4 rounded-lg border border-purple-700/50">
             <div className="flex items-center justify-center gap-3">
               {comparison.leftCheck !== undefined && (
-                <div className={`flex items-center gap-2 ${comparison.leftCheck ? 'text-green-400' : 'text-red-400'}`}>
+                <div
+                  className={`flex items-center gap-2 ${
+                    comparison.leftCheck ? "text-green-400" : "text-red-400"
+                  }`}
+                >
                   {comparison.leftCheck ? <Check size={16} /> : <X size={16} />}
-                  <span className="text-sm">Left: {currentNode} &gt; {comparison.leftValue}</span>
+                  <span className="text-sm">
+                    Left: {currentNode} &gt; {comparison.leftValue}
+                  </span>
                 </div>
               )}
               {comparison.rightCheck !== undefined && (
-                <div className={`flex items-center gap-2 ${comparison.rightCheck ? 'text-green-400' : 'text-red-400'}`}>
-                  {comparison.rightCheck ? <Check size={16} /> : <X size={16} />}
-                  <span className="text-sm">Right: {currentNode} &lt; {comparison.rightValue}</span>
+                <div
+                  className={`flex items-center gap-2 ${
+                    comparison.rightCheck ? "text-green-400" : "text-red-400"
+                  }`}
+                >
+                  {comparison.rightCheck ? (
+                    <Check size={16} />
+                  ) : (
+                    <X size={16} />
+                  )}
+                  <span className="text-sm">
+                    Right: {currentNode} &lt; {comparison.rightValue}
+                  </span>
                 </div>
               )}
             </div>
@@ -311,7 +363,9 @@ const RangeVisualization = ({ currentNode, currentRange, comparison }) => {
 
         <div className="flex items-center justify-between text-sm">
           <div className="text-gray-400">BST Rule:</div>
-          <div className="font-mono text-amber-400">min &lt; node.val &lt; max</div>
+          <div className="font-mono text-amber-400">
+            min &lt; node.val &lt; max
+          </div>
         </div>
       </div>
     </div>
@@ -331,32 +385,39 @@ const ValidateBST = () => {
   // Build tree from level order input
   const buildTreeFromLevelOrder = (values) => {
     if (values.length === 0) return null;
-    
-    const nodes = values.map(val => val === null ? null : new BinaryTreeNode(val));
-    
+
+    const nodes = values.map((val) =>
+      val === null ? null : new BinaryTreeNode(val)
+    );
+
     for (let i = 0; i < nodes.length; i++) {
       if (nodes[i] !== null) {
         const leftIndex = 2 * i + 1;
         const rightIndex = 2 * i + 2;
-        
+
         if (leftIndex < nodes.length) nodes[i].left = nodes[leftIndex];
         if (rightIndex < nodes.length) nodes[i].right = nodes[rightIndex];
       }
     }
-    
+
     return nodes[0];
   };
 
   const generateHistory = useCallback(() => {
-    const values = treeInput.split(",").map(s => {
-      const trimmed = s.trim();
-      return trimmed === "null" || trimmed === "" ? null : parseInt(trimmed);
-    }).filter(val => val !== undefined);
+    const values = treeInput
+      .split(",")
+      .map((s) => {
+        const trimmed = s.trim();
+        return trimmed === "null" || trimmed === "" ? null : parseInt(trimmed);
+      })
+      .filter((val) => val !== undefined);
 
     const root = buildTreeFromLevelOrder(values);
-    
+
     if (!root) {
-      alert("Invalid tree input. Please provide comma-separated values in level order.");
+      alert(
+        "Invalid tree input. Please provide comma-separated values in level order."
+      );
       return;
     }
 
@@ -364,7 +425,13 @@ const ValidateBST = () => {
     let stepCount = 0;
     let callStack = [];
 
-    const isValidBST = (node, min = -Infinity, max = Infinity, depth = 0, side = 'root') => {
+    const isValidBST = (
+      node,
+      min = -Infinity,
+      max = Infinity,
+      depth = 0,
+      side = "root"
+    ) => {
       callStack.push({ node: node?.val, min, max, depth, side });
 
       // Base case: null node is always valid
@@ -380,7 +447,7 @@ const ValidateBST = () => {
           line: 2,
           callStack: [...callStack],
           depth,
-          side
+          side,
         });
         callStack.pop();
         return true;
@@ -389,7 +456,9 @@ const ValidateBST = () => {
       // Show current node being processed
       newHistory.push({
         step: stepCount++,
-        explanation: `Processing node ${node.val} with range [${min === -Infinity ? '-∞' : min}, ${max === Infinity ? '∞' : max}]`,
+        explanation: `Processing node ${node.val} with range [${
+          min === -Infinity ? "-∞" : min
+        }, ${max === Infinity ? "∞" : max}]`,
         tree: root,
         currentNode: node.val,
         processingNode: node.val,
@@ -397,15 +466,19 @@ const ValidateBST = () => {
         line: 4,
         callStack: [...callStack],
         depth,
-        side
+        side,
       });
 
       // Check BST condition: min < node.val < max
       const isCurrentValid = node.val > min && node.val < max;
-      
+
       newHistory.push({
         step: stepCount++,
-        explanation: `Checking BST condition: ${min === -Infinity ? '-∞' : min} < ${node.val} < ${max === Infinity ? '∞' : max} = ${isCurrentValid ? 'VALID' : 'INVALID'}`,
+        explanation: `Checking BST condition: ${
+          min === -Infinity ? "-∞" : min
+        } < ${node.val} < ${max === Infinity ? "∞" : max} = ${
+          isCurrentValid ? "VALID" : "INVALID"
+        }`,
         tree: root,
         currentNode: node.val,
         processingNode: node.val,
@@ -415,12 +488,12 @@ const ValidateBST = () => {
           leftCheck: node.val > min,
           leftValue: min,
           rightCheck: node.val < max,
-          rightValue: max
+          rightValue: max,
         },
         line: 5,
         callStack: [...callStack],
         depth,
-        side
+        side,
       });
 
       if (!isCurrentValid) {
@@ -436,7 +509,7 @@ const ValidateBST = () => {
           line: 6,
           callStack: [...callStack],
           depth,
-          side
+          side,
         });
         callStack.pop();
         return false;
@@ -445,7 +518,9 @@ const ValidateBST = () => {
       // Process left subtree with updated max
       newHistory.push({
         step: stepCount++,
-        explanation: `Checking left subtree of ${node.val} with updated range [${min === -Infinity ? '-∞' : min}, ${node.val}]`,
+        explanation: `Checking left subtree of ${
+          node.val
+        } with updated range [${min === -Infinity ? "-∞" : min}, ${node.val}]`,
         tree: root,
         currentNode: node.val,
         processingNode: null,
@@ -453,10 +528,10 @@ const ValidateBST = () => {
         line: 8,
         callStack: [...callStack],
         depth: depth + 1,
-        side: 'left'
+        side: "left",
       });
 
-      const leftValid = isValidBST(node.left, min, node.val, depth + 1, 'left');
+      const leftValid = isValidBST(node.left, min, node.val, depth + 1, "left");
 
       if (!leftValid) {
         callStack.pop();
@@ -466,7 +541,9 @@ const ValidateBST = () => {
       // Process right subtree with updated min
       newHistory.push({
         step: stepCount++,
-        explanation: `Checking right subtree of ${node.val} with updated range [${node.val}, ${max === Infinity ? '∞' : max}]`,
+        explanation: `Checking right subtree of ${
+          node.val
+        } with updated range [${node.val}, ${max === Infinity ? "∞" : max}]`,
         tree: root,
         currentNode: node.val,
         processingNode: null,
@@ -474,19 +551,25 @@ const ValidateBST = () => {
         line: 9,
         callStack: [...callStack],
         depth: depth + 1,
-        side: 'right'
+        side: "right",
       });
 
-      const rightValid = isValidBST(node.right, node.val, max, depth + 1, 'right');
+      const rightValid = isValidBST(
+        node.right,
+        node.val,
+        max,
+        depth + 1,
+        "right"
+      );
 
       // Final result for this subtree
       const finalValid = leftValid && rightValid;
-      
+
       newHistory.push({
         step: stepCount++,
-        explanation: finalValid ? 
-          `✅ Subtree rooted at ${node.val} is valid BST` : 
-          `❌ Subtree rooted at ${node.val} is invalid BST`,
+        explanation: finalValid
+          ? `✅ Subtree rooted at ${node.val} is valid BST`
+          : `❌ Subtree rooted at ${node.val} is invalid BST`,
         tree: root,
         currentNode: node.val,
         processingNode: node.val,
@@ -495,7 +578,7 @@ const ValidateBST = () => {
         line: 10,
         callStack: [...callStack],
         depth,
-        side
+        side,
       });
 
       callStack.pop();
@@ -506,14 +589,14 @@ const ValidateBST = () => {
 
     newHistory.push({
       step: stepCount++,
-      explanation: result ? 
-        "🎉 The entire tree is a VALID Binary Search Tree!" : 
-        "💥 The tree is NOT a valid Binary Search Tree!",
+      explanation: result
+        ? "🎉 The entire tree is a VALID Binary Search Tree!"
+        : "💥 The tree is NOT a valid Binary Search Tree!",
       tree: root,
       isComplete: true,
       isValid: result,
       line: 11,
-      callStack: []
+      callStack: [],
     });
 
     setHistory(newHistory);
@@ -553,10 +636,10 @@ const ValidateBST = () => {
 
   const generateRandomTree = () => {
     const size = Math.floor(Math.random() * 8) + 5; // 5-12 nodes
-    
+
     // Generate a valid BST (sorted array converted to BST)
     const sortedValues = Array.from({ length: size }, (_, i) => i + 1);
-    
+
     // Build balanced BST from sorted array
     const buildBalancedBST = (arr, start, end) => {
       if (start > end) return null;
@@ -566,9 +649,13 @@ const ValidateBST = () => {
       node.right = buildBalancedBST(arr, mid + 1, end);
       return node;
     };
-    
-    const balancedRoot = buildBalancedBST(sortedValues, 0, sortedValues.length - 1);
-    
+
+    const balancedRoot = buildBalancedBST(
+      sortedValues,
+      0,
+      sortedValues.length - 1
+    );
+
     // Convert to level order for input
     const levelOrder = [];
     const queue = [balancedRoot];
@@ -582,8 +669,8 @@ const ValidateBST = () => {
         levelOrder.push(null);
       }
     }
-    
-    setTreeInput(levelOrder.filter(val => val !== null).join(','));
+
+    setTreeInput(levelOrder.filter((val) => val !== null).join(","));
     resetVisualization();
   };
 
@@ -621,7 +708,14 @@ const ValidateBST = () => {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, isPlaying, stepBackward, stepForward, playAnimation, pauseAnimation]);
+  }, [
+    isLoaded,
+    isPlaying,
+    stepBackward,
+    stepForward,
+    playAnimation,
+    pauseAnimation,
+  ]);
 
   const state = history[currentStep] || {};
   const {
@@ -635,8 +729,8 @@ const ValidateBST = () => {
     comparison,
     callStack = [],
     depth = 0,
-    side = 'root',
-    isComplete = false
+    side = "root",
+    isComplete = false,
   } = state;
 
   const CodeLine = ({ lineNum, content }) => (
@@ -650,7 +744,11 @@ const ValidateBST = () => {
       <span className="text-gray-500 select-none inline-block w-8 text-right mr-3">
         {lineNum}
       </span>
-      <span className={line === lineNum ? "text-green-300 font-semibold" : "text-gray-300"}>
+      <span
+        className={
+          line === lineNum ? "text-green-300 font-semibold" : "text-gray-300"
+        }
+      >
         {content}
       </span>
     </div>
@@ -697,7 +795,8 @@ const ValidateBST = () => {
           Validate Binary Search Tree
         </h1>
         <p className="text-lg text-gray-400 mt-2">
-          Determine if a binary tree is a valid binary search tree (LeetCode #98)
+          Determine if a binary tree is a valid binary search tree (LeetCode
+          #98)
         </p>
       </header>
 
@@ -705,7 +804,10 @@ const ValidateBST = () => {
       <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl shadow-2xl border border-gray-700/50 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
         <div className="flex flex-col md:flex-row gap-4 flex-grow">
           <div className="flex items-center gap-4 flex-grow">
-            <label htmlFor="tree-input" className="font-medium text-gray-300 font-mono hidden md:block">
+            <label
+              htmlFor="tree-input"
+              className="font-medium text-gray-300 font-mono hidden md:block"
+            >
               Tree (Level Order):
             </label>
             <input
@@ -719,7 +821,7 @@ const ValidateBST = () => {
             />
           </div>
         </div>
-        
+
         <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
           {!isLoaded ? (
             <>
@@ -746,7 +848,7 @@ const ValidateBST = () => {
                 >
                   <SkipBack size={20} />
                 </button>
-                
+
                 {!isPlaying ? (
                   <button
                     onClick={playAnimation}
@@ -817,9 +919,9 @@ const ValidateBST = () => {
               <pre className="text-sm">
                 <code className="font-mono leading-relaxed block">
                   {bstValidationCode.map((codeLine) => (
-                    <CodeLine 
-                      key={codeLine.line} 
-                      lineNum={codeLine.line} 
+                    <CodeLine
+                      key={codeLine.line}
+                      lineNum={codeLine.line}
                       content={codeLine.content}
                     />
                   ))}
@@ -836,8 +938,13 @@ const ValidateBST = () => {
                 </h4>
                 <div className="space-y-1 max-h-24 overflow-y-auto">
                   {callStack.map((call, idx) => (
-                    <div key={idx} className="text-xs font-mono bg-gray-800/50 p-1 rounded">
-                      {call.side}: node={call.node}, range=[{call.min === -Infinity ? '-∞' : call.min}, {call.max === Infinity ? '∞' : call.max}]
+                    <div
+                      key={idx}
+                      className="text-xs font-mono bg-gray-800/50 p-1 rounded"
+                    >
+                      {call.side}: node={call.node}, range=[
+                      {call.min === -Infinity ? "-∞" : call.min},{" "}
+                      {call.max === Infinity ? "∞" : call.max}]
                     </div>
                   ))}
                 </div>
@@ -848,18 +955,18 @@ const ValidateBST = () => {
           {/* Enhanced Visualization Panels */}
           <div className="lg:col-span-2 space-y-6">
             {/* Tree Visualization */}
-            <TreeVisualization 
+            <TreeVisualization
               tree={tree}
               traversalState={{
                 currentNode: processingNode,
                 processingNode,
                 nodeValidity,
-                nodeRanges
+                nodeRanges,
               }}
             />
 
             {/* Range Visualization */}
-            <RangeVisualization 
+            <RangeVisualization
               currentNode={currentNode}
               currentRange={currentRange}
               comparison={comparison}
@@ -899,7 +1006,9 @@ const ValidateBST = () => {
                       <span className="font-mono text-xl">INVALID</span>
                     </div>
                   ) : (
-                    <div className="text-gray-400 font-mono text-lg">Checking...</div>
+                    <div className="text-gray-400 font-mono text-lg">
+                      Checking...
+                    </div>
                   )}
                 </div>
               </div>
@@ -912,12 +1021,18 @@ const ValidateBST = () => {
                 <div className="text-center">
                   {isComplete ? (
                     isValid ? (
-                      <div className="text-green-400 font-mono text-xl">VALID BST</div>
+                      <div className="text-green-400 font-mono text-xl">
+                        VALID BST
+                      </div>
                     ) : (
-                      <div className="text-red-400 font-mono text-xl">INVALID BST</div>
+                      <div className="text-red-400 font-mono text-xl">
+                        INVALID BST
+                      </div>
                     )
                   ) : (
-                    <div className="text-gray-400 font-mono text-lg">In Progress</div>
+                    <div className="text-gray-400 font-mono text-lg">
+                      In Progress
+                    </div>
                   )}
                 </div>
               </div>
@@ -948,17 +1063,23 @@ const ValidateBST = () => {
                 </h4>
                 <div className="space-y-3">
                   <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">O(N)</strong>
+                    <strong className="text-teal-300 font-mono block mb-1">
+                      O(N)
+                    </strong>
                     <p className="text-gray-400 text-sm">
-                      Each node is visited exactly once. The algorithm performs 
-                      constant-time operations at each node during the DFS traversal.
+                      Each node is visited exactly once. The algorithm performs
+                      constant-time operations at each node during the DFS
+                      traversal.
                     </p>
                   </div>
                   <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">Why O(N)?</strong>
+                    <strong className="text-teal-300 font-mono block mb-1">
+                      Why O(N)?
+                    </strong>
                     <p className="text-gray-400 text-sm">
-                      The recursive DFS visits all N nodes exactly once, 
-                      making the time complexity linear with respect to the number of nodes.
+                      The recursive DFS visits all N nodes exactly once, making
+                      the time complexity linear with respect to the number of
+                      nodes.
                     </p>
                   </div>
                 </div>
@@ -970,17 +1091,21 @@ const ValidateBST = () => {
                 </h4>
                 <div className="space-y-3">
                   <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">O(H)</strong>
+                    <strong className="text-teal-300 font-mono block mb-1">
+                      O(H)
+                    </strong>
                     <p className="text-gray-400 text-sm">
-                      The recursion stack uses O(H) space where H is the height of the tree.
-                      For balanced trees, H = O(log N).
+                      The recursion stack uses O(H) space where H is the height
+                      of the tree. For balanced trees, H = O(log N).
                     </p>
                   </div>
                   <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">Worst Case</strong>
+                    <strong className="text-teal-300 font-mono block mb-1">
+                      Worst Case
+                    </strong>
                     <p className="text-gray-400 text-sm">
-                      For a skewed tree, the recursion depth is O(N), 
-                      making space complexity O(N) in worst case.
+                      For a skewed tree, the recursion depth is O(N), making
+                      space complexity O(N) in worst case.
                     </p>
                   </div>
                 </div>
@@ -995,15 +1120,20 @@ const ValidateBST = () => {
           </div>
           <div className="text-gray-600 text-sm max-w-2xl mx-auto space-y-2">
             <div className="flex items-center justify-center gap-4 text-xs mb-4">
-              <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full">Level Order: root, left, right, ...</span>
-              <span className="bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full">Use 'null' for empty nodes</span>
+              <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full">
+                Level Order: root, left, right, ...
+              </span>
+              <span className="bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full">
+                Use 'null' for empty nodes
+              </span>
             </div>
             <p>
               <strong>Example:</strong> "5,3,7,2,4,6,8" represents a valid BST
             </p>
             <p className="text-gray-500">
-              The algorithm uses DFS with range checking to validate the BST property:
-              left subtree values &lt; node value &lt; right subtree values
+              The algorithm uses DFS with range checking to validate the BST
+              property: left subtree values &lt; node value &lt; right subtree
+              values
             </p>
           </div>
         </div>
