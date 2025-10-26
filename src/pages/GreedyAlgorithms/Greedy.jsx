@@ -13,7 +13,8 @@ import {
   Target,
   Circle,
   GitBranch,
-  Banknote
+  Banknote, 
+  Briefcase
 } from "lucide-react";
 import BestTimeStockII from "./BestTimeStockII";
 import TwoCityScheduling from "./TwoCityScheduling";
@@ -123,14 +124,35 @@ const AlgorithmList = ({ navigate }) => {
       timeComplexity: "O(n)",
       platforms: ["LeetCode #134"],
       tags: ["Circular Route", "Optimization"]
+    },
+    {
+      name: "Job Scheduling",
+      number: "1235",
+      icon: Briefcase,
+      description: "Maximize profit by scheduling jobs with deadlines and profits.",
+      page: "JobScheduling",
+      difficulty: "Hard",
+      tier: "Tier 3",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-rose-500 to-pink-500",
+      iconColor: "text-rose-400",
+      iconBg: "bg-rose-500/20",
+      borderColor: "border-rose-500/30",
+      technique: "DP + Binary Search",
+      timeComplexity: "O(n log n)",
+      platforms: ["LeetCode #1235"],
+      tags: ["Scheduling", "DP", "Binary Search"]
     }
   ];
 
   const filteredAlgorithms = algorithms.filter(algo => {
     if (filter === "all") return true;
     if (filter === "beginner") return algo.tier === "Tier 1";
-    if (filter === "easy") return algo.tier === "Tier 2";
-    return true;
+    if (filter === "medium") return algo.tier === "Tier 2";
+    if (filter === "hard") return algo.tier === "Tier 3";
+    return false;
   });
 
   return (
@@ -207,14 +229,24 @@ const AlgorithmList = ({ navigate }) => {
           Beginner (Tier 1)
         </button>
         <button
-          onClick={() => setFilter("easy")}
+          onClick={() => setFilter("medium")}
           className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
-            filter === "easy"
+            filter === "medium"
               ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
           }`}
         >
           Medium (Tier 2)
+        </button>
+        <button
+          onClick={() => setFilter("hard")}
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
+            filter === "hard"
+              ? "bg-red-500/20 border-red-500/50 text-red-300"
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+          }`}
+        >
+          Hard (Tier 3)
         </button>
       </div>
 
@@ -373,18 +405,6 @@ const JumpGameIIPlaceholder = ({ navigate }) => (
   </div>
 );
 
-const GasStationPlaceholder = ({ navigate }) => (
-  <div className="text-center py-20">
-    <div className="text-2xl text-gray-400">Gas Station Visualizer - Coming Soon</div>
-    <button 
-      onClick={() => navigate("home")}
-      className="mt-4 px-6 py-2 bg-amber-500 hover:bg-amber-600 rounded-lg transition-colors"
-    >
-      Back to Problems
-    </button>
-  </div>
-);
-
 const GreedyPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
@@ -402,6 +422,8 @@ const GreedyPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <GasStationPlaceholder navigate={navigate} />;
       case "LemonadeChange":
         return <LemonadeChange navigate={navigate} />;
+      case "JobScheduling":
+        return <JobScheduling navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

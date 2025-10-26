@@ -25,6 +25,7 @@ import {
   Type,
   ScanLine,
   Search,
+  Calculator,
   Hash,
 } from "lucide-react";
 
@@ -50,6 +51,7 @@ import BacktrackingPage from "./Backtracking/Backtracking.jsx";
 import StringPage from "./Strings/Strings.jsx";
 import BitPage from "./BitManipulation/BitManipulation.jsx";
 import HashingPage from "./Hashing/Hashing.jsx";
+import MathsMiscPage from "./MathematicalMiscellaneous/MathematicalMiscellaneous.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -274,6 +276,17 @@ const AlgorithmCategories = ({ navigate }) => {
         borderColor: "border-teal-500/30",
         iconColor: "text-teal-400",
       },
+      {
+        name: "Mathematical & Miscellaneous",
+        icon: Calculator,
+        description:
+          "Master the numerical foundations and essential utilities for efficient problem-solving.",
+        page: "MathsMiscPage",
+        gradient: "from-blue-500 to-cyan-600",
+        iconBg: "bg-blue-500/20",
+        borderColor: "border-blue-500/30",
+        iconColor: "text-blue-400",
+      },
     ],
     []
   );
@@ -289,7 +302,7 @@ const AlgorithmCategories = ({ navigate }) => {
     const problemItems = PROBLEM_CATALOG.map((p) => ({
       type: "problem",
       ...p,
-    }));
+    })).filter(p => p.category && p.subpage); // Ensure items are valid
     return [...categoryItems, ...problemItems];
   }, [categories]);
 
@@ -706,6 +719,8 @@ const HomePage = () => {
         );  
       case "DynamicProgramming":
         return <DPPage navigate={navigate} initialPage={initialSubPage} />;
+      case "MathsMiscPage":
+        return <MathsMiscPage navigate={navigate} initialPage={initialSubPage} />;  
       case "BitManipulation":
         return <BitPage navigate={navigate} initialPage={initialSubPage} />;
       case "home":

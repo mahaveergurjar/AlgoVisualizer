@@ -13,6 +13,7 @@ import {
   BarChart3,
   Trees,
   Target,
+  FlipVertical,
 } from "lucide-react";
 
 // --- Import your specific sorting algorithm visualizer components here ---
@@ -31,8 +32,9 @@ import InsertionSortVisualizer from "./InsertionSort";
 import RadixSortVisualizer from  "./RadixSort";
 import CountingSortVisualizer from "./CountingSort";
 import HeapSortVisualizer from "./HeapSort";
-import  SelectionSortVisualizer from "./SelectionSort";
+import SelectionSortVisualizer from "./SelectionSort";
 import ShellSortVisualizer from "./ShellSort";
+import PancakeSortVisualizer from "./PancakeSort";
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -197,6 +199,24 @@ const AlgorithmList = ({ navigate }) => {
   borderColor: "border-teal-500/30",
   technique: "Gap Insertion",
   timeComplexity: "O(n^3/2)",
+},
+{
+  name: "Pancake Sort",
+  number: "N/A",
+  icon: FlipVertical,
+  description:
+    "A sorting algorithm that sorts by repeatedly flipping the prefix of the array to move the largest unsorted element to the end.",
+  page: "PancakeSort",
+  difficulty: "Medium",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-orange-500 to-amber-500",
+  iconColor: "text-orange-400",
+  iconBg: "bg-orange-500/20",
+  borderColor: "border-orange-500/30",
+  technique: "Flipping",
+  timeComplexity: "O(n²)",
 },
   ];
 
@@ -363,9 +383,11 @@ const SortingPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "HeapSort":
         return <HeapSortVisualizer navigate={navigate} />; 
       case "SelectionSort":
-        return <SelectionSortVisualizer navigate={navigate} />;  
+        return <SelectionSortVisualizer navigate={navigate} />;
       case "ShellSort":
         return <ShellSortVisualizer navigate={navigate} />;
+      case "PancakeSort":
+        return <PancakeSortVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
