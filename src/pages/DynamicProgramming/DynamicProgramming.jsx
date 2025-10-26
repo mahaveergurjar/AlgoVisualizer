@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import {
   ArrowLeft,
-  Brackets,
+  Brackets, // Used as the main DP icon
   Code2,
   Clock,
   TrendingUp,
   Star,
   Zap,
+  ArrowRight, // Use ArrowRight for 'Solve' button
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
@@ -15,10 +16,11 @@ import LCSVisualizer from "./LongestCommonSubsequence.jsx";
 import CoinChangeVisualizer from "./CoinChange.jsx";
 import EditDistanceVisualizer from "./EditDistance.jsx";
 import LISVisualizer from "./LISubsequence.jsx";
+// NOTE: Add more visualizer imports here as you create them!
 
 // --- ✅ Import the master catalog and your StarButton ---
-import { problems as PROBLEM_CATALOG } from '../../search/catalog';
-import StarButton from '../../components/StarButton';
+import { problems as PROBLEM_CATALOG } from "../../search/catalog";
+import StarButton from "../../components/StarButton";
 
 // ✅ (Optional but Recommended) Default values for visual properties
 const defaultVisuals = {
@@ -27,15 +29,22 @@ const defaultVisuals = {
   borderColor: "border-gray-600",
   iconBg: "bg-gray-700/20",
   iconColor: "text-gray-300",
+  technique: "Memoization/Tabulation",
+  timeComplexity: "O(n²)",
+  difficulty: "N/A",
+  difficultyColor: "text-gray-400",
+  difficultyBg: "bg-gray-400/10",
+  difficultyBorder: "border-gray-400/30",
 };
 
+// --- AlgorithmList Component for Dynamic Programming ---
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   // ✅ Get DP problems directly from the master catalog
-  const dpAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'DynamicProgramming');
-
-  // ❌ The local 'algorithms' array has been DELETED.
+  const dpAlgorithms = PROBLEM_CATALOG.filter(
+    (p) => p.category === "Dynamic Programming"
+  );
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -57,11 +66,11 @@ const AlgorithmList = ({ navigate }) => {
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
             Master classic dynamic programming problems with techniques like{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
-              0/1 Knapsack
+              Memoization
             </span>{" "}
             and{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-              subset sum optimization
+              Tabulation
             </span>
             .
           </p>
@@ -79,7 +88,7 @@ const AlgorithmList = ({ navigate }) => {
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-3.5 w-3.5 text-green-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  Multiple Techniques
+                  State Management
                 </span>
               </div>
             </div>
@@ -90,64 +99,83 @@ const AlgorithmList = ({ navigate }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
         {dpAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
+          // IMPORTANT: Use the icon specified in the catalog, or the default DP icon
           const Icon = algo.icon || defaultVisuals.icon;
 
           return (
             <div
-              key={algo.subpage} // ✅ Use subpage
-              onClick={() => navigate(algo.subpage)} // ✅ Use subpage
+              key={algo.subpage}
+              onClick={() => navigate(algo.subpage)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className="group relative cursor-pointer animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient || defaultVisuals.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${
+                  algo.gradient || defaultVisuals.gradient
+                } opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
               />
 
               <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor || defaultVisuals.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${
+                  algo.borderColor || defaultVisuals.borderColor
+                } transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-3 ${algo.iconBg || defaultVisuals.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                      className={`p-3 ${
+                        algo.iconBg || defaultVisuals.iconBg
+                      } rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${isHovered ? "text-white" : (algo.iconColor || defaultVisuals.iconColor)
-                          } transition-colors duration-300`}
+                        className={`h-10 w-10 ${
+                          isHovered
+                            ? "text-white"
+                            : algo.iconColor || defaultVisuals.iconColor
+                        } transition-colors duration-300`}
                       />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-xs font-mono text-gray-500">
-                          #{algo.number}
+                          #{algo.number || "N/A"}
                         </span>
                         <div
-                          className={`px-2 py-0.5 rounded-md text-xs font-bold ${algo.difficultyBg} ${algo.difficultyColor} border ${algo.difficultyBorder}`}
+                          className={`px-2 py-0.5 rounded-md text-xs font-bold ${
+                            algo.difficultyBg || defaultVisuals.difficultyBg
+                          } ${
+                            algo.difficultyColor ||
+                            defaultVisuals.difficultyColor
+                          } border ${
+                            algo.difficultyBorder ||
+                            defaultVisuals.difficultyBorder
+                          }`}
                         >
-                          {algo.difficulty}
+                          {algo.difficulty || defaultVisuals.difficulty}
                         </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"
-                          }`}
+                        className={`text-xl font-bold transition-colors duration-300 ${
+                          isHovered ? "text-white" : "text-gray-200"
+                        }`}
                       >
-                        {algo.label} {/* ✅ Use label */}
+                        {algo.label}
                       </h2>
                     </div>
                   </div>
 
-                  {/* ✅ Add the StarButton here */}
+                  {/* StarButton */}
                   <div onClick={(e) => e.stopPropagation()}>
                     <StarButton problemId={algo.subpage} />
                   </div>
-
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"
-                    }`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
+                    isHovered ? "text-gray-300" : "text-gray-400"
+                  }`}
                 >
                   {algo.description}
                 </p>
@@ -157,28 +185,29 @@ const AlgorithmList = ({ navigate }) => {
                     <div className="flex items-center gap-1.5">
                       <Star className="h-4 w-4 text-amber-400" />
                       <span className="text-xs font-medium text-gray-400">
-                        {algo.technique}
+                        {algo.technique || defaultVisuals.technique}
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-4 w-4 text-blue-400" />
                       <span className="text-xs font-mono text-gray-400">
-                        {algo.timeComplexity}
+                        {algo.timeComplexity || defaultVisuals.timeComplexity}
                       </span>
                     </div>
                   </div>
 
                   <div
-                    className={`transition-all duration-300 ${isHovered
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 -translate-x-2"
-                      }`}
+                    className={`transition-all duration-300 ${
+                      isHovered
+                        ? "opacity-100 translate-x-0"
+                        : "opacity-0 -translate-x-2"
+                    }`}
                   >
                     <div className="flex items-center gap-1">
                       <span className="text-xs font-medium text-gray-400">
                         Solve
                       </span>
-                      <ArrowLeft className="h-4 w-4 text-gray-400 rotate-180" />
+                      <ArrowRight className="h-4 w-4 text-gray-400" />
                     </div>
                   </div>
                 </div>
@@ -199,13 +228,16 @@ const AlgorithmList = ({ navigate }) => {
     </div>
   );
 };
+// --- End of AlgorithmList Component ---
 
+// --- DPPage Component ---
 const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
+      // ✅ All DP Visualizers from your imports are listed here
       case "KnapSack":
         return <KnapsackVisualizer navigate={navigate} />;
       case "LCS":
@@ -216,8 +248,10 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <EditDistanceVisualizer navigate={navigate} />;
       case "LIS":
         return <LISVisualizer navigate={navigate} />;
+      // NOTE: Add a case for every visualizer you import!
       case "home":
       default:
+        // This is the component that displays all cards
         return <AlgorithmList navigate={navigate} />;
     }
   };
