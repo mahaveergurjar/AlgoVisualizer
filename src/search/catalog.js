@@ -77,6 +77,7 @@ export const problems = [
   // Pathfinding problems
   { label: "Rat in Maze", category: "Pathfinding", subpage: "RatInMaze", keywords: ["pathfinding", "maze", "rat", "bfs", "dfs", "backtracking", "graph traversal"]},
   { label: "Flood Fill", category: "Pathfinding", subpage: "FloodFill", keywords: ["pathfinding", "flood fill", "bucket tool", "bfs", "graph traversal"]},
+  { label: "Color Islands", category: "Pathfinding", subpage: "ColorIslands", keywords: ["pathfinding", "color islands", "flood fill", "200"] },
   
   // Recursion problems
   { label: "Subset Sum", category: "Recursion", subpage: "SubsetSumVisualizer", keywords: ["recursion", "subset", "sum", "backtracking", "dynamic programming"] },
@@ -163,15 +164,13 @@ export const problems = [
     label: "Counting Bits", 
     category: "BitManipulation", 
     subpage: "CountingBits", 
-    keywords: ["bit manipulation", "counting", "bits", "dp", "338"]
+    keywords: ["bit manipulation", "counting", "bits", "dp", "338"] 
   },
-  // Dynamic Programming 
-  { 
-    label: "Knapsack Problem", 
-    category: "DynamicProgramming", 
-    subpage: "KnapsackVisualizer", 
-    keywords: ["dynamic programming", "knapsack", "dp", "dynamic"]
-  },
-  
 
+  // Greedy Algorithms
+  { label: "Best Time to Buy and Sell Stock II", category: "GreedyPage", subpage: "BestTimeStockII", keywords: ["greedy", "stock", "profit", "122"] },
+  { label: "Two City Scheduling", category: "GreedyPage", subpage: "TwoCityScheduling", keywords: ["greedy", "scheduling", "cost", "1029"] },
+  { label: "Jump Game II", category: "GreedyPage", subpage: "JumpGameII", keywords: ["greedy", "array", "jump", "45"] },
+  { label: "Gas Station", category: "GreedyPage", subpage: "GasStation", keywords: ["greedy", "circuit", "gas", "134"] },
+  { label: "Job Scheduling", category: "GreedyPage", subpage: "JobScheduling", keywords: ["greedy", "dp", "scheduling", "profit", "1235"] },
 ];

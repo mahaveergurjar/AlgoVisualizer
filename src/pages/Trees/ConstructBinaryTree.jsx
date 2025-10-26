@@ -1,973 +1,1104 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Code, Clock, GitMerge, Layers, TreeDeciduous } from "lucide-react";
+// ConstructTree.jsx
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import {
+  Code,
+  CheckCircle,
+  BarChart3,
+  Clock,
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  RotateCcw,
+  Zap,
+  Cpu,
+  TreePine,
+  GitBranch,
+  GitMerge,
+  Target,
+  Gauge,
+  Maximize2,
+  ArrowRight,
+  ArrowLeft,
+  Split,
+  List,
+} from "lucide-react";
 
-const ConstructBinaryTree = () => {
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
-  const [preorderInput, setPreorderInput] = useState("3,9,20,15,7");
-  const [inorderInput, setInorderInput] = useState("9,3,15,20,7");
-  const [isLoaded, setIsLoaded] = useState(false);
+// BinaryTreeNode class for building the tree
+class BinaryTreeNode {
+  constructor(val, left = null, right = null) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
+}
 
-  const generateHistory = useCallback((preorder, inorder) => {
-    const newHistory = [];
-    let nodeCounter = 0;
-    let nodes = [];
-    let edges = [];
-
-    const addState = (props) =>
-      newHistory.push({
-        nodes: JSON.parse(JSON.stringify(nodes)),
-        edges: JSON.parse(JSON.stringify(edges)),
-        callStack: [],
-        explanation: "",
-        preorder,
-        inorder,
-        nodesCreatedSoFar: nodes.length,
-        ...props,
-      });
-
-    function build(
-      prelo,
-      prehi,
-      inlo,
-      inhi,
-      parentId,
-      callStack,
-      x,
-      y,
-      xOffset
-    ) {
-      const call = { prelo, prehi, inlo, inhi, id: Math.random() };
-      const newCallStack = [...callStack, call];
-
-      addState({
-        callStack: newCallStack,
-        line: 4,
-        explanation: `Recursive call: preorder[${prelo}:${prehi}], inorder[${inlo}:${inhi}]`,
-        highlightNode: null,
-      });
-
-      if (prelo > prehi) {
-        addState({
-          callStack: newCallStack,
-          line: 5,
-          explanation: "Base case reached: range is invalid, returning null.",
-          highlightNode: null,
-        });
-        return null;
-      }
-
-      const rootVal = preorder[prelo];
-      const nodeId = nodeCounter++;
-
-      addState({
-        callStack: newCallStack,
-        line: 6,
-        currentRootValue: rootVal,
-        currentRootIndex: prelo,
-        explanation: `Creating node with value ${rootVal} from preorder[${prelo}]`,
-        highlightNode: null,
-        showNodesUpTo: nodes.length - 1,
-      });
-
-      const newNode = {
-        id: nodeId,
-        data: rootVal,
-        x,
-        y,
-        left: null,
-        right: null,
-      };
-      nodes.push(newNode);
-
-      if (parentId !== null) {
-        edges.push({ from: parentId, to: nodeId });
-      }
-
-      addState({
-        callStack: newCallStack,
-        nodes,
-        edges,
-        line: 6,
-        currentRootValue: rootVal,
-        currentRootIndex: prelo,
-        explanation: `Node ${rootVal} created and added to tree at position (${Math.round(
-          x
-        )}, ${Math.round(y)})`,
-        highlightNode: nodeId,
-        justCreatedNode: nodeId,
-        showNodesUpTo: nodes.length,
-      });
-
-      if (prelo === prehi) {
-        addState({
-          callStack: newCallStack,
-          nodes,
-          edges,
-          line: 7,
-          explanation: `Leaf node detected. Returning node ${rootVal}.`,
-          highlightNode: nodeId,
-        });
-        return newNode;
-      }
-
-      let i = inlo;
-      addState({
-        callStack: newCallStack,
-        nodes,
-        edges,
-        line: 8,
-        explanation: `Searching for ${rootVal} in inorder array from index ${inlo} to ${inhi}`,
-        highlightNode: nodeId,
-      });
-
-      while (i <= inhi) {
-        addState({
-          callStack: newCallStack,
-          nodes,
-          edges,
-          line: 9,
-          i,
-          explanation: `Checking inorder[${i}] = ${inorder[i]}`,
-          highlightNode: nodeId,
-        });
-
-        if (inorder[i] === rootVal) {
-          addState({
-            callStack: newCallStack,
-            nodes,
-            edges,
-            line: 10,
-            i,
-            explanation: `Found root ${rootVal} at index ${i} in inorder array!`,
-            highlightNode: nodeId,
-          });
-          break;
-        }
-        i++;
-      }
-
-      let leftCount = i - inlo;
-      addState({
-        callStack: newCallStack,
-        nodes,
-        edges,
-        line: 14,
-        i,
-        explanation: `Left subtree size calculated: ${i} - ${inlo} = ${leftCount} nodes`,
-        highlightNode: nodeId,
-      });
-
-      if (leftCount > 0) {
-        addState({
-          callStack: newCallStack,
-          nodes,
-          edges,
-          line: 15,
-          i,
-          explanation: `Building left subtree: preorder[${prelo + 1}:${
-            prelo + leftCount
-          }], inorder[${inlo}:${i - 1}]`,
-          highlightNode: nodeId,
-        });
-
-        newNode.left = build(
-          prelo + 1,
-          prelo + leftCount,
-          inlo,
-          i - 1,
-          nodeId,
-          newCallStack,
-          x - xOffset,
-          y + 100,
-          xOffset / 2
-        );
-      }
-
-      if (i < inhi) {
-        addState({
-          callStack: newCallStack,
-          nodes,
-          edges,
-          line: 16,
-          i,
-          explanation: `Building right subtree: preorder[${
-            prelo + leftCount + 1
-          }:${prehi}], inorder[${i + 1}:${inhi}]`,
-          highlightNode: nodeId,
-        });
-
-        newNode.right = build(
-          prelo + leftCount + 1,
-          prehi,
-          i + 1,
-          inhi,
-          nodeId,
-          newCallStack,
-          x + xOffset,
-          y + 100,
-          xOffset / 2
-        );
-      }
-
-      addState({
-        callStack: newCallStack,
-        nodes,
-        edges,
-        line: 17,
-        i,
-        explanation: `Completed building subtree rooted at ${rootVal}`,
-        highlightNode: nodeId,
-      });
-
-      return newNode;
-    }
-
-    addState({
-      line: 0,
-      explanation:
-        "Starting tree construction from preorder and inorder traversals",
-      highlightNode: null,
-    });
-
-    build(
-      0,
-      preorder.length - 1,
-      0,
-      inorder.length - 1,
-      null,
-      [],
-      450,
-      80,
-      200
-    );
-
-    addState({
-      finished: true,
-      explanation: "Tree construction complete! All nodes have been created.",
-      highlightNode: null,
-    });
-
-    setHistory(newHistory);
-    setCurrentStep(0);
-  }, []);
-
-  const loadArrays = () => {
-    const pre = preorderInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map(Number);
-    const ino = inorderInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map(Number);
-
-    if (
-      pre.some(isNaN) ||
-      ino.some(isNaN) ||
-      pre.length !== ino.length ||
-      pre.length === 0
-    ) {
-      alert(
-        "Invalid input. Ensure both are comma-separated numbers of the same length."
-      );
-      return;
-    }
-
-    setIsLoaded(true);
-    generateHistory(pre, ino);
-  };
-
-  const reset = () => {
-    setIsLoaded(false);
-    setHistory([]);
-    setCurrentStep(-1);
-  };
-
-  const stepForward = useCallback(
-    () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
-    [history.length]
-  );
-  const stepBackward = useCallback(
-    () => setCurrentStep((prev) => Math.max(prev - 1, 0)),
-    []
-  );
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") stepBackward();
-        if (e.key === "ArrowRight") stepForward();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, stepForward, stepBackward]);
-
-  const state = history[currentStep] || {};
-  const { preorder = [], inorder = [] } = state;
-
-  const colorMapping = {
-    purple: "text-purple-400",
-    cyan: "text-cyan-400",
-    "light-blue": "text-sky-300",
-    yellow: "text-yellow-300",
-    orange: "text-orange-400",
-    red: "text-red-400",
-    "light-gray": "text-gray-400",
-    green: "text-green-400",
-    "": "text-gray-200",
-  };
-
-  const CodeLine = ({ line, content }) => (
-    <div
-      className={`block rounded-md transition-colors px-2 py-1 ${
-        state.line === line
-          ? "bg-emerald-500/20 border-l-4 border-emerald-400"
-          : ""
-      }`}
-    >
-      <span className="text-gray-500 w-8 inline-block text-right pr-4 select-none">
-        {line}
-      </span>
-      {content.map((token, index) => (
-        <span key={index} className={colorMapping[token.c]}>
-          {token.t}
-        </span>
-      ))}
-    </div>
-  );
-
-  const code = [
-    {
-      l: 4,
-      c: [
-        { t: "if", c: "purple" },
-        { t: " (prelo > prehi) ", c: "" },
-        { t: "return", c: "purple" },
-        { t: " NULL;", c: "" },
-      ],
-    },
-    {
-      l: 6,
-      c: [
-        { t: "TreeNode*", c: "cyan" },
-        { t: " root = ", c: "" },
-        { t: "new", c: "purple" },
-        { t: " TreeNode(pre[prelo]);", c: "" },
-      ],
-    },
-    {
-      l: 7,
-      c: [
-        { t: "if", c: "purple" },
-        { t: " (prelo == prehi) ", c: "" },
-        { t: "return", c: "purple" },
-        { t: " root;", c: "" },
-      ],
-    },
-    {
-      l: 8,
-      c: [
-        { t: "int", c: "cyan" },
-        { t: " i = inlo;", c: "" },
-      ],
-    },
-    {
-      l: 9,
-      c: [
-        { t: "while", c: "purple" },
-        { t: "(i <= inhi){", c: "" },
-      ],
-    },
-    {
-      l: 10,
-      c: [
-        { t: "  if", c: "purple" },
-        { t: "(in[i] == pre[prelo]) ", c: "" },
-        { t: "break", c: "purple" },
-        { t: ";", c: "light-gray" },
-      ],
-    },
-    { l: 12, c: [{ t: "  i++;", c: "" }] },
-    { l: 13, c: [{ t: "}", c: "light-gray" }] },
-    {
-      l: 14,
-      c: [
-        { t: "int", c: "cyan" },
-        { t: " leftCount = i - inlo;", c: "" },
-      ],
-    },
-    {
-      l: 15,
-      c: [
-        {
-          t: "root->left = build(pre, prelo+1, prelo+leftCount, in, inlo, i-1);",
-          c: "",
-        },
-      ],
-    },
-    {
-      l: 16,
-      c: [
-        {
-          t: "root->right = build(pre, prelo+leftCount+1, prehi, in, i+1, inhi);",
-          c: "",
-        },
-      ],
-    },
-    {
-      l: 17,
-      c: [
-        { t: "return", c: "purple" },
-        { t: " root;", c: "" },
-      ],
-    },
-  ];
+// TreeNode Component for Visualization
+const TreeNode = ({ node, x, y, isHighlighted = false, isCurrent = false, isRoot = false }) => {
+  if (!node) return null;
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <header className="text-center mb-8">
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">
-          Binary Tree Constructor
-        </h1>
-        <p className="text-xl text-gray-400 mt-3">
-          From Preorder & Inorder Traversal (LeetCode 105)
-        </p>
-      </header>
+    <g className="transition-all duration-500 ease-out">
+      {/* Node circle */}
+      <circle
+        cx={x}
+        cy={y}
+        r={20}
+        fill={
+          isCurrent ? "#10b981" : 
+          isHighlighted ? "#f59e0b" : 
+          isRoot ? "#3b82f6" : "#6b7280"
+        }
+        stroke={isCurrent ? "#059669" : isHighlighted ? "#d97706" : isRoot ? "#1d4ed8" : "#4b5563"}
+        strokeWidth={2}
+        className="transition-all duration-300"
+      />
+      
+      {/* Node value */}
+      <text
+        x={x}
+        y={y}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        className="text-sm font-bold fill-white pointer-events-none select-none"
+      >
+        {node.val}
+      </text>
+      
+      {/* Highlight effect */}
+      {isCurrent && (
+        <circle
+          cx={x}
+          cy={y}
+          r={24}
+          fill="none"
+          stroke="#10b981"
+          strokeWidth={2}
+          strokeDasharray="4"
+          className="animate-pulse"
+        />
+      )}
+    </g>
+  );
+};
 
-      <div className="bg-gray-800 p-5 rounded-xl shadow-2xl border border-gray-700 mb-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex flex-col sm:flex-row items-center gap-4 flex-grow w-full">
-            <div className="flex items-center gap-3 w-full">
-              <label className="font-mono text-sm text-gray-300 whitespace-nowrap">
-                Preorder:
-              </label>
-              <input
-                type="text"
-                value={preorderInput}
-                onChange={(e) => setPreorderInput(e.target.value)}
-                disabled={isLoaded}
-                className="font-mono flex-grow bg-gray-900 p-2 rounded-lg border-2 border-gray-600 focus:border-emerald-500 focus:outline-none transition-colors text-white"
-                placeholder="3,9,20,15,7"
-              />
-            </div>
-            <div className="flex items-center gap-3 w-full">
-              <label className="font-mono text-sm text-gray-300 whitespace-nowrap">
-                Inorder:
-              </label>
-              <input
-                type="text"
-                value={inorderInput}
-                onChange={(e) => setInorderInput(e.target.value)}
-                disabled={isLoaded}
-                className="font-mono flex-grow bg-gray-900 p-2 rounded-lg border-2 border-gray-600 focus:border-emerald-500 focus:outline-none transition-colors text-white"
-                placeholder="9,3,15,20,7"
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {!isLoaded ? (
-              <button
-                onClick={loadArrays}
-                className="bg-gradient-to-r from-emerald-500 to-green-600 cursor-pointer hover:from-emerald-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
-              >
-                Load & Visualize
-              </button>
-            ) : (
-              <>
-                <button
-                  onClick={stepBackward}
-                  disabled={currentStep <= 0}
-                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
-                    />
-                  </svg>
-                </button>
-                <span className="font-mono text-lg w-28 text-center bg-gray-700 px-3 py-2 rounded-lg">
-                  {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
-                </span>
-                <button
-                  onClick={stepForward}
-                  disabled={currentStep >= history.length - 1}
-                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13 5l7 7-7 7M5 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
-              </>
-            )}
-            <button
-              onClick={reset}
-              className="bg-red-600 hover:bg-red-700 font-bold py-3 cursor-pointer px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
-            >
-              Reset
-            </button>
-          </div>
-        </div>
+// Tree Visualization Component
+const TreeVisualization = ({ tree, traversalState }) => {
+  const svgRef = useRef();
+  const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (svgRef.current) {
+        const { width } = svgRef.current.getBoundingClientRect();
+        setDimensions({ width: Math.min(800, width - 40), height: 400 });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
+  // Calculate tree depth for proper spacing
+  const calculateTreeDepth = (node) => {
+    if (!node) return 0;
+    return 1 + Math.max(calculateTreeDepth(node.left), calculateTreeDepth(node.right));
+  };
+
+  const calculateNodePositions = (node, level = 0, position = 0, maxPosition = 1) => {
+    if (!node) return { nodes: [], maxPosition: 1 };
+
+    const depth = calculateTreeDepth(tree);
+    const levelHeight = dimensions.height / (depth + 1);
+    const y = 60 + level * levelHeight;
+    
+    // Calculate x position based on binary tree positioning
+    const x = (position + 0.5) * (dimensions.width / Math.pow(2, level));
+
+    const leftResult = node.left ? calculateNodePositions(node.left, level + 1, position * 2, maxPosition) : { nodes: [], maxPosition };
+    const rightResult = node.right ? calculateNodePositions(node.right, level + 1, position * 2 + 1, maxPosition) : { nodes: [], maxPosition };
+
+    const nodes = [
+      {
+        node,
+        x,
+        y,
+        level,
+        isHighlighted: traversalState?.currentNode === node.val,
+        isCurrent: traversalState?.processingNode === node.val,
+        isRoot: level === 0
+      },
+      ...leftResult.nodes,
+      ...rightResult.nodes
+    ];
+
+    return { nodes, maxPosition: Math.max(position, leftResult.maxPosition, rightResult.maxPosition) };
+  };
+
+  const { nodes } = calculateNodePositions(tree);
+
+  const renderEdges = (node, parentX = null, parentY = null, level = 0, position = 0) => {
+    if (!node) return [];
+
+    const depth = calculateTreeDepth(tree);
+    const levelHeight = dimensions.height / (depth + 1);
+    const y = 60 + level * levelHeight;
+    const x = (position + 0.5) * (dimensions.width / Math.pow(2, level));
+
+    const edges = [];
+
+    if (parentX !== null && parentY !== null) {
+      edges.push(
+        <line
+          key={`edge-${node.val}-${parentX}-${parentY}`}
+          x1={parentX}
+          y1={parentY}
+          x2={x}
+          y2={y}
+          stroke="#6b7280"
+          strokeWidth={2}
+          className="transition-all duration-500"
+        />
+      );
+    }
+
+    const leftEdges = node.left ? renderEdges(node.left, x, y, level + 1, position * 2) : [];
+    const rightEdges = node.right ? renderEdges(node.right, x, y, level + 1, position * 2 + 1) : [];
+
+    return [...edges, ...leftEdges, ...rightEdges];
+  };
+
+  return (
+    <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
+      <h3 className="font-bold text-lg text-emerald-300 mb-4 flex items-center gap-2">
+        <TreePine size={20} />
+        Tree Visualization
+        {tree && (
+          <span className="text-sm text-gray-400 ml-2">
+            (Root: {tree.val}, Depth: {calculateTreeDepth(tree)})
+          </span>
+        )}
+      </h3>
+      
+      <div className="flex justify-center">
+        <svg
+          ref={svgRef}
+          width={dimensions.width}
+          height={dimensions.height}
+          className="border border-gray-600 rounded-lg bg-gray-900/50"
+        >
+          {/* Render edges first */}
+          {tree && renderEdges(tree)}
+          
+          {/* Render nodes on top */}
+          {nodes.map((nodeData, index) => (
+            <TreeNode key={`node-${nodeData.node.val}-${index}`} {...nodeData} />
+          ))}
+        </svg>
       </div>
 
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-gradient-to-br from-gray-800 to-gray-850 p-5 rounded-2xl shadow-2xl border border-gray-700 space-y-6">
-            <div>
-              <h3 className="font-bold text-2xl text-emerald-400 mb-4 pb-3 border-b border-gray-600 flex items-center gap-2">
-                <Code size={22} />
-                C++ Solution
-              </h3>
-              <pre className="text-sm overflow-auto max-h-80">
-                <code className="font-mono leading-relaxed">
-                  {code.map((l) => (
-                    <CodeLine key={l.l} line={l.l} content={l.c} />
-                  ))}
-                </code>
-              </pre>
-            </div>
-
-            <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-600">
-              <h4 className="font-mono text-sm text-cyan-300 mb-3 flex items-center gap-2">
-                <Layers size={18} />
-                Recursion Call Stack
-              </h4>
-              <div className="flex flex-col-reverse gap-2 max-h-64 overflow-y-auto">
-                {state.callStack?.length > 0 ? (
-                  state.callStack.map((call, index) => (
-                    <div
-                      key={call.id}
-                      className={`p-3 rounded-lg border-2 text-xs transition-all ${
-                        index === state.callStack.length - 1
-                          ? "bg-emerald-500/30 border-emerald-400 scale-105 shadow-lg"
-                          : "bg-gray-700/50 border-gray-600"
-                      }`}
-                    >
-                      <p className="font-bold text-emerald-300">
-                        build(pre[{call.prelo}:{call.prehi}], in[{call.inlo}:
-                        {call.inhi}])
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-gray-500 italic text-sm">
-                    No active calls
-                  </span>
-                )}
-              </div>
+      {/* Tree Info */}
+      {tree && (
+        <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+          <div className="bg-gray-700/50 p-3 rounded-lg">
+            <div className="text-gray-400">Tree Height</div>
+            <div className="font-mono text-emerald-400">
+              {calculateTreeDepth(tree)}
             </div>
           </div>
-
-          <div className="lg:col-span-2 space-y-6">
-            <div className="relative bg-gradient-to-br from-gray-800 to-gray-850 p-6 rounded-2xl border border-gray-700 shadow-2xl min-h-[500px]">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-xl text-gray-200 flex items-center gap-2">
-                  <TreeDeciduous size={24} />
-                  Binary Tree Visualization
-                </h3>
-                <div className="text-sm text-gray-400 font-mono bg-gray-700/50 px-3 py-1 rounded-lg">
-                  {state.showNodesUpTo ?? state.nodes?.length ?? 0} /{" "}
-                  {state.nodes?.length || 0} nodes visible
-                </div>
-              </div>
-
-              <div
-                className="relative bg-gray-900/30 rounded-xl p-4"
-                style={{ width: "100%", height: "450px", overflow: "auto" }}
-              >
-                <svg
-                  className="absolute top-0 left-0"
-                  style={{ width: "1000px", height: "450px" }}
-                >
-                  <defs>
-                    <linearGradient
-                      id="edge-gradient"
-                      x1="0%"
-                      y1="0%"
-                      x2="0%"
-                      y2="100%"
-                    >
-                      <stop offset="0%" stopColor="#10b981" />
-                      <stop offset="100%" stopColor="#059669" />
-                    </linearGradient>
-                  </defs>
-                  {state.edges?.map((edge, i) => {
-                    const fromNode = state.nodes.find(
-                      (n) => n.id === edge.from
-                    );
-                    const toNode = state.nodes.find((n) => n.id === edge.to);
-                    if (!fromNode || !toNode) return null;
-
-                    const showNodesUpTo =
-                      state.showNodesUpTo ?? state.nodes.length;
-                    const fromIndex = state.nodes.findIndex(
-                      (n) => n.id === edge.from
-                    );
-                    const toIndex = state.nodes.findIndex(
-                      (n) => n.id === edge.to
-                    );
-                    if (fromIndex >= showNodesUpTo || toIndex >= showNodesUpTo)
-                      return null;
-
-                    const isLeft = toNode.x < fromNode.x;
-                    const midX = (fromNode.x + toNode.x) / 2;
-                    const midY = (fromNode.y + toNode.y) / 2;
-
-                    return (
-                      <g key={i}>
-                        <line
-                          x1={fromNode.x}
-                          y1={fromNode.y + 28}
-                          x2={toNode.x}
-                          y2={toNode.y - 28}
-                          stroke="#10b981"
-                          strokeWidth="3"
-                          className="drop-shadow-lg"
-                        />
-                        <circle
-                          cx={midX}
-                          cy={midY}
-                          r="16"
-                          className="fill-gray-800 stroke-emerald-400"
-                          strokeWidth="2"
-                        />
-                        <text
-                          x={midX}
-                          y={midY + 5}
-                          className="fill-emerald-300 text-sm font-bold"
-                          textAnchor="middle"
-                        >
-                          {isLeft ? "L" : "R"}
-                        </text>
-                      </g>
-                    );
-                  })}
-                </svg>
-
-                <div
-                  className="absolute top-0 left-0"
-                  style={{ width: "1000px", height: "450px" }}
-                >
-                  {state.nodes?.map((node, nodeIndex) => {
-                    const showNodesUpTo =
-                      state.showNodesUpTo ?? state.nodes.length;
-                    if (nodeIndex >= showNodesUpTo) return null;
-
-                    const isHighlighted = state.highlightNode === node.id;
-                    const isJustCreated = state.justCreatedNode === node.id;
-
-                    return (
-                      <div
-                        key={node.id}
-                        className={`absolute transition-all duration-500 ${
-                          isJustCreated ? "animate-bounce" : ""
-                        }`}
-                        style={{
-                          left: `${node.x - 32}px`,
-                          top: `${node.y - 32}px`,
-                        }}
-                      >
-                        <div
-                          className={`w-16 h-16 flex items-center justify-center rounded-full font-mono text-xl font-bold text-white border-4 transition-all duration-300 shadow-2xl ${
-                            isHighlighted || isJustCreated
-                              ? "bg-gradient-to-br from-emerald-400 to-green-500 border-white scale-110 shadow-emerald-500/70"
-                              : "bg-gradient-to-br from-teal-600 to-emerald-600 border-emerald-400"
-                          }`}
-                        >
-                          {node.data}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="mt-4 bg-gray-900/50 p-3 rounded-lg border border-gray-600">
-                <div className="flex items-center justify-around text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-green-500 border-4 border-white rounded-full shadow-lg"></div>
-                    <span className="text-gray-300 font-semibold">
-                      Currently Processing
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-emerald-600 border-4 border-emerald-400 rounded-full shadow-lg"></div>
-                    <span className="text-gray-300 font-semibold">
-                      Completed Node
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-gray-800 to-gray-850 p-5 rounded-2xl border border-gray-700 shadow-xl space-y-5">
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-mono text-base text-gray-200 font-semibold">
-                    Preorder Traversal
-                  </h4>
-                  <span className="text-xs text-emerald-400 font-mono bg-emerald-500/20 px-2 py-1 rounded">
-                    Root → Left → Right
-                  </span>
-                </div>
-                <div className="flex gap-2 flex-wrap bg-gray-900/50 p-3 rounded-lg">
-                  {preorder.map((val, index) => {
-                    const call = state.callStack?.[state.callStack.length - 1];
-                    const isActive =
-                      call && index >= call.prelo && index <= call.prehi;
-                    const isRoot = call && index === call.prelo;
-
-                    return (
-                      <div key={index} className="flex flex-col items-center">
-                        <div
-                          className={`w-14 h-14 flex items-center justify-center rounded-lg font-mono text-base font-bold border-2 transition-all ${
-                            isRoot
-                              ? "bg-emerald-500 text-white border-emerald-300 scale-110 shadow-lg shadow-emerald-500/50"
-                              : isActive
-                              ? "bg-emerald-500/30 border-emerald-500 text-white"
-                              : "bg-gray-700 border-gray-600 text-gray-300"
-                          }`}
-                        >
-                          {val}
-                        </div>
-                        <span className="text-xs text-gray-500 mt-1">
-                          [{index}]
-                        </span>
-                        {isRoot && (
-                          <span className="text-xs text-emerald-400 font-bold mt-1">
-                            ROOT
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-                {(() => {
-                  const call = state.callStack?.[state.callStack.length - 1];
-                  if (call) {
-                    return (
-                      <div className="mt-2 text-xs text-gray-400 font-mono">
-                        Active Range: [{call.prelo}, {call.prehi}]
-                      </div>
-                    );
-                  }
-                })()}
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-mono text-base text-gray-200 font-semibold">
-                    Inorder Traversal
-                  </h4>
-                  <span className="text-xs text-amber-400 font-mono bg-amber-500/20 px-2 py-1 rounded">
-                    Left → Root → Right
-                  </span>
-                </div>
-                <div className="flex gap-2 flex-wrap bg-gray-900/50 p-3 rounded-lg">
-                  {inorder.map((val, index) => {
-                    const call = state.callStack?.[state.callStack.length - 1];
-                    const isActive =
-                      call && index >= call.inlo && index <= call.inhi;
-                    const isRoot = state.i !== undefined && index === state.i;
-                    const isLeftSubtree =
-                      state.i !== undefined &&
-                      call &&
-                      index >= call.inlo &&
-                      index < state.i;
-                    const isRightSubtree =
-                      state.i !== undefined &&
-                      call &&
-                      index > state.i &&
-                      index <= call.inhi;
-
-                    return (
-                      <div key={index} className="flex flex-col items-center">
-                        <div
-                          className={`w-14 h-14 flex items-center justify-center rounded-lg font-mono text-base font-bold border-2 transition-all ${
-                            isRoot
-                              ? "bg-amber-500 text-white border-amber-300 scale-110 shadow-lg shadow-amber-500/50"
-                              : isLeftSubtree
-                              ? "bg-blue-500/50 border-blue-400 text-white"
-                              : isRightSubtree
-                              ? "bg-purple-500/50 border-purple-400 text-white"
-                              : isActive
-                              ? "bg-emerald-500/30 border-emerald-500 text-white"
-                              : "bg-gray-700 border-gray-600 text-gray-300"
-                          }`}
-                        >
-                          {val}
-                        </div>
-                        <span className="text-xs text-gray-500 mt-1">
-                          [{index}]
-                        </span>
-                        {isRoot && (
-                          <span className="text-xs text-amber-400 font-bold mt-1">
-                            SPLIT
-                          </span>
-                        )}
-                        {isLeftSubtree && (
-                          <span className="text-xs text-blue-400 mt-1">
-                            LEFT
-                          </span>
-                        )}
-                        {isRightSubtree && (
-                          <span className="text-xs text-purple-400 mt-1">
-                            RIGHT
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-                {(() => {
-                  const call = state.callStack?.[state.callStack.length - 1];
-                  if (call && state.i !== undefined) {
-                    const leftCount = state.i - call.inlo;
-                    const rightCount = call.inhi - state.i;
-                    return (
-                      <div className="mt-2 text-xs font-mono space-y-1 bg-gray-700/30 p-2 rounded">
-                        <div className="text-gray-400">
-                          Range: [{call.inlo}, {call.inhi}] | Split at:{" "}
-                          {state.i}
-                        </div>
-                        <div className="flex gap-4">
-                          <span className="text-blue-400">
-                            Left: {leftCount} nodes
-                          </span>
-                          <span className="text-purple-400">
-                            Right: {rightCount} nodes
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  }
-                })()}
-              </div>
-
-              <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-600">
-                <h5 className="text-sm font-semibold text-gray-400 mb-3">
-                  Color Legend:
-                </h5>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-emerald-500 rounded-lg border-2 border-emerald-300"></div>
-                    <span>Current Root</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-amber-500 rounded-lg border-2 border-amber-300"></div>
-                    <span>Split Point</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-500/50 rounded-lg border-2 border-blue-400"></div>
-                    <span>Left Subtree</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-purple-500/50 rounded-lg border-2 border-purple-400"></div>
-                    <span>Right Subtree</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-gray-800 to-gray-850 p-5 rounded-2xl border border-gray-700 shadow-xl min-h-[6rem]">
-              <h3 className="text-gray-400 text-sm font-semibold mb-2">
-                Step Explanation
-              </h3>
-              <p className="text-gray-200 text-base leading-relaxed">
-                {state.explanation || 'Click "Load & Visualize" to begin'}
-              </p>
+          <div className="bg-gray-700/50 p-3 rounded-lg">
+            <div className="text-gray-400">Total Nodes</div>
+            <div className="font-mono text-emerald-400">
+              {nodes.length}
             </div>
           </div>
-
-          <div className="lg:col-span-3 bg-gradient-to-br from-gray-800 to-gray-850 p-6 rounded-2xl shadow-2xl border border-gray-700">
-            <h3 className="font-bold text-2xl text-emerald-400 mb-5 pb-3 border-b-2 border-gray-600 flex items-center gap-2">
-              <Clock size={24} />
-              Complexity Analysis
-            </h3>
-            <div className="space-y-5 text-base">
-              <div className="bg-gray-900/50 p-4 rounded-xl">
-                <h4 className="font-semibold text-emerald-300 text-lg mb-2">
-                  Time Complexity:{" "}
-                  <span className="font-mono text-teal-300">O(N²)</span>
-                </h4>
-                <p className="text-gray-300">
-                  In this implementation, for each node we create, we iterate
-                  through the inorder array to find the root's position. In the
-                  worst case of a skewed tree, this leads to a total time
-                  complexity of N + (N-1) + ... + 1, which is O(N²). This can be
-                  optimized to O(N) by using a hash map to store inorder
-                  indices.
-                </p>
-              </div>
-              <div className="bg-gray-900/50 p-4 rounded-xl">
-                <h4 className="font-semibold text-emerald-300 text-lg mb-2">
-                  Space Complexity:{" "}
-                  <span className="font-mono text-teal-300">O(N)</span>
-                </h4>
-                <p className="text-gray-300">
-                  The space is dominated by the recursion call stack. In the
-                  worst case of a skewed tree (like a linked list), the
-                  recursion depth can go up to N, leading to O(N) space. For a
-                  perfectly balanced tree, the space complexity would be O(log
-                  N) for the call stack, plus O(N) for storing the tree nodes.
-                </p>
-              </div>
-              <div className="bg-emerald-900/20 p-4 rounded-xl border border-emerald-500/30">
-                <h4 className="font-semibold text-emerald-300 text-lg mb-2">
-                  💡 Key Insights
-                </h4>
-                <ul className="list-disc list-inside text-gray-300 space-y-2">
-                  <li>Preorder's first element is always the root</li>
-                  <li>
-                    Inorder splits into left and right subtrees at the root
-                    position
-                  </li>
-                  <li>
-                    The size of the left subtree determines preorder indices for
-                    children
-                  </li>
-                  <li>
-                    Recursively apply the same logic to build left and right
-                    subtrees
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="text-center py-20">
-          <TreeDeciduous size={64} className="mx-auto text-gray-600 mb-4" />
-          <p className="text-gray-400 text-xl">
-            Load preorder and inorder arrays to begin visualization
-          </p>
         </div>
       )}
     </div>
   );
 };
 
-export default ConstructBinaryTree;
+// Array Visualization Component
+const ArrayVisualization = ({ preorder, inorder, traversalState }) => {
+  const getArrayElementStyle = (value, arrayType, index) => {
+    const isCurrent = 
+      (arrayType === 'preorder' && traversalState?.preIndex === index) ||
+      (arrayType === 'inorder' && index === traversalState?.inIndex);
+
+    const isInRange = 
+      arrayType === 'inorder' && 
+      traversalState?.inStart !== undefined && 
+      traversalState?.inEnd !== undefined &&
+      index >= traversalState.inStart && 
+      index <= traversalState.inEnd;
+
+    const isHighlighted = 
+      traversalState?.currentRoot === value;
+
+    const baseStyle = "w-12 h-12 rounded-lg border-2 flex items-center justify-center font-bold text-lg transition-all duration-500 transform";
+    
+    if (isCurrent) {
+      return `${baseStyle} bg-emerald-500 border-emerald-400 text-white scale-110 shadow-lg shadow-emerald-500/50`;
+    } else if (isHighlighted) {
+      return `${baseStyle} bg-amber-500 border-amber-400 text-gray-900 scale-105 shadow-lg shadow-amber-500/50`;
+    } else if (isInRange) {
+      return `${baseStyle} bg-blue-500/30 border-blue-400/50 text-gray-300 scale-105`;
+    }
+    
+    return `${baseStyle} bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600/50 scale-100`;
+  };
+
+  return (
+    <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
+      <h3 className="font-bold text-lg text-blue-300 mb-4 flex items-center gap-2">
+        <List size={20} />
+        Traversal Arrays
+      </h3>
+
+      <div className="space-y-6">
+        {/* Preorder Array */}
+        <div>
+          <h4 className="text-sm text-gray-400 mb-3 flex items-center gap-2">
+            <ArrowRight size={16} />
+            Preorder Traversal (Root → Left → Right)
+            {traversalState?.preIndex !== undefined && (
+              <span className="text-emerald-400 font-mono ml-2">
+                Index: {traversalState.preIndex}
+              </span>
+            )}
+          </h4>
+          <div className="flex gap-2 flex-wrap justify-center">
+            {preorder.map((value, index) => (
+              <div key={`preorder-${index}`} className="flex flex-col items-center">
+                <div className="text-xs text-gray-500 mb-1 font-mono">{index}</div>
+                <div
+                  className={getArrayElementStyle(value, 'preorder', index)}
+                >
+                  {value}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Inorder Array */}
+        <div>
+          <h4 className="text-sm text-gray-400 mb-3 flex items-center gap-2">
+            <ArrowLeft size={16} />
+            Inorder Traversal (Left → Root → Right)
+            {traversalState?.inStart !== undefined && traversalState?.inEnd !== undefined && (
+              <span className="text-amber-400 font-mono ml-2">
+                Range: [{traversalState.inStart}, {traversalState.inEnd}]
+              </span>
+            )}
+          </h4>
+          <div className="flex gap-2 flex-wrap justify-center">
+            {inorder.map((value, index) => (
+              <div key={`inorder-${index}`} className="flex flex-col items-center">
+                <div className="text-xs text-gray-500 mb-1 font-mono">{index}</div>
+                <div
+                  className={getArrayElementStyle(value, 'inorder', index)}
+                >
+                  {value}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Current Range Visualization */}
+      {traversalState?.inStart !== undefined && traversalState?.inEnd !== undefined && (
+        <div className="mt-4 bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg p-4 border border-gray-700">
+          <h4 className="text-sm text-gray-400 mb-2 flex items-center gap-2">
+            <Target size={16} />
+            Current Subtree Range
+          </h4>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <div className="text-gray-500">Inorder Start:</div>
+              <div className="font-mono text-amber-400">{traversalState.inStart}</div>
+            </div>
+            <div>
+              <div className="text-gray-500">Inorder End:</div>
+              <div className="font-mono text-amber-400">{traversalState.inEnd}</div>
+            </div>
+          </div>
+          <div className="mt-2 text-xs text-gray-400">
+            Processing subtree rooted at: <span className="font-mono text-emerald-400">{traversalState.currentRoot}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Main Component
+const ConstructTree = () => {
+  const [history, setHistory] = useState([]);
+  const [currentStep, setCurrentStep] = useState(-1);
+  const [preorderInput, setPreorderInput] = useState("3,9,20,15,7");
+  const [inorderInput, setInorderInput] = useState("9,3,15,20,7");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1000);
+  const visualizerRef = useRef(null);
+
+  // Create a proper binary tree from sorted array for random generation
+  const createBalancedBST = (arr, start = 0, end = arr.length - 1) => {
+    if (start > end) return null;
+    
+    const mid = Math.floor((start + end) / 2);
+    const node = new BinaryTreeNode(arr[mid]);
+    
+    node.left = createBalancedBST(arr, start, mid - 1);
+    node.right = createBalancedBST(arr, mid + 1, end);
+    
+    return node;
+  };
+
+  // Generate traversals from tree
+  const generatePreorder = (node, result = []) => {
+    if (!node) return result;
+    result.push(node.val);
+    generatePreorder(node.left, result);
+    generatePreorder(node.right, result);
+    return result;
+  };
+
+  const generateInorder = (node, result = []) => {
+    if (!node) return result;
+    generateInorder(node.left, result);
+    result.push(node.val);
+    generateInorder(node.right, result);
+    return result;
+  };
+
+  const generateHistory = useCallback(() => {
+    const preorder = preorderInput.split(",").map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+    const inorder = inorderInput.split(",").map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+
+    if (preorder.length === 0 || inorder.length === 0) {
+      alert("Invalid input. Please provide valid preorder and inorder traversals.");
+      return;
+    }
+
+    if (preorder.length !== inorder.length) {
+      alert("Preorder and inorder traversals must have the same length.");
+      return;
+    }
+
+    // Validate that both arrays contain the same elements
+    const preSorted = [...preorder].sort((a, b) => a - b);
+    const inSorted = [...inorder].sort((a, b) => a - b);
+    
+    for (let i = 0; i < preSorted.length; i++) {
+      if (preSorted[i] !== inSorted[i]) {
+        alert("Preorder and inorder traversals must contain the same elements.");
+        return;
+      }
+    }
+
+    const newHistory = [];
+    let stepCount = 0;
+    let callStack = [];
+
+    const buildTree = (preStart, preEnd, inStart, inEnd, depth = 0, side = 'root') => {
+      callStack.push({ preStart, preEnd, inStart, inEnd, depth, side });
+
+      if (preStart > preEnd || inStart > inEnd) {
+        newHistory.push({
+          step: stepCount++,
+          explanation: `Empty subtree range [${inStart}, ${inEnd}], returning null`,
+          preorder,
+          inorder,
+          preIndex: preStart,
+          inStart,
+          inEnd,
+          currentRoot: null,
+          processingNode: null,
+          tree: null,
+          line: 3,
+          callStack: [...callStack],
+          depth,
+          side
+        });
+        callStack.pop();
+        return null;
+      }
+
+      const rootVal = preorder[preStart];
+      const rootNode = new BinaryTreeNode(rootVal);
+      
+      // Show root creation
+      newHistory.push({
+        step: stepCount++,
+        explanation: `Creating root node with value ${rootVal} from preorder[${preStart}]`,
+        preorder,
+        inorder,
+        preIndex: preStart,
+        inStart,
+        inEnd,
+        currentRoot: rootVal,
+        processingNode: rootVal,
+        tree: JSON.parse(JSON.stringify(rootNode)), // Deep copy for visualization
+        line: 5,
+        callStack: [...callStack],
+        depth,
+        side
+      });
+
+      // Find root in inorder
+      let inIndex = -1;
+      for (let i = inStart; i <= inEnd; i++) {
+        if (inorder[i] === rootVal) {
+          inIndex = i;
+          break;
+        }
+      }
+
+      if (inIndex === -1) {
+        alert(`Error: Root value ${rootVal} not found in inorder array within range [${inStart}, ${inEnd}]`);
+        callStack.pop();
+        return null;
+      }
+
+      newHistory.push({
+        step: stepCount++,
+        explanation: `Found root ${rootVal} in inorder array at index ${inIndex}`,
+        preorder,
+        inorder,
+        preIndex: preStart,
+        inStart,
+        inEnd,
+        inIndex,
+        currentRoot: rootVal,
+        processingNode: rootVal,
+        tree: JSON.parse(JSON.stringify(rootNode)),
+        line: 7,
+        callStack: [...callStack],
+        depth,
+        side
+      });
+
+      const leftSize = inIndex - inStart;
+      
+      newHistory.push({
+        step: stepCount++,
+        explanation: `Left subtree: ${leftSize} elements, Right subtree: ${inEnd - inIndex} elements`,
+        preorder,
+        inorder,
+        preIndex: preStart,
+        inStart,
+        inEnd,
+        inIndex,
+        leftSize,
+        currentRoot: rootVal,
+        processingNode: rootVal,
+        tree: JSON.parse(JSON.stringify(rootNode)),
+        line: 9,
+        callStack: [...callStack],
+        depth,
+        side
+      });
+
+      // Build left subtree with visualization of partial tree
+      if (leftSize > 0) {
+        newHistory.push({
+          step: stepCount++,
+          explanation: `Building left subtree: preorder[${preStart + 1}..${preStart + leftSize}], inorder[${inStart}..${inIndex - 1}]`,
+          preorder,
+          inorder,
+          preIndex: preStart + 1,
+          inStart,
+          inEnd: inIndex - 1,
+          currentRoot: rootVal,
+          processingNode: null,
+          tree: JSON.parse(JSON.stringify(rootNode)),
+          line: 10,
+          callStack: [...callStack],
+          depth: depth + 1,
+          side: 'left'
+        });
+      }
+
+      const leftTree = buildTree(preStart + 1, preStart + leftSize, inStart, inIndex - 1, depth + 1, 'left');
+      rootNode.left = leftTree;
+
+      // Show tree with left subtree added
+      if (leftTree) {
+        newHistory.push({
+          step: stepCount++,
+          explanation: `Completed left subtree of ${rootVal}`,
+          preorder,
+          inorder,
+          preIndex: preStart + leftSize + 1,
+          inStart: inIndex + 1,
+          inEnd,
+          currentRoot: rootVal,
+          processingNode: rootVal,
+          tree: JSON.parse(JSON.stringify(rootNode)),
+          line: 11,
+          callStack: [...callStack],
+          depth,
+          side
+        });
+      }
+
+      // Build right subtree with visualization of partial tree
+      if (inEnd - inIndex > 0) {
+        newHistory.push({
+          step: stepCount++,
+          explanation: `Building right subtree: preorder[${preStart + leftSize + 1}..${preEnd}], inorder[${inIndex + 1}..${inEnd}]`,
+          preorder,
+          inorder,
+          preIndex: preStart + leftSize + 1,
+          inStart: inIndex + 1,
+          inEnd,
+          currentRoot: rootVal,
+          processingNode: null,
+          tree: JSON.parse(JSON.stringify(rootNode)),
+          line: 11,
+          callStack: [...callStack],
+          depth: depth + 1,
+          side: 'right'
+        });
+      }
+
+      const rightTree = buildTree(preStart + leftSize + 1, preEnd, inIndex + 1, inEnd, depth + 1, 'right');
+      rootNode.right = rightTree;
+
+      // Show complete subtree
+      newHistory.push({
+        step: stepCount++,
+        explanation: `Completed subtree rooted at ${rootVal}`,
+        preorder,
+        inorder,
+        preIndex: preStart,
+        inStart,
+        inEnd,
+        currentRoot: rootVal,
+        processingNode: rootVal,
+        tree: JSON.parse(JSON.stringify(rootNode)),
+        line: 12,
+        callStack: [...callStack],
+        depth,
+        side
+      });
+
+      callStack.pop();
+      return rootNode;
+    };
+
+    const root = buildTree(0, preorder.length - 1, 0, inorder.length - 1);
+
+    newHistory.push({
+      step: stepCount++,
+      explanation: `🎉 Tree construction complete! Built binary tree with root ${root.val}`,
+      preorder,
+      inorder,
+      tree: root,
+      line: 14,
+      isComplete: true,
+      callStack: []
+    });
+
+    setHistory(newHistory);
+    setCurrentStep(0);
+    setIsLoaded(true);
+  }, [preorderInput, inorderInput]);
+
+  const resetVisualization = () => {
+    setHistory([]);
+    setCurrentStep(-1);
+    setIsLoaded(false);
+    setIsPlaying(false);
+  };
+
+  const stepForward = useCallback(() => {
+    setCurrentStep((prev) => Math.min(prev + 1, history.length - 1));
+  }, [history.length]);
+
+  const stepBackward = useCallback(() => {
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
+  }, []);
+
+  const handleSpeedChange = (e) => {
+    setSpeed(Number(e.target.value));
+  };
+
+  const playAnimation = useCallback(() => {
+    if (currentStep >= history.length - 1) {
+      setCurrentStep(0);
+    }
+    setIsPlaying(true);
+  }, [currentStep, history.length]);
+
+  const pauseAnimation = useCallback(() => {
+    setIsPlaying(false);
+  }, []);
+
+  const generateRandomArrays = () => {
+    const size = Math.floor(Math.random() * 6) + 4; // 4-9 nodes
+    const values = Array.from({ length: size }, (_, i) => i + 1);
+    
+    // Create a balanced BST to ensure valid traversals
+    const balancedTree = createBalancedBST([...values].sort((a, b) => a - b));
+    
+    // Generate valid traversals from the tree
+    const preorder = generatePreorder(balancedTree);
+    const inorder = generateInorder(balancedTree);
+
+    setPreorderInput(preorder.join(','));
+    setInorderInput(inorder.join(','));
+    resetVisualization();
+  };
+
+  // Auto-play
+  useEffect(() => {
+    let timer;
+    if (isPlaying && currentStep < history.length - 1) {
+      timer = setTimeout(() => {
+        stepForward();
+      }, speed);
+    } else if (currentStep >= history.length - 1) {
+      setIsPlaying(false);
+    }
+    return () => clearTimeout(timer);
+  }, [isPlaying, currentStep, history.length, stepForward, speed]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isLoaded) {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          stepBackward();
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          stepForward();
+        } else if (e.key === " ") {
+          e.preventDefault();
+          if (isPlaying) {
+            pauseAnimation();
+          } else {
+            playAnimation();
+          }
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isLoaded, isPlaying, stepBackward, stepForward, playAnimation, pauseAnimation]);
+
+  const state = history[currentStep] || {};
+  const {
+    preorder = [],
+    inorder = [],
+    tree = null,
+    explanation = "",
+    line,
+    preIndex,
+    inStart,
+    inEnd,
+    inIndex,
+    leftSize,
+    currentRoot,
+    processingNode,
+    callStack = [],
+    depth = 0,
+    side = 'root',
+    isComplete = false
+  } = state;
+
+  const CodeLine = ({ lineNum, content }) => (
+    <div
+      className={`block rounded-md transition-all duration-300 ${
+        line === lineNum
+          ? "bg-emerald-500/20 border-l-4 border-emerald-500 shadow-lg"
+          : "hover:bg-gray-700/30"
+      }`}
+    >
+      <span className="text-gray-500 select-none inline-block w-8 text-right mr-3">
+        {lineNum}
+      </span>
+      <span className={line === lineNum ? "text-emerald-300 font-semibold" : "text-gray-300"}>
+        {content}
+      </span>
+    </div>
+  );
+
+  const buildTreeCode = [
+    { line: 1, content: "TreeNode* buildTree(vector<int>& preorder," },
+    { line: 2, content: "                  vector<int>& inorder) {" },
+    { line: 3, content: "    return build(preorder, inorder, 0," },
+    { line: 4, content: "                   preorder.size()-1, 0," },
+    { line: 5, content: "                   inorder.size()-1);" },
+    { line: 6, content: "}" },
+    { line: 7, content: "" },
+    { line: 8, content: "TreeNode* build(vector<int>& preorder," },
+    { line: 9, content: "                vector<int>& inorder," },
+    { line: 10, content: "                int preStart, int preEnd," },
+    { line: 11, content: "                int inStart, int inEnd) {" },
+    { line: 12, content: "    if (preStart > preEnd ||" },
+    { line: 13, content: "        inStart > inEnd) return nullptr;" },
+    { line: 14, content: "" },
+    { line: 15, content: "    // Root is first element in preorder" },
+    { line: 16, content: "    int rootVal = preorder[preStart];" },
+    { line: 17, content: "    TreeNode* root = new TreeNode(rootVal);" },
+    { line: 18, content: "" },
+    { line: 19, content: "    // Find root in inorder" },
+    { line: 20, content: "    int inIndex = find(inorder, rootVal);" },
+    { line: 21, content: "    int leftSize = inIndex - inStart;" },
+    { line: 22, content: "" },
+    { line: 23, content: "    // Recursively build subtrees" },
+    { line: 24, content: "    root->left = build(preorder, inorder," },
+    { line: 25, content: "                     preStart+1, preStart+leftSize," },
+    { line: 26, content: "                     inStart, inIndex-1);" },
+    { line: 27, content: "    root->right = build(preorder, inorder," },
+    { line: 28, content: "                      preStart+leftSize+1, preEnd," },
+    { line: 29, content: "                      inIndex+1, inEnd);" },
+    { line: 30, content: "" },
+    { line: 31, content: "    return root;" },
+    { line: 32, content: "}" },
+  ];
+
+  return (
+    <div
+      ref={visualizerRef}
+      tabIndex={0}
+      className="p-4 max-w-7xl mx-auto focus:outline-none"
+    >
+      <header className="text-center mb-6">
+        <h1 className="text-5xl font-bold text-emerald-400 flex items-center justify-center gap-3">
+          <GitMerge size={28} />
+          Construct Tree from Traversal
+        </h1>
+        <p className="text-lg text-gray-400 mt-2">
+          Build binary tree from preorder and inorder traversal sequences (LeetCode #105)
+        </p>
+      </header>
+
+      {/* Enhanced Controls Section */}
+      <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl shadow-2xl border border-gray-700/50 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row gap-4 flex-grow">
+          <div className="flex items-center gap-4 flex-grow">
+            <label htmlFor="preorder-input" className="font-medium text-gray-300 font-mono hidden md:block">
+              Preorder:
+            </label>
+            <input
+              id="preorder-input"
+              type="text"
+              value={preorderInput}
+              onChange={(e) => setPreorderInput(e.target.value)}
+              disabled={isLoaded}
+              placeholder="e.g., 3,9,20,15,7"
+              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all disabled:opacity-50"
+            />
+          </div>
+          <div className="flex items-center gap-4 flex-grow">
+            <label htmlFor="inorder-input" className="font-medium text-gray-300 font-mono">
+              Inorder:
+            </label>
+            <input
+              id="inorder-input"
+              type="text"
+              value={inorderInput}
+              onChange={(e) => setInorderInput(e.target.value)}
+              disabled={isLoaded}
+              placeholder="e.g., 9,3,15,20,7"
+              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all disabled:opacity-50"
+            />
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
+          {!isLoaded ? (
+            <>
+              <button
+                onClick={generateHistory}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+              >
+                Load & Visualize
+              </button>
+              <button
+                onClick={generateRandomArrays}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+              >
+                Random Tree
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex gap-2">
+                <button
+                  onClick={stepBackward}
+                  disabled={currentStep <= 0}
+                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
+                >
+                  <SkipBack size={20} />
+                </button>
+                
+                {!isPlaying ? (
+                  <button
+                    onClick={playAnimation}
+                    disabled={currentStep >= history.length - 1}
+                    className="bg-green-500 hover:bg-green-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
+                  >
+                    <Play size={20} />
+                  </button>
+                ) : (
+                  <button
+                    onClick={pauseAnimation}
+                    className="bg-yellow-500 hover:bg-yellow-600 p-3 rounded-lg transition-all duration-300 cursor-pointer"
+                  >
+                    <Pause size={20} />
+                  </button>
+                )}
+
+                <button
+                  onClick={stepForward}
+                  disabled={currentStep >= history.length - 1}
+                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
+                >
+                  <SkipForward size={20} />
+                </button>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-gray-400 text-sm">Speed:</label>
+                  <select
+                    value={speed}
+                    onChange={handleSpeedChange}
+                    className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm cursor-pointer"
+                  >
+                    <option value={1500}>Slow</option>
+                    <option value={1000}>Medium</option>
+                    <option value={500}>Fast</option>
+                    <option value={250}>Very Fast</option>
+                  </select>
+                </div>
+
+                <div className="font-mono px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-center min-w-20">
+                  {currentStep + 1}/{history.length}
+                </div>
+              </div>
+
+              <button
+                onClick={resetVisualization}
+                className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg cursor-pointer"
+              >
+                <RotateCcw size={16} />
+                Reset
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {isLoaded ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Pseudocode Panel */}
+          <div className="lg:col-span-1 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50">
+            <h3 className="font-bold text-xl text-emerald-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
+              <Code size={20} />
+              Recursive Algorithm
+            </h3>
+            <div className="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+              <pre className="text-sm">
+                <code className="font-mono leading-relaxed block">
+                  {buildTreeCode.map((codeLine) => (
+                    <CodeLine 
+                      key={codeLine.line} 
+                      lineNum={codeLine.line} 
+                      content={codeLine.content}
+                    />
+                  ))}
+                </code>
+              </pre>
+            </div>
+
+            {/* Call Stack Visualization */}
+            {callStack.length > 0 && (
+              <div className="mt-4 bg-gray-900/50 p-3 rounded-lg border border-gray-700">
+                <h4 className="text-sm text-gray-400 mb-2 flex items-center gap-2">
+                  <GitBranch size={16} />
+                  Call Stack (Depth: {depth})
+                </h4>
+                <div className="space-y-1 max-h-24 overflow-y-auto">
+                  {callStack.map((call, idx) => (
+                    <div key={idx} className="text-xs font-mono bg-gray-800/50 p-1 rounded">
+                      {call.side}: pre[{call.preStart}..{call.preEnd}], in[{call.inStart}..{call.inEnd}]
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Enhanced Visualization Panels */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Tree Visualization */}
+            <TreeVisualization 
+              tree={tree}
+              currentStep={currentStep}
+              traversalState={{
+                currentNode: currentRoot,
+                processingNode,
+                preIndex,
+                inStart,
+                inEnd,
+                inIndex
+              }}
+            />
+
+            {/* Array Visualization */}
+            <ArrayVisualization
+              preorder={preorder}
+              inorder={inorder}
+              currentStep={currentStep}
+              traversalState={{
+                preIndex,
+                inStart,
+                inEnd,
+                inIndex,
+                currentRoot,
+                processingNode
+              }}
+            />
+
+            {/* Statistics Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-blue-700/50">
+                <h3 className="font-bold text-lg text-blue-300 mb-3 flex items-center gap-2">
+                  <Gauge size={20} />
+                  Current Root
+                </h3>
+                <div className="text-center">
+                  <span className="font-mono text-4xl font-bold text-blue-300">
+                    {currentRoot || "null"}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-400 text-center mt-2">
+                  {side} subtree
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-purple-700/50">
+                <h3 className="font-bold text-lg text-purple-300 mb-3 flex items-center gap-2">
+                  <Split size={20} />
+                  Subtree Range
+                </h3>
+                <div className="font-mono text-lg text-center text-purple-300 space-y-1">
+                  <div>Inorder: [{inStart}, {inEnd}]</div>
+                  {leftSize !== undefined && (
+                    <div className="text-sm text-gray-400">Left size: {leftSize}</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-green-700/50">
+                <h3 className="font-bold text-lg text-green-300 mb-3 flex items-center gap-2">
+                  <CheckCircle size={20} />
+                  Progress
+                </h3>
+                <div className="font-mono text-2xl font-bold text-center text-green-400">
+                  {isComplete ? "Complete!" : "Building..."}
+                </div>
+                <div className="text-xs text-gray-400 text-center mt-2">
+                  Recursion depth: {depth}
+                </div>
+              </div>
+            </div>
+
+            {/* Status and Explanation Panel */}
+            <div className="bg-gradient-to-br from-amber-900/40 to-yellow-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-amber-700/50">
+              <h3 className="font-bold text-lg text-amber-300 mb-3 flex items-center gap-2">
+                <BarChart3 size={20} />
+                Step Explanation
+              </h3>
+              <div className="text-gray-300 text-sm h-20 overflow-y-auto scrollbar-thin">
+                {explanation || "Starting tree construction algorithm..."}
+              </div>
+            </div>
+          </div>
+
+          {/* Enhanced Complexity Analysis */}
+          <div className="lg:col-span-3 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50">
+            <h3 className="font-bold text-xl text-emerald-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
+              <Clock size={20} /> Complexity Analysis
+            </h3>
+            <div className="grid md:grid-cols-2 gap-6 text-sm">
+              <div className="space-y-4">
+                <h4 className="font-semibold text-emerald-300 flex items-center gap-2">
+                  <Zap size={16} />
+                  Time Complexity
+                </h4>
+                <div className="space-y-3">
+                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
+                    <strong className="text-teal-300 font-mono block mb-1">O(N)</strong>
+                    <p className="text-gray-400 text-sm">
+                      Each node is processed exactly once. The recursive function visits 
+                      every node and performs constant-time operations for each.
+                    </p>
+                  </div>
+                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
+                    <strong className="text-teal-300 font-mono block mb-1">Optimization</strong>
+                    <p className="text-gray-400 text-sm">
+                      Using a hash map to store inorder indices reduces 
+                      the root search from O(N) to O(1) per node.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <h4 className="font-semibold text-emerald-300 flex items-center gap-2">
+                  <Cpu size={16} />
+                  Space Complexity
+                </h4>
+                <div className="space-y-3">
+                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
+                    <strong className="text-teal-300 font-mono block mb-1">O(N)</strong>
+                    <p className="text-gray-400 text-sm">
+                      The recursion stack uses O(H) space where H is the tree height, 
+                      and the hash map uses O(N) space for storing indices.
+                    </p>
+                  </div>
+                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
+                    <strong className="text-teal-300 font-mono block mb-1">Worst Case</strong>
+                    <p className="text-gray-400 text-sm">
+                      For a skewed tree, the recursion depth is O(N), 
+                      making space complexity O(N) in worst case.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="text-center py-16 bg-gray-800/50 rounded-xl border border-gray-700/50">
+          <div className="text-gray-500 text-lg mb-4">
+            Enter preorder and inorder traversals to start the visualization
+          </div>
+          <div className="text-gray-600 text-sm max-w-2xl mx-auto space-y-2">
+            <div className="flex items-center justify-center gap-4 text-xs mb-4">
+              <span className="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full">Preorder: Root → Left → Right</span>
+              <span className="bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full">Inorder: Left → Root → Right</span>
+            </div>
+            <p>
+              <strong>Example:</strong> Preorder: "3,9,20,15,7", Inorder: "9,3,15,20,7"
+            </p>
+            <p className="text-gray-500">
+              The algorithm recursively builds the tree by using preorder to find roots 
+              and inorder to determine left/right subtree boundaries.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ConstructTree;

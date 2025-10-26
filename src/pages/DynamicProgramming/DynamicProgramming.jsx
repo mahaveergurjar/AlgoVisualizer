@@ -5,6 +5,9 @@ import {
   Container,
   ToggleRight,
   ArrowUpDown,
+  FileText,
+  Coins,
+  Edit3,
   Brackets,
   Code2,
   Clock,
@@ -15,6 +18,10 @@ import {
 
 // --- Import your specific algorithm visualizer components here ---
 import KnapsackVisualizer from "./KnapSack.jsx";
+import LCSVisualizer from "./LongestCommonSubsequence.jsx";
+import CoinChangeVisualizer from "./CoinChange.jsx";
+import EditDistanceVisualizer from "./EditDistance.jsx";
+import LISVisualizer from "./LISubsequence.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -37,6 +44,78 @@ const AlgorithmList = ({ navigate }) => {
       borderColor: "border-yellow-500/30",
       technique: "Dynamic Programming",
       timeComplexity: "O(N × W)"
+    },
+    {
+    name: "Longest Common Subsequence",
+    number: "1143",
+    icon: FileText,
+    description:
+    "Given two strings, find the length of their longest common subsequence. A subsequence is a sequence that appears in the same relative order, but not necessarily contiguous.",
+    page: "LCS",
+    difficulty: "Medium",
+    difficultyColor: "text-cyan-400",
+    difficultyBg: "bg-cyan-400/10",
+    difficultyBorder: "border-cyan-400/30",
+    gradient: "from-cyan-400 to-blue-400",
+    iconColor: "text-cyan-400",
+    iconBg: "bg-cyan-500/20",
+    borderColor: "border-cyan-500/30",
+    technique: "Dynamic Programming",
+    timeComplexity: "O(M × N)"
+    },
+    {
+    name: "Coin Change",
+    number: "322",
+    icon: Coins,
+    description:
+    "Given an array of coin denominations and a target amount, find the minimum number of coins needed to make up that amount. If impossible, return -1.",
+    page: "CoinChange",
+    difficulty: "Medium",
+    difficultyColor: "text-amber-400",
+    difficultyBg: "bg-amber-400/10",
+    difficultyBorder: "border-amber-400/30",
+    gradient: "from-amber-400 to-orange-400",
+    iconColor: "text-amber-400",
+    iconBg: "bg-amber-500/20",
+    borderColor: "border-amber-500/30",
+    technique: "Dynamic Programming",
+    timeComplexity: "O(Amount × Coins)"
+    },
+    {
+    name: "Edit Distance",
+    number: "72",
+    icon: Edit3,
+    description:
+    "Given two strings, find the minimum number of operations (insert, delete, replace) required to convert one string into another. Also known as Levenshtein Distance.",
+    page: "EditDistance",
+    difficulty: "Hard",
+    difficultyColor: "text-red-400",
+    difficultyBg: "bg-red-400/10",
+    difficultyBorder: "border-red-400/30",
+    gradient: "from-purple-400 to-pink-400",
+    iconColor: "text-purple-400",
+    iconBg: "bg-purple-500/20",
+    borderColor: "border-purple-500/30",
+    technique: "Dynamic Programming",
+    timeComplexity: "O(M × N)"
+   },
+   {
+    name: "Longest Increasing Subsequence",
+    number: "300",
+    icon: TrendingUp,
+    description:
+    "Given an integer array, find the length of the longest strictly increasing subsequence. Elements don't need to be contiguous but must maintain their relative order.",
+    page: "LIS",
+    difficulty: "Medium",
+    difficultyColor: "text-green-400",
+    difficultyBg: "bg-green-400/10",
+    difficultyBorder: "border-green-400/30",
+    gradient: "from-green-400 to-teal-400",
+    iconColor: "text-green-400",
+    iconBg: "bg-green-500/20",
+    borderColor: "border-green-500/30",
+    technique: "Dynamic Programming",
+    timeComplexity: "O(N²)"
     }
 
   ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
@@ -207,6 +286,14 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
     switch (page) {
       case "KnapSack":
         return <KnapsackVisualizer navigate={navigate} />;
+      case "LCS":
+        return <LCSVisualizer navigate={navigate} />;
+      case "CoinChange":
+        return <CoinChangeVisualizer navigate={navigate} />;
+      case "EditDistance":
+        return <EditDistanceVisualizer navigate={navigate} />;
+      case "LIS":
+        return <LISVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

@@ -23,6 +23,9 @@ import {
   Target,
   CheckCircle,
   Type,
+  ScanLine,
+  Search,
+  Calculator,
   Hash,
 } from "lucide-react";
 
@@ -32,6 +35,7 @@ import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
 import HeapsPage from "./Heaps/Heaps.jsx";
+import SearchingPage from "./Searching/Searching.jsx"
 import DesignPage from "./Design/Design.jsx";
 import RecursionPage from "./Recursion/Recursion.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
@@ -47,6 +51,7 @@ import BacktrackingPage from "./Backtracking/Backtracking.jsx";
 import StringPage from "./Strings/Strings.jsx";
 import BitPage from "./BitManipulation/BitManipulation.jsx";
 import HashingPage from "./Hashing/Hashing.jsx";
+import MathsMiscPage from "./MathematicalMiscellaneous/MathematicalMiscellaneous.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -97,6 +102,16 @@ const AlgorithmCategories = ({ navigate }) => {
         iconBg: "bg-purple-500/20",
         borderColor: "border-purple-500/30",
         iconColor: "text-purple-400",
+      },
+      {
+        name: "Searching",
+        icon: Search,
+        description: "Find elements using efficient search logic.",
+        page: "Searching",
+        gradient: "from-teal-500 to-emerald-600",
+        iconBg: "bg-teal-500/20",
+        borderColor: "border-teal-500/30",
+        iconColor: "text-teal-400",
       },
       {
         name: "Hashing",
@@ -261,6 +276,17 @@ const AlgorithmCategories = ({ navigate }) => {
         borderColor: "border-teal-500/30",
         iconColor: "text-teal-400",
       },
+      {
+        name: "Mathematical & Miscellaneous",
+        icon: Calculator,
+        description:
+          "Master the numerical foundations and essential utilities for efficient problem-solving.",
+        page: "MathsMiscPage",
+        gradient: "from-blue-500 to-cyan-600",
+        iconBg: "bg-blue-500/20",
+        borderColor: "border-blue-500/30",
+        iconColor: "text-blue-400",
+      },
     ],
     []
   );
@@ -276,7 +302,7 @@ const AlgorithmCategories = ({ navigate }) => {
     const problemItems = PROBLEM_CATALOG.map((p) => ({
       type: "problem",
       ...p,
-    }));
+    })).filter(p => p.category && p.subpage); // Ensure items are valid
     return [...categoryItems, ...problemItems];
   }, [categories]);
 
@@ -661,6 +687,8 @@ const HomePage = () => {
         return <StackPage navigate={navigate} initialPage={initialSubPage} />;
       case "Sorting":
         return <SortingPage navigate={navigate} initialPage={initialSubPage} />;
+      case "Searching":
+        return <SearchingPage navigate={navigate} initialPage={initialSubPage} />;
       case "Trees":
         return <TreesPage navigate={navigate} initialPage={initialSubPage} />;
       case "Design":
@@ -691,6 +719,8 @@ const HomePage = () => {
         );  
       case "DynamicProgramming":
         return <DPPage navigate={navigate} initialPage={initialSubPage} />;
+      case "MathsMiscPage":
+        return <MathsMiscPage navigate={navigate} initialPage={initialSubPage} />;  
       case "BitManipulation":
         return <BitPage navigate={navigate} initialPage={initialSubPage} />;
       case "home":

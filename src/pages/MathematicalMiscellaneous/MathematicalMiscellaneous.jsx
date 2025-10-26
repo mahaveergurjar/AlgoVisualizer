@@ -1,4 +1,3 @@
-// Trees.jsx
 import React, { useState } from "react";
 import { 
   ArrowLeft, 
@@ -8,107 +7,105 @@ import {
   ArrowRight, 
   TrendingUp,
   Code2,
-  TreePine,
-  Network,
+  Calculator,
+  PieChart,
   Binary,
-  Layers,
-  GitBranch,
-  GitMerge,
-  TreeDeciduous,
+  Network,
+  Hash,
+  Grid,
+  Puzzle,
   Cpu,
   Power
 } from "lucide-react";
-import ValidateBST from "./validBST.jsx";
-import ConstructTree from "./ConstructBinaryTree.jsx";
-import LCAofDeepestLeaves from "./LCAofDeepestLeaves.jsx";
-import AVLTree from "./AVLTree.jsx";
+import CountPrimes from "./CountPrimes.jsx";
+import PowerPage from "./Power.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [filter, setFilter] = useState("all");
 
   const algorithms = [
-    {
-      name: "Construct Tree from Traversal",
-      number: "105",
-      icon: GitMerge,
-      description: "Construct binary tree from preorder and inorder traversal sequences.",
-      page: "ConstructTree",
-      difficulty: "Medium",
-      tier: "Tier 2",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-emerald-500 to-green-500",
-      iconColor: "text-emerald-400",
-      iconBg: "bg-emerald-500/20",
-      borderColor: "border-emerald-500/30",
-      technique: "Divide & Conquer",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #105", "GfG"],
-      tags: ["Binary Tree", "Traversal", "Recursion"]
-    },
-    {
-      name: "Validate BST",
-      number: "98",
-      icon: TreePine,
-      description: "Determine if a binary tree is a valid binary search tree.",
-      page: "ValidateBST",
-      difficulty: "Medium",
-      tier: "Tier 2",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-green-500 to-lime-500",
-      iconColor: "text-green-400",
-      iconBg: "bg-green-500/20",
-      borderColor: "border-green-500/30",
-      technique: "DFS Traversal",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #98", "GfG"],
-      tags: ["BST", "Validation", "DFS"]
-    },
-    {
-      name: "LCA of Deepest Leaves",
-      number: "1123",
-      icon: Layers,
-      description: "Find the lowest common ancestor of the deepest leaves in a binary tree.",
-      page: "LCAofDeepestLeaves",
-      difficulty: "Medium",
-      tier: "Tier 2",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-lime-500 to-emerald-500",
-      iconColor: "text-lime-400",
-      iconBg: "bg-lime-500/20",
-      borderColor: "border-lime-500/30",
-      technique: "Postorder DFS",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #1123", "GfG"],
-      tags: ["LCA", "Binary Tree", "DFS"]
-    },
-    {
-      name: "Balance BST (AVL Tree)",
-      number: "1382",
-      icon: GitBranch,
-      description: "Convert any Binary Search Tree to a balanced AVL Tree",
-      page: "AVLTree",
-      difficulty: "Easy",
-      tier: "Tier 1",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-teal-500 to-cyan-500",
-      iconColor: "text-teal-400",
-      iconBg: "bg-teal-500/20",
-      borderColor: "border-teal-500/30",
-      technique: "Tree Rotation",
-      timeComplexity: "O(log n)",
-      platforms: ["LeetCode #1382","GfG"],
-      tags: ["AVL", "Balanced BST", "Rotations"]
-    }
-  ];
+  {
+    name: "Count Primes",
+    number: "204",
+    icon: Hash,
+    description: "Count the number of prime numbers less than a non-negative number.",
+    page: "CountPrimes",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-blue-500 to-cyan-500",
+    iconColor: "text-blue-400",
+    iconBg: "bg-blue-500/20",
+    borderColor: "border-blue-500/30",
+    technique: "Sieve Method",
+    timeComplexity: "O(n log log n)",
+    platforms: ["LeetCode #204", "GfG"],
+    tags: ["Number Theory", "Sieve", "Primes"]
+  },
+  {
+    name: "Pow(x, n)",
+    number: "50",
+    icon: Zap,
+    description: "Implement pow(x, n) which calculates x raised to the power n using fast exponentiation.",
+    page: "PowerPage",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-emerald-500 to-teal-500",
+    iconColor: "text-emerald-400",
+    iconBg: "bg-emerald-500/20",
+    borderColor: "border-emerald-500/30",
+    technique: "Fast Exponentiation",
+    timeComplexity: "O(log n)",
+    platforms: ["LeetCode #50", "GfG"],
+    tags: ["Exponentiation", "Math", "Recursion"]
+  },
+  {
+    name: "Excel Sheet Column Title",
+    number: "168",
+    icon: Grid,
+    description: "Convert a column number to its corresponding Excel sheet column title (1->A, 28->AB).",
+    page: "ExcelColumnTitle",
+    difficulty: "Easy",
+    tier: "Tier 1",
+    difficultyColor: "text-green-400",
+    difficultyBg: "bg-green-400/10",
+    difficultyBorder: "border-green-400/30",
+    gradient: "from-violet-500 to-purple-500",
+    iconColor: "text-violet-400",
+    iconBg: "bg-violet-500/20",
+    borderColor: "border-violet-500/30",
+    technique: "Base Conversion",
+    timeComplexity: "O(log n)",
+    platforms: ["LeetCode #168", "GfG"],
+    tags: ["String", "Base-26", "Conversion"]
+  },
+  {
+    name: "Factorial Trailing Zeroes",
+    number: "172",
+    icon: Calculator,
+    description: "Count trailing zeroes in factorial without computing the factorial.",
+    page: "FactorialZeroes",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-indigo-500 to-blue-500",
+    iconColor: "text-indigo-400",
+    iconBg: "bg-indigo-500/20",
+    borderColor: "border-indigo-500/30",
+    technique: "Mathematical Analysis",
+    timeComplexity: "O(log n)",
+    platforms: ["LeetCode #172", "GfG"],
+    tags: ["Math", "Counting", "Optimization"]
+  }
+];
 
   const filteredAlgorithms = algorithms.filter(algo => {
     if (filter === "all") return true;
@@ -121,48 +118,47 @@ const AlgorithmList = ({ navigate }) => {
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
       <header className="text-center mb-16 mt-8 relative">
-        <div className="absolute top-0 left-1/3 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
-        <div className="absolute top-10 right-1/3 w-80 h-80 bg-green-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
+        <div className="absolute top-0 left-1/3 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
+        <div className="absolute top-10 right-1/3 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-6">
             <div className="relative">
-              <svg className="h-14 sm:h-16 w-14 sm:w-16 text-emerald-400 animated-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              <svg className="h-14 sm:h-16 w-14 sm:w-16 text-blue-400 animated-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
-              <TreeDeciduous className="h-5 w-5 text-green-300 absolute -top-1 -right-1 animate-pulse" />
+              <Cpu className="h-5 w-5 text-cyan-300 absolute -top-1 -right-1 animate-pulse" />
             </div>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-green-400 to-lime-400 animated-gradient">
-              Tree Algorithms
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 animated-gradient">
+              Mathematical & Miscellaneous
             </h1>
           </div>
 
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
-            Master hierarchical data structures with essential{" "}
-            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-400">
-              tree traversal
+            Master the numerical foundations and essential utilities for efficient{" "}
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+              problem-solving
             </span>{" "}
-            and{" "}
-            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-teal-400">
-              balancing techniques
-            </span>{" "}
-            for efficient problem-solving.
+            with mathematical insights and{" "}
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400">
+              algorithmic thinking.
+            </span>
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
-            <div className="px-4 py-2 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-full border border-emerald-500/30 backdrop-blur-sm">
+            <div className="px-4 py-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full border border-blue-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
-                <Code2 className="h-3.5 w-3.5 text-emerald-400" />
+                <Code2 className="h-3.5 w-3.5 text-blue-400" />
                 <span className="text-xs font-medium text-gray-300">
                   {algorithms.length} Problems
                 </span>
               </div>
             </div>
-            <div className="px-4 py-2 bg-gradient-to-r from-lime-500/10 to-teal-500/10 rounded-full border border-lime-500/30 backdrop-blur-sm">
+            <div className="px-4 py-2 bg-gradient-to-r from-teal-500/10 to-emerald-500/10 rounded-full border border-teal-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-3.5 w-3.5 text-lime-400" />
+                <TrendingUp className="h-3.5 w-3.5 text-teal-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  Hierarchical Structures
+                  Mathematical Foundations
                 </span>
               </div>
             </div>
@@ -176,7 +172,7 @@ const AlgorithmList = ({ navigate }) => {
           onClick={() => setFilter("all")}
           className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
             filter === "all"
-              ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
+              ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
               : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
           }`}
         >
@@ -344,9 +340,9 @@ const AlgorithmList = ({ navigate }) => {
 
       <div className="mt-12 text-center">
         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-full border border-gray-700 backdrop-blur-sm">
-          <TrendingUp className="h-4 w-4 text-emerald-400" />
+          <TrendingUp className="h-4 w-4 text-blue-400" />
           <span className="text-sm text-gray-400">
-            More tree problems coming soon
+            More mathematical problems coming soon
           </span>
         </div>
       </div>
@@ -354,32 +350,48 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
+const MathsMiscPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
-    switch (page) {
-      case "ConstructTree":
-        return <ConstructTree />;
-      case "ValidateBST":
-        return <ValidateBST />
-      case "LCAofDeepestLeaves":
-        return <LCAofDeepestLeaves />;
-      case "AVLTree":
-        return <AVLTree />;
-      case "home":
-      default:
-        return <AlgorithmList navigate={navigate} />;
-    }
-  };
+  switch (page) {
+    case "CountPrimes":
+      return <CountPrimes />;
+    case "PowerPage":
+      return <PowerPage />;
+    case "ExcelColumnTitle":
+      return <div className="text-center py-20">
+        <div className="text-2xl text-gray-400">Excel Sheet Column Title Visualizer - Coming Soon</div>
+        <button 
+          onClick={() => navigate("home")}
+          className="mt-4 px-6 py-2 bg-violet-500 hover:bg-violet-600 rounded-lg transition-colors"
+        >
+          Back to Problems
+        </button>
+      </div>;
+    case "FactorialZeroes":
+      return <div className="text-center py-20">
+        <div className="text-2xl text-gray-400">Factorial Zeroes Visualizer - Coming Soon</div>
+        <button 
+          onClick={() => navigate("home")}
+          className="mt-4 px-6 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg transition-colors"
+        >
+          Back to Problems
+        </button>
+      </div>;
+    case "home":
+    default:
+      return <AlgorithmList navigate={navigate} />;
+  }
+};
 
   const PageWrapper = ({ children }) => (
     <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-3xl animate-float-delayed" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-lime-500/10 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-float-delayed" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse-slow" />
       </div>
 
       <style>{`
@@ -401,7 +413,7 @@ const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
         }
         .animated-icon {
           animation: float-rotate 8s ease-in-out infinite;
-          filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.6));
+          filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.6));
         }
         @keyframes float-rotate {
           0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -448,9 +460,9 @@ const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
               Back to Problems
             </button>
             <div className="flex items-center gap-2">
-              <TreePine className="h-5 w-5 text-emerald-400" />
+              <Calculator className="h-5 w-5 text-blue-400" />
               <span className="text-sm font-semibold text-gray-300">
-                Tree Algorithms
+                Mathematical & Miscellaneous
               </span>
             </div>
           </div>
@@ -477,4 +489,4 @@ const TreesPage = ({ navigate: parentNavigate, initialPage = null }) => {
   );
 };
 
-export default TreesPage;
+export default MathsMiscPage;
