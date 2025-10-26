@@ -224,7 +224,7 @@ const SudokuSolver = () => {
   ];
 
   return (
-    <div className="p-4 max-w-7xl mx-auto focus:outline-none">
+    <div className="p-4 focus:outline-none">
       <header className="text-center mb-6">
         <h1 className="text-5xl font-bold text-blue-400 flex items-center justify-center gap-3">
           <Puzzle size={28} />
@@ -349,7 +349,7 @@ const SudokuSolver = () => {
               <h3 className="font-bold text-xl text-blue-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
                 <Code size={20} /> Backtracking Code
               </h3>
-              <pre className="text-sm">
+              <pre className="text-sm overflow-x-auto">
                 <code className="font-mono leading-relaxed block">
                   {sudokuCode.map(({ line: lineNum, content }) => (
                     <div key={lineNum} className={`block rounded-md transition-all duration-300 ${line === lineNum ? "bg-blue-500/20 border-l-4 border-blue-500" : ""}`}>
@@ -379,6 +379,14 @@ const SudokuSolver = () => {
                     <strong className="text-teal-300 font-mono block mb-1">O(N*N)</strong>
                     <p className="text-gray-400">The space is dominated by the board itself (O(N*N)) and the recursion stack depth, which is at most N*N (for 81 empty cells).</p>
                   </div>
+                </div>
+                <div className="bg-blue-900/20 p-4 rounded-xl border border-blue-500/30 mt-4">
+                  <h4 className="font-semibold text-blue-300 text-lg mb-2">💡 Key Insights</h4>
+                  <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm">
+                    <li>The `isValid` function is the core of constraint satisfaction, pruning the search space dramatically. Without it, the algorithm would be a brute-force search.</li>
+                    <li>Backtracking (resetting a cell to 0) is essential. It allows the algorithm to undo a decision that leads to a dead end and explore other possibilities.</li>
+                    <li>The order of searching for an empty cell doesn't affect correctness, but it can impact performance. A simple top-to-bottom scan is usually sufficient.</li>
+                  </ul>
                 </div>
               </div>
             </div>
