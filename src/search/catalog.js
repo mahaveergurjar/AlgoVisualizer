@@ -61,6 +61,7 @@ import {
   CheckCircle,
   Edit,
   Coins,
+  ListOrdered,
 } from "lucide-react";
 
 export const problems = [
@@ -988,6 +989,35 @@ export const problems = [
     timeComplexity: "O(m + n)",
     tags: ["Two Pointers", "Classic"],
   },
+  {
+    label: "Sort List",
+    category: "LinkedList",
+    subpage: "SortList",
+    keywords: [
+      "linked list",
+      "merge sort",
+      "sort",
+      "divide and conquer",
+      "148",
+    ],
+    number: "148",
+    icon: ListOrdered,
+    description:
+      "Sort a linked list in ascending order using merge sort.",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-orange-500 to-yellow-500",
+    iconColor: "text-yellow-400",
+    iconBg: "bg-yellow-500/20",
+    borderColor: "border-yellow-500/30",
+    technique: "Merge Sort (Divide & Conquer)",
+    timeComplexity: "O(n log n)",
+    tags: ["Merge Sort", "Linked List", "Divide and Conquer"],
+  },
+
 
   // =================================================================
   // STACK
