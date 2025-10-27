@@ -889,7 +889,7 @@ const CountPrimes = () => {
                     <div className="bg-red-500/10 p-3 rounded-lg border border-red-500/30">
                       <div className="text-red-300 font-semibold mb-2">Limitations</div>
                       <ul className="text-xs text-gray-400 space-y-1">
-                        <li>• Becomes slow for n > 10,000</li>
+                        <li>• Becomes slow for n &gt; 10,000</li>
                         <li>• Repeated work for composite numbers</li>
                         <li>• Not suitable for large inputs</li>
                         <li>• Poor scalability</li>
