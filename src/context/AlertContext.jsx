@@ -7,7 +7,7 @@ export const AlertContextProvider = ({ children }) => {
     message: "",
     heading: "",
     type: "error",
-    autoDismiss: 2,
+    autoDismiss: 4,
     visible: false,
   });
 
