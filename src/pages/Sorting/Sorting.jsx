@@ -25,6 +25,7 @@ import RadixSortVisualizer from "./RadixSort";
 import CountingSortVisualizer from "./CountingSort";
 import HeapSortVisualizer from "./HeapSort";
 import SelectionSortVisualizer from "./SelectionSort";
+import CombSortVisualizer from "./CombSort";
 // import ShellSortVisualizer from "./ShellSort"; // Removed from switch below
 // import PancakeSortVisualizer from "./PancakeSort"; // Removed from switch below
 
@@ -216,6 +217,8 @@ const SortingPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <HeapSortVisualizer navigate={navigate} />;
       case "SelectionSort":
         return <SelectionSortVisualizer navigate={navigate} />;
+      case "CombSort":
+        return <CombSortVisualizer navigate={navigate} />;
       // case "ShellSort": return <ShellSortVisualizer navigate={navigate} />; // Removed: import is commented out
       // case "PancakeSort": return <PancakeSortVisualizer navigate={navigate} />; // Removed: import is commented out
       case "home":
