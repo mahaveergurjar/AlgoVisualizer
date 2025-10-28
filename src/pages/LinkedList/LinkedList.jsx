@@ -16,7 +16,7 @@ import {
 import LinkedListCycle from "./LinkedListCycle.jsx";
 import ReverseLinkedList from "./ReverseLinkedList.jsx";
 import MergeTwoSortedLists from "./MergeTwoSortedLists.jsx";
-
+import SortList from "./SortList.jsx";
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from '../../search/catalog';
 import StarButton from '../../components/StarButton';
@@ -213,6 +213,7 @@ const LinkedListPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "LinkedListCycle": return <LinkedListCycle navigate={navigate} />;
       case "ReverseLinkedList": return <ReverseLinkedList navigate={navigate} />;
       case "MergeTwoSortedLists": return <MergeTwoSortedLists navigate={navigate} />;
+      case "SortList": return <SortList navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
