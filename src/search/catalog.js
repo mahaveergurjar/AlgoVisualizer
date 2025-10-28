@@ -8,6 +8,7 @@ import {
   Container,
   Droplets,
   ToggleRight,
+  LineChart,
   ArrowUpDown,
   TrendingUp,
   Target,
@@ -61,6 +62,7 @@ import {
   CheckCircle,
   Edit,
   Coins,
+  ListOrdered,
 } from "lucide-react";
 
 export const problems = [
@@ -988,6 +990,35 @@ export const problems = [
     timeComplexity: "O(m + n)",
     tags: ["Two Pointers", "Classic"],
   },
+  {
+    label: "Sort List",
+    category: "LinkedList",
+    subpage: "SortList",
+    keywords: [
+      "linked list",
+      "merge sort",
+      "sort",
+      "divide and conquer",
+      "148",
+    ],
+    number: "148",
+    icon: ListOrdered,
+    description:
+      "Sort a linked list in ascending order using merge sort.",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-orange-500 to-yellow-500",
+    iconColor: "text-yellow-400",
+    iconBg: "bg-yellow-500/20",
+    borderColor: "border-yellow-500/30",
+    technique: "Merge Sort (Divide & Conquer)",
+    timeComplexity: "O(n log n)",
+    tags: ["Merge Sort", "Linked List", "Divide and Conquer"],
+  },
+
 
   // =================================================================
   // STACK
@@ -1435,6 +1466,51 @@ export const problems = [
     timeComplexity: "O(n log n)",
     tags: ["Optimization", "In-place"],
   },
+  // =================================================================
+  // HEAPS
+  // =================================================================
+  {
+     category: 'Heaps',
+    subpage: 'Heapify', // <-- This MUST match the 'case' in HeapsPage
+    label: 'Heapify (Build Heap)',
+    number: 'H-01', // Custom ID for a concept
+    difficulty: 'Medium',
+    difficultyBg: 'bg-yellow-500/10',
+    difficultyColor: 'text-yellow-400',
+    difficultyBorder: 'border-yellow-500/30',
+    tier: 'Tier 1',
+    description: 'Learn how to convert an unordered array into a max-heap in-place using the sift-down (heapify) operation.',
+    icon: Layers, // This is already imported
+    gradient: 'from-teal-700 to-cyan-800',
+    borderColor: 'border-teal-600',
+    iconBg: 'bg-teal-700/20',
+    iconColor: 'text-teal-300',
+    tags: ['Heap', 'In-Place', 'Data Structure', 'Concept'],
+    technique: 'Sift-Down',
+    timeComplexity: 'O(n)',
+    platforms: ['Concept']
+  },
+  {
+    category: 'Heaps',
+    subpage: 'TopKFrequent', // <-- This MUST match the 'case' in HeapsPage
+    label: 'Top K Frequent Elements',
+    number: "347",
+    difficulty: 'Medium',
+    difficultyBg: 'bg-yellow-500/10',
+    difficultyColor: 'text-yellow-400',
+    difficultyBorder: 'border-yellow-500/30',
+    tier: 'Tier 2',
+    description: 'Given an integer array and an integer k, return the k most frequent elements. A min-heap is a perfect solution.',
+    icon: TrendingUp, // This is already imported
+    gradient: 'from-purple-700 to-indigo-800',
+    borderColor: 'border-purple-600',
+    iconBg: 'bg-purple-700/20',
+    iconColor: 'text-purple-300',
+    tags: ['Heap', 'Priority Queue', 'Hash Map'],
+    technique: 'Min-Heap',
+    timeComplexity: 'O(n log k)',
+    platforms: ['LeetCode #347']
+  },
 
   // =================================================================
   // TREES
@@ -2532,5 +2608,66 @@ export const problems = [
     timeComplexity: "O(n log n)",
     platforms: ["LeetCode #300", "GfG"],
     tags: ["DP", "Subsequence", "Binary Search"],
+  },
+  {
+    label: "Burst Balloons",
+    category: "Dynamic Programming",
+    subpage: "BurstBalloons", // This MUST match the case in DynamicProgramming.jsx
+    keywords: [
+      "dp",
+      "dynamic programming",
+      "burst",
+      "balloons",
+      "312",
+      "interval dp",
+      "matrix chain multiplication",
+    ],
+    number: "312",
+    icon: Zap, // Using Zap for the "burst" theme
+    description:
+      "Find the maximum coins you can collect by bursting balloons in an optimal order using interval DP.",
+    difficulty: "Hard",
+    tier: "Tier 1", // Tiers are subjective, adjust as needed
+    difficultyColor: "text-red-400",
+    difficultyBg: "bg-red-400/10",
+    difficultyBorder: "border-red-400/30",
+    gradient: "from-red-500 to-orange-600", // Fiery gradient for "burst"
+    iconColor: "text-red-400",
+    iconBg: "bg-red-500/20",
+    borderColor: "border-red-500/30",
+    technique: "Interval DP",
+    timeComplexity: "O(n³)",
+    tags: ["Interval DP", "Optimization"],
+  },
+  { 
+    label: "Buy/Sell Stock IV",
+    category: "Dynamic Programming",
+    subpage: "SellStockIV", // This MUST match the case in DynamicProgramming.jsx
+    keywords: [
+      "dp",
+      "dynamic programming",
+      "stock",
+      "buy",
+      "sell",
+      "transaction",
+      "k",
+      "188",
+    ],
+    number: "188",
+    icon: LineChart, // Icon for stock charts
+    description:
+      "Find the maximum profit from at most 'k' transactions using space-optimized DP.",
+    difficulty: "Hard",
+    tier: "Tier 2",
+    difficultyColor: "text-red-400",
+    difficultyBg: "bg-red-400/10",
+    difficultyBorder: "border-red-400/30",
+    gradient: "from-green-600 to-blue-700", // Green/Blue for stocks
+    iconColor: "text-green-400",
+    iconBg: "bg-green-500/20",
+    borderColor: "border-green-500/30",
+    technique: "Dynamic Programming",
+    timeComplexity: "O(N × K)",
+    tags: ["Classic DP", "Optimization", "Space-Optimized"],
   },
 ];
