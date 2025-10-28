@@ -17,6 +17,7 @@ import {
 // --- Import your specific algorithm visualizer components ---
 import Heapify from "./Heapify";
 import TopKFrequentVisualizer from "./TopKFrequentVisualizer";
+import TaskSchedulerVisualizer from "./TaskScheduler";
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from '../../search/catalog';
@@ -211,11 +212,13 @@ const HeapsPage = ({ navigate: parentNavigate, initialPage = null }) => {
     switch (page) {
       case "Heapify": return <Heapify navigate={navigate} />;
       case "TopKFrequent": return <TopKFrequentVisualizer navigate={navigate} />;
+      case "TaskScheduler":
+        return <TaskSchedulerVisualizer navigate={navigate} />;
       case "PriorityQueue":
         return <div className="text-center py-20"><div className="text-2xl text-gray-400">Priority Queue Visualizer - Coming Soon</div><button onClick={() => navigate("home")} className="mt-4 px-6 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors">Back to Problems</button></div>;
       case "KthLargest":
         return <div className="text-center py-20"><div className="text-2xl text-gray-400">Kth Largest Visualizer - Coming Soon</div><button onClick={() => navigate("home")} className="mt-4 px-6 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors">Back to Problems</button></div>;
-      case "home":
+        case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
     }
