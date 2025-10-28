@@ -16,6 +16,8 @@ import LCSVisualizer from "./LongestCommonSubsequence.jsx";
 import CoinChangeVisualizer from "./CoinChange.jsx";
 import EditDistanceVisualizer from "./EditDistance.jsx";
 import LISVisualizer from "./LISubsequence.jsx";
+import BurstBalloonsVisualizer from "./BurstBalloons.jsx";
+import SellStockIVVisualizer from "./SellStockIVVisualizer.jsx";
 // NOTE: Add more visualizer imports here as you create them!
 
 // --- ✅ Import the master catalog and your StarButton ---
@@ -248,6 +250,10 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <EditDistanceVisualizer navigate={navigate} />;
       case "LIS":
         return <LISVisualizer navigate={navigate} />;
+      case "BurstBalloons":
+        return <BurstBalloonsVisualizer navigate={navigate} />;
+      case "SellStockIV":
+        return <SellStockIVVisualizer navigate={navigate} />;
       // NOTE: Add a case for every visualizer you import!
       case "home":
       default:
