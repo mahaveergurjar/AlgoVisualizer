@@ -18,7 +18,7 @@ import {
   X,
   ArrowLeft,
   ArrowRight,
-  FlipHorizontal, // Corrected icon for Mirror
+  FlipHorizontal,
   ArrowDown,
   Minus,
 } from "lucide-react";
@@ -32,7 +32,7 @@ class BinaryTreeNode {
   }
 }
 
-// TreeNode Component for Visualization (modified for symmetry check)
+// TreeNode Component (No changes needed here)
 const TreeNode = ({
   node,
   x,
@@ -115,7 +115,7 @@ const TreeNode = ({
   );
 };
 
-// Tree Visualization Component (modified to handle twin nodes)
+// Tree Visualization Component
 const TreeVisualization = ({ tree, traversalState }) => {
   const svgRef = useRef();
   const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
@@ -228,9 +228,10 @@ const TreeVisualization = ({ tree, traversalState }) => {
   };
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
+    // MODIFIED: bg-gray-800/50 changed to bg-gray-900/30
+    <div className="bg-gray-900/30 backdrop-blur-md p-6 rounded-xl border border-gray-700/50 shadow-2xl">
       <h3 className="font-bold text-lg text-purple-300 mb-4 flex items-center gap-2">
-        <FlipHorizontal size={20} /> {/* Used FlipHorizontal */}
+        <FlipHorizontal size={20} />
         Symmetry Check Visualization
         {tree && (
           <span className="text-sm text-gray-400 ml-2">
@@ -240,11 +241,12 @@ const TreeVisualization = ({ tree, traversalState }) => {
       </h3>
 
       <div className="flex justify-center">
+        {/* MODIFIED: bg-gray-900/50 changed to bg-transparent */}
         <svg
           ref={svgRef}
           width={dimensions.width}
           height={dimensions.height}
-          className="border border-gray-600 rounded-lg bg-gray-900/50"
+          className="border border-gray-600 rounded-lg bg-transparent"
         >
           {/* Render edges first */}
           {tree && renderEdges(tree)}
@@ -285,7 +287,8 @@ const TreeVisualization = ({ tree, traversalState }) => {
 // Comparison Visualization Component
 const ComparisonVisualization = ({ nodeA, nodeB, comparison }) => {
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
+    // MODIFIED: bg-gray-800/50 changed to bg-gray-900/30
+    <div className="bg-gray-900/30 backdrop-blur-md p-6 rounded-xl border border-gray-700/50 shadow-2xl">
       <h3 className="font-bold text-lg text-amber-300 mb-4 flex items-center gap-2">
         <Target size={20} />
         Symmetry Comparison
@@ -294,7 +297,8 @@ const ComparisonVisualization = ({ nodeA, nodeB, comparison }) => {
       <div className="space-y-4">
         <div className="grid grid-cols-5 gap-4 text-center items-center">
           {/* Node A (Left) */}
-          <div className="bg-gray-700/50 p-3 rounded-lg border-2 border-blue-400 col-span-2">
+          {/* MODIFIED: bg-gray-700/50 changed to bg-gray-800/50 */}
+          <div className="bg-gray-800/50 p-3 rounded-lg border-2 border-blue-400 col-span-2">
             <div className="text-gray-400 text-sm">Node A (Left Side)</div>
             <div className="font-mono text-lg text-blue-400">
               {nodeA?.val ?? "null"}
@@ -304,7 +308,8 @@ const ComparisonVisualization = ({ nodeA, nodeB, comparison }) => {
           <div className="text-4xl text-gray-400 font-bold">=?</div>
 
           {/* Node B (Right) */}
-          <div className="bg-gray-700/50 p-3 rounded-lg border-2 border-red-400 col-span-2">
+          {/* MODIFIED: bg-gray-700/50 changed to bg-gray-800/50 */}
+          <div className="bg-gray-800/50 p-3 rounded-lg border-2 border-red-400 col-span-2">
             <div className="text-gray-400 text-sm">Node B (Right Side)</div>
             <div className="font-mono text-lg text-red-400">
               {nodeB?.val ?? "null"}
@@ -313,7 +318,8 @@ const ComparisonVisualization = ({ nodeA, nodeB, comparison }) => {
         </div>
 
         {comparison && (
-          <div className="bg-gradient-to-br from-amber-900/40 to-amber-800/40 p-4 rounded-lg border border-amber-700/50">
+          // MODIFIED: from-amber-900/40 to-amber-800/40 changed to reduced opacity
+          <div className="bg-gradient-to-br from-amber-900/20 to-amber-800/20 p-4 rounded-lg border border-amber-700/50">
             <div className="flex flex-col items-center justify-center gap-2">
               <div className="text-sm text-gray-400">Comparison Result:</div>
               <div
@@ -359,7 +365,6 @@ const SymmetricTreeVisualizer = () => {
   
   // NOTE: isPlaying and speed states are removed for manual control
 
-  // Build tree from level order input (re-used)
   const buildTreeFromLevelOrder = (values) => {
     if (values.length === 0 || values[0] === null) return null;
 
@@ -494,8 +499,8 @@ const SymmetricTreeVisualizer = () => {
           ...currentCall,
           step: stepCount++,
           explanation: `Recurse 2: Compare A.right (${nodeA.right?.val ?? 'null'}) with B.left (${nodeB.left?.val ?? 'null'}).`,
-          nodeA: { val: nodeA.right?.val, key: nodeMap.get(nodeA.right), side: 'right' }, // Switched side to 'right' for visual clarity
-          nodeB: { val: nodeB.left?.val, key: nodeMap.get(nodeB.left), side: 'left' }, // Switched side to 'left' for visual clarity
+          nodeA: { val: nodeA.right?.val, key: nodeMap.get(nodeA.right), side: 'right' }, 
+          nodeB: { val: nodeB.left?.val, key: nodeMap.get(nodeB.left), side: 'left' }, 
           line: 19,
       });
       
@@ -553,7 +558,6 @@ const SymmetricTreeVisualizer = () => {
     setHistory([]);
     setCurrentStep(-1);
     setIsLoaded(false);
-    // setIsPlaying(false); <-- REMOVED
   };
 
   const stepForward = useCallback(() => {
@@ -564,8 +568,6 @@ const SymmetricTreeVisualizer = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   }, []);
   
-  // NOTE: handleSpeedChange and playAnimation/pauseAnimation are removed
-
   const generateRandomTree = (isSymmetric = true) => {
     const getRandomVal = () => Math.floor(Math.random() * 10) + 1;
 
@@ -685,8 +687,6 @@ const SymmetricTreeVisualizer = () => {
   };
 
 
-  // NOTE: Auto-play useEffect block removed here
-
   // Keyboard controls
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -698,7 +698,6 @@ const SymmetricTreeVisualizer = () => {
           e.preventDefault();
           stepForward();
         } 
-        // NOTE: Spacebar functionality removed here
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -707,7 +706,7 @@ const SymmetricTreeVisualizer = () => {
     isLoaded,
     stepBackward,
     stepForward,
-  ]); // Simplified dependencies
+  ]); 
 
   const state = history[currentStep] || {};
   const {
@@ -785,14 +784,20 @@ const SymmetricTreeVisualizer = () => {
 
 
   return (
+    // MODIFIED: bg-gray-900 removed for transparency
     <div
       ref={visualizerRef}
       tabIndex={0}
-      className="p-4 max-w-7xl mx-auto focus:outline-none text-white bg-gray-900 min-h-screen"
+      className="p-4 max-w-7xl mx-auto focus:outline-none text-white min-h-screen"
+      style={{ 
+        // NOTE: You would typically set the background on the page/body, 
+        // but for this component, we'll keep the background absent here 
+        // to let the surrounding content show through.
+      }}
     >
       <header className="text-center mb-6">
         <h1 className="text-5xl font-bold text-purple-400 flex items-center justify-center gap-3">
-          <FlipHorizontal size={28} /> {/* Used FlipHorizontal */}
+          <FlipHorizontal size={28} />
           Symmetric Tree Validation
         </h1>
         <p className="text-lg text-gray-400 mt-2">
@@ -801,7 +806,8 @@ const SymmetricTreeVisualizer = () => {
       </header>
 
       {/* Controls Section */}
-      <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl shadow-2xl border border-gray-700/50 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+      {/* MODIFIED: bg-gray-800/50 changed to bg-gray-900/30 */}
+      <div className="bg-gray-900/30 backdrop-blur-md p-4 rounded-xl shadow-2xl border border-gray-700/50 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
         <div className="flex flex-col md:flex-row gap-4 flex-grow">
           <div className="flex items-center gap-4 flex-grow">
             <label
@@ -810,6 +816,7 @@ const SymmetricTreeVisualizer = () => {
             >
               Tree (Level Order):
             </label>
+            {/* MODIFIED: bg-gray-900 changed to bg-gray-800/50 */}
             <input
               id="tree-input"
               type="text"
@@ -817,7 +824,7 @@ const SymmetricTreeVisualizer = () => {
               onChange={(e) => setTreeInput(e.target.value)}
               disabled={isLoaded}
               placeholder="e.g., 1,2,2,3,null,null,3"
-              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+              className="font-mono flex-grow bg-gray-800/50 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
             />
           </div>
         </div>
@@ -855,7 +862,6 @@ const SymmetricTreeVisualizer = () => {
                   <SkipBack size={20} />
                 </button>
                 
-                {/* Simplified to only show SkipForward as the primary action */}
                 <button
                   onClick={stepForward}
                   disabled={currentStep >= history.length - 1}
@@ -865,25 +871,8 @@ const SymmetricTreeVisualizer = () => {
                 </button>
               </div>
 
-              <div className="flex items-center gap-4">
-                {/* Speed control is now optional as it doesn't affect manual steps */}
-                {/* <div className="flex items-center gap-2">
-                  <label className="text-gray-400 text-sm">Speed:</label>
-                  <select
-                    value={speed}
-                    onChange={handleSpeedChange}
-                    className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm cursor-pointer"
-                  >
-                    <option value={1500}>Slow</option>
-                    <option value={1000}>Medium</option>
-                    <option value={500}>Fast</option>
-                    <option value={250}>Very Fast</option>
-                  </select>
-                </div> */}
-
-                <div className="font-mono px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-center min-w-20">
-                  Step {currentStep + 1}/{history.length}
-                </div>
+              <div className="font-mono px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-center min-w-20">
+                Step {currentStep + 1}/{history.length}
               </div>
 
               <button
@@ -901,7 +890,8 @@ const SymmetricTreeVisualizer = () => {
       {isLoaded ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Pseudocode Panel */}
-          <div className="lg:col-span-1 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50">
+          {/* MODIFIED: bg-gray-800/50 changed to bg-gray-900/30 */}
+          <div className="lg:col-span-1 bg-gray-900/30 backdrop-blur-md p-5 rounded-xl shadow-2xl border border-gray-700/50">
             <h3 className="font-bold text-xl text-purple-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
               <Code size={20} />
               Symmetry Algorithm (isMirror)
@@ -921,17 +911,19 @@ const SymmetricTreeVisualizer = () => {
             </div>
 
             {/* Call Stack Visualization */}
+            {/* MODIFIED: bg-gray-900/50 changed to bg-gray-800/50 */}
             {callStack.length > 0 && (
-              <div className="mt-4 bg-gray-900/50 p-3 rounded-lg border border-gray-700">
+              <div className="mt-4 bg-gray-800/50 p-3 rounded-lg border border-gray-700">
                 <h4 className="text-sm text-gray-400 mb-2 flex items-center gap-2">
                   <BarChart3 size={16} />
                   Call Stack (Depth: {callStack.length})
                 </h4>
                 <div className="space-y-1 max-h-24 overflow-y-auto">
+                  {/* MODIFIED: bg-gray-800/50 changed to bg-gray-900/50 */}
                   {callStack.map((call, idx) => (
                     <div
                       key={idx}
-                      className="text-xs font-mono bg-gray-800/50 p-1 rounded"
+                      className="text-xs font-mono bg-gray-900/50 p-1 rounded"
                     >
                       (D{call.depth}) {call.sideA}:{call.nodeA} vs {call.sideB}:{call.nodeB}
                     </div>
@@ -943,7 +935,7 @@ const SymmetricTreeVisualizer = () => {
 
           {/* Enhanced Visualization Panels */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Tree Visualization */}
+            {/* Tree Visualization (bg updated inside component) */}
             <TreeVisualization
               tree={tree}
               traversalState={{
@@ -953,7 +945,7 @@ const SymmetricTreeVisualizer = () => {
               }}
             />
 
-            {/* Comparison Visualization */}
+            {/* Comparison Visualization (bg updated inside component) */}
             <ComparisonVisualization
               nodeA={nodeA}
               nodeB={nodeB}
@@ -961,7 +953,8 @@ const SymmetricTreeVisualizer = () => {
             />
 
             {/* Step Explanation Card */}
-             <div className="bg-gradient-to-br from-gray-700/40 to-gray-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-gray-700/50">
+            {/* MODIFIED: from-gray-700/40 to-gray-800/40 changed to from-gray-900/20 to-gray-800/20 */}
+             <div className="bg-gradient-to-br from-gray-900/20 to-gray-800/20 backdrop-blur-md p-6 rounded-xl shadow-xl border border-gray-700/50">
               <h3 className="font-bold text-lg text-amber-300 mb-3 flex items-center gap-2">
                 <Clock size={20} />
                 Step-by-Step Explanation
@@ -979,7 +972,8 @@ const SymmetricTreeVisualizer = () => {
           </div>
         </div>
       ) : (
-        <div className="text-center p-20 bg-gray-800/50 rounded-xl border border-gray-700/50">
+        // MODIFIED: bg-gray-800/50 changed to bg-gray-900/30
+        <div className="text-center p-20 bg-gray-900/30 backdrop-blur-md rounded-xl border border-gray-700/50">
           <FlipHorizontal size={48} className="text-purple-400 mx-auto mb-4" />
           <p className="text-gray-400 text-lg">
             Enter a tree structure (e.g., <span className="font-mono text-white">1,2,2,3,4,4,3</span> for a symmetric tree) or load a random example to begin the symmetry visualization.
