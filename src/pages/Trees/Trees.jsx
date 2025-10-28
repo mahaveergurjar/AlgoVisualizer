@@ -19,6 +19,7 @@ import {
 import ConstructBinaryTree from "./ConstructBinaryTree.jsx";
 import LCAofDeepestLeaves from "./LCAofDeepestLeaves";
 import AVLTree from "./AVLTree.jsx";
+import SymmetricTreeVisualizer from "./SymmetricTreeVisualizer.jsx";
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from "../../search/catalog";
@@ -911,6 +912,8 @@ const TreesPage = ({ navigate: parentNavigate }) => {
         return <AVLTree navigate={navigate} />;
       case "ValidateBST":
         return <ValidateBST navigate={navigate} />; // ✅ Merged change
+      case "SymmetricTreeVisualizer":
+        return <SymmetricTreeVisualizer navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
