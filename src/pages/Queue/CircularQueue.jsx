@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import VisualizerPointer from "../../components/VisualizerPointer";
 
+import { useAlertContext } from "../../context/AlertContext";
+
 // Main Visualizer Component
 const CircularQueueVisualizer = () => {
   const [history, setHistory] = useState([]);
@@ -18,6 +20,7 @@ const CircularQueueVisualizer = () => {
   const [capacityInput, setCapacityInput] = useState("6");
   const [operationsInput, setOperationsInput] = useState("enqueue 5, enqueue 3, enqueue 7, dequeue, enqueue 9, dequeue, enqueue 2, enqueue 8");
   const [isLoaded, setIsLoaded] = useState(false);
+  const { showAlert } = useAlertContext();
 
   const generateCircularQueueHistory = useCallback((capacity, operations) => {
     const queue = new Array(capacity).fill(null);
@@ -158,7 +161,7 @@ const CircularQueueVisualizer = () => {
         } else if (action === "dequeue") {
           return ["dequeue", null];
         } else {
-          alert(`Unknown operation: ${action}`);
+          showAlert("Invalid operation", `Unknown operation: ${action}`);
           return null;
         }
       })

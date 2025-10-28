@@ -15,11 +15,11 @@ import {
   Zap,
   Clock,
   Hash,
-  LetterText,
   Scissors,
   ArrowRight
 } from "lucide-react";
 
+// --- Import your specific algorithm visualizer components ---
 import PalindromeCheck from "./PalindromeCheck.jsx";
 import ReverseString from "./ReverseString.jsx";
 import CountVowels from "./CountVowels.jsx";
@@ -27,257 +27,19 @@ import ValidAnagramVisualizer from "./ValidAnagram.jsx";
 import LongestCommonPrefixVisualizer from "./LongestCP.jsx";
 import ReverseWordsVisualizer from "./ReverseWords.jsx";
 import StringCompressionVisualizer from "./StringCompression.jsx";
+import IsSubsequence from "./IsSubSequence.jsx";
+
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [filter, setFilter] = useState("all");
 
-  const algorithms = [
-    {
-      name: "Check Palindrome",
-      number: "1",
-      icon: ArrowLeftRight,
-      description: "Check if a string reads the same backward as forward.",
-      page: "PalindromeCheck",
-      difficulty: "Basic",
-      tier: "Tier 1",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-green-500 to-emerald-500",
-      iconColor: "text-green-400",
-      iconBg: "bg-green-500/20",
-      borderColor: "border-green-500/30",
-      technique: "Two Pointers",
-      timeComplexity: "O(n)",
-      platforms: ["All Platforms"],
-      tags: ["Beginner", "Two Pointers"]
-    },
-    {
-      name: "Reverse String",
-      number: "2",
-      icon: RefreshCw,
-      description: "Reverse the characters in a string.",
-      page: "ReverseString",
-      difficulty: "Basic",
-      tier: "Tier 1",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-blue-500 to-cyan-500",
-      iconColor: "text-blue-400",
-      iconBg: "bg-blue-500/20",
-      borderColor: "border-blue-500/30",
-      technique: "Two Pointers",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #344"],
-      tags: ["Beginner", "In-place"]
-    },
-    {
-      name: "Count Vowels",
-      number: "3",
-      icon: Hash,
-      description: "Count the number of vowels in a string.",
-      page: "CountVowels",
-      difficulty: "Basic",
-      tier: "Tier 1",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-purple-500 to-indigo-500",
-      iconColor: "text-purple-400",
-      iconBg: "bg-purple-500/20",
-      borderColor: "border-purple-500/30",
-      technique: "Traversal",
-      timeComplexity: "O(n)",
-      platforms: ["GfG"],
-      tags: ["Beginner", "Counting"]
-    },
-    {
-      name: "First Unique Character",
-      number: "4",
-      icon: CheckCircle2,
-      description: "Find the first non-repeating character in a string.",
-      page: "FirstUniqueChar",
-      difficulty: "Basic",
-      tier: "Tier 1",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-orange-500 to-amber-500",
-      iconColor: "text-orange-400",
-      iconBg: "bg-orange-500/20",
-      borderColor: "border-orange-500/30",
-      technique: "Hashing",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #387"],
-      tags: ["Beginner", "Hash Map"]
-    },
-    // TIER 2: EASY
-    {
-      name: "Valid Anagram",
-      number: "242",
-      icon: Repeat,
-      description: "Check if two strings are anagrams of each other.",
-      page: "ValidAnagram",
-      difficulty: "Easy",
-      tier: "Tier 2",
-      difficultyColor: "text-blue-400",
-      difficultyBg: "bg-blue-400/10",
-      difficultyBorder: "border-blue-400/30",
-      gradient: "from-teal-500 to-cyan-500",
-      iconColor: "text-teal-400",
-      iconBg: "bg-teal-500/20",
-      borderColor: "border-teal-500/30",
-      technique: "Hashing",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #242", "GfG"],
-      tags: ["Hashing", "Frequency"]
-    },
-    {
-      name: "Longest Common Prefix",
-      number: "14",
-      icon: AlignLeft,
-      description: "Find the longest common prefix among an array of strings.",
-      page: "LongestCommonPrefix",
-      difficulty: "Easy",
-      tier: "Tier 2",
-      difficultyColor: "text-blue-400",
-      difficultyBg: "bg-blue-400/10",
-      difficultyBorder: "border-blue-400/30",
-      gradient: "from-violet-500 to-purple-500",
-      iconColor: "text-violet-400",
-      iconBg: "bg-violet-500/20",
-      borderColor: "border-violet-500/30",
-      technique: "String Matching",
-      timeComplexity: "O(n*m)",
-      platforms: ["LeetCode #14", "GfG"],
-      tags: ["Prefix", "Comparison"]
-    },
-    {
-      name: "String Compression",
-      number: "443",
-      icon: Scissors,
-      description: "Compress string using character counts.",
-      page: "StringCompression",
-      difficulty: "Easy",
-      tier: "Tier 2",
-      difficultyColor: "text-blue-400",
-      difficultyBg: "bg-blue-400/10",
-      difficultyBorder: "border-blue-400/30",
-      gradient: "from-pink-500 to-rose-500",
-      iconColor: "text-pink-400",
-      iconBg: "bg-pink-500/20",
-      borderColor: "border-pink-500/30",
-      technique: "Two Pointers",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #443"],
-      tags: ["Compression", "In-place"]
-    },
-    {
-      name: "Reverse Words",
-      number: "151",
-      icon: Text,
-      description: "Reverse the order of words in a string.",
-      page: "ReverseWords",
-      difficulty: "Easy",
-      tier: "Tier 2",
-      difficultyColor: "text-blue-400",
-      difficultyBg: "bg-blue-400/10",
-      difficultyBorder: "border-blue-400/30",
-      gradient: "from-cyan-500 to-blue-500",
-      iconColor: "text-cyan-400",
-      iconBg: "bg-cyan-500/20",
-      borderColor: "border-cyan-500/30",
-      technique: "String Manipulation",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #151", "GfG"],
-      tags: ["Words", "Parsing"]
-    },
-    // TIER 3: MEDIUM+
-    {
-      name: "Longest Substring Without Repeating",
-      number: "3",
-      icon: Search,
-      description: "Find length of longest substring without repeating characters.",
-      page: "LongestSubstring",
-      difficulty: "Medium",
-      tier: "Tier 3",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-emerald-500 to-teal-500",
-      iconColor: "text-emerald-400",
-      iconBg: "bg-emerald-500/20",
-      borderColor: "border-emerald-500/30",
-      technique: "Sliding Window",
-      timeComplexity: "O(n)",
-      platforms: ["LeetCode #3", "GfG"],
-      tags: ["Sliding Window", "Hash Set"]
-    },
-    {
-      name: "Longest Palindromic Substring",
-      number: "5",
-      icon: ArrowLeftRight,
-      description: "Find the longest palindromic substring in a string.",
-      page: "LongestPalindrome",
-      difficulty: "Medium",
-      tier: "Tier 3",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-fuchsia-500 to-purple-500",
-      iconColor: "text-fuchsia-400",
-      iconBg: "bg-fuchsia-500/20",
-      borderColor: "border-fuchsia-500/30",
-      technique: "Expand Around Center",
-      timeComplexity: "O(n²)",
-      platforms: ["LeetCode #5", "GfG"],
-      tags: ["Palindrome", "DP"]
-    },
-    {
-      name: "Group Anagrams",
-      number: "49",
-      icon: Repeat,
-      description: "Group strings that are anagrams of each other.",
-      page: "GroupAnagrams",
-      difficulty: "Medium",
-      tier: "Tier 3",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-amber-500 to-orange-500",
-      iconColor: "text-amber-400",
-      iconBg: "bg-amber-500/20",
-      borderColor: "border-amber-500/30",
-      technique: "Hashing",
-      timeComplexity: "O(n*k)",
-      platforms: ["LeetCode #49", "GfG"],
-      tags: ["Grouping", "Hash Map"]
-    },
-    {
-      name: "Minimum Window Substring",
-      number: "76",
-      icon: Search,
-      description: "Find minimum window containing all characters of target.",
-      page: "MinWindowSubstring",
-      difficulty: "Hard",
-      tier: "Tier 3",
-      difficultyColor: "text-red-400",
-      difficultyBg: "bg-red-400/10",
-      difficultyBorder: "border-red-400/30",
-      gradient: "from-red-500 to-rose-500",
-      iconColor: "text-red-400",
-      iconBg: "bg-red-500/20",
-      borderColor: "border-red-500/30",
-      technique: "Sliding Window",
-      timeComplexity: "O(n+m)",
-      platforms: ["LeetCode #76", "GfG"],
-      tags: ["Sliding Window", "Advanced"]
-    }
-  ];
+  // ✅ Get String problems directly from the master catalog
+  const stringAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'Strings');
+  
+  // ❌ The local 'algorithms' array has been DELETED.
 
-  const filteredAlgorithms = algorithms.filter(algo => {
+  const filteredAlgorithms = stringAlgorithms.filter(algo => {
     if (filter === "all") return true;
     if (filter === "beginner") return algo.tier === "Tier 1";
     if (filter === "easy") return algo.tier === "Tier 2";
@@ -290,7 +52,6 @@ function AlgorithmList({ navigate }) {
       <header className="text-center mb-16 mt-8 relative">
         <div className="absolute top-0 left-1/3 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
         <div className="absolute top-10 right-1/3 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow-delayed pointer-events-none" />
-
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-6">
             <div className="relative">
@@ -301,7 +62,6 @@ function AlgorithmList({ navigate }) {
               String Algorithms
             </h1>
           </div>
-
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
             Master string manipulation with powerful techniques like{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
@@ -312,13 +72,12 @@ function AlgorithmList({ navigate }) {
               sliding windows
             </span>
           </p>
-
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
             <div className="px-4 py-2 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full border border-purple-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
                 <Code2 className="h-3.5 w-3.5 text-purple-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  {algorithms.length} Problems
+                  {stringAlgorithms.length} Problems
                 </span>
               </div>
             </div>
@@ -381,32 +140,32 @@ function AlgorithmList({ navigate }) {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
         {filteredAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
-          const Icon = algo.icon;
+          const Icon = algo.icon || defaultVisuals.icon;
 
           return (
             <div
-              key={algo.name}
-              onClick={() => navigate(algo.page)}
+              key={algo.subpage} // ✅ Use subpage
+              onClick={() => navigate(algo.subpage)} // ✅ Use subpage
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className="group relative cursor-pointer animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient || defaultVisuals.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
               />
 
               <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor || defaultVisuals.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                      className={`p-3 ${algo.iconBg || defaultVisuals.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
                         className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
+                          isHovered ? "text-white" : (algo.iconColor || defaultVisuals.iconColor)
                         } transition-colors duration-300`}
                       />
                     </div>
@@ -429,10 +188,16 @@ function AlgorithmList({ navigate }) {
                           isHovered ? "text-white" : "text-gray-200"
                         }`}
                       >
-                        {algo.name}
+                        {algo.label} {/* ✅ Use label */}
                       </h2>
                     </div>
                   </div>
+
+                  {/* ✅ Add the StarButton here */}
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <StarButton problemId={algo.subpage} />
+                  </div>
+
                 </div>
 
                 <p
@@ -524,6 +289,7 @@ function AlgorithmList({ navigate }) {
   );
 }
 
+// ✅ This part remains completely the same as before.
 const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
@@ -544,6 +310,8 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <ReverseWordsVisualizer navigate={navigate} />;
       case "StringCompression":
         return <StringCompressionVisualizer navigate={navigate} />;
+      case "IsSubsequence":
+        return <IsSubsequence navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -559,52 +327,18 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
       </div>
 
       <style>{`
-        .animated-gradient {
-          background-size: 200% auto;
-          animation: gradient-animation 4s ease-in-out infinite;
-        }
-        @keyframes gradient-animation {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0;
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animated-icon {
-          animation: float-rotate 8s ease-in-out infinite;
-          filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.6));
-        }
-        @keyframes float-rotate {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          33% { transform: translateY(-8px) rotate(120deg); }
-          66% { transform: translateY(-4px) rotate(240deg); }
-        }
-        .animate-pulse-slow, .animate-pulse-slow-delayed {
-          animation: pulse-slow 4s ease-in-out infinite;
-        }
-        .animate-pulse-slow-delayed {
-          animation-delay: 2s;
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.6; }
-        }
-        .animate-float {
-          animation: float 20s ease-in-out infinite;
-        }
-        .animate-float-delayed {
-          animation: float 20s ease-in-out infinite;
-          animation-delay: 10s;
-        }
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(30px, -30px) scale(1.1); }
-        }
+        .animated-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; }
+        @keyframes gradient-animation { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animated-icon { animation: float-rotate 8s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.6)); }
+        @keyframes float-rotate { 0%, 100% { transform: translateY(0) rotate(0deg); } 33% { transform: translateY(-8px) rotate(120deg); } 66% { transform: translateY(-4px) rotate(240deg); } }
+        .animate-pulse-slow, .animate-pulse-slow-delayed { animation: pulse-slow 4s ease-in-out infinite; }
+        .animate-pulse-slow-delayed { animation-delay: 2s; }
+        @keyframes pulse-slow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+        .animate-float { animation: float 20s ease-in-out infinite; }
+        .animate-float-delayed { animation: float 20s ease-in-out infinite; animation-delay: 10s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.1); } }
       `}</style>
       <div className="relative z-10">{children}</div>
     </div>
@@ -612,7 +346,6 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
 
   return (
     <PageWrapper>
-      {/* Navigation to go back to the problem list within this category */}
       {page !== "home" && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
@@ -633,7 +366,6 @@ const StringPage = ({ navigate: parentNavigate, initialPage = null }) => {
         </nav>
       )}
 
-      {/* Navigation to go back to the main category homepage */}
       {page === "home" && parentNavigate && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto">

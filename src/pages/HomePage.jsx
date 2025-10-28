@@ -27,6 +27,7 @@ import {
   Search,
   Calculator,
   Hash,
+  Star,
 } from "lucide-react";
 
 import ArrayPage from "./Arrays/Arrays.jsx";
@@ -35,7 +36,7 @@ import LinkedListPage from "./LinkedList/LinkedList.jsx";
 import StackPage from "./Stack/Stack.jsx";
 import TreesPage from "./Trees/Trees.jsx";
 import HeapsPage from "./Heaps/Heaps.jsx";
-import SearchingPage from "./Searching/Searching.jsx"
+import SearchingPage from "./Searching/Searching.jsx";
 import DesignPage from "./Design/Design.jsx";
 import RecursionPage from "./Recursion/Recursion.jsx";
 import SortingPage from "./Sorting/Sorting.jsx";
@@ -52,6 +53,7 @@ import StringPage from "./Strings/Strings.jsx";
 import BitPage from "./BitManipulation/BitManipulation.jsx";
 import HashingPage from "./Hashing/Hashing.jsx";
 import MathsMiscPage from "./MathematicalMiscellaneous/MathematicalMiscellaneous.jsx";
+import StarredProblems from "./Starred/StarredProblems.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -61,6 +63,16 @@ const AlgorithmCategories = ({ navigate }) => {
 
   const categories = useMemo(
     () => [
+      {
+        name: "Starred Topics",
+        icon: Star,
+        description: "Review your saved problems and topics for easy access.",
+        page: "Starred", // This is the key we'll use for routing
+        gradient: "from-yellow-400 to-amber-500",
+        iconBg: "bg-yellow-400/20",
+        borderColor: "border-yellow-400/30",
+        iconColor: "text-yellow-300",
+      },
       {
         name: "Sorting",
         icon: ArrowDownUp,
@@ -302,7 +314,7 @@ const AlgorithmCategories = ({ navigate }) => {
     const problemItems = PROBLEM_CATALOG.map((p) => ({
       type: "problem",
       ...p,
-    })).filter(p => p.category && p.subpage); // Ensure items are valid
+    })).filter((p) => p.category && p.subpage); // Ensure items are valid
     return [...categoryItems, ...problemItems];
   }, [categories]);
 
@@ -366,7 +378,7 @@ const AlgorithmCategories = ({ navigate }) => {
                   strokeWidth="1.5"
                   color="currentColor"
                 >
-                  <path d="M11.5 6C7.022 6 4.782 6 3.391 7.172S2 10.229 2 14s0 5.657 1.391 6.828S7.021 22 11.5 22c4.478 0 6.718 0 8.109-1.172S21 17.771 21 14c0-1.17 0-2.158-.041-3M18.5 2l.258.697c.338.914.507 1.371.84 1.704c.334.334.791.503 1.705.841L22 5.5l-.697.258c-.914.338-1.371.507-1.704.84c-.334.334-.503.791-.841 1.705L18.5 9l-.258-.697c-.338-.914-.507-1.371-.84-1.704c-.334-.334-.791-.503-1.705-.841L15 5.5l.697-.258c.914-.338 1.371-.507 1.704-.84c.334-.334.503-.791.841-1.705z" />
+                  <path d="M11.5 6C7.022 6 4.782 6 3.391 7.172S2 10.229 2 14s0 5.657 1.391 6.828S7.021 22 11.5 22c4.478 0 6.718 0 8.109-1.172S21 17.771 21 14c0-1.17 0-2.158-.041-3M18.5 2l.258.697c.338.914.507 1.371.84 1.704c.334.334.791.503 1.705.841L22 5.5l-.697.258c-.914.338-1.371.507-1.704.84c-.334.334-.503.791-.841 1.705L18.5 9l-.258-.697c-.338-.914-.507-1.371-.84-1.704c-.334-.334-.503-.791-.841 1.705L15 5.5l.697-.258c.914-.338 1.371-.507 1.704-.84c.334-.334.503-.791.841-1.705z" />
                   <path d="m15.5 12l1.227 1.057c.515.445.773.667.773.943s-.258.498-.773.943L15.5 16m-8-4l-1.227 1.057c-.515.445-.773.667-.773.943s.258.498.773.943L7.5 16m5-5l-2 6" />
                 </g>
               </svg>
@@ -457,12 +469,23 @@ const AlgorithmCategories = ({ navigate }) => {
                                     ? "Problem"
                                     : "Topic"}
                                 </span>
-                                <span className="text-gray-200">
+                                <span className="text-gray-200 font-semibold">
+                                  {/* ✅ ADD PROBLEM NUMBER AND PLATFORM DISPLAY */}
+                                  {item.type === "problem" && item.number && (
+                                    <span className="text-gray-500 font-mono mr-2">
+                                      #{item.number}
+                                    </span>
+                                  )}
                                   {item.label}
                                   {item.type === "problem" && (
-                                    <span className="text-gray-500">
-                                      {" "}
+                                    <span className="text-gray-500 font-normal ml-2">
                                       — {item.category}
+                                      {item.platforms &&
+                                        item.platforms.length > 0 && (
+                                          <span className="ml-2 font-mono text-xs px-2 py-0.5 rounded bg-gray-700/50 border border-gray-600">
+                                            {item.platforms.join(", ")}
+                                          </span>
+                                        )}
                                     </span>
                                   )}
                                 </span>
@@ -666,6 +689,9 @@ const HomePage = () => {
 
   const renderPage = () => {
     switch (page) {
+      // ADD THE NEW CASE HERE
+      case "Starred":
+        return <StarredProblems navigate={navigate} />;
       case "Arrays":
         return <ArrayPage navigate={navigate} initialPage={initialSubPage} />;
       case "Strings":
@@ -688,7 +714,9 @@ const HomePage = () => {
       case "Sorting":
         return <SortingPage navigate={navigate} initialPage={initialSubPage} />;
       case "Searching":
-        return <SearchingPage navigate={navigate} initialPage={initialSubPage} />;
+        return (
+          <SearchingPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "Trees":
         return <TreesPage navigate={navigate} initialPage={initialSubPage} />;
       case "Design":
@@ -716,11 +744,13 @@ const HomePage = () => {
       case "BacktrackingPage":
         return (
           <BacktrackingPage navigate={navigate} initialPage={initialSubPage} />
-        );  
+        );
       case "DynamicProgramming":
         return <DPPage navigate={navigate} initialPage={initialSubPage} />;
       case "MathsMiscPage":
-        return <MathsMiscPage navigate={navigate} initialPage={initialSubPage} />;  
+        return (
+          <MathsMiscPage navigate={navigate} initialPage={initialSubPage} />
+        );
       case "BitManipulation":
         return <BitPage navigate={navigate} initialPage={initialSubPage} />;
       case "home":

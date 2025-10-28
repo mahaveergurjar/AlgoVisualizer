@@ -10,69 +10,32 @@ import {
   Database,
   Search,
 } from "lucide-react";
+
+// --- Import your specific algorithm visualizer components ---
 import ValidAnagram from "./ValidAnagram";
 import SubarraySumEqualsK from "./SubarraySumEqualsK";
 import LongestConsecutiveSequence from "./LongestConsecutiveSequence";
 
+// --- ✅ Import the master catalog and your StarButton ---
+import { problems as PROBLEM_CATALOG } from '../../search/catalog';
+import StarButton from '../../components/StarButton';
+
+// ✅ (Optional but Recommended) Default values for visual properties
+const defaultVisuals = {
+  icon: Hash,
+  gradient: "from-gray-700 to-gray-800",
+  borderColor: "border-gray-600",
+  iconBg: "bg-gray-700/20",
+  iconColor: "text-gray-300",
+};
+
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const algorithms = [
-    {
-      name: "Valid Anagram",
-      number: "242",
-      icon: Search,
-      description:
-        "Check if two strings are anagrams using character counting.",
-      page: "ValidAnagram",
-      difficulty: "Easy",
-      difficultyColor: "text-green-400",
-      difficultyBg: "bg-green-400/10",
-      difficultyBorder: "border-green-400/30",
-      gradient: "from-pink-500 to-purple-500",
-      iconColor: "text-pink-400",
-      iconBg: "bg-pink-500/20",
-      borderColor: "border-pink-500/30",
-      technique: "Hash Map",
-      timeComplexity: "O(n)",
-    },
-    {
-      name: "Subarray Sum Equals K",
-      number: "560",
-      icon: Database,
-      description:
-        "Count subarrays whose elements sum to k using prefix sums and hashing.",
-      page: "SubarraySumEqualsK",
-      difficulty: "Medium",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-amber-500 to-orange-500",
-      iconColor: "text-amber-400",
-      iconBg: "bg-amber-500/20",
-      borderColor: "border-amber-500/30",
-      technique: "Prefix Sum + Hash Map",
-      timeComplexity: "O(n)",
-    },
-    {
-      name: "Longest Consecutive Sequence",
-      number: "128",
-      icon: Hash,
-      description:
-        "Find the longest sequence of consecutive numbers using a set.",
-      page: "LongestConsecutiveSequence",
-      difficulty: "Medium",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-cyan-500 to-blue-500",
-      iconColor: "text-cyan-400",
-      iconBg: "bg-cyan-500/20",
-      borderColor: "border-cyan-500/30",
-      technique: "Hash Set Search",
-      timeComplexity: "O(n)",
-    },
-  ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
+  // ✅ Get Hashing problems directly from the master catalog
+  const hashingAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'Hashing');
+
+  // ❌ The local 'algorithms' array has been DELETED.
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -108,7 +71,7 @@ const AlgorithmList = ({ navigate }) => {
               <div className="flex items-center gap-2">
                 <Code2 className="h-3.5 w-3.5 text-lime-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  {algorithms.length} Problems
+                  {hashingAlgorithms.length} Problems
                 </span>
               </div>
             </div>
@@ -125,33 +88,33 @@ const AlgorithmList = ({ navigate }) => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {algorithms.map((algo, index) => {
+        {hashingAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
-          const Icon = algo.icon;
+          const Icon = algo.icon || defaultVisuals.icon;
 
           return (
             <div
-              key={algo.name}
-              onClick={() => navigate(algo.page)}
+              key={algo.subpage} // ✅ Use subpage
+              onClick={() => navigate(algo.subpage)} // ✅ Use subpage
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className="group relative cursor-pointer animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient || defaultVisuals.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
               />
               <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor || defaultVisuals.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                      className={`p-3 ${algo.iconBg || defaultVisuals.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
                         className={`h-10 w-10 ${
-                          isHovered ? "text-white" : algo.iconColor
+                          isHovered ? "text-white" : (algo.iconColor || defaultVisuals.iconColor)
                         } transition-colors duration-300`}
                       />
                     </div>
@@ -171,9 +134,14 @@ const AlgorithmList = ({ navigate }) => {
                           isHovered ? "text-white" : "text-gray-200"
                         }`}
                       >
-                        {algo.name}
+                        {algo.label} {/* ✅ Use label */}
                       </h2>
                     </div>
+                  </div>
+
+                  {/* ✅ Add the StarButton here */}
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <StarButton problemId={algo.subpage} />
                   </div>
                 </div>
 
@@ -234,18 +202,16 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
+// ✅ This part remains completely the same as before.
 const HashingPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
-      case "ValidAnagram":
-        return <ValidAnagram />;
-      case "SubarraySumEqualsK":
-        return <SubarraySumEqualsK />;
-      case "LongestConsecutiveSequence":
-        return <LongestConsecutiveSequence />;
+      case "ValidAnagram": return <ValidAnagram />;
+      case "SubarraySumEqualsK": return <SubarraySumEqualsK />;
+      case "LongestConsecutiveSequence": return <LongestConsecutiveSequence />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -261,47 +227,16 @@ const HashingPage = ({ navigate: parentNavigate, initialPage = null }) => {
       </div>
 
       <style>{`
-        .animated-gradient {
-          background-size: 200% auto;
-          animation: gradient-animation 4s ease-in-out infinite;
-        }
-        @keyframes gradient-animation {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0;
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animated-icon {
-          animation: float-rotate 8s ease-in-out infinite;
-          filter: drop-shadow(0 0 20px rgba(132, 204, 22, 0.6));
-        }
-        @keyframes float-rotate {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          33% { transform: translateY(-8px) rotate(120deg); }
-          66% { transform: translateY(-4px) rotate(240deg); }
-        }
-        .animate-pulse-slow, .animate-pulse-slow-delayed {
-          animation: pulse-slow 4s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.6; }
-        }
-        .animate-float, .animate-float-delayed {
-          animation: float 20s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
-        }
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(30px, -30px) scale(1.1); }
-        }
+        .animated-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; }
+        @keyframes gradient-animation { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animated-icon { animation: float-rotate 8s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(132, 204, 22, 0.6)); }
+        @keyframes float-rotate { 0%, 100% { transform: translateY(0) rotate(0deg); } 33% { transform: translateY(-8px) rotate(120deg); } 66% { transform: translateY(-4px) rotate(240deg); } }
+        .animate-pulse-slow, .animate-pulse-slow-delayed { animation: pulse-slow 4s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
+        @keyframes pulse-slow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+        .animate-float, .animate-float-delayed { animation: float 20s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.1); } }
       `}</style>
       <div className="relative z-10">{children}</div>
     </div>
@@ -309,7 +244,6 @@ const HashingPage = ({ navigate: parentNavigate, initialPage = null }) => {
 
   return (
     <PageWrapper>
-      {/* Navigation to go back to the problem list within this category */}
       {page !== "home" && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
@@ -330,7 +264,6 @@ const HashingPage = ({ navigate: parentNavigate, initialPage = null }) => {
         </nav>
       )}
 
-      {/* Navigation to go back to the main category homepage */}
       {page === "home" && parentNavigate && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto">

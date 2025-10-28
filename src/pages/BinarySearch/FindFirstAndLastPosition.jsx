@@ -409,8 +409,9 @@ const FindFirstAndLastPosition = () => {
                     max={2000}
                     step={50}
                     value={speed}
-                    onChange={(e) =>
-                      setSpeed(2100 - parseInt(e.target.value, 10))
+                    onChange={(e) =>{
+                      console.log(e.target.value)
+                      setSpeed(parseInt(e.target.value, 10))}
                     }
                     className="w-24"
                   />

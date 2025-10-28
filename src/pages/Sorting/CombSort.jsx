@@ -11,7 +11,7 @@ import {
 import VisualizerPointer from "../../components/VisualizerPointer";
 
 // Main Visualizer Component
-const BubbleSortVisualizer = () => {
+const CombSortVisualizer = () => {
   const [history, setHistory] = useState([]);
   const [currentStep, setCurrentStep] = useState(-1);
   const [arrayInput, setArrayInput] = useState("8,5,2,9,5,6,3");
@@ -21,101 +21,74 @@ const BubbleSortVisualizer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
 
-  const generateBubbleSortHistory = useCallback((initialArray) => {
-    // The array is now objects like {id, value}
+  const generateCombSortHistory = useCallback((initialArray) => {
     const arr = JSON.parse(JSON.stringify(initialArray));
     const n = arr.length;
     const newHistory = [];
     let totalSwaps = 0;
     let totalComparisons = 0;
-    let sortedIndices = [];
 
     const addState = (props) =>
       newHistory.push({
-        array: JSON.parse(JSON.stringify(arr)), // Deep copy of objects
+        array: JSON.parse(JSON.stringify(arr)),
         i: null,
         j: null,
-        sortedIndices: [...sortedIndices],
+        sortedIndices: [],
         explanation: "",
         totalSwaps,
         totalComparisons,
         ...props,
       });
 
-    addState({ line: 2, explanation: "Initialize Bubble Sort algorithm." });
+    addState({ line: 2, explanation: "Initialize Comb Sort algorithm." });
 
-    for (let i = 0; i < n - 1; i++) {
-      let swappedInPass = false;
-      addState({
-        line: 3,
-        i,
-        explanation: `Start Pass ${
-          i + 1
-        }. The largest unsorted element will bubble to the end.`,
-      });
+    let gap = n;
+    let shrink = 1.3;
+    let swapped = true;
 
-      for (let j = 0; j < n - i - 1; j++) {
+    addState({ line: 3, explanation: `Initial gap is ${gap}.` });
+
+    while (gap > 1 || swapped) {
+      gap = Math.floor(gap / shrink);
+      if (gap < 1) {
+        gap = 1;
+      }
+      addState({ line: 4, explanation: `New gap is ${gap}.` });
+
+      swapped = false;
+      addState({ line: 5, explanation: "Start a pass." });
+
+      for (let i = 0; i + gap < n; i++) {
         totalComparisons++;
         addState({
-          line: 4,
+          line: 6,
           i,
-          j,
-          explanation: `Comparing adjacent elements at index ${j} (${
-            arr[j].value
-          }) and ${j + 1} (${arr[j + 1].value}).`,
+          j: i + gap,
+          explanation: `Comparing elements at index ${i} (${arr[i].value}) and ${i + gap} (${arr[i + gap].value}).`,
         });
 
-        if (arr[j].value > arr[j + 1].value) {
-          swappedInPass = true;
+        if (arr[i].value > arr[i + gap].value) {
+          swapped = true;
           totalSwaps++;
           addState({
-            line: 5,
+            line: 7,
             i,
-            j,
-            explanation: `${arr[j].value} > ${
-              arr[j + 1].value
-            }, so they need to be swapped.`,
+            j: i + gap,
+            explanation: `${arr[i].value} > ${arr[i + gap].value}, so they need to be swapped.`,
           });
-          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]; // Swap
+          [arr[i], arr[i + gap]] = [arr[i + gap], arr[i]]; // Swap
           addState({
-            line: 6,
+            line: 8,
             i,
-            j,
+            j: i + gap,
             explanation: `Elements swapped.`,
           });
         }
       }
-
-      sortedIndices.push(n - 1 - i);
-      addState({
-        line: 8,
-        i,
-        explanation: `End of Pass ${i + 1}. Element ${
-          arr[n - 1 - i].value
-        } is now in its correct sorted position.`,
-      });
-
-      if (!swappedInPass) {
-        addState({
-          line: 9,
-          i,
-          explanation:
-            "No swaps occurred in this pass. The array is already sorted. Breaking early.",
-        });
-        const remainingUnsorted = Array.from(
-          { length: n - sortedIndices.length },
-          (_, k) => k
-        );
-        sortedIndices.push(...remainingUnsorted);
-        break;
-      }
     }
 
-    const finalSorted = Array.from({ length: n }, (_, k) => k);
-
     addState({
-      line: 13,
-      sortedIndices: finalSorted,
+      line: 12,
       finished: true,
       explanation: "Algorithm finished. The array is fully sorted.",
     });
@@ -140,7 +113,7 @@ const BubbleSortVisualizer = () => {
     const initialObjects = localArray.map((value, id) => ({ value, id }));
 
     setIsLoaded(true);
-    generateBubbleSortHistory(initialObjects);
+    generateCombSortHistory(initialObjects);
   };
 
   const reset = () => {
@@ -250,49 +223,47 @@ const BubbleSortVisualizer = () => {
     </div>
   );
 
-  const bubbleSortCode = [
-    { l: 2, c: [{ t: "function bubbleSort(arr) {", c: "" }] },
+  const combSortCode = [
+    { l: 2, c: [{ t: "function combSort(arr) {", c: "" }] },
     {
       l: 3,
       c: [
-        { t: "  for", c: "purple" },
-        { t: " (let i = 0; i < n - 1; i++) {", c: "" },
+        { t: "  let gap = arr.length;", c: "" },
+        { t: "  let shrink = 1.3;", c: "" },
+        { t: "  let swapped = true;", c: "" },
       ],
     },
     {
       l: 4,
       c: [
-        { t: "    for", c: "purple" },
-        { t: " (let j = 0; j < n - i - 1; j++) {", c: "" },
+        { t: "  while (gap > 1 || swapped) {", c: "" },
       ],
     },
     {
       l: 5,
       c: [
-        { t: "      if", c: "purple" },
-        { t: " (arr[j] > arr[j + 1]) {", c: "" },
+        { t: "    gap = Math.floor(gap / shrink);", c: "" },
+        { t: "    if (gap < 1) gap = 1;", c: "" },
       ],
     },
-    { l: 6, c: [{ t: "        swap(arr[j], arr[j + 1]);", c: "" }] },
-    { l: 7, c: [{ t: "      }", c: "light-gray" }] },
-    { l: 8, c: [{ t: "    }", c: "light-gray" }] },
+    { l: 6, c: [{ t: "    swapped = false;", c: "" }] },
     {
-      l: 9,
+      l: 7,
       c: [
-        { t: "    if", c: "purple" },
-        { t: " (!swappedInPass) ", c: "" },
-        { t: "break", c: "purple" },
-        { t: ";", c: "light-gray" },
+        { t: "    for (let i = 0; i + gap < arr.length; i++) {", c: "" },
       ],
     },
-    { l: 12, c: [{ t: "  }", c: "light-gray" }] },
     {
-      l: 13,
+      l: 8,
       c: [
-        { t: "  return", c: "purple" },
-        { t: " arr;", c: "" },
+        { t: "      if (arr[i] > arr[i + gap]) {", c: "" },
       ],
     },
+    { l: 9, c: [{ t: "        swap(arr[i], arr[i + gap]);", c: "" }] },
+    { l: 10, c: [{ t: "        swapped = true;", c: "" }] },
+    { l: 11, c: [{ t: "      }", c: "light-gray" }] },
+    { l: 12, c: [{ t: "    }", c: "light-gray" }] },
+    { l: 13, c: [{ t: "  }", c: "light-gray" }] },
   ];
 
   return (
@@ -304,10 +275,10 @@ const BubbleSortVisualizer = () => {
     >
       <header className="text-center mb-6">
         <h1 className="text-4xl font-bold text-blue-400 flex items-center justify-center gap-3">
-          <List /> Bubble Sort Visualizer
+          <List /> Comb Sort Visualizer
         </h1>
         <p className="text-lg text-gray-400 mt-2">
-          Visualizing the classic comparison sorting algorithm
+          Visualizing an improvement over Bubble Sort
         </p>
       </header>
       {/* ---------------------------------------under work---------------------------------------------- */}
@@ -449,7 +420,7 @@ const BubbleSortVisualizer = () => {
             </h3>
             <pre className="text-sm overflow-auto">
               <code className="font-mono leading-relaxed">
-                {bubbleSortCode.map((line) => (
+                {combSortCode.map((line) => (
                   <CodeLine key={line.l} line={line.l} content={line.c} />
                 ))}
               </code>
@@ -470,7 +441,7 @@ const BubbleSortVisualizer = () => {
                 >
                   {array.map((item, index) => {
                     const isComparing =
-                      state.j === index || state.j + 1 === index;
+                      state.i === index || state.j === index;
                     const isSorted = state.sortedIndices?.includes(index);
 
                     let boxStyles = "bg-gray-700 border-gray-600";
@@ -498,16 +469,16 @@ const BubbleSortVisualizer = () => {
                   {isLoaded && (
                     <>
                       <VisualizerPointer
+                        index={state.i}
+                        containerId="array-container"
+                        color="amber"
+                        label="i"
+                      />
+                      <VisualizerPointer
                         index={state.j}
                         containerId="array-container"
                         color="amber"
-                        label="j"
-                      />
-                      <VisualizerPointer
-                        index={state.j !== null ? state.j + 1 : null}
-                        containerId="array-container"
-                        color="amber"
-                        label="j+1"
+                        label="i + gap"
                       />
                     </>
                   )}
@@ -555,26 +526,22 @@ const BubbleSortVisualizer = () => {
                     Worst Case: O(N²)
                   </strong>
                   <br />
-                  Occurs when the array is in reverse order. We must make N-1
-                  passes, and each pass compares and swaps through the unsorted
-                  portion of the array.
+                  Occurs with "killer" sequences, but is rare.
                 </p>
                 <p className="text-gray-400">
                   <strong className="text-teal-300 font-mono">
-                    Average Case: O(N²)
+                    Average Case: O(N log N)
                   </strong>
                   <br />
                   For a random array, the number of comparisons and swaps is
-                  also proportional to N².
+                  proportional to N log N.
                 </p>
                 <p className="text-gray-400">
                   <strong className="text-teal-300 font-mono">
-                    Best Case: O(N)
+                    Best Case: O(N log N)
                   </strong>
                   <br />
-                  Occurs when the array is already sorted. The algorithm makes a
-                  single pass through the array to check if any swaps are
-                  needed. Finding none, it terminates early.
+                   The algorithm's performance is consistently O(N log N).
                 </p>
               </div>
               <div className="space-y-4">
@@ -584,10 +551,10 @@ const BubbleSortVisualizer = () => {
                 <p className="text-gray-400">
                   <strong className="text-teal-300 font-mono">O(1)</strong>
                   <br />
-                  Bubble sort is an in-place sorting algorithm. It only requires
+                  Comb sort is an in-place sorting algorithm. It only requires
                   a constant amount of extra memory for variables like loop
                   counters, regardless of the input size. (Note: Our
-                  visualizer's history adds O(N²) space for demonstration, but
+                  visualizer's history adds space for demonstration, but
                   the algorithm itself is O(1)).
                 </p>
               </div>
@@ -603,4 +570,4 @@ const BubbleSortVisualizer = () => {
   );
 };
 
-export default BubbleSortVisualizer;
+export default CombSortVisualizer;
