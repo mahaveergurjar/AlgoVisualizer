@@ -2274,6 +2274,28 @@ export const problems = [
     platforms: ["LeetCode #49", "GfG"],
     tags: ["Grouping", "Hash Map"],
   },
+  {
+    label: "Is Subsequence",
+    category: "Strings",
+    subpage: "IsSubSequence", // <-- Combinando com seu arquivo
+    keywords: ["string", "subsequence", "two pointers", "leetcode", "392"],
+    number: "392",
+    icon: Check, // <-- Vamos usar o ícone "Check"
+    description: "Check if one string is a subsequence of another.",
+    difficulty: "Easy", // <-- LeetCode diz que é Easy
+    tier: "Tier 2",     // <-- "Easy" parece ser Tier 2 nesse projeto
+    difficultyColor: "text-blue-400", // Padrão "Easy"
+    difficultyBg: "bg-blue-400/10",
+    difficultyBorder: "border-blue-400/30",
+    gradient: "from-sky-500 to-cyan-500", // Um novo gradiente
+    iconColor: "text-sky-400",
+    iconBg: "bg-sky-500/20",
+    borderColor: "border-sky-500/30",
+    technique: "Two Pointers",
+    timeComplexity: "O(n)", // Onde n é o tamanho da string 't'
+    platforms: ["LeetCode #392"],
+    tags: ["Two Pointers", "Beginner"],
+  },
 
   // =================================================================
   // HASHING
