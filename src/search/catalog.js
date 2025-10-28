@@ -1548,6 +1548,35 @@ export const problems = [
     timeComplexity: "O(log n)",
     tags: ["Self-Balancing", "BST"],
   },
+  {
+  label: "Symmetric Tree",
+  category: "Trees",
+  subpage: "SymmetricTreeVisualizer",
+  keywords: [
+    "tree",
+    "symmetric",
+    "mirror",
+    "binary tree",
+    "recursion",
+    "iterative",
+    "101"
+  ],
+  number: "111",
+  icon: GitBranch,
+  description: "Check whether a binary tree is symmetric (a mirror of itself) using recursion or iterative BFS/DFS approaches.",
+  difficulty: "Easy",
+  tier: "Tier 1",
+  difficultyColor: "text-green-400",
+  difficultyBg: "bg-green-400/10",
+  difficultyBorder: "border-green-400/30",
+  gradient: "from-green-400 to-emerald-500",
+  iconColor: "text-green-400",
+  iconBg: "bg-green-500/20",
+  borderColor: "border-green-500/30",
+  technique: "Tree Traversal (Recursion / BFS)",
+  timeComplexity: "O(n)",
+  tags: ["Recursion", "Mirror", "BFS", "DFS"]
+},
 
   // =================================================================
   // DESIGN
