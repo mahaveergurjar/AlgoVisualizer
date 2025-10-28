@@ -15,11 +15,30 @@ import RatInMaze from "./RatInMaze.jsx";
 import BFSVisualizer from "./BFS";
 import { FloodFill } from "./FloodFill.jsx";
 import { ColorIslands } from "./ColorIslands.jsx";
+import AStarVisualizer from "./AStar.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const algorithms = [
+    {
+      name: "A* Pathfinding",
+      number: "N/A",
+      icon: Target,
+      description:
+        "Optimal pathfinding algorithm using heuristic functions. Guarantees shortest path with efficient exploration.",
+      page: "AStar",
+      difficulty: "Hard",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-red-500 to-pink-500",
+      iconColor: "text-red-400",
+      iconBg: "bg-red-500/20",
+      borderColor: "border-red-500/30",
+      technique: "Heuristic Search",
+      timeComplexity: "O(b^d)",
+    },
     {
       name: "Rat in Maze",
       number: "N/A",
@@ -95,7 +114,11 @@ const AlgorithmList = ({ navigate }) => {
 
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
             Navigate through complex mazes and grids. Visualize different
-            pathfinding strategies using{" "}
+            pathfinding strategies including{" "}
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-pink-400">
+              A* (A-Star)
+            </span>
+            ,{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
               BFS (Breadth-First Search)
             </span>{" "}
@@ -222,6 +245,8 @@ const PathfindingPage = ({ navigate: parentNavigate, initialPage = null }) => {
 
   const renderPage = () => {
     switch (page) {
+      case "AStar":
+        return <AStarVisualizer navigate={navigate} />;
       case "RatInMaze":
         return <RatInMaze navigate={navigate} />;
       case "BFS":

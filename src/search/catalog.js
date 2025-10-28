@@ -74,6 +74,7 @@ export const problems = [
   { label: "Circular Queue", category: "Queue", subpage: "CircularQueue", keywords: ["circular queue", "ring buffer", "circular array", "queue optimization", "wrap around", "modulo"]},
   
   // Pathfinding problems
+  { label: "A* Pathfinding", category: "Pathfinding", subpage: "AStar", keywords: ["pathfinding", "a star", "a*", "heuristic", "optimal path", "astar", "shortest path", "grid search"]},
   { label: "Rat in Maze", category: "Pathfinding", subpage: "RatInMaze", keywords: ["pathfinding", "maze", "rat", "bfs", "dfs", "backtracking", "graph traversal"]},
   { label: "Flood Fill", category: "Pathfinding", subpage: "FloodFill", keywords: ["pathfinding", "flood fill", "bucket tool", "bfs", "graph traversal"]},
   { label: "Color Islands", category: "Pathfinding", subpage: "ColorIslands", keywords: ["pathfinding", "color islands", "flood fill", "200"] },
