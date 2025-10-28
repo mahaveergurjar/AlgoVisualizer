@@ -2280,7 +2280,7 @@ export const problems = [
     subpage: "IsSubSequence", // <-- Combinando com seu arquivo
     keywords: ["string", "subsequence", "two pointers", "leetcode", "392"],
     number: "392",
-    icon: Check, // <-- Vamos usar o ícone "Check"
+    icon: CheckCircle, // <-- Vamos usar o ícone "Check"
     description: "Check if one string is a subsequence of another.",
     difficulty: "Easy", // <-- LeetCode diz que é Easy
     tier: "Tier 2",     // <-- "Easy" parece ser Tier 2 nesse projeto
