@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
     ArrowUp,
-    Code,
     CheckCircle,
     Clock,
+    Code,
     GitBranch,
-    Hash,
-    Split,
     Merge,
     Rabbit,
-    Turtle,
+    Split,
+    Turtle
 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 
 // Pointer Component
 const VisualizerPointer = ({
