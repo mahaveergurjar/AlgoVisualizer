@@ -88,6 +88,9 @@ const FindFirstAndLastPosition = () => {
   const [speed, setSpeed] = useState(1000);
   const playRef = useRef(null);
 
+  const maxSpeed = 2000;
+  const minSpeed = 100;
+
   const state = history[currentStep] || {};
 
   const generateHistory = useCallback(() => {
@@ -281,7 +284,7 @@ const FindFirstAndLastPosition = () => {
           }
           return s + 1;
         });
-      }, speed);
+      }, (maxSpeed - speed));
     } else {
       clearInterval(playRef.current);
     }
@@ -405,8 +408,8 @@ const FindFirstAndLastPosition = () => {
                   <label className="text-sm text-gray-300">Speed</label>
                   <input
                     type="range"
-                    min={100}
-                    max={2000}
+                    min={minSpeed}
+                    max={maxSpeed}
                     step={50}
                     value={speed}
                     onChange={(e) =>{
