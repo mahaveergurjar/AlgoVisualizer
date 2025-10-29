@@ -5,6 +5,7 @@
 
 // --- ✅ Combined Icon Imports for ALL Categories ---
 import {
+  Check,
   Container,
   Droplets,
   ToggleRight,
