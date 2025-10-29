@@ -61,6 +61,7 @@ import {
   Filter,
   MapPin,
   CheckCircle,
+  Check,
   Edit,
   Coins,
   ListOrdered,
@@ -1512,6 +1513,28 @@ export const problems = [
     timeComplexity: 'O(n log k)',
     platforms: ['LeetCode #347']
   },
+{
+    category: 'Heaps',
+    subpage: 'TaskScheduler', // <-- Este será o nome do nosso novo arquivo/componente
+    label: 'Task Scheduler',
+    number: "621",
+    difficulty: 'Medium',
+    difficultyBg: 'bg-yellow-500/10',
+    difficultyColor: 'text-yellow-400',
+    difficultyBorder: 'border-yellow-500/30',
+    tier: 'Tier 2',
+    description: 'Determine o número mínimo de intervalos para completar todas as tarefas com um "cooldown" (folga).',
+    icon: Clock, // Ícone perfeito para agendamento
+    gradient: 'from-blue-700 to-sky-800', // Um novo gradiente
+    borderColor: 'border-blue-600',
+    iconBg: 'bg-blue-700/20',
+    iconColor: 'text-blue-300',
+    tags: ['Heap', 'Greedy', 'Priority Queue', 'Scheduling'],
+    technique: 'Max-Heap / Greedy',
+    timeComplexity: 'O(N)', // O(N) para contar, o resto é O(1) pois o alfabeto é fixo (26)
+    platforms: ['LeetCode #621'],
+    keywords: ['heap', 'task', 'scheduler', 'cooldown', 'greedy', 'priority queue', '621'],
+  },
 
   // =================================================================
   // TREES
