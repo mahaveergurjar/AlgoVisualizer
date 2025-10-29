@@ -61,7 +61,6 @@ import {
   Filter,
   MapPin,
   CheckCircle,
-  Check,
   Edit,
   Coins,
   ListOrdered,
@@ -709,7 +708,7 @@ export const problems = [
   // =================================================================
   {
     label: "Basic Binary Search",
-    category: "BinarySearch", 
+    category: "BinarySearch",
     subpage: "BinarySearchBasic",
     keywords: ["binary search", "basic", "search", "sorted"],
     number: "N/A",
@@ -732,7 +731,7 @@ export const problems = [
   },
   {
     label: "Search a 2D Matrix",
-    category: "BinarySearch", 
+    category: "BinarySearch",
     subpage: "Search2DMatrix",
     keywords: ["binary search", "matrix", "2d", "74"],
     number: "74",
@@ -755,7 +754,7 @@ export const problems = [
   },
   {
     label: "Find First and Last Position of Element in Sorted Array",
-    category: "BinarySearch", 
+    category: "BinarySearch",
     subpage: "FindFirstAndLastPosition",
     keywords: ["binary search", "first", "last", "position", "34"],
     number: "34",
@@ -776,10 +775,10 @@ export const problems = [
     platforms: ["LeetCode #34"],
     tags: ["Boundary Search", "Logarithmic"],
   },
-  { 
-    label: "Search in Rotated Sorted Array", 
-    category: "BinarySearch", 
-    subpage: "SearchInRotatedSortedArray", 
+  {
+    label: "Search in Rotated Sorted Array",
+    category: "BinarySearch",
+    subpage: "SearchInRotatedSortedArray",
     keywords: ["binary search", "rotated", "sorted array", "33"],
     number: "33",
     icon: SearchCode,
@@ -798,10 +797,10 @@ export const problems = [
     platforms: ["LeetCode #33"],
     tags: ["Pivot", "Logarithmic", "Rotated Array"],
   },
-  { 
-    label: "Find Peak Element", 
-    category: "BinarySearch", 
-    subpage: "FindPeakElement", 
+  {
+    label: "Find Peak Element",
+    category: "BinarySearch",
+    subpage: "FindPeakElement",
     keywords: ["binary search", "peak", "element", "162"],
     number: "162",
     icon: Mountain,
@@ -823,7 +822,7 @@ export const problems = [
   },
   {
     label: "Find Minimum in Rotated Sorted Array",
-    category: "BinarySearch", 
+    category: "BinarySearch",
     subpage: "FindMinimumInRotatedSortedArray",
     keywords: ["binary search", "minimum", "rotated", "sorted array", "153"],
     number: "153",
@@ -1005,8 +1004,7 @@ export const problems = [
     ],
     number: "148",
     icon: ListOrdered,
-    description:
-      "Sort a linked list in ascending order using merge sort.",
+    description: "Sort a linked list in ascending order using merge sort.",
     difficulty: "Medium",
     tier: "Tier 2",
     difficultyColor: "text-yellow-400",
@@ -1020,7 +1018,6 @@ export const problems = [
     timeComplexity: "O(n log n)",
     tags: ["Merge Sort", "Linked List", "Divide and Conquer"],
   },
-
 
   // =================================================================
   // STACK
@@ -1454,7 +1451,8 @@ export const problems = [
     keywords: ["sorting", "comb", "gap", "bubble sort"],
     number: "N/A",
     icon: Filter,
-    description: "An improvement over Bubble Sort, Comb Sort eliminates 'turtles' for better performance.",
+    description:
+      "An improvement over Bubble Sort, Comb Sort eliminates 'turtles' for better performance.",
     difficulty: "Medium",
     tier: "Tier 1",
     difficultyColor: "text-yellow-400",
@@ -1467,73 +1465,82 @@ export const problems = [
     technique: "Gap Insertion",
     timeComplexity: "O(n log n)",
     tags: ["Optimization", "In-place"],
-  },
+  }, // HEAPS // =================================================================
   // =================================================================
-  // HEAPS
-  // =================================================================
-  {
-     category: 'Heaps',
-    subpage: 'Heapify', // <-- This MUST match the 'case' in HeapsPage
-    label: 'Heapify (Build Heap)',
-    number: 'H-01', // Custom ID for a concept
-    difficulty: 'Medium',
-    difficultyBg: 'bg-yellow-500/10',
-    difficultyColor: 'text-yellow-400',
-    difficultyBorder: 'border-yellow-500/30',
-    tier: 'Tier 1',
-    description: 'Learn how to convert an unordered array into a max-heap in-place using the sift-down (heapify) operation.',
-    icon: Layers, // This is already imported
-    gradient: 'from-teal-700 to-cyan-800',
-    borderColor: 'border-teal-600',
-    iconBg: 'bg-teal-700/20',
-    iconColor: 'text-teal-300',
-    tags: ['Heap', 'In-Place', 'Data Structure', 'Concept'],
-    technique: 'Sift-Down',
-    timeComplexity: 'O(n)',
-    platforms: ['Concept']
-  },
-  {
-    category: 'Heaps',
-    subpage: 'TopKFrequent', // <-- This MUST match the 'case' in HeapsPage
-    label: 'Top K Frequent Elements',
-    number: "347",
-    difficulty: 'Medium',
-    difficultyBg: 'bg-yellow-500/10',
-    difficultyColor: 'text-yellow-400',
-    difficultyBorder: 'border-yellow-500/30',
-    tier: 'Tier 2',
-    description: 'Given an integer array and an integer k, return the k most frequent elements. A min-heap is a perfect solution.',
-    icon: TrendingUp, // This is already imported
-    gradient: 'from-purple-700 to-indigo-800',
-    borderColor: 'border-purple-600',
-    iconBg: 'bg-purple-700/20',
-    iconColor: 'text-purple-300',
-    tags: ['Heap', 'Priority Queue', 'Hash Map'],
-    technique: 'Min-Heap',
-    timeComplexity: 'O(n log k)',
-    platforms: ['LeetCode #347']
-  },
-{
-    category: 'Heaps',
-    subpage: 'TaskScheduler', // <-- Este será o nome do nosso novo arquivo/componente
-    label: 'Task Scheduler',
+  {
+    category: "Heaps",
+    subpage: "Heapify", // <-- This MUST match the 'case' in HeapsPage
+    label: "Heapify (Build Heap)",
+    number: "H-01", // Custom ID for a concept
+    difficulty: "Medium",
+    difficultyBg: "bg-yellow-500/10",
+    difficultyColor: "text-yellow-400",
+    difficultyBorder: "border-yellow-500/30",
+    tier: "Tier 1",
+    description:
+      "Learn how to convert an unordered array into a max-heap in-place using the sift-down (heapify) operation.",
+    icon: Layers, // This is already imported
+    gradient: "from-teal-700 to-cyan-800",
+    borderColor: "border-teal-600",
+    iconBg: "bg-teal-700/20",
+    iconColor: "text-teal-300",
+    tags: ["Heap", "In-Place", "Data Structure", "Concept"],
+    technique: "Sift-Down",
+    timeComplexity: "O(n)",
+    platforms: ["Concept"],
+  },
+  {
+    category: "Heaps",
+    subpage: "TopKFrequent", // <-- This MUST match the 'case' in HeapsPage
+    label: "Top K Frequent Elements",
+    number: "347",
+    difficulty: "Medium",
+    difficultyBg: "bg-yellow-500/10",
+    difficultyColor: "text-yellow-400",
+    difficultyBorder: "border-yellow-500/30",
+    tier: "Tier 2",
+    description:
+      "Given an integer array and an integer k, return the k most frequent elements. A min-heap is a perfect solution.",
+    icon: TrendingUp, // This is already imported
+    gradient: "from-purple-700 to-indigo-800",
+    borderColor: "border-purple-600",
+    iconBg: "bg-purple-700/20",
+    iconColor: "text-purple-300",
+    tags: ["Heap", "Priority Queue", "Hash Map"],
+    technique: "Min-Heap",
+    timeComplexity: "O(n log k)",
+    platforms: ["LeetCode #347"],
+  },
+  {
+    category: "Heaps",
+    subpage: "TaskScheduler", // <-- Este será o nome do nosso novo arquivo/componente
+    label: "Task Scheduler",
     number: "621",
-    difficulty: 'Medium',
-    difficultyBg: 'bg-yellow-500/10',
-    difficultyColor: 'text-yellow-400',
-    difficultyBorder: 'border-yellow-500/30',
-    tier: 'Tier 2',
-    description: 'Determine o número mínimo de intervalos para completar todas as tarefas com um "cooldown" (folga).',
+    difficulty: "Medium",
+    difficultyBg: "bg-yellow-500/10",
+    difficultyColor: "text-yellow-400",
+    difficultyBorder: "border-yellow-500/30",
+    tier: "Tier 2",
+    description:
+      'Determine o número mínimo de intervalos para completar todas as tarefas com um "cooldown" (folga).',
     icon: Clock, // Ícone perfeito para agendamento
-    gradient: 'from-blue-700 to-sky-800', // Um novo gradiente
-    borderColor: 'border-blue-600',
-    iconBg: 'bg-blue-700/20',
-    iconColor: 'text-blue-300',
-    tags: ['Heap', 'Greedy', 'Priority Queue', 'Scheduling'],
-    technique: 'Max-Heap / Greedy',
-    timeComplexity: 'O(N)', // O(N) para contar, o resto é O(1) pois o alfabeto é fixo (26)
-    platforms: ['LeetCode #621'],
-    keywords: ['heap', 'task', 'scheduler', 'cooldown', 'greedy', 'priority queue', '621'],
+    gradient: "from-blue-700 to-sky-800", // Um novo gradiente
+    borderColor: "border-blue-600",
+    iconBg: "bg-blue-700/20",
+    iconColor: "text-blue-300",
+    tags: ["Heap", "Greedy", "Priority Queue", "Scheduling"],
+    technique: "Max-Heap / Greedy",
+    timeComplexity: "O(N)", // O(N) para contar, o resto é O(1) pois o alfabeto é fixo (26)
+    platforms: ["LeetCode #621"],
+    keywords: [
+      "heap",
+      "task",
+      "scheduler",
+      "cooldown",
+      "greedy",
+      "priority queue",
+      "621",
+    ],
   },
 
   // =================================================================
@@ -1649,34 +1656,35 @@ export const problems = [
     tags: ["Self-Balancing", "BST"],
   },
   {
-  label: "Symmetric Tree",
-  category: "Trees",
-  subpage: "SymmetricTreeVisualizer",
-  keywords: [
-    "tree",
-    "symmetric",
-    "mirror",
-    "binary tree",
-    "recursion",
-    "iterative",
-    "101"
-  ],
-  number: "111",
-  icon: GitBranch,
-  description: "Check whether a binary tree is symmetric (a mirror of itself) using recursion or iterative BFS/DFS approaches.",
-  difficulty: "Easy",
-  tier: "Tier 1",
-  difficultyColor: "text-green-400",
-  difficultyBg: "bg-green-400/10",
-  difficultyBorder: "border-green-400/30",
-  gradient: "from-green-400 to-emerald-500",
-  iconColor: "text-green-400",
-  iconBg: "bg-green-500/20",
-  borderColor: "border-green-500/30",
-  technique: "Tree Traversal (Recursion / BFS)",
-  timeComplexity: "O(n)",
-  tags: ["Recursion", "Mirror", "BFS", "DFS"]
-},
+    label: "Symmetric Tree",
+    category: "Trees",
+    subpage: "SymmetricTreeVisualizer",
+    keywords: [
+      "tree",
+      "symmetric",
+      "mirror",
+      "binary tree",
+      "recursion",
+      "iterative",
+      "101",
+    ],
+    number: "111",
+    icon: GitBranch,
+    description:
+      "Check whether a binary tree is symmetric (a mirror of itself) using recursion or iterative BFS/DFS approaches.",
+    difficulty: "Easy",
+    tier: "Tier 1",
+    difficultyColor: "text-green-400",
+    difficultyBg: "bg-green-400/10",
+    difficultyBorder: "border-green-400/30",
+    gradient: "from-green-400 to-emerald-500",
+    iconColor: "text-green-400",
+    iconBg: "bg-green-500/20",
+    borderColor: "border-green-500/30",
+    technique: "Tree Traversal (Recursion / BFS)",
+    timeComplexity: "O(n)",
+    tags: ["Recursion", "Mirror", "BFS", "DFS"],
+  },
 
   // =================================================================
   // DESIGN
@@ -2339,7 +2347,7 @@ export const problems = [
     icon: Check, // <-- Vamos usar o ícone "Check"
     description: "Check if one string is a subsequence of another.",
     difficulty: "Easy", // <-- LeetCode diz que é Easy
-    tier: "Tier 2",     // <-- "Easy" parece ser Tier 2 nesse projeto
+    tier: "Tier 2", // <-- "Easy" parece ser Tier 2 nesse projeto
     difficultyColor: "text-blue-400", // Padrão "Easy"
     difficultyBg: "bg-blue-400/10",
     difficultyBorder: "border-blue-400/30",
@@ -2717,7 +2725,7 @@ export const problems = [
     timeComplexity: "O(n³)",
     tags: ["Interval DP", "Optimization"],
   },
-  { 
+  {
     label: "Buy/Sell Stock IV",
     category: "Dynamic Programming",
     subpage: "SellStockIV", // This MUST match the case in DynamicProgramming.jsx
