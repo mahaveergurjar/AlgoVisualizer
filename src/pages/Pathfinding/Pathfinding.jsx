@@ -8,14 +8,16 @@ import {
   Star,
   Zap,
   MapPin,
-  Grid // Added from HEAD
+  Grid,
+  Target
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components ---
 import RatInMaze from "./RatInMaze.jsx";
-import BFSVisualizer from "./BFS"; // Keep BFS if it's used for Pathfinding visualization
-import { FloodFill } from "./FloodFill.jsx"; // ✅ Maintainer's new import
-import { ColorIslands } from "./ColorIslands.jsx"; // ✅ Maintainer's new import
+import BFSVisualizer from "./BFS";
+import { FloodFill } from "./FloodFill.jsx";
+import { ColorIslands } from "./ColorIslands.jsx";
+import AStarVisualizer from "./AStar.jsx";
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from '../../search/catalog';
@@ -36,8 +38,6 @@ const AlgorithmList = ({ navigate }) => {
   // ✅ Get Pathfinding problems directly from the master catalog
   const pathfindingAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'Pathfinding');
 
-  // ❌ The local 'algorithms' array has been DELETED.
-
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
       <header className="text-center mb-16 mt-8 relative">
@@ -55,7 +55,11 @@ const AlgorithmList = ({ navigate }) => {
           </div>
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
             Navigate through complex mazes and grids. Visualize different
-            pathfinding strategies using{" "}
+            pathfinding strategies including{" "}
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-pink-400">
+              A* (A-Star)
+            </span>
+            ,{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
               BFS
             </span>{" "}
@@ -164,10 +168,16 @@ const PathfindingPage = ({ navigate: parentNavigate, initialPage = null }) => {
 
   const renderPage = () => {
     switch (page) {
-      case "RatInMaze": return <RatInMaze navigate={navigate} />;
-      case "BFS": return <BFSVisualizer navigate={navigate} />; // Assuming BFS is still relevant here
-      case "FloodFill": return <FloodFill navigate={navigate} />; // ✅ Keep maintainer's route
-      case "ColorIslands": return <ColorIslands navigate={navigate} />; // ✅ Keep maintainer's route
+      case "AStar":
+        return <AStarVisualizer navigate={navigate} />;
+      case "RatInMaze":
+        return <RatInMaze navigate={navigate} />;
+      case "BFS":
+        return <BFSVisualizer navigate={navigate} />;
+      case "FloodFill":
+        return <FloodFill navigate={navigate} />;
+      case "ColorIslands":
+        return <ColorIslands navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

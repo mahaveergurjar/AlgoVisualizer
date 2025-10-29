@@ -708,7 +708,7 @@ export const problems = [
   // =================================================================
   {
     label: "Basic Binary Search",
-    category: "BinarySearch",
+    category: "BinarySearch", 
     subpage: "BinarySearchBasic",
     keywords: ["binary search", "basic", "search", "sorted"],
     number: "N/A",
@@ -731,7 +731,7 @@ export const problems = [
   },
   {
     label: "Search a 2D Matrix",
-    category: "BinarySearch",
+    category: "BinarySearch", 
     subpage: "Search2DMatrix",
     keywords: ["binary search", "matrix", "2d", "74"],
     number: "74",
@@ -754,7 +754,7 @@ export const problems = [
   },
   {
     label: "Find First and Last Position of Element in Sorted Array",
-    category: "BinarySearch",
+    category: "BinarySearch", 
     subpage: "FindFirstAndLastPosition",
     keywords: ["binary search", "first", "last", "position", "34"],
     number: "34",
@@ -775,10 +775,10 @@ export const problems = [
     platforms: ["LeetCode #34"],
     tags: ["Boundary Search", "Logarithmic"],
   },
-  {
-    label: "Search in Rotated Sorted Array",
-    category: "BinarySearch",
-    subpage: "SearchInRotatedSortedArray",
+  { 
+    label: "Search in Rotated Sorted Array", 
+    category: "BinarySearch", 
+    subpage: "SearchInRotatedSortedArray", 
     keywords: ["binary search", "rotated", "sorted array", "33"],
     number: "33",
     icon: SearchCode,
@@ -797,10 +797,10 @@ export const problems = [
     platforms: ["LeetCode #33"],
     tags: ["Pivot", "Logarithmic", "Rotated Array"],
   },
-  {
-    label: "Find Peak Element",
-    category: "BinarySearch",
-    subpage: "FindPeakElement",
+  { 
+    label: "Find Peak Element", 
+    category: "BinarySearch", 
+    subpage: "FindPeakElement", 
     keywords: ["binary search", "peak", "element", "162"],
     number: "162",
     icon: Mountain,
@@ -822,7 +822,7 @@ export const problems = [
   },
   {
     label: "Find Minimum in Rotated Sorted Array",
-    category: "BinarySearch",
+    category: "BinarySearch", 
     subpage: "FindMinimumInRotatedSortedArray",
     keywords: ["binary search", "minimum", "rotated", "sorted array", "153"],
     number: "153",
@@ -1809,6 +1809,38 @@ export const problems = [
   // =================================================================
   // PATHFINDING
   // =================================================================
+  {
+    label: "A* Pathfinding",
+    category: "Pathfinding",
+    subpage: "AStar",
+    keywords: [
+      "pathfinding",
+      "a star",
+      "a*",
+      "heuristic",
+      "optimal path",
+      "astar",
+      "shortest path",
+      "grid search",
+    ],
+    number: "N/A",
+    icon: Target,
+    description:
+      "Optimal pathfinding algorithm using heuristic functions. Guarantees shortest path with efficient exploration.",
+    difficulty: "Hard",
+    tier: "Tier 3",
+    difficultyColor: "text-red-400",
+    difficultyBg: "bg-red-400/10",
+    difficultyBorder: "border-red-400/30",
+    gradient: "from-red-500 to-pink-500",
+    iconColor: "text-red-400",
+    iconBg: "bg-red-500/20",
+    borderColor: "border-red-500/30",
+    technique: "Heuristic Search",
+    timeComplexity: "O(b^d)",
+    platforms: ["All Platforms"],
+    tags: ["Heuristic", "Optimal Path"],
+  },
   {
     label: "Rat in a Maze",
     category: "Pathfinding",
