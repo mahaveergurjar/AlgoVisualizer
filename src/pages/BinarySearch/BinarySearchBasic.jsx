@@ -92,6 +92,9 @@ const BinarySearchBasic = () => {
 
   const state = history[currentStep] || {};
 
+  const maxSpeed = 1500;
+  const minSpeed = 100;
+
   const load = useCallback(() => {
     const arr = arrInput
       .split(",")
@@ -205,7 +208,7 @@ const BinarySearchBasic = () => {
           }
           return s + 1;
         });
-      }, speed);
+      }, (maxSpeed - speed));
     } else {
       clearInterval(playRef.current);
     }
@@ -314,8 +317,8 @@ const BinarySearchBasic = () => {
                 <label className="text-sm text-gray-300">Speed</label>
                 <input
                   type="range"
-                  min={100}
-                  max={1500}
+                  min={minSpeed}
+                  max={maxSpeed}
                   step={50}
                   value={speed}
                   onChange={(e) => setSpeed(parseInt(e.target.value, 10))}

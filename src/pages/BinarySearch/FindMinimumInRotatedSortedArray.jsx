@@ -85,6 +85,9 @@ const FindMinimumInRotatedSortedArray = () => {
   const [speed, setSpeed] = useState(1200);
   const playRef = useRef(null);
 
+  const minSpeed = 100;
+  const maxSpeed = 1500;
+
   const state = history[currentStep] || {};
 
   const load = useCallback(() => {
@@ -177,7 +180,7 @@ const FindMinimumInRotatedSortedArray = () => {
           }
           return s + 1;
         });
-      }, speed);
+      }, (maxSpeed -  speed));
     } else {
       clearInterval(playRef.current);
     }
@@ -281,8 +284,8 @@ const FindMinimumInRotatedSortedArray = () => {
                 <label className="text-sm text-gray-300">Speed</label>
                 <input
                   type="range"
-                  min={100}
-                  max={1500}
+                  min={minSpeed}
+                  max={maxSpeed}
                   step={50}
                   value={speed}
                   // Note: Changed onChange logic to match the target example

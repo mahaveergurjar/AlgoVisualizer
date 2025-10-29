@@ -83,6 +83,9 @@ const Search2DMatrix = () => {
   const [speed, setSpeed] = useState(1000);
   const playRef = useRef(null);
 
+  const minSpeed = 100;
+  const maxSpeed = 2000;
+
   const state = history[currentStep] || {};
 
   const codeContent = {
@@ -346,7 +349,7 @@ const Search2DMatrix = () => {
           }
           return s + 1;
         });
-      }, speed);
+      }, (maxSpeed - speed));
     } else {
       clearInterval(playRef.current);
     }
@@ -460,12 +463,12 @@ const Search2DMatrix = () => {
                   <label className="text-sm text-gray-300">Speed</label>
                   <input
                     type="range"
-                    min={100}
-                    max={2000}
+                    min={minSpeed}
+                    max={maxSpeed}
                     step={50}
                     value={speed}
                     onChange={(e) =>
-                      setSpeed(2100 - parseInt(e.target.value, 10))
+                      setSpeed(parseInt(e.target.value, 10))
                     }
                     className="w-24"
                   />
