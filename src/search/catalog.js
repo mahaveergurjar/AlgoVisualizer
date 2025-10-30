@@ -58,7 +58,6 @@ import {
   Trees,
   TrendingUp,
   Users,
-  Circle,
   FlipHorizontal,
   Binary,
   BarChart4,
