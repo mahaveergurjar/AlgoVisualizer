@@ -19,6 +19,8 @@ import LinearSearch from "./LinearSearch.jsx";
 import ExponentialSearch from "./ExponentialSearch.jsx";
 import SmallestLetter from "./SmallestLetter.jsx";
 import UnknownSizeSearch from "./UnknownSizeSearch.jsx";
+import KthMissing from "./kthMissingNumber.jsx";
+import SpecialArray from "./specialArray.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -395,25 +397,9 @@ const SearchingPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "UnknownSizeSearch":
         return <UnknownSizeSearch navigate={navigate} />;
       case "KthMissing":
-        return <div className="text-center py-20">
-          <div className="text-2xl text-gray-400">LeetCode 1539 - Kth Missing Number - Coming Soon</div>
-          <button 
-            onClick={() => navigate("home")}
-            className="mt-4 px-6 py-2 bg-teal-500 hover:bg-teal-600 rounded-lg transition-colors"
-          >
-            Back to Problems
-          </button>
-        </div>;
+        return <KthMissing navigate={navigate} />;
       case "SpecialArray":
-        return <div className="text-center py-20">
-          <div className="text-2xl text-gray-400">LeetCode 1608 - Special Array - Coming Soon</div>
-          <button 
-            onClick={() => navigate("home")}
-            className="mt-4 px-6 py-2 bg-teal-500 hover:bg-teal-600 rounded-lg transition-colors"
-          >
-            Back to Problems
-          </button>
-        </div>;
+        return <SpecialArray navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
