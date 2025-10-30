@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { 
-  ArrowLeft, 
-  Filter, 
-  Star, 
-  Clock, 
-  Zap, 
-  ArrowRight, 
+import {
+  ArrowLeft,
+  Filter,
+  Star,
+  Clock,
+  Zap,
+  ArrowRight,
   TrendingUp,
   Code2,
   Brackets,
@@ -15,7 +15,7 @@ import {
   Grid,
   List,
   Puzzle,
-  Map
+  Map,
 } from "lucide-react";
 import PermutationsVisualizer from "./Permutations.jsx";
 import WordSearchVisualizer from "./WordSearch.jsx";
@@ -31,7 +31,8 @@ const AlgorithmList = ({ navigate }) => {
       name: "Word Search",
       number: "79",
       icon: Map,
-      description: "Search for a word in a 2D grid of characters using backtracking.",
+      description:
+        "Search for a word in a 2D grid of characters using backtracking.",
       page: "WordSearchVisualizer",
       difficulty: "Medium",
       tier: "Tier 2",
@@ -45,13 +46,14 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking",
       timeComplexity: "O(M×N×4^L)",
       platforms: ["LeetCode #79", "GfG"],
-      tags: ["Grid", "DFS", "String Matching"]
+      tags: ["Grid", "DFS", "String Matching"],
     },
     {
       name: "Permutations",
       number: "46",
       icon: List,
-      description: "Generate all possible permutations of a distinct integers array.",
+      description:
+        "Generate all possible permutations of a distinct integers array.",
       page: "PermutationsVisualizer",
       difficulty: "Medium",
       tier: "Tier 2",
@@ -65,13 +67,14 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking",
       timeComplexity: "O(N×N!)",
       platforms: ["LeetCode #46", "GfG"],
-      tags: ["Combinatorics", "Recursion"]
+      tags: ["Combinatorics", "Recursion"],
     },
     {
       name: "Combination Sum",
       number: "39",
       icon: Target,
-      description: "Find all unique combinations where candidate numbers sum to target.",
+      description:
+        "Find all unique combinations where candidate numbers sum to target.",
       page: "CombinationSum",
       difficulty: "Medium",
       tier: "Tier 2",
@@ -85,13 +88,14 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking",
       timeComplexity: "O(2^N)",
       platforms: ["LeetCode #39", "GfG"],
-      tags: ["Subsets", "Sum", "Recursion"]
+      tags: ["Subsets", "Sum", "Recursion"],
     },
     {
       name: "Generate Parentheses",
       number: "22",
       icon: Brackets,
-      description: "Generate all combinations of well-formed parentheses for n pairs.",
+      description:
+        "Generate all combinations of well-formed parentheses for n pairs.",
       page: "GenerateParentheses",
       difficulty: "Medium",
       tier: "Tier 2",
@@ -105,13 +109,14 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking",
       timeComplexity: "O(4^N/√N)",
       platforms: ["LeetCode #22", "GfG"],
-      tags: ["Parentheses", "Balanced", "Catalan"]
+      tags: ["Parentheses", "Balanced", "Catalan"],
     },
     {
       name: "Sudoku Solver",
       number: "37",
       icon: Puzzle,
-      description: "Solve a 9x9 Sudoku puzzle by filling empty cells using backtracking.",
+      description:
+        "Solve a 9x9 Sudoku puzzle by filling empty cells using backtracking.",
       page: "SudokuSolver",
       difficulty: "Hard",
       tier: "Tier 3",
@@ -125,14 +130,15 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking",
       timeComplexity: "O(9^(N*N))",
       platforms: ["LeetCode #37", "GfG"],
-      tags: ["Grid", "Recursion", "Matrix"]
+      tags: ["Grid", "Recursion", "Matrix"],
     },
     // NEW: Expression Add Operators
     {
       name: "Expression Add Operators",
       number: "282",
       icon: Layers,
-      description: "Insert +, -, * between digits to make expressions evaluate to a target.",
+      description:
+        "Insert +, -, * between digits to make expressions evaluate to a target.",
       page: "ExpressionAddOperators",
       difficulty: "Hard",
       tier: "Tier 3",
@@ -146,11 +152,11 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking + Expression Parsing",
       timeComplexity: "O(4^N)",
       platforms: ["LeetCode #282", "GfG"],
-      tags: ["Strings", "Math", "Recursion", "Operators"]
-    }
+      tags: ["Strings", "Math", "Recursion", "Operators"],
+    },
   ];
 
-  const filteredAlgorithms = algorithms.filter(algo => {
+  const filteredAlgorithms = algorithms.filter((algo) => {
     if (filter === "all") return true;
     if (filter === "medium") return algo.tier === "Tier 2";
     if (filter === "hard") return algo.tier === "Tier 3";
@@ -166,8 +172,18 @@ const AlgorithmList = ({ navigate }) => {
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mb-6">
             <div className="relative">
-              <svg className="h-14 sm:h-16 w-14 sm:w-16 text-purple-400 animated-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <svg
+                className="h-14 sm:h-16 w-14 sm:w-16 text-purple-400 animated-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
               <Zap className="h-5 w-5 text-pink-300 absolute -top-1 -right-1 animate-pulse" />
             </div>
@@ -269,7 +285,9 @@ const AlgorithmList = ({ navigate }) => {
                       className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor} transition-colors duration-300`}
+                        className={`h-10 w-10 ${
+                          isHovered ? "text-white" : algo.iconColor
+                        } transition-colors duration-300`}
                       />
                     </div>
                     <div>
@@ -287,7 +305,9 @@ const AlgorithmList = ({ navigate }) => {
                         </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"}`}
+                        className={`text-xl font-bold transition-colors duration-300 ${
+                          isHovered ? "text-white" : "text-gray-200"
+                        }`}
                       >
                         {algo.name}
                       </h2>
@@ -296,7 +316,9 @@ const AlgorithmList = ({ navigate }) => {
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"}`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
+                    isHovered ? "text-gray-300" : "text-gray-400"
+                  }`}
                 >
                   {algo.description}
                 </p>
@@ -389,41 +411,53 @@ const BacktrackingPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const renderPage = () => {
     switch (page) {
       case "NQueens":
-        return <div className="text-center py-20">
-          <div className="text-2xl text-gray-400">N-Queens Visualizer - Coming Soon</div>
-          <button 
-            onClick={() => navigate("home")}
-            className="mt-4 px-6 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg transition-colors"
-          >
-            Back to Problems
-          </button>
-        </div>;
+        return (
+          <div className="text-center py-20">
+            <div className="text-2xl text-gray-400">
+              N-Queens Visualizer - Coming Soon
+            </div>
+            <button
+              onClick={() => navigate("home")}
+              className="mt-4 px-6 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg transition-colors"
+            >
+              Back to Problems
+            </button>
+          </div>
+        );
       case "SudokuSolver":
         return <SudokuSolver navigate={navigate} />;
       case "PermutationsVisualizer":
         return <PermutationsVisualizer />;
       case "CombinationSum":
-        return <div className="text-center py-20">
-          <div className="text-2xl text-gray-400">Combination Sum Visualizer - Coming Soon</div>
-          <button 
-            onClick={() => navigate("home")}
-            className="mt-4 px-6 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors"
-          >
-            Back to Problems
-          </button>
-        </div>;
+        return (
+          <div className="text-center py-20">
+            <div className="text-2xl text-gray-400">
+              Combination Sum Visualizer - Coming Soon
+            </div>
+            <button
+              onClick={() => navigate("home")}
+              className="mt-4 px-6 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors"
+            >
+              Back to Problems
+            </button>
+          </div>
+        );
       case "WordSearchVisualizer":
         return <WordSearchVisualizer />;
       case "GenerateParentheses":
-        return <div className="text-center py-20">
-          <div className="text-2xl text-gray-400">Generate Parentheses Visualizer - Coming Soon</div>
-          <button 
-            onClick={() => navigate("home")}
-            className="mt-4 px-6 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg transition-colors"
-          >
-            Back to Problems
-          </button>
-        </div>;
+        return (
+          <div className="text-center py-20">
+            <div className="text-2xl text-gray-400">
+              Generate Parentheses Visualizer - Coming Soon
+            </div>
+            <button
+              onClick={() => navigate("home")}
+              className="mt-4 px-6 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-lg transition-colors"
+            >
+              Back to Problems
+            </button>
+          </div>
+        );
       case "ExpressionAddOperators":
         return <ExpressionAddOperators navigate={navigate} />;
       case "home":
