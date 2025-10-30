@@ -18,6 +18,7 @@ import EditDistanceVisualizer from "./EditDistance.jsx";
 import LISVisualizer from "./LISubsequence.jsx";
 import BurstBalloonsVisualizer from "./BurstBalloons.jsx";
 import SellStockIVVisualizer from "./SellStockIVVisualizer.jsx";
+import UniquePathsVisualizer from "./UniquePaths.jsx";
 // NOTE: Add more visualizer imports here as you create them!
 
 // --- ✅ Import the master catalog and your StarButton ---
@@ -254,6 +255,8 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <BurstBalloonsVisualizer navigate={navigate} />;
       case "SellStockIV":
         return <SellStockIVVisualizer navigate={navigate} />;
+      case "UniquePaths":
+        return <UniquePathsVisualizer navigate={navigate} />;
       // NOTE: Add a case for every visualizer you import!
       case "home":
       default:

@@ -64,6 +64,7 @@ import {
   Edit,
   Coins,
   ListOrdered,
+  Grid3X3,
 } from "lucide-react";
 
 export const problems = [
@@ -2756,4 +2757,36 @@ export const problems = [
     timeComplexity: "O(N × K)",
     tags: ["Classic DP", "Optimization", "Space-Optimized"],
   },
+  {
+  label: "Unique Paths",
+  category: "Dynamic Programming",
+  subpage: "UniquePaths", // MUST match your navigate() case
+  keywords: [
+    "dp",
+    "dynamic programming",
+    "grid",
+    "paths",
+    "robot",
+    "unique",
+    "62",
+  ],
+  number: "62",
+  icon: Grid3X3, // you can use Brackets or another icon from lucide-react if Grid3x3 isn't imported
+  description:
+    "Count the number of unique paths in an m×n grid from the top-left corner to the bottom-right using dynamic programming.",
+  difficulty: "Medium",
+  tier: "Tier 1",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-teal-600 to-blue-700",
+  iconColor: "text-teal-400",
+  iconBg: "bg-teal-500/20",
+  borderColor: "border-teal-500/30",
+  technique: "Tabulation",
+  timeComplexity: "O(m×n)",
+  platforms: ["LeetCode #62"],
+  tags: ["Grid DP", "Combinatorics", "Classic Problem"],
+},
+
 ];
