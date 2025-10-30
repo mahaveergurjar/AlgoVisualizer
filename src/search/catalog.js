@@ -58,13 +58,6 @@ import {
   Trees,
   TrendingUp,
   Users,
-  List,
-  Filter,
-  MapPin,
-  CheckCircle,
-  Edit,
-  Coins,
-  ListOrdered,
   Grid3x3,
   Zap,
 } from "lucide-react";
