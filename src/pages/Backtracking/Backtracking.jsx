@@ -17,9 +17,11 @@ import {
   Puzzle,
   Map
 } from "lucide-react";
-import PermutationsVisualizer from "./Permutations.jsx"
-import WordSearchVisualizer from "./WordSearch.jsx"
+import PermutationsVisualizer from "./Permutations.jsx";
+import WordSearchVisualizer from "./WordSearch.jsx";
 import SudokuSolver from "./SudokuSolver.jsx";
+import ExpressionAddOperators from "./ExpressionAddOperators.jsx"; // NEW IMPORT
+
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [filter, setFilter] = useState("all");
@@ -124,6 +126,27 @@ const AlgorithmList = ({ navigate }) => {
       timeComplexity: "O(9^(N*N))",
       platforms: ["LeetCode #37", "GfG"],
       tags: ["Grid", "Recursion", "Matrix"]
+    },
+    // NEW: Expression Add Operators
+    {
+      name: "Expression Add Operators",
+      number: "282",
+      icon: Layers,
+      description: "Insert +, -, * between digits to make expressions evaluate to a target.",
+      page: "ExpressionAddOperators",
+      difficulty: "Hard",
+      tier: "Tier 3",
+      difficultyColor: "text-red-400",
+      difficultyBg: "bg-red-400/10",
+      difficultyBorder: "border-red-400/30",
+      gradient: "from-purple-500 to-fuchsia-500",
+      iconColor: "text-purple-400",
+      iconBg: "bg-purple-500/20",
+      borderColor: "border-purple-500/30",
+      technique: "Backtracking + Expression Parsing",
+      timeComplexity: "O(4^N)",
+      platforms: ["LeetCode #282", "GfG"],
+      tags: ["Strings", "Math", "Recursion", "Operators"]
     }
   ];
 
@@ -401,6 +424,8 @@ const BacktrackingPage = ({ navigate: parentNavigate, initialPage = null }) => {
             Back to Problems
           </button>
         </div>;
+      case "ExpressionAddOperators":
+        return <ExpressionAddOperators navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
