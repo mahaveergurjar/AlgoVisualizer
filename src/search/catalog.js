@@ -64,7 +64,7 @@ import {
   Edit,
   Coins,
   ListOrdered,
-  Grid3X3,
+  Grid3x3,
 } from "lucide-react";
 
 export const problems = [
@@ -2771,7 +2771,7 @@ export const problems = [
     "62",
   ],
   number: "62",
-  icon: Grid3X3, // you can use Brackets or another icon from lucide-react if Grid3x3 isn't imported
+  icon: Grid3x3, 
   description:
     "Count the number of unique paths in an m×n grid from the top-left corner to the bottom-right using dynamic programming.",
   difficulty: "Medium",
