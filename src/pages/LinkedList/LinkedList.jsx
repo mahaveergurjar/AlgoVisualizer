@@ -1,25 +1,23 @@
-import React, { useState } from "react";
 import {
-  GitBranch,
   ArrowLeft,
-  Infinity as InfinityIcon,
-  Code2,
   Clock,
-  TrendingUp,
+  Code2,
+  GitBranch,
   Star,
-  Zap,
-  RefreshCw,
-  GitMerge,
+  TrendingUp,
+  Zap
 } from "lucide-react";
+import { useState } from "react";
 
 // --- Import your specific algorithm visualizer components ---
 import LinkedListCycle from "./LinkedListCycle.jsx";
-import ReverseLinkedList from "./ReverseLinkedList.jsx";
 import MergeTwoSortedLists from "./MergeTwoSortedLists.jsx";
+import ReverseLinkedList from "./ReverseLinkedList.jsx";
 import SortList from "./SortList.jsx";
+import SwapPairs from "./SwapPairs.jsx";
 // --- ✅ Import the master catalog and your StarButton ---
-import { problems as PROBLEM_CATALOG } from '../../search/catalog';
 import StarButton from '../../components/StarButton';
+import { problems as PROBLEM_CATALOG } from '../../search/catalog';
 
 // ✅ (Optional but Recommended) Default values for visual properties
 const defaultVisuals = {
@@ -214,6 +212,7 @@ const LinkedListPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "ReverseLinkedList": return <ReverseLinkedList navigate={navigate} />;
       case "MergeTwoSortedLists": return <MergeTwoSortedLists navigate={navigate} />;
       case "SortList": return <SortList navigate={navigate} />;
+      case "SwapPairs": return <SwapPairs navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
