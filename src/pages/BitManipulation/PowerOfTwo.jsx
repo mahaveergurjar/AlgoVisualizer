@@ -1,46 +1,103 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { ArrowLeft, Play, RotateCw, Pause, SkipBack, SkipForward, Zap } from "lucide-react";
-import useModeHistorySwitch from "../../hooks/useModeHistorySwitch";
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { 
+  ArrowLeft, 
+  Play, 
+  Pause, 
+  RotateCcw, 
+  SkipBack, 
+  SkipForward, 
+  Zap,
+  Code2,
+  Binary,
+  Cpu,
+  Clock,
+  CheckCircle,
+  Target,
+  Gauge,
+  Sparkles,
+  TrendingUp,
+  Calculator,
+  AlertCircle
+} from "lucide-react";
 
-const PowerOfTwo = () => {
+const LANG_TABS = ["C++", "Python", "Java"];
+
+const CODE_SNIPPETS = {
+  "C++": [
+    { l: 1, t: "bool isPowerOfTwo(int n) {" },
+    { l: 2, t: "    if (n <= 0) return false;" },
+    { l: 3, t: "    return (n & (n - 1)) == 0;" },
+    { l: 4, t: "}" },
+  ],
+  Python: [
+    { l: 1, t: "def isPowerOfTwo(n):" },
+    { l: 2, t: "    if n <= 0:" },
+    { l: 3, t: "        return False" },
+    { l: 4, t: "    return (n & (n - 1)) == 0" },
+  ],
+  Java: [
+    { l: 1, t: "public boolean isPowerOfTwo(int n) {" },
+    { l: 2, t: "    if (n <= 0) return false;" },
+    { l: 3, t: "    return (n & (n - 1)) == 0;" },
+    { l: 4, t: "}" },
+  ],
+};
+
+// Enhanced Code Line Component
+const CodeLine = ({ lineNum, content, isActive = false, isHighlighted = false }) => (
+  <div
+    className={`block rounded-lg transition-all duration-300 border-l-4 ${
+      isActive
+        ? "bg-amber-500/20 border-amber-500 shadow-lg shadow-amber-500/20 scale-[1.02]"
+        : isHighlighted
+        ? "bg-blue-500/10 border-blue-500/50"
+        : "border-transparent hover:bg-gray-700/30"
+    }`}
+  >
+    <span className="text-gray-500 select-none inline-block w-8 text-right mr-3">
+      {lineNum}
+    </span>
+    <span className={`font-mono ${isActive ? "text-amber-300 font-bold" : isHighlighted ? "text-blue-300" : "text-gray-300"}`}>
+      {content}
+    </span>
+  </div>
+);
+
+const PowerOfTwo = ({ navigate }) => {
   const defaultNumber = 16;
-
   const [number, setNumber] = useState(defaultNumber);
-  const [inputNumber, setInputNumber] = useState(defaultNumber);
-
-  const [animSpeed, setAnimSpeed] = useState(1500);
+  const [inputNumber, setInputNumber] = useState(defaultNumber.toString());
+  const [animSpeed, setAnimSpeed] = useState(800);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  const {
-    mode,
-    history,
-    currentStep,
-    setMode,
-    setHistory,
-    setCurrentStep,
-    goToPrevStep,
-    goToNextStep,
-  } = useModeHistorySwitch();
+  const [mode, setMode] = useState("input");
+  const [history, setHistory] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [activeLang, setActiveLang] = useState("C++");
+  const playRef = useRef(null);
 
   const generatePowerOfTwoHistory = useCallback((num) => {
     const hist = [];
-    const binary = num > 0 ? num.toString(2).padStart(Math.ceil(num.toString(2).length / 8) * 8, '0') : '0';
+    const binary = num > 0 ? num.toString(2).padStart(Math.ceil(Math.log2(num + 1)), '0') : '0';
     
+    // Initial state
     hist.push({
       number: num,
       binary,
-      message: `Checking if ${num} is a power of 2`,
+      message: `Checking if ${num} is a power of 2\nA number is a power of 2 if it can be expressed as 2^x for some integer x`,
       phase: "init",
-      result: null
+      result: null,
+      line: 1
     });
 
+    // Check if number is positive
     if (num <= 0) {
       hist.push({
         number: num,
         binary,
-        message: `${num} is not positive, so it cannot be a power of 2`,
+        message: `${num} is not positive\nOnly positive numbers can be powers of 2`,
         phase: "negative",
-        result: false
+        result: false,
+        line: 2
       });
       return hist;
     }
@@ -48,11 +105,13 @@ const PowerOfTwo = () => {
     hist.push({
       number: num,
       binary,
-      message: `Binary representation: ${binary}`,
+      message: `✓ Number is positive\nBinary representation: ${binary}`,
       phase: "show-binary",
-      result: null
+      result: null,
+      line: 3
     });
 
+    // Calculate n-1
     const nMinus1 = num - 1;
     const nMinus1Binary = nMinus1.toString(2).padStart(binary.length, '0');
 
@@ -61,9 +120,10 @@ const PowerOfTwo = () => {
       nMinus1,
       binary,
       nMinus1Binary,
-      message: `n - 1 = ${num} - 1 = ${nMinus1}`,
+      message: `Calculate n - 1:\n${num} - 1 = ${nMinus1}`,
       phase: "subtract",
-      result: null
+      result: null,
+      line: 3
     });
 
     hist.push({
@@ -73,9 +133,11 @@ const PowerOfTwo = () => {
       nMinus1Binary,
       message: `Binary of (n-1): ${nMinus1Binary}`,
       phase: "show-n-minus-1",
-      result: null
+      result: null,
+      line: 3
     });
 
+    // Perform AND operation
     const andResult = num & nMinus1;
     const andBinary = andResult.toString(2).padStart(binary.length, '0');
 
@@ -86,11 +148,13 @@ const PowerOfTwo = () => {
       nMinus1Binary,
       andResult,
       andBinary,
-      message: `n & (n-1) = ${num} & ${nMinus1} = ${andResult}`,
+      message: `Perform bitwise AND operation:\nn & (n-1) = ${num} & ${nMinus1} = ${andResult}`,
       phase: "and-operation",
-      result: null
+      result: null,
+      line: 3
     });
 
+    // Check result
     const isPowerOfTwo = andResult === 0;
 
     hist.push({
@@ -101,20 +165,28 @@ const PowerOfTwo = () => {
       andResult,
       andBinary,
       message: isPowerOfTwo 
-        ? `Since ${num} & ${nMinus1} = 0, ${num} IS a power of 2!`
-        : `Since ${num} & ${nMinus1} = ${andResult} ≠ 0, ${num} is NOT a power of 2`,
+        ? `✓ SUCCESS: ${num} & ${nMinus1} = 0\n${num} IS a power of 2! 🎉`
+        : `✗ FAILED: ${num} & ${nMinus1} = ${andResult} ≠ 0\n${num} is NOT a power of 2`,
       phase: "complete",
-      result: isPowerOfTwo
+      result: isPowerOfTwo,
+      line: 3
     });
 
     return hist;
   }, []);
 
   const handleStart = () => {
+    const num = parseInt(inputNumber, 10);
+    if (isNaN(num)) {
+      alert("Please enter a valid integer");
+      return;
+    }
+    setNumber(num);
     setMode("visualizing");
-    const hist = generatePowerOfTwoHistory(number);
+    const hist = generatePowerOfTwoHistory(num);
     setHistory(hist);
     setCurrentStep(0);
+    setIsPlaying(false);
   };
 
   const handleReset = () => {
@@ -122,218 +194,540 @@ const PowerOfTwo = () => {
     setHistory([]);
     setCurrentStep(0);
     setIsPlaying(false);
+    clearInterval(playRef.current);
   };
 
   const handleNumberChange = (e) => {
     setInputNumber(e.target.value);
   };
 
-  const handleApply = () => {
-    const newNumber = parseInt(inputNumber, 10);
-    if (!isNaN(newNumber)) {
-      setNumber(newNumber);
-    }
+  const handleExample = () => {
+    const randomNum = Math.floor(Math.random() * 1000) + 1; // Generate random number between 1 and 1000
+    setInputNumber(randomNum.toString());
   };
 
+  const goToNextStep = useCallback(() => {
+    setCurrentStep((prev) => {
+      if (prev < history.length - 1) {
+        return prev + 1;
+      }
+      setIsPlaying(false);
+      return prev;
+    });
+  }, [history.length]);
+
+  const goToPrevStep = useCallback(() => {
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
+  }, []);
+
+  const goToStart = useCallback(() => {
+    setCurrentStep(0);
+  }, []);
+
+  const goToEnd = useCallback(() => {
+    setCurrentStep(history.length - 1);
+  }, [history.length]);
+
+  const togglePlay = useCallback(() => {
+    setIsPlaying(prev => !prev);
+  }, []);
+
+  // Auto-play effect
   useEffect(() => {
-    let interval;
-    if (isPlaying && mode === "visualizing") {
-      interval = setInterval(() => {
-        if (currentStep < history.length - 1) {
-          goToNextStep();
-        } else {
-          setIsPlaying(false);
-        }
-      }, animSpeed);
+    if (isPlaying && currentStep < history.length - 1) {
+      playRef.current = setInterval(() => {
+        goToNextStep();
+      }, 1100 - animSpeed);
+    } else {
+      clearInterval(playRef.current);
     }
-    return () => clearInterval(interval);
-  }, [isPlaying, currentStep, history.length, animSpeed, mode, goToNextStep]);
+    return () => clearInterval(playRef.current);
+  }, [isPlaying, currentStep, history.length, animSpeed, goToNextStep]);
+
+  // Keyboard controls
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (mode !== "visualizing") return;
+      
+      switch (e.key) {
+        case "ArrowLeft":
+          e.preventDefault();
+          goToPrevStep();
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          goToNextStep();
+          break;
+        case " ":
+          e.preventDefault();
+          togglePlay();
+          break;
+        case "Home":
+          e.preventDefault();
+          goToStart();
+          break;
+        case "End":
+          e.preventDefault();
+          goToEnd();
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [mode, goToPrevStep, goToNextStep, goToStart, goToEnd, togglePlay]);
 
   const step = history[currentStep] || {};
-  const { binary = "", nMinus1Binary = "", andBinary = "", message = "", result = null } = step;
+  const { 
+    binary = "", 
+    nMinus1Binary = "", 
+    andBinary = "", 
+    message = "", 
+    result = null, 
+    phase = "init",
+    line,
+    number: currentNum,
+    nMinus1,
+    andResult
+  } = step;
+
+  const progressPercentage = history.length > 0 ? ((currentStep + 1) / history.length) * 100 : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-yellow-900 to-gray-900 text-white p-8">
-      <header className="mb-8">
-        <button
-          onClick={() => window.history.back()}
-          className="flex items-center gap-2 text-yellow-300 hover:text-yellow-100 transition-colors mb-4"
-        >
-          <ArrowLeft className="h-5 w-5" />
-          Back to Bit Manipulation
-        </button>
-        <div className="flex items-center gap-4 mb-4">
-          <div className="p-3 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl shadow-lg">
-            <Zap className="h-8 w-8 text-white" />
-          </div>
-          <div>
-            <h1 className="text-4xl font-black tracking-tight">Power of Two</h1>
-            <p className="text-yellow-200 mt-1">LeetCode #231 - Easy</p>
-          </div>
-        </div>
-        <p className="text-gray-300 text-lg leading-relaxed max-w-4xl">
-          Given an integer <code className="px-2 py-1 bg-gray-800 rounded">n</code>, return <strong>true</strong> if it is a power of two. 
-          Otherwise, return <strong>false</strong>. An integer <code className="px-2 py-1 bg-gray-800 rounded">n</code> is a power of two 
-          if there exists an integer <code className="px-2 py-1 bg-gray-800 rounded">x</code> such that{" "}
-          <code className="px-2 py-1 bg-gray-800 rounded">n == 2^x</code>.
-        </p>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950 text-white relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+      </div>
 
-      {mode === "input" && (
-        <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 mb-8 shadow-xl">
-          <h2 className="text-2xl font-bold mb-4 text-yellow-300">Input Configuration</h2>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300 mb-2">Number:</label>
-            <input
-              type="number"
-              value={inputNumber}
-              onChange={handleNumberChange}
-              className="w-full px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-              placeholder="e.g., 16"
-            />
-          </div>
-          <div className="flex gap-3">
-            <button onClick={handleApply} className="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-lg font-semibold transition-colors">
-              Apply
-            </button>
-            <button
-              onClick={handleStart}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-yellow-600 to-orange-700 hover:from-yellow-700 hover:to-orange-800 rounded-lg font-semibold transition-all shadow-lg shadow-yellow-500/30"
-            >
-              <Play className="h-4 w-4" />
-              Start Visualization
-            </button>
-          </div>
-        </section>
-      )}
-
-      {mode === "visualizing" && (
-        <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 mb-8 shadow-xl">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="p-3 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 rounded-lg transition-all shadow-lg"
-              >
-                {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-              </button>
-              <button onClick={goToPrevStep} disabled={currentStep === 0} className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                <SkipBack className="h-5 w-5" />
-              </button>
-              <button onClick={goToNextStep} disabled={currentStep >= history.length - 1} className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                <SkipForward className="h-5 w-5" />
-              </button>
-              <button onClick={handleReset} className="flex items-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
-                <RotateCw className="h-5 w-5" />
-                Reset
-              </button>
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-8">
+        {/* Header */}
+        <header className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-400 mb-4">
+            Power of Two
+          </h1>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            Check if a number is a power of two using bit manipulation magic
+          </p>
+          
+          <div className="flex flex-wrap justify-center gap-3 mt-6">
+            <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 rounded-full border border-amber-500/30">
+              <Clock className="h-4 w-4 text-amber-400" />
+              <span className="text-amber-300 text-sm font-medium">O(1) Time</span>
             </div>
-            <div className="text-center">
-              <div className="text-sm text-gray-400">Step</div>
-              <div className="text-2xl font-bold text-yellow-300">{currentStep + 1} / {history.length}</div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 rounded-full border border-green-500/30">
+              <Cpu className="h-4 w-4 text-green-400" />
+              <span className="text-green-300 text-sm font-medium">O(1) Space</span>
             </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-2">Animation Speed</label>
-              <select value={animSpeed} onChange={(e) => setAnimSpeed(Number(e.target.value))} className="px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white">
-                <option value={2000}>Slow</option>
-                <option value={1500}>Normal</option>
-                <option value={800}>Fast</option>
-              </select>
+            <div className="flex items-center gap-2 px-4 py-2 bg-orange-500/10 rounded-full border border-orange-500/30">
+              <Binary className="h-4 w-4 text-orange-400" />
+              <span className="text-orange-300 text-sm font-medium">Bit Manipulation</span>
             </div>
           </div>
-        </section>
-      )}
+        </header>
 
-      {mode === "visualizing" && message && (
-        <div className={`mb-6 p-4 rounded-xl border ${
-          result === true 
-            ? "bg-green-900/30 border-green-500 text-green-200"
-            : result === false
-            ? "bg-red-900/30 border-red-500 text-red-200"
-            : "bg-yellow-900/30 border-yellow-500 text-yellow-200"
-        }`}>
-          <p className="text-center font-medium">{message}</p>
-        </div>
-      )}
-
-      {mode === "visualizing" && history.length > 0 && (
-        <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-8 shadow-xl">
-          <div className="space-y-6">
-            {binary && (
-              <div className="p-4 bg-yellow-900/20 rounded-xl border border-yellow-500/30">
-                <div className="text-sm text-yellow-300 mb-2">n (binary)</div>
-                <div className="flex gap-1 justify-center flex-wrap">
-                  {binary.split('').map((bit, index) => (
-                    <div
-                      key={index}
-                      className={`w-8 h-10 flex items-center justify-center rounded font-mono text-sm font-bold ${
-                        bit === '1' ? "bg-yellow-600 text-white" : "bg-gray-700 text-gray-400"
-                      }`}
-                    >
-                      {bit}
-                    </div>
-                  ))}
+        {/* Input Controls */}
+        {mode === "input" && (
+          <section className="mb-8">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    <Target className="inline w-4 h-4 mr-2" />
+                    Number to Check
+                  </label>
+                  <input
+                    type="number"
+                    value={inputNumber}
+                    onChange={handleNumberChange}
+                    className="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-xl text-white font-mono focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                    placeholder="Enter a number to check..."
+                  />
+                  <div className="text-xs text-gray-500 mt-2">
+                    Examples: 16 (power of 2), 18 (not power of 2), 0 (not power of 2)
+                  </div>
+                </div>
+                
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleStart}
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-amber-500/25 flex items-center justify-center gap-2"
+                  >
+                    <Zap className="h-5 w-5" />
+                    Start Visualization
+                  </button>
+                  <button
+                    onClick={handleExample}
+                    className="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl transition-all duration-200 flex items-center gap-2"
+                  >
+                    <TrendingUp className="h-4 w-4" />
+                    Example
+                  </button>
                 </div>
               </div>
-            )}
+            </div>
+          </section>
+        )}
 
-            {nMinus1Binary && (
-              <div className="p-4 bg-orange-900/20 rounded-xl border border-orange-500/30">
-                <div className="text-sm text-orange-300 mb-2">n - 1 (binary)</div>
-                <div className="flex gap-1 justify-center flex-wrap">
-                  {nMinus1Binary.split('').map((bit, index) => (
-                    <div
-                      key={index}
-                      className={`w-8 h-10 flex items-center justify-center rounded font-mono text-sm font-bold ${
-                        bit === '1' ? "bg-orange-600 text-white" : "bg-gray-700 text-gray-400"
+        {mode === "visualizing" && (
+          <>
+            {/* Controls & Language Tabs */}
+            <section className="mb-6">
+              <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
+                <div className="flex gap-2">
+                  {LANG_TABS.map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => setActiveLang(lang)}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                        activeLang === lang
+                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                          : "bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 border border-gray-600"
                       }`}
                     >
-                      {bit}
-                    </div>
+                      {lang}
+                    </button>
                   ))}
                 </div>
-              </div>
-            )}
 
-            {andBinary && (
-              <div className="p-4 bg-purple-900/20 rounded-xl border border-purple-500/30">
-                <div className="text-sm text-purple-300 mb-2">n & (n-1) (binary)</div>
-                <div className="flex gap-1 justify-center flex-wrap">
-                  {andBinary.split('').map((bit, index) => (
-                    <div
-                      key={index}
-                      className={`w-8 h-10 flex items-center justify-center rounded font-mono text-sm font-bold ${
-                        bit === '1' ? "bg-purple-600 text-white" : "bg-gray-700 text-gray-400"
-                      }`}
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 bg-gray-800/50 rounded-xl px-4 py-2 border border-gray-600">
+                    <button
+                      onClick={goToStart}
+                      disabled={currentStep <= 0}
+                      className="p-2 hover:bg-gray-700 rounded-lg disabled:opacity-30 transition-all"
+                      title="Go to Start (Home)"
                     >
-                      {bit}
-                    </div>
-                  ))}
+                      <SkipBack className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={goToPrevStep}
+                      disabled={currentStep <= 0}
+                      className="p-2 hover:bg-gray-700 rounded-lg disabled:opacity-30 transition-all"
+                    >
+                      <SkipBack className="h-4 w-4" />
+                    </button>
+                    
+                    {!isPlaying ? (
+                      <button
+                        onClick={togglePlay}
+                        disabled={currentStep >= history.length - 1}
+                        className="p-2 hover:bg-gray-700 rounded-lg disabled:opacity-30 transition-all"
+                      >
+                        <Play className="h-4 w-4" />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={togglePlay}
+                        className="p-2 bg-yellow-500 hover:bg-yellow-600 rounded-lg transition-all"
+                      >
+                        <Pause className="h-4 w-4" />
+                      </button>
+                    )}
+
+                    <button
+                      onClick={goToNextStep}
+                      disabled={currentStep >= history.length - 1}
+                      className="p-2 hover:bg-gray-700 rounded-lg disabled:opacity-30 transition-all"
+                    >
+                      <SkipForward className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={goToEnd}
+                      disabled={currentStep >= history.length - 1}
+                      className="p-2 hover:bg-gray-700 rounded-lg disabled:opacity-30 transition-all"
+                      title="Go to End (End)"
+                    >
+                      <SkipForward className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-400">Speed:</label>
+                    <select
+                      value={animSpeed}
+                      onChange={(e) => setAnimSpeed(parseInt(e.target.value))}
+                      className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm cursor-pointer focus:ring-2 focus:ring-amber-500"
+                    >
+                      <option value={400}>Slow</option>
+                      <option value={700}>Medium</option>
+                      <option value={1000}>Fast</option>
+                    </select>
+                  </div>
+
+                  <div className="font-mono px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-center min-w-20">
+                    <div className="text-amber-400 font-bold">{currentStep + 1}</div>
+                    <div className="text-gray-400 text-xs">of {history.length}</div>
+                  </div>
+
+                  <button
+                    onClick={handleReset}
+                    className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    Reset
+                  </button>
                 </div>
               </div>
-            )}
 
-            {result !== null && (
-              <div className={`mt-8 p-6 rounded-xl border-2 ${
-                result ? "bg-green-900/30 border-green-500" : "bg-red-900/30 border-red-500"
-              }`}>
-                <div className="text-center">
-                  <div className={`text-sm mb-2 ${result ? "text-green-300" : "text-red-300"}`}>Result</div>
-                  <div className={`text-4xl font-black ${result ? "text-green-200" : "text-red-200"}`}>
-                    {result ? "✓ Power of 2" : "✗ Not a Power of 2"}
+              {/* Progress Bar */}
+              <div className="mt-4">
+                <div className="flex justify-between text-sm text-gray-400 mb-2">
+                  <span>Progress</span>
+                  <span>{Math.round(progressPercentage)}%</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all duration-500 shadow-lg shadow-amber-500/25"
+                    style={{ width: `${progressPercentage}%` }}
+                  ></div>
+                </div>
+              </div>
+            </section>
+
+            {/* Main Visualization */}
+            <main className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              {/* Code Panel */}
+              <div className="xl:col-span-1">
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 h-full">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Code2 className="h-5 w-5 text-amber-400" />
+                    <h3 className="font-semibold text-gray-200">Algorithm Code</h3>
+                  </div>
+                  <div className="bg-gray-900 rounded-xl border border-gray-600 p-4 font-mono text-sm">
+                    {CODE_SNIPPETS[activeLang].map((codeLine) => (
+                      <CodeLine 
+                        key={codeLine.l} 
+                        lineNum={codeLine.l} 
+                        content={codeLine.t}
+                        isActive={line === codeLine.l}
+                        isHighlighted={[2, 3].includes(codeLine.l)}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
-            )}
-          </div>
 
-          <div className="mt-8 p-4 bg-gray-900/50 rounded-xl border border-gray-600">
-            <div className="text-sm text-gray-300 text-center">
-              <strong>Bit Trick:</strong> A number is a power of 2 if and only if <code className="px-2 py-1 bg-gray-800 rounded">{"n & (n-1) == 0"}</code> (and n {"> 0"})
-            </div>
-          </div>
-        </section>
-      )}
+              {/* Visualization Panel */}
+              <div className="xl:col-span-2 space-y-6">
+                {/* Binary Representations */}
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-bold text-xl text-gray-200 flex items-center gap-3">
+                      <Binary className="h-6 w-6 text-amber-400" />
+                      Binary Representations
+                    </h3>
+                    <div className="text-sm text-gray-400 font-mono bg-gray-900/50 px-3 py-1 rounded-full">
+                      Step {currentStep + 1}
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* n (Original Number) */}
+                    {binary && (
+                      <div className="bg-gradient-to-br from-amber-900/40 to-yellow-800/40 backdrop-blur-sm p-4 rounded-xl border border-amber-700/50">
+                        <h4 className="text-lg font-semibold text-amber-300 mb-3 flex items-center gap-2">
+                          <Gauge className="h-5 w-5" />
+                          n = {currentNum}
+                        </h4>
+                        <div className="flex gap-1 justify-center flex-wrap">
+                          {binary.split('').map((bit, index) => (
+                            <div
+                              key={index}
+                              className={`w-8 h-10 flex items-center justify-center rounded font-mono text-sm font-bold transition-all duration-300 ${
+                                bit === '1' 
+                                  ? "bg-amber-600 text-white shadow-lg shadow-amber-500/50" 
+                                  : "bg-gray-700 text-gray-400"
+                              }`}
+                            >
+                              {bit}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* n-1 */}
+                    {nMinus1Binary && (
+                      <div className="bg-gradient-to-br from-orange-900/40 to-red-800/40 backdrop-blur-sm p-4 rounded-xl border border-orange-700/50">
+                        <h4 className="text-lg font-semibold text-orange-300 mb-3 flex items-center gap-2">
+                          <Calculator className="h-5 w-5" />
+                          n - 1 = {nMinus1}
+                        </h4>
+                        <div className="flex gap-1 justify-center flex-wrap">
+                          {nMinus1Binary.split('').map((bit, index) => (
+                            <div
+                              key={index}
+                              className={`w-8 h-10 flex items-center justify-center rounded font-mono text-sm font-bold transition-all duration-300 ${
+                                bit === '1' 
+                                  ? "bg-orange-600 text-white shadow-lg shadow-orange-500/50" 
+                                  : "bg-gray-700 text-gray-400"
+                              }`}
+                            >
+                              {bit}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* n & (n-1) */}
+                    {andBinary && (
+                      <div className="bg-gradient-to-br from-purple-900/40 to-pink-800/40 backdrop-blur-sm p-4 rounded-xl border border-purple-700/50">
+                        <h4 className="text-lg font-semibold text-purple-300 mb-3 flex items-center gap-2">
+                          <Sparkles className="h-5 w-5" />
+                          n & (n-1) = {andResult}
+                        </h4>
+                        <div className="flex gap-1 justify-center flex-wrap">
+                          {andBinary.split('').map((bit, index) => (
+                            <div
+                              key={index}
+                              className={`w-8 h-10 flex items-center justify-center rounded font-mono text-sm font-bold transition-all duration-300 ${
+                                bit === '1' 
+                                  ? "bg-purple-600 text-white shadow-lg shadow-purple-500/50" 
+                                  : "bg-gray-700 text-gray-400"
+                              }`}
+                            >
+                              {bit}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Explanation & Results */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-gradient-to-br from-amber-900/40 to-orange-900/40 backdrop-blur-sm p-6 rounded-2xl border border-amber-700/50">
+                    <h3 className="font-bold text-xl text-amber-300 mb-4 flex items-center gap-3">
+                      <Cpu className="h-5 w-5" />
+                      Step Explanation
+                    </h3>
+                    <div className="text-gray-200 text-sm leading-relaxed h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-2">
+                      {message.split('\n').map((line, i) => (
+                        <div key={i} className="mb-2 last:mb-0">
+                          {line}
+                        </div>
+                      ))}
+                    </div>
+                    {phase === "complete" && (
+                      <div className={`mt-4 p-3 rounded-lg border ${
+                        result 
+                          ? "bg-green-500/20 border-green-500/30" 
+                          : "bg-red-500/20 border-red-500/30"
+                      }`}>
+                        <div className={`text-sm font-semibold flex items-center gap-2 ${
+                          result ? "text-green-300" : "text-red-300"
+                        }`}>
+                          <CheckCircle className="h-4 w-4" />
+                          {result ? "Power of 2 Confirmed!" : "Not a Power of 2"}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="bg-gradient-to-br from-orange-900/40 to-red-900/40 backdrop-blur-sm p-6 rounded-2xl border border-orange-700/50">
+                    <h3 className="font-bold text-xl text-orange-300 mb-4 flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5" />
+                      Current State
+                    </h3>
+                    <div className="space-y-4 text-sm">
+                      <div className="flex justify-between items-center py-2 border-b border-orange-700/30">
+                        <span className="text-gray-300">Number</span>
+                        <span className="font-mono font-bold text-amber-400">
+                          {currentNum}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-orange-700/30">
+                        <span className="text-gray-300">Phase</span>
+                        <span className="font-mono font-bold text-blue-400 capitalize">
+                          {phase.replace('-', ' ')}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-orange-700/30">
+                        <span className="text-gray-300">Steps Completed</span>
+                        <span className="font-mono font-bold text-amber-400">
+                          {currentStep + 1}/{history.length}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-300">Active Line</span>
+                        <span className="font-mono font-bold text-green-400">
+                          {line || "—"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Final Result */}
+                {result !== null && (
+                  <div className={`p-6 rounded-2xl border-2 shadow-xl ${
+                    result 
+                      ? "bg-gradient-to-br from-green-900/40 to-emerald-900/40 border-green-500" 
+                      : "bg-gradient-to-br from-red-900/40 to-pink-900/40 border-red-500"
+                  }`}>
+                    <div className="text-center">
+                      <div className={`text-sm mb-2 ${result ? "text-green-300" : "text-red-300"}`}>
+                        Final Result
+                      </div>
+                      <div className={`text-4xl font-black mb-4 ${result ? "text-green-200" : "text-red-200"}`}>
+                        {result ? "✓ Power of 2" : "✗ Not a Power of 2"}
+                      </div>
+                      <div className="text-gray-300 text-sm">
+                        {result 
+                          ? `${currentNum} = 2^${Math.log2(currentNum)}` 
+                          : `${currentNum} cannot be expressed as 2^x`}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Complexity Analysis */}
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700">
+                  <h3 className="font-bold text-xl text-amber-400 mb-6 flex items-center gap-3">
+                    <Zap className="h-6 w-6" />
+                    Algorithm Analysis
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-amber-300 text-lg">Time Complexity</h4>
+                      <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700">
+                        <div className="text-2xl font-bold text-green-400 text-center mb-2">O(1)</div>
+                        <p className="text-gray-400 text-sm text-center">
+                          Single bitwise operation regardless of input size
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-orange-300 text-lg">Space Complexity</h4>
+                      <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700">
+                        <div className="text-2xl font-bold text-green-400 text-center mb-2">O(1)</div>
+                        <p className="text-gray-400 text-sm text-center">
+                          Uses only constant extra space
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-6 p-4 bg-gray-900/30 rounded-xl border border-gray-600">
+                    <h5 className="font-semibold text-amber-300 mb-2 flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4" />
+                      Key Insight
+                    </h5>
+                    <p className="text-gray-400 text-sm">
+                      Powers of 2 have exactly one '1' bit in their binary representation. 
+                      The operation <code className="px-2 py-1 bg-gray-800 rounded">n & (n-1)</code> clears the rightmost set bit. 
+                      If the result is 0, there was only one set bit to begin with.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </>
+        )}
+      </div>
     </div>
   );
 };

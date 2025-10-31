@@ -12,6 +12,7 @@
   "dependencies": {
     "@langchain/google-genai": "^1.0.0",
     "@tailwindcss/vite": "^4.1.14",
+    "framer-motion": "^11.18.2",
     "lucide-react": "^0.544.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

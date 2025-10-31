@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import CountPrimes from "./CountPrimes.jsx";
 import PowerPage from "./Power.jsx";
+import PrimePalindrome from "./PrimePalindrome.jsx";
+import ExcelSheetColumnTitle from "./ExcelSheetColumnTitle.jsx";
+import FactorialZeroes from "./FactorialZeroes.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -103,6 +106,26 @@ const AlgorithmList = ({ navigate }) => {
     technique: "Mathematical Analysis",
     timeComplexity: "O(log n)",
     platforms: ["LeetCode #172", "GfG"],
+    tags: ["Math", "Counting", "Optimization"]
+  },
+  {
+    name: "Prime Palindrome",
+    number: "866",
+    icon: Calculator,
+    description: "Find the smallest prime palindrome greater than or equal to a given number.",
+    page: "PrimePalindrome",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-indigo-500 to-blue-500",
+    iconColor: "text-indigo-400",
+    iconBg: "bg-indigo-500/20",
+    borderColor: "border-indigo-500/30",
+    technique: "Mathematical Analysis",
+    timeComplexity: "O(log n)",
+    platforms: ["LeetCode #866"],
     tags: ["Math", "Counting", "Optimization"]
   }
 ];
@@ -361,25 +384,11 @@ const MathsMiscPage = ({ navigate: parentNavigate, initialPage = null }) => {
     case "PowerPage":
       return <PowerPage />;
     case "ExcelColumnTitle":
-      return <div className="text-center py-20">
-        <div className="text-2xl text-gray-400">Excel Sheet Column Title Visualizer - Coming Soon</div>
-        <button 
-          onClick={() => navigate("home")}
-          className="mt-4 px-6 py-2 bg-violet-500 hover:bg-violet-600 rounded-lg transition-colors"
-        >
-          Back to Problems
-        </button>
-      </div>;
+      return <ExcelSheetColumnTitle />;
     case "FactorialZeroes":
-      return <div className="text-center py-20">
-        <div className="text-2xl text-gray-400">Factorial Zeroes Visualizer - Coming Soon</div>
-        <button 
-          onClick={() => navigate("home")}
-          className="mt-4 px-6 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-lg transition-colors"
-        >
-          Back to Problems
-        </button>
-      </div>;
+      return <FactorialZeroes />;
+    case "PrimePalindrome":
+      return <PrimePalindrome />;
     case "home":
     default:
       return <AlgorithmList navigate={navigate} />;

@@ -15,6 +15,7 @@ import {
   Terminal,
 } from "lucide-react";
 import VisualizerPointer from "../../components/VisualizerPointer";
+import Tooltip from "../../components/Tooltip";
 
 const LANG_TABS = ["C++", "Python", "Java"];
 
@@ -398,28 +399,37 @@ const UniquePathsVisualizer = () => {
           ) : (
             <>
               <div className="flex items-center gap-2">
-                <button
-                  onClick={stepBackward}
-                  disabled={currentStep <= 0}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-cyan-600 disabled:opacity-40 transition shadow"
-                >
-                  <ArrowLeft />
-                </button>
+                <Tooltip content="Previous step" position="top">
+                  <button
+                    onClick={stepBackward}
+                    disabled={currentStep <= 0}
+                    className="px-3 py-2 rounded-full bg-gray-800 hover:bg-cyan-600 disabled:opacity-40 transition shadow"
+                    aria-label="Previous step"
+                  >
+                    <ArrowLeft />
+                  </button>
+                </Tooltip>
 
-                <button
-                  onClick={togglePlay}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-cyan-600 transition shadow"
-                >
-                  {playing ? <Pause /> : <Play />}
-                </button>
+                <Tooltip content={playing ? "Pause visualization" : "Play visualization"} position="top">
+                  <button
+                    onClick={togglePlay}
+                    className="px-3 py-2 rounded-full bg-gray-800 hover:bg-cyan-600 transition shadow"
+                    aria-label={playing ? "Pause visualization" : "Play visualization"}
+                  >
+                    {playing ? <Pause /> : <Play />}
+                  </button>
+                </Tooltip>
 
-                <button
-                  onClick={stepForward}
-                  disabled={currentStep >= history.length - 1}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-cyan-600 disabled:opacity-40 transition shadow"
-                >
-                  <ArrowRight />
-                </button>
+                <Tooltip content="Next step" position="top">
+                  <button
+                    onClick={stepForward}
+                    disabled={currentStep >= history.length - 1}
+                    className="px-3 py-2 rounded-full bg-gray-800 hover:bg-cyan-600 disabled:opacity-40 transition shadow"
+                    aria-label="Next step"
+                  >
+                    <ArrowRight />
+                  </button>
+                </Tooltip>
               </div>
 
               <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow inner">
@@ -439,12 +449,15 @@ const UniquePathsVisualizer = () => {
                 />
               </div>
 
-              <button
-                onClick={resetAll}
-                className="ml-3 px-4 py-2 rounded-xl bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold shadow"
-              >
-                Reset
-              </button>
+              <Tooltip content="Reset visualization" position="top">
+                <button
+                  onClick={resetAll}
+                  className="ml-3 px-4 py-2 rounded-xl bg-red-600 cursor-pointer hover:bg-red-700 text-white font-bold shadow"
+                  aria-label="Reset visualization"
+                >
+                  Reset
+                </button>
+              </Tooltip>
             </>
           )}
         </div>

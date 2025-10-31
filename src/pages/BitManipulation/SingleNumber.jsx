@@ -1,38 +1,62 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { ArrowLeft, ArrowRight, List, FileText, Play, Pause, Clock, CheckCircle, Cpu } from "lucide-react";
-import VisualizerPointer from "../../components/VisualizerPointer";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Play,
+  Pause,
+  RotateCcw,
+  Code2,
+  Binary,
+  Zap,
+  Cpu,
+  Clock,
+  CheckCircle,
+  BarChart3,
+  Target,
+  Gauge,
+  Calculator,
+  Grid,
+  Search,
+  Sparkles,
+  TrendingUp,
+  MousePointer,
+  List,
+  AlertCircle,
+  ArrowRight as ArrowRightIcon,
+} from "lucide-react";
 
 const LANG_TABS = ["C++", "Python", "Java"];
 
 const CODE_SNIPPETS = {
   "C++": [
-    { l: 1, t: "int singleNumber(vector<int>& nums) {" },
-    { l: 2, t: "    int result = 0;" },
-    { l: 3, t: "    for (int x : nums) {" },
-    { l: 4, t: "        result ^= x;" },
-    { l: 5, t: "    }" },
-    { l: 6, t: "    return result;" },
-    { l: 7, t: "}" },
+    { line: 1, content: "int singleNumber(vector<int>& nums) {" },
+    { line: 2, content: "    int result = 0;" },
+    { line: 3, content: "    for (int x : nums) {" },
+    { line: 4, content: "        result ^= x;" },
+    { line: 5, content: "    }" },
+    { line: 6, content: "    return result;" },
+    { line: 7, content: "}" },
   ],
   Python: [
-    { l: 1, t: "def singleNumber(nums):" },
-    { l: 2, t: "    result = 0" },
-    { l: 3, t: "    for x in nums:" },
-    { l: 4, t: "        result ^= x" },
-    { l: 5, t: "    return result" },
+    { line: 1, content: "def singleNumber(nums):" },
+    { line: 2, content: "    result = 0" },
+    { line: 3, content: "    for x in nums:" },
+    { line: 4, content: "        result ^= x" },
+    { line: 5, content: "    return result" },
   ],
   Java: [
-    { l: 1, t: "public int singleNumber(int[] nums) {" },
-    { l: 2, t: "    int result = 0;" },
-    { l: 3, t: "    for (int x : nums) {" },
-    { l: 4, t: "        result ^= x;" },
-    { l: 5, t: "    }" },
-    { l: 6, t: "    return result;" },
-    { l: 7, t: "}" },
+    { line: 1, content: "public int singleNumber(int[] nums) {" },
+    { line: 2, content: "    int result = 0;" },
+    { line: 3, content: "    for (int x : nums) {" },
+    { line: 4, content: "        result ^= x;" },
+    { line: 5, content: "    }" },
+    { line: 6, content: "    return result;" },
+    { line: 7, content: "}" },
   ],
 };
 
 const formatBinary = (num, bits) => {
+  if (num === null || num === undefined) return "-".repeat(bits);
   const mask = (1n << BigInt(bits)) - 1n;
   const bn = BigInt(num) & mask;
   let s = bn.toString(2);
@@ -40,411 +64,779 @@ const formatBinary = (num, bits) => {
   return s.padStart(bits, "0");
 };
 
-const chunkBits = (binStr) => binStr.split("").map((b, i) => ({ b, idx: i }));
+// Enhanced Code Line Component
+const CodeLine = ({ lineNum, content, isActive = false, isHighlighted = false }) => (
+  <div
+    className={`block rounded-lg transition-all duration-300 border-l-4 ${
+      isActive
+        ? "bg-green-500/20 border-green-500 shadow-lg shadow-green-500/20 scale-[1.02]"
+        : isHighlighted
+        ? "bg-blue-500/10 border-blue-500/50"
+        : "border-transparent hover:bg-gray-700/30"
+    }`}
+  >
+    <span className="text-gray-500 select-none inline-block w-8 text-right mr-3">
+      {lineNum}
+    </span>
+    <span className={`font-mono ${isActive ? "text-green-300 font-bold" : isHighlighted ? "text-blue-300" : "text-gray-300"}`}>
+      {content}
+    </span>
+  </div>
+);
 
-const SingleNumberVisualizer = () => {
-  // inputs
-  const [numsInput, setNumsInput] = useState("2,2,1");
+const SingleNumberVisualizer = ({ navigate }) => {
+  // State management
+  const [numsInput, setNumsInput] = useState("2,2,1,3,3,4,4");
   const [bitWidth, setBitWidth] = useState(8);
-
-  // parsed
   const [nums, setNums] = useState([]);
-
-  // history & state
-  // each state: { index, before, current, after, explanation, binBefore, binCurrent, binAfter, line, bestValue }
   const [history, setHistory] = useState([]);
   const [currentStep, setCurrentStep] = useState(-1);
-
-  // UI controls
   const [isLoaded, setIsLoaded] = useState(false);
-  const [playing, setPlaying] = useState(false);
-  const [speed, setSpeed] = useState(600);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1000);
   const [activeLang, setActiveLang] = useState("C++");
-  const playRef = useRef(null);
+  const visualizerRef = useRef(null);
 
-  const state = history[currentStep] || {};
+  const currentState = history[currentStep] || {};
 
-  // generate history
+  // Enhanced history generation with better explanations
   const generateHistory = useCallback((arr, bits) => {
     const newHistory = [];
-    let acc = 0;
+    let accumulator = 0;
+    let stepCount = 0;
 
-    const add = (obj) => newHistory.push({ bestValue: acc, ...obj });
+    // Initial state
+    newHistory.push({
+      index: null,
+      before: accumulator,
+      current: null,
+      after: accumulator,
+      explanation: "🚀 Starting XOR Algorithm\nInitializing accumulator to 0",
+      binBefore: formatBinary(accumulator, bits),
+      binCurrent: null,
+      binAfter: formatBinary(accumulator, bits),
+      line: 2,
+      status: "initial",
+      step: stepCount++,
+    });
 
-    add({ index: null, before: acc, current: null, after: acc, explanation: `Initialize accumulator to 0.`, binBefore: formatBinary(acc, bits), binCurrent: null, binAfter: formatBinary(acc, bits), line: 2 });
-
+    // Process each number
     for (let i = 0; i < arr.length; i++) {
-      const cur = arr[i];
-      // snapshot before operation
-      add({ index: i, before: acc, current: cur, after: null, explanation: `Preparing to XOR accumulator (${acc}) with nums[${i}] = ${cur}.`, binBefore: formatBinary(acc, bits), binCurrent: formatBinary(cur, bits), binAfter: null, line: 3 });
+      const currentNum = arr[i];
+      
+      // Before XOR
+      newHistory.push({
+        index: i,
+        before: accumulator,
+        current: currentNum,
+        after: null,
+        explanation: `📊 Checking element at index ${i}\nAccumulator: ${accumulator}, Current: ${currentNum}\nReady to perform XOR operation`,
+        binBefore: formatBinary(accumulator, bits),
+        binCurrent: formatBinary(currentNum, bits),
+        binAfter: null,
+        line: 3,
+        status: "before",
+        step: stepCount++,
+      });
 
-      const after = acc ^ cur;
-      // compute line
-      add({ index: i, before: acc, current: cur, after, explanation: `${acc} ^ ${cur} = ${after}`, binBefore: formatBinary(acc, bits), binCurrent: formatBinary(cur, bits), binAfter: formatBinary(after, bits), line: 4 });
+      // Perform XOR
+      const result = accumulator ^ currentNum;
+      newHistory.push({
+        index: i,
+        before: accumulator,
+        current: currentNum,
+        after: result,
+        explanation: `⚡ XOR Operation\n${accumulator} ^ ${currentNum} = ${result}\n${formatBinary(accumulator, bits)} XOR ${formatBinary(currentNum, bits)} = ${formatBinary(result, bits)}`,
+        binBefore: formatBinary(accumulator, bits),
+        binCurrent: formatBinary(currentNum, bits),
+        binAfter: formatBinary(result, bits),
+        line: 4,
+        status: "operation",
+        step: stepCount++,
+      });
 
-      acc = after;
+      accumulator = result;
+
+      // Show intermediate result
+      if (i < arr.length - 1) {
+        newHistory.push({
+          index: i,
+          before: accumulator,
+          current: null,
+          after: accumulator,
+          explanation: `📈 Intermediate Result: ${accumulator}\nMoving to next element...`,
+          binBefore: formatBinary(accumulator, bits),
+          binCurrent: null,
+          binAfter: formatBinary(accumulator, bits),
+          line: 3,
+          status: "intermediate",
+          step: stepCount++,
+        });
+      }
     }
 
-    // final state
-    add({ index: arr.length - 1, before: acc, current: null, after: acc, explanation: `Done. Single number is ${acc}.`, binBefore: formatBinary(acc, bits), binCurrent: null, binAfter: formatBinary(acc, bits), line: 6 });
+    // Final state
+    newHistory.push({
+      index: arr.length - 1,
+      before: accumulator,
+      current: null,
+      after: accumulator,
+      explanation: `🎉 Algorithm Complete!\nThe single number is: ${accumulator}\nAll pairs canceled out through XOR operations`,
+      binBefore: formatBinary(accumulator, bits),
+      binCurrent: null,
+      binAfter: formatBinary(accumulator, bits),
+      line: 6,
+      status: "final",
+      step: stepCount++,
+    });
 
     setHistory(newHistory);
     setCurrentStep(0);
+    setIsLoaded(true);
   }, []);
 
-  // load and validate
-  const load = () => {
+  // Load and validate input
+  const loadVisualization = () => {
     const arr = numsInput
       .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map((s) => parseInt(s, 10));
+      .map(s => parseInt(s.trim(), 10))
+      .filter(num => !isNaN(num));
 
-    if (arr.length === 0 || arr.some(isNaN)) return alert("Invalid input. Enter comma-separated integers, e.g. 2,2,1");
+    if (arr.length === 0) {
+      alert("Please enter valid comma-separated integers");
+      return;
+    }
+
+    // Validate that there's exactly one single number
+    const frequency = {};
+    arr.forEach(num => {
+      frequency[num] = (frequency[num] || 0) + 1;
+    });
+    
+    const singles = Object.keys(frequency).filter(num => frequency[num] === 1);
+    if (singles.length !== 1) {
+      alert("Please ensure there's exactly one number that appears once, and all others appear twice");
+      return;
+    }
 
     setNums(arr);
-    setIsLoaded(true);
     generateHistory(arr, bitWidth);
   };
 
-  const resetAll = () => {
+  const resetVisualization = () => {
     setIsLoaded(false);
     setHistory([]);
     setCurrentStep(-1);
-    setPlaying(false);
-    clearInterval(playRef.current);
+    setIsPlaying(false);
   };
 
-  // step controls
+  const generateRandomArray = () => {
+    const length = Math.floor(Math.random() * 3) + 4; // 4-6 elements (2-3 pairs + 1 single)
+    const pairs = Array.from({ length: Math.floor(length / 2) }, () => Math.floor(Math.random() * 50) + 1);
+    
+    // Duplicate pairs and add one single number
+    const array = [];
+    pairs.forEach(num => {
+      array.push(num, num);
+    });
+    
+    // Add single number (different from pairs)
+    let single;
+    do {
+      single = Math.floor(Math.random() * 50) + 1;
+    } while (pairs.includes(single));
+    array.push(single);
+    
+    // Shuffle array
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+
+    setNumsInput(array.join(', '));
+    resetVisualization();
+  };
+
+  // Navigation controls
   const stepForward = useCallback(() => {
-    setCurrentStep((s) => Math.min(s + 1, history.length - 1));
+    setCurrentStep(s => Math.min(s + 1, history.length - 1));
   }, [history.length]);
 
   const stepBackward = useCallback(() => {
-    setCurrentStep((s) => Math.max(s - 1, 0));
+    setCurrentStep(s => Math.max(s - 1, 0));
   }, []);
 
-  // keyboard nav
+  const playAnimation = () => {
+    if (currentStep >= history.length - 1) {
+      setCurrentStep(0);
+    }
+    setIsPlaying(true);
+  };
+
+  const pauseAnimation = () => {
+    setIsPlaying(false);
+  };
+
+  const goToStart = useCallback(() => {
+    setCurrentStep(0);
+  }, []);
+
+  const goToEnd = useCallback(() => {
+    setCurrentStep(history.length - 1);
+  }, [history.length]);
+
+  const handleSpeedChange = (e) => {
+    setSpeed(Number(e.target.value));
+  };
+
+  // Keyboard navigation
   useEffect(() => {
-    const onKey = (e) => {
+    const handleKeyPress = (e) => {
       if (!isLoaded) return;
       if (e.key === "ArrowRight") stepForward();
       if (e.key === "ArrowLeft") stepBackward();
       if (e.key === " ") {
         e.preventDefault();
-        togglePlay();
+        setIsPlaying(prev => !prev);
       }
+      if (e.key === "Home") goToStart();
+      if (e.key === "End") goToEnd();
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [isLoaded, stepForward, stepBackward]);
+    
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [isLoaded, stepForward, stepBackward, goToStart, goToEnd]);
 
-  const togglePlay = useCallback(() => setPlaying((p) => !p), []);
-
+  // Auto-play functionality
   useEffect(() => {
-    if (playing) {
-      if (currentStep >= history.length - 1) {
-        setPlaying(false);
-        return;
-      }
-      playRef.current = setInterval(() => {
-        setCurrentStep((s) => {
-          if (s >= history.length - 1) {
-            clearInterval(playRef.current);
-            setPlaying(false);
-            return s;
-          }
-          return s + 1;
-        });
-      }, speed);
-    } else {
-      clearInterval(playRef.current);
+    let timer;
+    if (isPlaying && currentStep < history.length - 1) {
+      timer = setTimeout(() => {
+        stepForward();
+      }, 1100 - speed);
+    } else if (currentStep >= history.length - 1) {
+      setIsPlaying(false);
     }
-    return () => clearInterval(playRef.current);
-  }, [playing, speed, history.length, currentStep]);
+    return () => clearTimeout(timer);
+  }, [isPlaying, currentStep, history.length, stepForward, speed]);
 
-  useEffect(() => {
-    if (currentStep >= history.length - 1) {
-      setPlaying(false);
-      clearInterval(playRef.current);
+  const progressPercentage = nums.length > 0 ? ((currentStep + 1) / history.length) * 100 : 0;
+
+  const getCellColor = (index) => {
+    if (index === currentState.index) {
+      return "bg-gradient-to-br from-amber-500 to-yellow-600 text-white border-amber-500 shadow-lg shadow-amber-500/50 scale-110 animate-pulse";
     }
-  }, [currentStep, history.length]);
-
-  // helpers
-  const formattedStep = () => {
-    if (!isLoaded) return "0/0";
-    return `${Math.max(0, currentStep + 1)}/${history.length}`;
-  };
-
-  const renderCodeLine = (lang, lineObj) => {
-    const text = lineObj.t;
-    const ln = lineObj.l;
-    const active = state.line === ln;
-
-    return (
-      <div key={ln} className={`relative flex font-mono text-sm ${active ? "bg-green-500/10" : ""}`}>
-        <div className="flex-none w-10 text-right text-gray-500 select-none pr-3">{ln}</div>
-        <pre className="flex-1 m-0 p-0 text-gray-200 whitespace-pre">{text}</pre>
-      </div>
-    );
-  };
-
-  const bitCellClass = (row, idx) => {
-    // highlight active bit when current step has bin strings
-    if (!state.binBefore) return "bg-gray-700";
-
-    const activeIdx = state.binAfter ? state.binAfter.length - 1 - idx : null; // mapping to show from left
-
-    return "bg-gray-700";
+    
+    if (currentState.index !== null && index < currentState.index) {
+      return "bg-gray-600 border-gray-500 shadow-inner";
+    }
+    
+    return "bg-gray-700/60 border-gray-600 hover:bg-gray-600/70 transition-colors";
   };
 
   return (
-    <div className="px-6 py-8 max-w-7xl mx-auto relative">
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-rose-500/8 rounded-full blur-3xl animate-float pointer-events-none" />
-      <div className="absolute bottom-12 right-12 w-80 h-80 bg-indigo-500/6 rounded-full blur-3xl animate-float-delayed pointer-events-none" />
+    <div
+      ref={visualizerRef}
+      tabIndex={0}
+      className="p-4 max-w-7xl mx-auto focus:outline-none min-h-screen"
+    >
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
 
-      <header className="relative z-10 mb-12 text-center">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-pink-400 to-fuchsia-400">
-          Single Number (Bitwise Visualizer)
+      <header className="text-center mb-8 relative z-10">
+        <h1 className="text-6xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 mb-4">
+          Single Number
         </h1>
-        <p className="text-gray-300 mt-2 text-sm sm:text-base md:text-lg max-w-xl mx-auto">
-          XOR your way to the unique number - step through each operation
+        
+        <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          Find the unique number using XOR magic.{" "}
+          <span className="text-cyan-400 font-semibold">Elegant, efficient, and bitwise brilliant.</span>
         </p>
-      </header>
 
-      {/* INPUT CONTROLS */}
-      <section className="mb-6 z-10 relative">
-        <div className="flex flex-col md:flex-row gap-3 items-center">
-          <input
-            type="text"
-            value={numsInput}
-            onChange={(e) => setNumsInput(e.target.value)}
-            disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
-            placeholder="nums (comma-separated)"
-          />
-
-          <select
-            value={bitWidth}
-            onChange={(e) => setBitWidth(parseInt(e.target.value, 10))}
-            disabled={isLoaded}
-            className="w-36 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono"
-          >
-            <option value={8}>8-bit</option>
-            <option value={16}>16-bit</option>
-            <option value={32}>32-bit</option>
-            <option value={64}>64-bit</option>
-          </select>
-
-          {!isLoaded ? (
-            <button
-              onClick={load}
-              className="px-5 py-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 transition text-white font-bold shadow-lg"
-            >
-              Load & Visualize
-            </button>
-          ) : (
-            <>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={stepBackward}
-                  disabled={currentStep <= 0}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-pink-600 disabled:opacity-40 transition shadow"
-                >
-                  <ArrowLeft />
-                </button>
-
-                <button
-                  onClick={() => {
-                    togglePlay();
-                  }}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-pink-600 transition shadow"
-                >
-                  {playing ? <Pause /> : <Play />}
-                </button>
-
-                <button
-                  onClick={stepForward}
-                  disabled={currentStep >= history.length - 1}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-pink-600 disabled:opacity-40 transition shadow"
-                >
-                  <ArrowRight />
-                </button>
-              </div>
-
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow inner">
-                {formattedStep()}
-              </div>
-
-              <div className="flex items-center gap-2 ml-2">
-                <label className="text-sm text-gray-300">Speed</label>
-                <input
-                  type="range"
-                  min={100}
-                  max={1500}
-                  step={50}
-                  value={speed}
-                  onChange={(e) => setSpeed(parseInt(e.target.value, 10))}
-                  className="w-36"
-                />
-              </div>
-
-              <button
-                onClick={resetAll}
-                className="ml-3 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold shadow"
-              >
-                Reset
-              </button>
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* LANGUAGE TABS */}
-      <section className="mb-4 z-10">
-        <div className="flex items-center gap-2">
-          {LANG_TABS.map((lang) => (
-            <button
-              key={lang}
-              onClick={() => setActiveLang(lang)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm ${activeLang === lang
-                ? "bg-rose-500/20 text-rose-300 ring-1 ring-rose-400"
-                : "bg-gray-800/40 text-gray-300 hover:bg-gray-800/60"
-                }`}
-            >
-              {lang}
-            </button>
-          ))}
-          <div className="ml-auto text-sm text-gray-400 flex items-center gap-2">
-            <Cpu size={16} /> <span>Approach: XOR accumulation</span>
+        <div className="flex flex-wrap justify-center gap-3 mt-6">
+          <div className="flex items-center gap-2 px-4 py-2 bg-cyan-500/10 rounded-full border border-cyan-500/30">
+            <Clock className="h-4 w-4 text-cyan-400" />
+            <span className="text-cyan-300 text-sm font-medium">O(n) Time</span>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 rounded-full border border-green-500/30">
+            <Cpu className="h-4 w-4 text-green-400" />
+            <span className="text-green-300 text-sm font-medium">O(1) Space</span>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-purple-500/10 rounded-full border border-purple-500/30">
+            <Zap className="h-4 w-4 text-purple-400" />
+            <span className="text-purple-300 text-sm font-medium">Bitwise XOR</span>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* MAIN */}
-      {!isLoaded ? (
-        <div className="mt-10 text-center text-gray-400 italic">
-          Enter a list like <span className="text-rose-400 font-semibold">2,2,1</span> and click
-          <span className="text-rose-400 font-semibold"> Load & Visualize</span> to begin.
+      {/* Enhanced Controls Section */}
+      <div className="bg-gray-800/70 backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-gray-700/50 mb-8 relative z-10">
+        <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
+          <div className="flex flex-col sm:flex-row gap-4 flex-grow w-full">
+            <div className="flex-1">
+              <label className="block text-gray-400 text-sm font-medium mb-2">
+                <Grid className="inline w-4 h-4 mr-2" />
+                Array Elements
+              </label>
+              <input
+                type="text"
+                value={numsInput}
+                onChange={(e) => setNumsInput(e.target.value)}
+                disabled={isLoaded}
+                placeholder="Enter numbers with exactly one single (e.g., 2,2,1,3,3,4,4)..."
+                className="w-full bg-gray-900/80 border border-gray-600 rounded-xl p-4 text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50 font-mono"
+              />
+            </div>
+            <div className="sm:w-48">
+              <label className="block text-gray-400 text-sm font-medium mb-2">
+                <Binary className="inline w-4 h-4 mr-2" />
+                Bit Width
+              </label>
+              <select
+                value={bitWidth}
+                onChange={(e) => setBitWidth(parseInt(e.target.value))}
+                disabled={isLoaded}
+                className="w-full bg-gray-900/80 border border-gray-600 rounded-xl p-4 text-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50 font-mono"
+              >
+                <option value={8}>8-bit</option>
+                <option value={16}>16-bit</option>
+                <option value={32}>32-bit</option>
+                <option value={64}>64-bit</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
+            {!isLoaded ? (
+              <>
+                <button
+                  onClick={loadVisualization}
+                  className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/25 cursor-pointer flex items-center gap-3"
+                >
+                  <Zap className="h-5 w-5" />
+                  Start Visualization
+                </button>
+                <button
+                  onClick={generateRandomArray}
+                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg shadow-purple-500/25 cursor-pointer flex items-center gap-2"
+                >
+                  <TrendingUp className="h-5 w-5" />
+                  Random
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="flex gap-2">
+                  <button
+                    onClick={goToStart}
+                    disabled={currentStep <= 0}
+                    className="bg-gray-700 hover:bg-gray-600 p-3 rounded-xl disabled:opacity-50 transition-all duration-300 cursor-pointer"
+                    title="Go to Start (Home)"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={stepBackward}
+                    disabled={currentStep <= 0}
+                    className="bg-gray-700 hover:bg-gray-600 p-3 rounded-xl disabled:opacity-50 transition-all duration-300 cursor-pointer"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
+                  
+                  {!isPlaying ? (
+                    <button
+                      onClick={playAnimation}
+                      disabled={currentStep >= history.length - 1}
+                      className="bg-cyan-500 hover:bg-cyan-600 p-3 rounded-xl disabled:opacity-50 transition-all duration-300 cursor-pointer"
+                    >
+                      <Play className="h-5 w-5" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={pauseAnimation}
+                      className="bg-yellow-500 hover:bg-yellow-600 p-3 rounded-xl transition-all duration-300 cursor-pointer"
+                    >
+                      <Pause className="h-5 w-5" />
+                    </button>
+                  )}
+
+                  <button
+                    onClick={stepForward}
+                    disabled={currentStep >= history.length - 1}
+                    className="bg-gray-700 hover:bg-gray-600 p-3 rounded-xl disabled:opacity-50 transition-all duration-300 cursor-pointer"
+                  >
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={goToEnd}
+                    disabled={currentStep >= history.length - 1}
+                    className="bg-gray-700 hover:bg-gray-600 p-3 rounded-xl disabled:opacity-50 transition-all duration-300 cursor-pointer"
+                    title="Go to End (End)"
+                  >
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <label className="text-gray-400 text-sm">Speed:</label>
+                    <select
+                      value={speed}
+                      onChange={handleSpeedChange}
+                      className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm cursor-pointer focus:ring-2 focus:ring-cyan-500"
+                    >
+                      <option value={400}>Slow</option>
+                      <option value={700}>Medium</option>
+                      <option value={1000}>Fast</option>
+                      <option value={1200}>Very Fast</option>
+                    </select>
+                  </div>
+
+                  <div className="font-mono px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-center min-w-20">
+                    <div className="text-cyan-400 font-bold">{currentStep + 1}</div>
+                    <div className="text-gray-400 text-xs">of {history.length}</div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={resetVisualization}
+                  className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg shadow-red-500/25 cursor-pointer"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  Reset
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        {isLoaded && (
+          <div className="mt-4">
+            <div className="flex justify-between text-sm text-gray-400 mb-2">
+              <span>Progress</span>
+              <span>{Math.round(progressPercentage)}%</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-2">
+              <div
+                className="bg-gradient-to-r from-cyan-500 to-purple-500 h-2 rounded-full transition-all duration-500 shadow-lg shadow-cyan-500/25"
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {isLoaded ? (
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 relative z-10 w-full overflow-x-hidden">
+          {/* Code Panel */}
+          <div className="xl:col-span-1 bg-gray-800/70 backdrop-blur-xl p-6 rounded-2xl shadow-2xl border border-gray-700/50">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-bold text-2xl text-cyan-400 flex items-center gap-3">
+                <Code2 className="h-6 w-6" />
+                Algorithm Code
+              </h3>
+              <div className="flex gap-2">
+                {LANG_TABS.map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => setActiveLang(lang)}
+                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      activeLang === lang
+                        ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                        : "bg-gray-700/50 text-gray-400 hover:bg-gray-600/50 border border-gray-600"
+                    }`}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+              <div className="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+                <pre className="text-sm leading-relaxed">
+                  <code className="font-mono block space-y-1">
+                    {CODE_SNIPPETS[activeLang].map((codeLine) => (
+                      <CodeLine 
+                        key={codeLine.line} 
+                        lineNum={codeLine.line} 
+                        content={codeLine.content}
+                        isActive={currentState.line === codeLine.line}
+                        isHighlighted={[2, 3, 4, 6].includes(codeLine.line)}
+                      />
+                    ))}
+                  </code>
+                </pre>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 gap-4 mt-6">
+              <div className="bg-gray-900/50 rounded-lg p-3 text-center border border-gray-700/30">
+                <div className="text-2xl font-bold text-purple-400">{nums.length}</div>
+                <div className="text-xs text-gray-400">Total Elements</div>
+              </div>
+              <div className="bg-gray-900/50 rounded-lg p-3 text-center border border-gray-700/30">
+                <div className="text-2xl font-bold text-green-400">{currentState.index !== null ? currentState.index + 1 : 0}</div>
+                <div className="text-xs text-gray-400">Elements Processed</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Visualization Panels */}
+          <div className="xl:col-span-2 space-y-8 overflow-x-hidden">
+            {/* Array Visualization */}
+            <div className="bg-gray-800/70 backdrop-blur-xl p-8 rounded-2xl border border-gray-700/50 shadow-2xl overflow-x-auto">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="font-bold text-2xl text-gray-200 flex items-center gap-3">
+                  <Grid className="h-6 w-6 text-cyan-400" />
+                  Array Visualization
+                </h3>
+                <div className="text-sm text-gray-400 font-mono bg-gray-900/50 px-3 py-1 rounded-full">
+                  {nums.length} elements
+                </div>
+              </div>
+              
+              <div className="flex flex-col items-center space-y-8">
+                {/* Array elements */}
+                <div className="w-full overflow-x-auto">
+                  <div className="relative bg-gray-900/50 rounded-2xl p-6 border border-gray-700/50 min-w-fit">
+                    {/* Column headers */}
+                    <div className="flex gap-4 mb-4 justify-center flex-wrap">
+                      {nums.map((_, index) => (
+                        <div key={index} className="min-w-[96px] text-center">
+                          <div className="text-xs text-gray-500 font-mono mb-2">Index</div>
+                          <div className={`text-lg font-bold rounded-lg py-1 px-3 border ${
+                            index === currentState.index 
+                              ? "bg-amber-500/20 text-amber-300 border-amber-500/50" 
+                              : "bg-gray-800/50 text-gray-400 border-gray-600/50"
+                          }`}>
+                            {index}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Array elements */}
+                    <div className="flex gap-4 justify-center flex-wrap">
+                      {nums.map((num, index) => (
+                        <div
+                          key={index}
+                          className={`min-w-[96px] max-w-full h-auto p-4 rounded-xl border-2 flex flex-col items-center justify-center font-bold transition-all duration-500 transform ${getCellColor(index)} relative`}
+                        >
+                          <div className="text-2xl mb-1">{num}</div>
+                          <div className="text-xs font-mono text-gray-200 opacity-80 break-all text-center max-w-full overflow-wrap px-1">
+                            {formatBinary(num, bitWidth)}
+                          </div>
+                          {index === currentState.index && (
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-400 rounded-full flex items-center justify-center text-xs font-bold text-gray-900 animate-ping">
+                              <Zap className="h-3 w-3" />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* XOR Operation Display */}
+                <div className="bg-gradient-to-br from-cyan-900/40 to-purple-900/40 backdrop-blur-sm p-6 rounded-2xl border border-cyan-700/50 w-full max-w-full shadow-xl overflow-hidden">
+                  <h4 className="text-lg text-gray-300 mb-6 flex items-center gap-3">
+                    <Zap className="h-5 w-5 text-cyan-400" />
+                    XOR Operation
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-cyan-600/30">
+                      <div className="text-sm text-gray-400 mb-2">Before XOR</div>
+                      <div className="text-2xl font-mono text-cyan-400 mb-2">
+                        {currentState.before ?? 0}
+                      </div>
+                      <div className="text-xs font-mono text-gray-300 bg-black/30 p-2 rounded break-all overflow-wrap">
+                        {currentState.binBefore ?? formatBinary(0, bitWidth)}
+                      </div>
+                    </div>
+
+                    <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-amber-600/30">
+                      <div className="text-sm text-gray-400 mb-2">Current Element</div>
+                      <div className="text-2xl font-mono text-amber-400 mb-2">
+                        {currentState.current ?? "-"}
+                      </div>
+                      <div className="text-xs font-mono text-gray-300 bg-black/30 p-2 rounded break-all overflow-wrap">
+                        {currentState.binCurrent ?? "-"}
+                      </div>
+                    </div>
+
+                    <div className="text-center p-4 bg-gray-900/50 rounded-xl border border-green-600/30">
+                      <div className="text-sm text-gray-400 mb-2">After XOR</div>
+                      <div className="text-2xl font-mono text-green-400 mb-2">
+                        {currentState.after ?? currentState.before ?? 0}
+                      </div>
+                      <div className="text-xs font-mono text-gray-300 bg-black/30 p-2 rounded break-all overflow-wrap">
+                        {currentState.binAfter ?? currentState.binBefore ?? formatBinary(0, bitWidth)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats and Explanation */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Current State */}
+              <div className="bg-gradient-to-br from-amber-900/40 to-yellow-800/40 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-amber-700/50">
+                <h3 className="font-bold text-xl text-amber-300 mb-4 flex items-center gap-3">
+                  <Calculator className="h-5 w-5" />
+                  Current State
+                </h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex justify-between items-center py-2 border-b border-amber-700/30">
+                    <span className="text-gray-300">Current Index</span>
+                    <span className="font-mono font-bold text-amber-400 text-lg">
+                      {currentState.index !== null ? currentState.index : "Initial"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-amber-700/30">
+                    <span className="text-gray-300">Accumulator</span>
+                    <span className="font-mono font-bold text-cyan-400 text-lg">
+                      {currentState.after ?? currentState.before ?? 0}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-amber-700/30">
+                    <span className="text-gray-300">Elements Processed</span>
+                    <span className="font-mono font-bold text-purple-400 text-lg">
+                      {currentState.index !== null ? currentState.index + 1 : 0}/{nums.length}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-300">Search Progress</span>
+                    <span className="font-mono font-bold text-green-400 text-lg">
+                      {Math.round(progressPercentage)}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Step Explanation */}
+              <div className="bg-gradient-to-br from-cyan-900/40 to-blue-900/40 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-cyan-700/50">
+                <h3 className="font-bold text-xl text-cyan-300 mb-4 flex items-center gap-3">
+                  <BarChart3 className="h-5 w-5" />
+                  Step Explanation
+                </h3>
+                <div className="text-gray-200 text-sm leading-relaxed h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 p-2">
+                  {currentState.explanation?.split('\n').map((line, i) => (
+                    <div key={i} className="mb-2 last:mb-0">
+                      {line}
+                    </div>
+                  )) || "Load the visualization to see step-by-step explanation."}
+                </div>
+                {currentState.status === "final" && (
+                  <div className="mt-4 p-3 bg-green-500/20 rounded-lg border border-green-500/30">
+                    <div className="text-green-300 text-sm font-semibold flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4" />
+                      Algorithm Completed Successfully!
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Complexity Analysis */}
+            <div className="bg-gray-800/70 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-gray-700/50">
+              <h3 className="font-bold text-2xl text-cyan-400 mb-6 flex items-center gap-3">
+                <Zap className="h-6 w-6" />
+                Algorithm Analysis
+              </h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <h4 className="font-semibold text-cyan-300 text-lg flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5" />
+                    XOR Properties
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700 hover:border-cyan-500/30 transition-all">
+                      <strong className="text-cyan-300 block mb-2 text-sm">a ^ a = 0</strong>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        Any number XORed with itself equals 0. This cancels out pairs automatically.
+                      </p>
+                    </div>
+                    <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700 hover:border-cyan-500/30 transition-all">
+                      <strong className="text-cyan-300 block mb-2 text-sm">a ^ 0 = a</strong>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        Any number XORed with 0 remains unchanged. Perfect for accumulation.
+                      </p>
+                    </div>
+                    <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700 hover:border-cyan-500/30 transition-all">
+                      <strong className="text-cyan-300 block mb-2 text-sm">Commutative & Associative</strong>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        Order doesn't matter: (a ^ b) ^ c = a ^ (b ^ c). Works regardless of element order.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-6">
+                  <h4 className="font-semibold text-cyan-300 text-lg flex items-center gap-2">
+                    <ArrowRightIcon className="h-5 w-5" />
+                    Performance Characteristics
+                  </h4>
+                  <div className="space-y-4">
+                    <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700 hover:border-green-500/30 transition-all">
+                      <strong className="text-green-300 block mb-2 text-sm">Time: O(n)</strong>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        Single pass through the array. Each element processed exactly once.
+                      </p>
+                    </div>
+                    <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700 hover:border-green-500/30 transition-all">
+                      <strong className="text-green-300 block mb-2 text-sm">Space: O(1)</strong>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        Only one variable (accumulator) needed regardless of input size.
+                      </p>
+                    </div>
+                    <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700 hover:border-green-500/30 transition-all">
+                      <strong className="text-green-300 block mb-2 text-sm">Bitwise Efficiency</strong>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        XOR operations are extremely fast at the hardware level. Optimal for this problem.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
-        <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
-          {/* CODE */}
-          <aside className="lg:col-span-1 p-6 bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-700/60 shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-green-300 flex items-center gap-2 font-semibold">
-                <FileText size={18} /> Code
-              </h3>
-              <div className="text-sm text-gray-400">Language: {activeLang}</div>
+        <div className="text-center py-20 bg-gray-800/50 rounded-2xl border border-gray-700/50 relative z-10">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-gray-400 text-lg mb-6">
+              🚀 Ready to visualize XOR Magic?
             </div>
-            <div className="bg-[#0b1020] rounded-lg border border-gray-700/80 max-h-[640px] overflow-auto p-3">
-              {CODE_SNIPPETS[activeLang].map((line) => renderCodeLine(activeLang, line))}
+            <div className="text-gray-500 text-sm mb-8 leading-relaxed">
+              Enter an array where every number appears twice except one, and watch how XOR finds the single number.
             </div>
-
-            <div className="mt-4 text-xs text-gray-400 space-y-2">
-              <div>Active line highlighted in green. Space toggles play/pause.</div>
-              <div>Tip: Use &lt; or &gt; keys to step backward/forward</div>
-            </div>
-          </aside>
-
-          {/* VISUALIZATION */}
-          <section className="lg:col-span-2 flex flex-col gap-6">
-            <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-inner flex flex-wrap gap-3">
-              <div className="flex-1">
-                <h4 className="text-gray-300 text-sm mb-2 flex items-center gap-2"><List size={16} /> Numbers</h4>
-                <div className="flex gap-3 flex-wrap items-center">
-                  {nums.map((n, idx) => {
-                    const selected = state.index === idx;
-                    return (
-                      <div key={idx} className={`relative w-36 h-24 flex flex-col items-center justify-center rounded-xl font-mono font-bold text-white transition-all ${selected
-                        ? "bg-amber-500/80 shadow-[0_8px_30px_rgba(250,204,21,0.18)] ring-2 ring-amber-400"
-                        : "bg-gradient-to-br from-slate-700 to-slate-600 shadow-md"
-                      }`}>
-                        {selected && <VisualizerPointer className="absolute -top-6" />}
-                        <div className="text-xs text-gray-100">#{idx}</div>
-                        <div className="text-sm">{n}</div>
-                        <div className="text-xs text-gray-200 mt-1">{formatBinary(n, bitWidth)}</div>
-                      </div>
-                    );
-                  })}
-                </div>
+            <div className="flex flex-wrap justify-center gap-4 text-xs mb-8">
+              <div className="bg-cyan-500/10 text-cyan-300 px-4 py-2 rounded-full border border-cyan-500/20 flex items-center gap-2">
+                <MousePointer className="h-3 w-3" />
+                Click "Start Visualization" to begin
               </div>
-
-              <div className="w-80">
-                <h4 className="text-gray-300 text-sm mb-2 flex items-center gap-2"><Clock size={14} /> Accumulator</h4>
-                <div className="bg-gray-900 p-3 rounded-lg border border-gray-700">
-                  <div className="text-xs text-gray-400 mb-2">Accumulator snapshot</div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1">
-                      <div className="text-xs text-gray-400">Before</div>
-                      <div className="font-mono text-sm text-gray-200">{state.binBefore ?? formatBinary(0, bitWidth)}</div>
-                      <div className="text-2xl font-mono text-green-400">{state.before ?? 0}</div>
-                    </div>
-
-                    <div className="flex-1">
-                      <div className="text-xs text-gray-400">Current</div>
-                      <div className="font-mono text-sm text-gray-200">{state.binCurrent ?? "-"}</div>
-                      <div className="text-2xl font-mono text-rose-400">{state.current ?? "-"}</div>
-                    </div>
-
-                    <div className="flex-1">
-                      <div className="text-xs text-gray-400">After</div>
-                      <div className="font-mono text-sm text-gray-200">{state.binAfter ?? formatBinary(state.before ?? 0, bitWidth)}</div>
-                      <div className="text-2xl font-mono text-teal-300">{state.after ?? state.before ?? 0}</div>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 text-sm">
-                    <div><span className="text-gray-400">Step:</span> {state.index !== null && state.index !== undefined ? `processing index ${state.index}` : "-"}</div>
-                    <div className="mt-1"><span className="text-gray-400">Current result:</span> {state.after ?? state.bestValue ?? 0}</div>
-                  </div>
-                </div>
+              <div className="bg-purple-500/10 text-purple-300 px-4 py-2 rounded-full border border-purple-500/20 flex items-center gap-2">
+                <TrendingUp className="h-3 w-3" />
+                Use "Random" for quick examples
               </div>
             </div>
-
-            {/* explanation & output */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="col-span-2 p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
-                <h4 className="text-gray-300 text-sm mb-2 flex items-center gap-2"><FileText size={14} /> Explanation</h4>
-                <p className="text-gray-200">{state.explanation || "Step through XOR operations to see the accumulator evolve."}</p>
-
-                <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-gray-400">
-                  <div><strong>Operation:</strong> <span className="text-gray-200">result ^= x</span></div>
-                  <div><strong>Active line:</strong> <span className="text-gray-200">{state.line ?? "-"}</span></div>
-                  <div className="col-span-2 mt-2"><strong>Bitwidth:</strong> <span className="text-gray-200">{bitWidth}</span></div>
-                </div>
-              </div>
-
-              <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
-                <h4 className="text-gray-300 text-sm mb-2 flex items-center gap-2"><CheckCircle size={14} /> Output</h4>
-                <div className="text-3xl font-mono text-green-400">{state.after ?? state.bestValue ?? 0}</div>
-                <div className="mt-2 text-xs text-gray-400">Single number result: {state.after ?? state.bestValue ?? 0}</div>
-                <div className="mt-3">
-                  <h5 className="text-xs text-gray-300">Binary result</h5>
-                  <div className="mt-2 font-mono text-sm text-gray-200">{state.binAfter ?? formatBinary(state.bestValue ?? 0, bitWidth)}</div>
-                </div>
+            <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-700/30 text-left">
+              <div className="text-cyan-400 font-mono text-sm mb-2">💡 Example Usage:</div>
+              <div className="text-gray-400 text-sm space-y-1">
+                <div>Array: <span className="text-cyan-300 font-mono">2, 2, 1, 3, 3, 4, 4</span></div>
+                <div>Single Number: <span className="text-green-300 font-mono">1</span></div>
+                <div className="text-gray-500 text-xs mt-2">→ XOR cancels all pairs: 2^2=0, 3^3=0, 4^4=0, leaving 0^1=1</div>
               </div>
             </div>
-
-            <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-2xl">
-              <h4 className="text-green-300 font-semibold flex items-center gap-2"><Clock size={16} /> Complexity & Notes</h4>
-              <div className="mt-3 text-sm text-gray-300 space-y-2">
-                <div><strong>Time:</strong> <span className="font-mono text-teal-300">O(N)</span> - single pass XOR accumulation</div>
-                <div><strong>Space:</strong> <span className="font-mono text-teal-300">O(1)</span> - constant extra space</div>
-                <div><strong>Note:</strong> Works because x ^ x = 0 and XOR is commutative.</div>
-              </div>
-            </div>
-          </section>
-        </main>
+          </div>
+        </div>
       )}
-
-      <style>{`
-        .animate-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; }
-        @keyframes gradient-animation { 0%,100% { background-position:0% 50%; } 50% { background-position:100% 50%; } }
-        .animate-float { animation: float 18s ease-in-out infinite; }
-        .animate-float-delayed { animation: float 20s ease-in-out 8s infinite; }
-        @keyframes float { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px,-30px); } }
-      `}</style>
     </div>
   );
 };
