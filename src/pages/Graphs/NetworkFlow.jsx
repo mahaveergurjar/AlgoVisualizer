@@ -63,6 +63,7 @@ const NetworkFlow = ({ navigate }) => {
   const [lastPath, setLastPath] = useState([]);
   const [message, setMessage] = useState("Click Play or Step to find an augmenting path using BFS.");
   const [preset, setPreset] = useState("simple");
+  const [algorithm, setAlgorithm] = useState("edmondsKarp"); // 'edmondsKarp' | 'dinic'
   const [viewMode, setViewMode] = useState("graph"); // "graph" | "matrix"
   const [selectedEdge, setSelectedEdge] = useState(null); // {u,v}
 
@@ -111,26 +112,37 @@ const NetworkFlow = ({ navigate }) => {
   }, [nodeCount, capacity, flow, source, sink]);
 
   const startOrContinue = useCallback(() => {
-    const result = runOneIteration();
-    if (!result || result.done) {
-      setIsPlaying(false);
-      setMessage("No more augmenting paths. Max flow reached.");
-      return;
+    if (algorithm === 'edmondsKarp') {
+      const result = runOneIteration();
+      if (!result || result.done) {
+        setIsPlaying(false);
+        setMessage("No more augmenting paths. Max flow reached.");
+        return;
+      }
+      const { bottleneck, pathNodes, newFlow } = result;
+      setFlow(newFlow);
+      setTotalMaxFlow(prev => prev + bottleneck);
+      setLastPath(pathNodes);
+      setMessage(`Augmented along path ${pathNodes.join(" → ")} with Δ = ${bottleneck}.`);
+      setSteps(prev => ([
+        ...prev,
+        { type: "augment", path: pathNodes, add: bottleneck },
+      ]));
+    } else {
+      const r = dinicStep(nodeCount, capacity, flow, source, sink);
+      if (!r || r.done) {
+        setIsPlaying(false);
+        setMessage("No more blocking flow. Max flow reached.");
+        return;
+      }
+      const { path, delta, newFlow } = r;
+      setFlow(newFlow);
+      setTotalMaxFlow(prev => prev + delta);
+      setLastPath(path);
+      setMessage(`Dinic: augmented ${delta} along ${path.join(" → ")}.`);
+      setSteps(prev => ([...prev, { type: 'dinic-augment', path, add: delta }]));
     }
-    const { bottleneck, pathNodes, newFlow } = result;
-    setFlow(newFlow);
-    setTotalMaxFlow(prev => prev + bottleneck);
-    setLastPath(pathNodes);
-    setMessage(`Augmented along path ${pathNodes.join(" → ")} with Δ = ${bottleneck}.`);
-    setSteps(prev => ([
-      ...prev,
-      {
-        type: "augment",
-        path: pathNodes,
-        add: bottleneck,
-      },
-    ]));
-  }, [runOneIteration]);
+  }, [algorithm, runOneIteration, nodeCount, capacity, flow, source, sink]);
 
   // animation loop
   useEffect(() => {
@@ -242,6 +254,70 @@ const NetworkFlow = ({ navigate }) => {
           </div>
         </div>
       </div>
+      {/* Full-width Algorithm Info below editor */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-10 pb-10">
+        <div className="bg-gray-900/50 rounded-xl p-5 border border-gray-800">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Info className="h-5 w-5 text-purple-400" /> Algorithm Info
+          </h3>
+          <div className="text-sm text-gray-300 space-y-2">
+            {algorithm === 'edmondsKarp' ? (
+              <>
+                <div>Edmonds–Karp = BFS-based Ford–Fulkerson.</div>
+                <div>Time Complexity: O(V·E²)</div>
+                <div>Residual graph: unused capacity; reverse edges allow cancellation.</div>
+              </>
+            ) : (
+              <>
+                <div>Dinic = Level graph (BFS layers) + blocking flow (DFS sends).</div>
+                <div>Time Complexity: O(V²·E) in general; faster on many graphs.</div>
+                <div>Level graph restricts edges to forward layers; speeds up augmentation.</div>
+              </>
+            )}
+          </div>
+          <div className="mt-4 p-3 bg-indigo-500/10 rounded border border-indigo-500/30 text-xs text-gray-300">
+            {algorithm === 'edmondsKarp' ? (
+              <div className="space-y-1">
+                <div className="font-semibold text-indigo-300">Edmonds–Karp (selected)</div>
+                <div>• Builds a path with BFS on the residual graph (fewest edges).</div>
+                <div>• Augments flow by the path's bottleneck; repeats until no path exists.</div>
+                <div>• Guarantees polynomial time: O(V·E²).</div>
+                <div className="text-gray-400">Best for teaching augmenting paths and bottlenecks.</div>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                <div className="font-semibold text-indigo-300">Dinic (selected)</div>
+                <div>• Builds a <span className="font-semibold">level graph</span> (BFS layers), then pushes flow to form a blocking flow.</div>
+                <div>• Repeats level-building + blocking-flow phases until no more flow can be sent.</div>
+                <div>• Typically faster than Edmonds–Karp in practice.</div>
+                <div className="text-gray-400">Great for performance and understanding level graphs.</div>
+              </div>
+            )}
+            <div className="mt-2 pt-2 border-t border-indigo-500/20 text-gray-400">
+              Difference in a nutshell: Edmonds–Karp augments one shortest path per step; Dinic sends multiple paths per phase using levels (we demonstrate one send per step for clarity).
+            </div>
+          </div>
+          <div className="mt-4 p-3 bg-purple-500/10 rounded border border-purple-500/30 text-xs text-gray-300">
+            <div className="font-semibold text-purple-300 mb-1">How to use</div>
+            <div>1) Pick a preset or edit the capacity table.</div>
+            <div>2) Set Source/Sink.</div>
+            <div>3) Press Step to see one augmenting path, or Play to run continuously.</div>
+            <div>4) Watch the last path and max flow update.</div>
+          </div>
+          {selectedEdge && (
+            <div className="mt-4 p-3 bg-blue-500/10 rounded border border-blue-500/30 text-xs text-gray-300">
+              <div className="font-semibold text-blue-300 mb-1">Edit Edge</div>
+              <div className="flex items-center gap-2">
+                <span>u={selectedEdge.u} → v={selectedEdge.v}</span>
+                <input type="number" min="0" className="w-20 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-right"
+                       value={capacity[selectedEdge.u][selectedEdge.v]}
+                       onChange={e => setCap(selectedEdge.u, selectedEdge.v, parseInt(e.target.value, 10))} />
+                <button className="px-2 py-1 bg-gray-700 rounded border border-gray-600" onClick={()=>setSelectedEdge(null)}>Done</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Controls */}
@@ -255,6 +331,14 @@ const NetworkFlow = ({ navigate }) => {
                 <button onClick={() => setViewMode("graph")} className={`px-3 py-2 rounded border ${viewMode==='graph' ? 'bg-blue-600 text-white border-blue-500' : 'bg-gray-800 text-gray-300 border-gray-700'}`}>Graph</button>
                 <button onClick={() => setViewMode("matrix")} className={`px-3 py-2 rounded border ${viewMode==='matrix' ? 'bg-blue-600 text-white border-blue-500' : 'bg-gray-800 text-gray-300 border-gray-700'}`}>Matrix</button>
               </div>
+              <label className="block">Algorithm
+                <select className="w-full mt-1 bg-gray-800 border border-gray-700 rounded p-2"
+                        value={algorithm}
+                        onChange={e => { setAlgorithm(e.target.value); setMessage("Algorithm changed. Reset recommended for fair comparison."); }}>
+                  <option value="edmondsKarp">Edmonds–Karp (BFS-based)</option>
+                  <option value="dinic">Dinic (Level graph + blocking flow)</option>
+                </select>
+              </label>
               <label className="block">Preset
                 <select className="w-full mt-1 bg-gray-800 border border-gray-700 rounded p-2"
                         value={preset}
@@ -330,35 +414,7 @@ const NetworkFlow = ({ navigate }) => {
             </div>
           </div>
 
-          <div className="bg-gray-900/50 rounded-xl p-5 border border-gray-800">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Info className="h-5 w-5 text-purple-400" /> Algorithm Info
-            </h3>
-            <div className="text-sm text-gray-300 space-y-2">
-              <div>Edmonds–Karp = BFS-based Ford–Fulkerson.</div>
-              <div>Time Complexity: O(V·E²)</div>
-              <div>Residual Graph shows unused capacity; reverse edges allow cancellation.</div>
-            </div>
-            <div className="mt-4 p-3 bg-purple-500/10 rounded border border-purple-500/30 text-xs text-gray-300">
-              <div className="font-semibold text-purple-300 mb-1">How to use</div>
-              <div>1) Pick a preset or edit the capacity table.</div>
-              <div>2) Set Source/Sink.</div>
-              <div>3) Press Step to see one augmenting path, or Play to run continuously.</div>
-              <div>4) Watch the last path and max flow update.</div>
-            </div>
-            {selectedEdge && (
-              <div className="mt-4 p-3 bg-blue-500/10 rounded border border-blue-500/30 text-xs text-gray-300">
-                <div className="font-semibold text-blue-300 mb-1">Edit Edge</div>
-                <div className="flex items-center gap-2">
-                  <span>u={selectedEdge.u} → v={selectedEdge.v}</span>
-                  <input type="number" min="0" className="w-20 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-right"
-                         value={capacity[selectedEdge.u][selectedEdge.v]}
-                         onChange={e => setCap(selectedEdge.u, selectedEdge.v, parseInt(e.target.value, 10))} />
-                  <button className="px-2 py-1 bg-gray-700 rounded border border-gray-600" onClick={()=>setSelectedEdge(null)}>Done</button>
-                </div>
-              </div>
-            )}
-          </div>
+          
         </div>
 
         {/* Right Panel */}
@@ -513,6 +569,76 @@ function GraphCanvas({ nodeCount, capacity, flow, lastPath, onSelectEdge }) {
       </svg>
     </div>
   );
+}
+
+// --- Dinic Implementation (single-step augmentation) ---
+function dinicBfsLevels(n, capacity, flow, s, t) {
+  const level = Array(n).fill(-1);
+  const q = [];
+  level[s] = 0; q.push(s);
+  const residual = (u, v) => capacity[u][v] - flow[u][v];
+  while (q.length) {
+    const u = q.shift();
+    for (let v = 0; v < n; v++) {
+      if (level[v] < 0 && residual(u, v) > 0) {
+        level[v] = level[u] + 1;
+        q.push(v);
+      }
+    }
+  }
+  return level;
+}
+
+function dinicDfs(n, capacity, flow, level, it, u, t, pushed) {
+  if (u === t) return pushed;
+  const residual = (a, b) => capacity[a][b] - flow[a][b];
+  for (; it[u] < n; it[u]++) {
+    const v = it[u];
+    if (level[v] === level[u] + 1 && residual(u, v) > 0) {
+      const tr = dinicDfs(n, capacity, flow, level, it, v, t, Math.min(pushed, residual(u, v)));
+      if (tr > 0) {
+        flow[u][v] += tr;
+        flow[v][u] -= tr;
+        return tr;
+      }
+    }
+  }
+  return 0;
+}
+
+// Returns one augmenting path (as nodes) and delta for a single DFS send
+function dinicStep(n, capacity, flow, s, t) {
+  const level = dinicBfsLevels(n, capacity, flow, s, t);
+  if (level[t] < 0) return { done: true };
+  const it = Array(n).fill(0);
+  // We perform one DFS send to align with step-by-step UI
+  const cloned = flow.map(r => r.slice());
+  const residualBefore = (u, v) => capacity[u][v] - cloned[u][v];
+  const delta = dinicDfs(n, capacity, cloned, level, it, s, t, Infinity);
+  if (delta <= 0) {
+    return { done: true };
+  }
+  // Reconstruct a path by greedy following edges where flow increased
+  const path = [s];
+  let u = s;
+  const visited = new Set([s]);
+  while (u !== t) {
+    let moved = false;
+    for (let v = 0; v < n; v++) {
+      const before = flow[u][v];
+      const after = cloned[u][v];
+      if (after > before && level[v] === level[u] + 1) {
+        path.push(v);
+        u = v;
+        moved = true;
+        break;
+      }
+    }
+    if (!moved) break;
+    if (visited.has(u)) break;
+    visited.add(u);
+  }
+  return { done: false, path, delta, newFlow: cloned };
 }
 
 
