@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   ArrowLeft,
-  Brackets,
+  ArrowRight,
   Code2,
   Clock,
   TrendingUp,
@@ -9,7 +9,10 @@ import {
   Zap,
   Hash,
   Binary,
+  Cpu,
+  Calculator,
   FlipHorizontal,
+  Power,
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components ---
@@ -23,22 +26,126 @@ import PowerOfTwo from "./PowerOfTwo.jsx";
 import { problems as PROBLEM_CATALOG } from '../../search/catalog';
 import StarButton from '../../components/StarButton';
 
-// ✅ (Optional but Recommended) Default values for visual properties
-const defaultVisuals = {
-  icon: Binary,
-  gradient: "from-gray-700 to-gray-800",
-  borderColor: "border-gray-600",
-  iconBg: "bg-gray-700/20",
-  iconColor: "text-gray-300",
-};
-
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [filter, setFilter] = useState("all");
 
-  // ✅ Get Bit Manipulation problems directly from the master catalog
-  const bitManipulationAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'BitManipulation');
+  // ✅ Enhanced Bit Manipulation algorithms with all required questions
+  const bitManipulationAlgorithms = [
+    {
+      name: "Single Number",
+      label: "Single Number",
+      number: "136",
+      subpage: "SingleNumber",
+      icon: Hash,
+      description: "Find the number that appears exactly once in an array where all other numbers appear twice using XOR operation.",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-cyan-500 to-blue-500",
+      iconColor: "text-cyan-400",
+      iconBg: "bg-cyan-500/20",
+      borderColor: "border-cyan-500/30",
+      technique: "XOR Operation",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #136", "GfG"],
+      tags: ["XOR", "Array", "Bit Manipulation"]
+    },
+    {
+      name: "Counting Bits",
+      label: "Counting Bits",
+      number: "338",
+      subpage: "CountingBits",
+      icon: Calculator,
+      description: "Count the number of set bits for all numbers from 0 to n efficiently using dynamic programming and bit manipulation.",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-violet-500 to-purple-500",
+      iconColor: "text-violet-400",
+      iconBg: "bg-violet-500/20",
+      borderColor: "border-violet-500/30",
+      technique: "Dynamic Programming",
+      timeComplexity: "O(n)",
+      platforms: ["LeetCode #338", "GfG"],
+      tags: ["DP", "Bit Count", "Pattern"]
+    },
+    {
+      name: "Number of 1 Bits",
+      label: "Number of 1 Bits",
+      number: "191",
+      subpage: "NumberOf1Bits",
+      icon: Binary,
+      description: "Count the number of set bits (1s) in the binary representation of a number using bit manipulation techniques.",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-emerald-500 to-teal-500",
+      iconColor: "text-emerald-400",
+      iconBg: "bg-emerald-500/20",
+      borderColor: "border-emerald-500/30",
+      technique: "Bit Counting",
+      timeComplexity: "O(1)",
+      platforms: ["LeetCode #191", "GfG"],
+      tags: ["Bit Count", "Hamming Weight", "Binary"]
+    },
+    {
+      name: "Reverse Bits",
+      label: "Reverse Bits",
+      number: "190",
+      subpage: "ReverseBits",
+      icon: FlipHorizontal,
+      description: "Reverse the bits of a given 32-bit unsigned integer using bit shifting and masking operations.",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-indigo-500 to-blue-500",
+      iconColor: "text-indigo-400",
+      iconBg: "bg-indigo-500/20",
+      borderColor: "border-indigo-500/30",
+      technique: "Bit Reversal",
+      timeComplexity: "O(1)",
+      platforms: ["LeetCode #190", "GfG"],
+      tags: ["Bit Reversal", "Shifting", "Masking"]
+    },
+    {
+      name: "Power of Two",
+      label: "Power of Two",
+      number: "231",
+      subpage: "PowerOfTwo",
+      icon: Power,
+      description: "Determine if a number is a power of two using bit manipulation properties of powers of two.",
+      difficulty: "Easy",
+      tier: "Tier 1",
+      difficultyColor: "text-green-400",
+      difficultyBg: "bg-green-400/10",
+      difficultyBorder: "border-green-400/30",
+      gradient: "from-amber-500 to-orange-500",
+      iconColor: "text-amber-400",
+      iconBg: "bg-amber-500/20",
+      borderColor: "border-amber-500/30",
+      technique: "Power Check",
+      timeComplexity: "O(1)",
+      platforms: ["LeetCode #231", "GfG"],
+      tags: ["Power Check", "Bit Mask", "Math"]
+    }
+  ];
 
-  // ❌ The local 'algorithms' array has been DELETED.
+  const filteredAlgorithms = bitManipulationAlgorithms.filter(algo => {
+    if (filter === "all") return true;
+    if (filter === "easy") return algo.tier === "Tier 1";
+    if (filter === "medium") return algo.tier === "Tier 2";
+    if (filter === "hard") return algo.tier === "Tier 3";
+    return true;
+  });
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -89,36 +196,78 @@ const AlgorithmList = ({ navigate }) => {
         </div>
       </header>
 
+      {/* Filter Buttons */}
+      <div className="flex flex-wrap justify-center gap-3 mb-8">
+        <button
+          onClick={() => setFilter("all")}
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
+            filter === "all"
+              ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-300"
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+          }`}
+        >
+          All Problems
+        </button>
+        <button
+          onClick={() => setFilter("easy")}
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
+            filter === "easy"
+              ? "bg-green-500/20 border-green-500/50 text-green-300"
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+          }`}
+        >
+          Easy (Tier 1)
+        </button>
+        <button
+          onClick={() => setFilter("medium")}
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
+            filter === "medium"
+              ? "bg-yellow-500/20 border-yellow-500/50 text-yellow-300"
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+          }`}
+        >
+          Medium (Tier 2)
+        </button>
+        <button
+          onClick={() => setFilter("hard")}
+          className={`px-4 py-2 rounded-full border backdrop-blur-sm transition-all ${
+            filter === "hard"
+              ? "bg-red-500/20 border-red-500/50 text-red-300"
+              : "bg-gray-800/50 border-gray-700 text-gray-400 hover:border-gray-600"
+          }`}
+        >
+          Hard (Tier 3)
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-        {bitManipulationAlgorithms.map((algo, index) => {
+        {filteredAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
-          const Icon = algo.icon || defaultVisuals.icon;
+          const Icon = algo.icon;
 
           return (
             <div
-              key={algo.subpage} // ✅ Use subpage
-              onClick={() => navigate(algo.subpage)} // ✅ Use subpage
+              key={algo.subpage}
+              onClick={() => navigate(algo.subpage)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className="group relative cursor-pointer animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient || defaultVisuals.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
               />
 
               <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor || defaultVisuals.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-3 ${algo.iconBg || defaultVisuals.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                      className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${
-                          isHovered ? "text-white" : (algo.iconColor || defaultVisuals.iconColor)
-                        } transition-colors duration-300`}
+                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor} transition-colors duration-300`}
                       />
                     </div>
                     <div>
@@ -131,13 +280,14 @@ const AlgorithmList = ({ navigate }) => {
                         >
                           {algo.difficulty}
                         </div>
+                        <div className="px-2 py-0.5 bg-gray-700/50 rounded-md text-xs text-gray-300 border border-gray-600">
+                          {algo.tier}
+                        </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${
-                          isHovered ? "text-white" : "text-gray-200"
-                        }`}
+                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"}`}
                       >
-                        {algo.label} {/* ✅ Use label */}
+                        {algo.name}
                       </h2>
                     </div>
                   </div>
@@ -146,41 +296,66 @@ const AlgorithmList = ({ navigate }) => {
                   <div onClick={(e) => e.stopPropagation()}>
                     <StarButton problemId={algo.subpage} />
                   </div>
-
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
-                    isHovered ? "text-gray-300" : "text-gray-400"
-                  }`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"}`}
                 >
                   {algo.description}
                 </p>
 
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {algo.tags.map((tag, tagIndex) => (
+                    <span
+                      key={tagIndex}
+                      className="px-2 py-1 bg-gray-700/30 rounded text-xs text-gray-300 border border-gray-600"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
                 <div className="flex items-center justify-between pt-4 border-t border-gray-800">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1.5">
-                      <Star className="h-4 w-4 text-cyan-400" />
+                      <Star className="h-4 w-4 text-amber-400" />
                       <span className="text-xs font-medium text-gray-400">
                         {algo.technique}
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <Clock className="h-4 w-4 text-indigo-400" />
+                      <Clock className="h-4 w-4 text-blue-400" />
                       <span className="text-xs font-mono text-gray-400">
                         {algo.timeComplexity}
                       </span>
                     </div>
                   </div>
 
-                  <div
-                    className={`transition-all duration-300 ${
-                      isHovered ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
-                    }`}
-                  >
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs font-medium text-gray-400">Solve</span>
-                      <ArrowLeft className="h-4 w-4 text-gray-400 rotate-180" />
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap gap-1">
+                      {algo.platforms.map((platform, platformIndex) => (
+                        <span
+                          key={platformIndex}
+                          className="px-2 py-1 bg-gray-800/50 rounded text-xs text-gray-400 border border-gray-700"
+                        >
+                          {platform}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div
+                      className={`transition-all duration-300 ${
+                        isHovered
+                          ? "opacity-100 translate-x-0"
+                          : "opacity-0 -translate-x-2"
+                      }`}
+                    >
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-medium text-gray-400">
+                          Solve
+                        </span>
+                        <ArrowRight className="h-4 w-4 text-gray-400" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -189,6 +364,14 @@ const AlgorithmList = ({ navigate }) => {
           );
         })}
       </div>
+
+      {filteredAlgorithms.length === 0 && (
+        <div className="text-center py-12">
+          <div className="text-gray-500 text-lg">
+            No problems found for the selected filter.
+          </div>
+        </div>
+      )}
 
       <div className="mt-12 text-center">
         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-full border border-gray-700 backdrop-blur-sm">
@@ -202,18 +385,22 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-// ✅ This part remains completely the same as before.
 const BitPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
-      case "SingleNumber": return <SingleNumberVisualizer navigate={navigate} />;
-      case "NumberOf1Bits": return <NumberOf1Bits navigate={navigate} />;
-      case "CountingBits": return <CountingBits navigate={navigate} />;
-      case "ReverseBits": return <ReverseBits navigate={navigate} />;
-      case "PowerOfTwo": return <PowerOfTwo navigate={navigate} />;
+      case "SingleNumber": 
+        return <SingleNumberVisualizer navigate={navigate} />;
+      case "NumberOf1Bits": 
+        return <NumberOf1Bits navigate={navigate} />;
+      case "CountingBits": 
+        return <CountingBits navigate={navigate} />;
+      case "ReverseBits": 
+        return <ReverseBits navigate={navigate} />;
+      case "PowerOfTwo": 
+        return <PowerOfTwo navigate={navigate} />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
@@ -229,16 +416,52 @@ const BitPage = ({ navigate: parentNavigate, initialPage = null }) => {
       </div>
 
       <style>{`
-        .animated-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; }
-        @keyframes gradient-animation { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-        .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
-        @keyframes fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .animated-icon { animation: float-rotate 8s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.6)); }
-        @keyframes float-rotate { 0%, 100% { transform: translateY(0) rotate(0deg); } 33% { transform: translateY(-8px) rotate(120deg); } 66% { transform: translateY(-4px) rotate(240deg); } }
-        .animate-pulse-slow, .animate-pulse-slow-delayed { animation: pulse-slow 4s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
-        @keyframes pulse-slow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
-        .animate-float, .animate-float-delayed { animation: float 20s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
-        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.1); } }
+        .animated-gradient { 
+          background-size: 200% auto; 
+          animation: gradient-animation 4s ease-in-out infinite; 
+        }
+        @keyframes gradient-animation { 
+          0%, 100% { background-position: 0% 50%; } 
+          50% { background-position: 100% 50%; } 
+        }
+        .animate-fade-in-up { 
+          animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+          opacity: 0; 
+        }
+        @keyframes fade-in-up { 
+          from { opacity: 0; transform: translateY(30px); } 
+          to { opacity: 1; transform: translateY(0); } 
+        }
+        .animated-icon { 
+          animation: float-rotate 8s ease-in-out infinite; 
+          filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.6)); 
+        }
+        @keyframes float-rotate { 
+          0%, 100% { transform: translateY(0) rotate(0deg); } 
+          33% { transform: translateY(-8px) rotate(120deg); } 
+          66% { transform: translateY(-4px) rotate(240deg); } 
+        }
+        .animate-pulse-slow, .animate-pulse-slow-delayed { 
+          animation: pulse-slow 4s ease-in-out infinite; 
+        }
+        .animate-pulse-slow-delayed {
+          animation-delay: 2s;
+        }
+        @keyframes pulse-slow { 
+          0%, 100% { opacity: 0.3; } 
+          50% { opacity: 0.6; } 
+        }
+        .animate-float { 
+          animation: float 20s ease-in-out infinite; 
+        }
+        .animate-float-delayed { 
+          animation: float 20s ease-in-out infinite; 
+          animation-delay: 10s; 
+        }
+        @keyframes float { 
+          0%, 100% { transform: translate(0, 0) scale(1); } 
+          50% { transform: translate(30px, -30px) scale(1.1); } 
+        }
       `}</style>
 
       <div className="relative z-10">{children}</div>
