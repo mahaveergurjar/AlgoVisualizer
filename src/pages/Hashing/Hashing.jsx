@@ -15,6 +15,7 @@ import {
 import ValidAnagram from "./ValidAnagram";
 import SubarraySumEqualsK from "./SubarraySumEqualsK";
 import LongestConsecutiveSequence from "./LongestConsecutiveSequence";
+import EqualRowsColumnPairs from "./EqualRowsColumnPair";
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from '../../search/catalog';
@@ -212,6 +213,7 @@ const HashingPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "ValidAnagram": return <ValidAnagram />;
       case "SubarraySumEqualsK": return <SubarraySumEqualsK />;
       case "LongestConsecutiveSequence": return <LongestConsecutiveSequence />;
+      case "EqualRowsColumnPairs": return <EqualRowsColumnPairs />;
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
