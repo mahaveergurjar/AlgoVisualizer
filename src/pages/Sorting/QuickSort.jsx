@@ -562,6 +562,12 @@ const QuickSortVisualizer = () => {
                     <span className="font-mono w-18 px-4 py-2 flex items-center justify-center text-center bg-gray-900 border border-gray-600 rounded-md">
                       {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
                     </span>
+                    {/* Array size display - showing current number of elements */}
+                    {isLoaded && arrayInput && (
+                      <span className="text-sm text-gray-400 font-medium ml-4">
+                        Array Size: {arrayInput.split(',').filter(item => item.trim() !== '').length}
+                      </span>
+                    )}
                   </div>
                 </div>
               </>

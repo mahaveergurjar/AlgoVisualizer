@@ -508,6 +508,14 @@ const MergeSortVisualizer = () => {
             disabled={isLoaded}
             className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
           />
+          {/* Array size display - showing current number of elements */}
+          {isLoaded && arrayInput && (
+            <div className="ml-4 flex items-center">
+              <span className="text-sm text-gray-400 font-medium">
+                Array Size: {arrayInput.split(',').filter(item => item.trim() !== '').length}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-2">
           {!isLoaded ? (
@@ -560,14 +568,13 @@ const MergeSortVisualizer = () => {
           >
             Reset
           </button>
- main
         </div>
       </div>
 
       {isLoaded ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2 justify-between">
+            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
               <span className="flex items-center gap-2">
                 <Code size={20} /> Pseudocode
               </span>
