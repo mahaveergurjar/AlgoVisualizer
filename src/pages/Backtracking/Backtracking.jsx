@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { 
-  ArrowLeft, 
-  Filter, 
-  Star, 
-  Clock, 
-  Zap, 
-  ArrowRight, 
+import {
+  ArrowLeft,
+  Filter,
+  Star,
+  Clock,
+  Zap,
+  ArrowRight,
   TrendingUp,
   Code2,
   Brackets,
@@ -34,7 +34,8 @@ const AlgorithmList = ({ navigate }) => {
       name: "Word Search",
       number: "79",
       icon: Map,
-      description: "Search for a word in a 2D grid of characters using backtracking.",
+      description:
+        "Search for a word in a 2D grid of characters using backtracking.",
       page: "WordSearchVisualizer",
       difficulty: "Medium",
       tier: "Tier 2",
@@ -48,13 +49,14 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking",
       timeComplexity: "O(M×N×4^L)",
       platforms: ["LeetCode #79", "GfG"],
-      tags: ["Grid", "DFS", "String Matching"]
+      tags: ["Grid", "DFS", "String Matching"],
     },
     {
       name: "Permutations",
       number: "46",
       icon: List,
-      description: "Generate all possible permutations of a distinct integers array.",
+      description:
+        "Generate all possible permutations of a distinct integers array.",
       page: "PermutationsVisualizer",
       difficulty: "Medium",
       tier: "Tier 2",
@@ -68,13 +70,14 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking",
       timeComplexity: "O(N×N!)",
       platforms: ["LeetCode #46", "GfG"],
-      tags: ["Combinatorics", "Recursion"]
+      tags: ["Combinatorics", "Recursion"],
     },
     {
       name: "Sudoku Solver",
       number: "37",
       icon: Puzzle,
-      description: "Solve a 9x9 Sudoku puzzle by filling empty cells using backtracking.",
+      description:
+        "Solve a 9x9 Sudoku puzzle by filling empty cells using backtracking.",
       page: "SudokuSolver",
       difficulty: "Hard",
       tier: "Tier 3",
@@ -88,13 +91,14 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking",
       timeComplexity: "O(9^(N*N))",
       platforms: ["LeetCode #37", "GfG"],
-      tags: ["Grid", "Recursion", "Matrix"]
+      tags: ["Grid", "Recursion", "Matrix"],
     },
     {
       name: "Expression Add Operators",
       number: "282",
       icon: Layers,
-      description: "Insert +, -, * between digits to make expressions evaluate to a target.",
+      description:
+        "Insert +, -, * between digits to make expressions evaluate to a target.",
       page: "ExpressionAddOperators",
       difficulty: "Hard",
       tier: "Tier 3",
@@ -133,7 +137,7 @@ const AlgorithmList = ({ navigate }) => {
     }
   ];
 
-  const filteredAlgorithms = algorithms.filter(algo => {
+  const filteredAlgorithms = algorithms.filter((algo) => {
     if (filter === "all") return true;
     if (filter === "medium") return algo.tier === "Tier 2";
     if (filter === "hard") return algo.tier === "Tier 3";

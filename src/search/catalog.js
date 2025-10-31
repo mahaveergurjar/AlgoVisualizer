@@ -6,7 +6,6 @@
 // --- ✅ Combined Icon Imports for ALL Categories ---
 import {
   AlignLeft,
-  ArrowDownUp,
   ArrowLeftRight,
   ArrowRightLeft,
   ArrowUpDown,
@@ -60,6 +59,7 @@ import {
   Users,
   Grid3x3,
   Zap,
+  PackageOpen
 } from "lucide-react";
 
 export const problems = [
@@ -1269,7 +1269,7 @@ export const problems = [
     subpage: "BubbleSort",
     keywords: ["sorting", "bubble", "swap", "basic"],
     number: "912",
-    icon: ArrowDownUp,
+    icon: ArrowUpDown,
     description:
       "A simple algorithm that repeatedly steps through the list, comparing and swapping adjacent elements.",
     difficulty: "Easy",
@@ -1284,6 +1284,28 @@ export const problems = [
     technique: "Swapping",
     timeComplexity: "O(n²)",
     tags: ["Basic", "In-place"],
+  },
+  {
+    category: "Sorting",
+    subpage: "BucketSort",
+    label: "Bucket Sort",
+    keywords: ["sorting","bucket","linear-time","range-based","concatenate"],
+    number: "N/A",
+    icon: PackageOpen,
+    description:
+      "Distribution-based, non-comparative sorting: normalize values into buckets, sort each bucket (e.g., with a stable insertion sort), and concatenate.",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-teal-300",
+    difficultyBg: "bg-teal-400/10",
+    difficultyBorder: "border-teal-400/30",
+    gradient: "from-teal-600 to-cyan-600",
+    iconColor: "text-teal-300",
+    iconBg: "bg-teal-500/20",
+    borderColor: "border-teal-500/30",
+    technique: "Distribution",
+    timeComplexity: "O(n + k)",
+    tags: ["Stable (with insertion)","Not in-place","Range-dependent","Avg linear"],
   },
   {
     label: "Merge Sort",
@@ -2460,6 +2482,37 @@ export const problems = [
     timeComplexity: "O(n)",
     tags: ["Set", "Arrays"],
   },
+  {
+  label: "Equal Rows and Columns",
+  category: "Hashing",
+  subpage: "EqualRowsColumnPairs",
+  keywords: [
+    "hashing",
+    "equal",
+    "rows",
+    "columns",
+    "pairs",
+    "grid",
+    "matrix",
+    "2352",
+  ],
+  number: "2352",
+  icon: Grid3x3,
+  description:
+    "Count pairs where a row and column contain identical sequences.",
+  difficulty: "Medium",
+  tier: "Tier 3",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-purple-500 to-pink-500",
+  iconColor: "text-purple-400",
+  iconBg: "bg-purple-500/20",
+  borderColor: "border-purple-500/30",
+  technique: "Hash Map Frequency",
+  timeComplexity: "O(n³)",
+  tags: ["Hash Map", "Matrix", "Arrays"],
+},
 
   // =================================================================
   // GREEDY ALGORITHMS
@@ -2803,5 +2856,40 @@ export const problems = [
     timeComplexity: "O(m×n)",
     platforms: ["LeetCode #62"],
     tags: ["Grid DP", "Combinatorics", "Classic Problem"],
+  },
+  // Graphs
+  {
+    label: "Max Flow (Edmonds–Karp, Dinic)",
+    category: "Graphs",
+    subpage: "NetworkFlow",
+    keywords: [
+      "graphs",
+      "graph",
+      "max flow",
+      "network flow",
+      "flow",
+      "edmonds-karp",
+      "edmonds karp",
+      "dinic",
+      "ford-fulkerson",
+      "residual",
+      "bottleneck",
+    ],
+    number: "N/A",
+    icon: GitMerge,
+    description:
+      "Visualize max flow with Edmonds–Karp (BFS) and Dinic (level graph): residual capacities, augmenting paths, bottlenecks.",
+    difficulty: "Hard",
+    tier: "Tier 2",
+    difficultyColor: "text-red-400",
+    difficultyBg: "bg-red-400/10",
+    difficultyBorder: "border-red-400/30",
+    gradient: "from-blue-600 to-indigo-700",
+    iconColor: "text-blue-300",
+    iconBg: "bg-blue-600/20",
+    borderColor: "border-blue-600/30",
+    technique: "Edmonds–Karp, Dinic",
+    timeComplexity: "EK: O(V·E²), Dinic: O(V²·E)",
+    tags: ["Residual Graph", "Augmenting Path", "Blocking Flow"],
   },
 ];

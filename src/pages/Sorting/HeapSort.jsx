@@ -460,18 +460,24 @@ const HeapSortVisualizer = () => {
                     <span className="font-mono w-18 px-4 py-2 flex items-center justify-center text-center bg-gray-900 border border-gray-600 rounded-md">
                       {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
                     </span>
+                    {/* Array size display - showing current number of elements */}
+                    {isLoaded && arrayInput && (
+                      <span className="text-sm text-gray-400 font-medium ml-4">
+                        Array Size: {arrayInput.split(',').filter(item => item.trim() !== '').length}
+                      </span>
+                    )}
                   </div>
+                </div>
+                <div className="flex w-full md:w-20">
+                  <button
+                    onClick={reset}
+                    className="bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg whitespace-nowrap text-sm sm:text-base flex-shrink-0 mx-auto w-full "
+                  >
+                    Reset
+                  </button>
                 </div>
               </>
             )}
-            <div className="flex w-full md:w-20">
-              <button
-                onClick={reset}
-                className="bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg whitespace-nowrap text-sm sm:text-base flex-shrink-0 mx-auto w-full "
-              >
-                Reset
-              </button>
-            </div>
           </div>
         </div>
       </div>

@@ -19,6 +19,7 @@ import DFS from "./DFS.jsx";
 import Dijkstra from "./Dijkstra.jsx";
 import TopologicalSort from "./TopologicalSort.jsx";
 import Kruskal from "./Kruskal.jsx";
+import NetworkFlow from "./NetworkFlow.jsx";
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from '../../search/catalog';
@@ -203,6 +204,7 @@ const GraphsPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "Dijkstra": return <Dijkstra navigate={navigate} />;
       case "Kruskal": return <Kruskal navigate={navigate} />;
       case "TopologicalSort": return <TopologicalSort navigate={navigate} />;
+      case "NetworkFlow": return <NetworkFlow navigate={navigate} />;
       case "UnionFind": return <PlaceholderVisualizer name="Union-Find" navigate={navigate} />; // ✅ Keep maintainer's placeholder
       case "MST": return <PlaceholderVisualizer name="Minimum Spanning Tree" navigate={navigate} />; // ✅ Keep maintainer's placeholder
       case "home":
@@ -211,12 +213,29 @@ const GraphsPage = ({ navigate: parentNavigate, initialPage = null }) => {
     }
   };
   const PageWrapper = ({ children }) => (
-    // PageWrapper remains the same
-    <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden"> ... </div>
+    <div className="bg-gray-950 text-white min-h-screen relative overflow-hidden">
+      {children}
+    </div>
   );
   return (
-    // Navigation and rendering logic remains the same
-    <PageWrapper> ... </PageWrapper>
+    <PageWrapper>
+      <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center">
+        <div className="max-w-7xl w-full mx-auto px-6 flex items-center justify-between">
+          <button
+            onClick={() => parentNavigate ? parentNavigate("home") : null}
+            className="flex items-center gap-2 text-gray-300 bg-gray-800/80 hover:bg-gray-700 active:bg-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 border border-gray-700 hover:border-gray-600"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Problems
+          </button>
+          <div className="flex items-center gap-2">
+            <Network className="h-5 w-5 text-blue-400" />
+            <span className="text-sm font-semibold text-gray-300">Graph Algorithms</span>
+          </div>
+        </div>
+      </nav>
+      {renderPage()}
+    </PageWrapper>
   );
 };
 

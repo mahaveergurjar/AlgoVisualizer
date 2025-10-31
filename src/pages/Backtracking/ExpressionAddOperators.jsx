@@ -50,17 +50,35 @@ const ExpressionAddOperators = ({ navigate }) => {
 
     const backtrack = (index, prevOperand, currOperand, value, expr) => {
       // show that we are at this node
-      push({ type: "visit", expr, value, index, note: `Visiting index ${index}` });
+      push({
+        type: "visit",
+        expr,
+        value,
+        index,
+        note: `Visiting index ${index}`,
+      });
 
       if (index === digits.length) {
         if (value === goal && currOperand === 0) {
           const sol = expr.slice(1);
           if (!solutionsFound.has(sol)) {
             solutionsFound.add(sol);
-            push({ type: "solution", expr: sol, value, index, note: `Found solution ${sol}` });
+            push({
+              type: "solution",
+              expr: sol,
+              value,
+              index,
+              note: `Found solution ${sol}`,
+            });
           }
         } else {
-          push({ type: "dead", expr, value, index, note: `Dead end (value ${value})` });
+          push({
+            type: "dead",
+            expr,
+            value,
+            index,
+            note: `Dead end (value ${value})`,
+          });
         }
         return;
       }
@@ -70,16 +88,40 @@ const ExpressionAddOperators = ({ navigate }) => {
 
       // Extend current operand (avoid leading zero)
       if (currOperand > 0 || currDigit !== "0") {
-        push({ type: "extend", expr, value, index, note: `Extend operand with ${currDigit}` });
-        backtrack(index + 1, prevOperand, currOperand * 10 + currVal, value, expr);
+        push({
+          type: "extend",
+          expr,
+          value,
+          index,
+          note: `Extend operand with ${currDigit}`,
+        });
+        backtrack(
+          index + 1,
+          prevOperand,
+          currOperand * 10 + currVal,
+          value,
+          expr
+        );
       }
 
       // Try addition
-      push({ type: "trying", expr: `${expr}+${currVal}`, value: value + currVal, index: index + 1, note: `Try +${currVal}` });
+      push({
+        type: "trying",
+        expr: `${expr}+${currVal}`,
+        value: value + currVal,
+        index: index + 1,
+        note: `Try +${currVal}`,
+      });
       backtrack(index + 1, currVal, 0, value + currVal, `${expr}+${currVal}`);
 
       // Try subtraction
-      push({ type: "trying", expr: `${expr}-${currVal}`, value: value - currVal, index: index + 1, note: `Try -${currVal}` });
+      push({
+        type: "trying",
+        expr: `${expr}-${currVal}`,
+        value: value - currVal,
+        index: index + 1,
+        note: `Try -${currVal}`,
+      });
       backtrack(index + 1, -currVal, 0, value - currVal, `${expr}-${currVal}`);
 
       // Try multiplication (careful with precedence)
@@ -88,16 +130,40 @@ const ExpressionAddOperators = ({ navigate }) => {
         expr: `${expr}*${currVal}`,
         value: value - prevOperand + prevOperand * currVal,
         index: index + 1,
-        note: `Try *${currVal}`
+        note: `Try *${currVal}`,
       });
-      backtrack(index + 1, prevOperand * currVal, 0, value - prevOperand + prevOperand * currVal, `${expr}*${currVal}`);
+      backtrack(
+        index + 1,
+        prevOperand * currVal,
+        0,
+        value - prevOperand + prevOperand * currVal,
+        `${expr}*${currVal}`
+      );
 
-      push({ type: "backtrack", expr, value, index, note: `Backtrack from index ${index}` });
+      push({
+        type: "backtrack",
+        expr,
+        value,
+        index,
+        note: `Backtrack from index ${index}`,
+      });
     };
 
-    push({ type: "start", expr: "", value: 0, index: 0, note: `Start exploring digits "${digits}" to reach ${goal}` });
+    push({
+      type: "start",
+      expr: "",
+      value: 0,
+      index: 0,
+      note: `Start exploring digits "${digits}" to reach ${goal}`,
+    });
     backtrack(0, 0, 0, 0, "");
-    push({ type: "end", expr: "", value: 0, index: digits.length, note: `Finished exploration` });
+    push({
+      type: "end",
+      expr: "",
+      value: 0,
+      index: digits.length,
+      note: `Finished exploration`,
+    });
 
     setFrames(localFrames);
     setSolutions(Array.from(solutionsFound));
@@ -134,12 +200,19 @@ const ExpressionAddOperators = ({ navigate }) => {
     <div className="p-6 min-h-screen bg-gradient-to-br from-fuchsia-900 via-purple-900 to-black text-white">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate("home")} className="px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 hover:bg-gray-800">
+          <button
+            onClick={() => navigate("home")}
+            className="px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 hover:bg-gray-800"
+          >
             <ArrowLeft size={18} /> Back
           </button>
-          <h2 className="text-2xl font-bold text-fuchsia-300">Expression Add Operators</h2>
+          <h2 className="text-2xl font-bold text-fuchsia-300">
+            Expression Add Operators
+          </h2>
         </div>
-        <div className="text-sm text-gray-400">LeetCode #282 • Tier 3 (Hard)</div>
+        <div className="text-sm text-gray-400">
+          LeetCode #282 • Tier 3 (Hard)
+        </div>
       </div>
 
       {/* Inputs */}
@@ -157,18 +230,28 @@ const ExpressionAddOperators = ({ navigate }) => {
           className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 w-28"
           placeholder="target"
         />
-        <button onClick={handleStart} className="px-4 py-2 bg-fuchsia-600 hover:bg-fuchsia-700 rounded-lg">Start</button>
+        <button
+          onClick={handleStart}
+          className="px-4 py-2 bg-fuchsia-600 hover:bg-fuchsia-700 rounded-lg"
+        >
+          Start
+        </button>
 
         <div className="ml-auto flex items-center gap-2">
           <button
-            onClick={() => { setIsPlaying((p) => !p); }}
+            onClick={() => {
+              setIsPlaying((p) => !p);
+            }}
             className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-700"
             disabled={frames.length === 0}
           >
             {isPlaying ? <Pause size={16} /> : <Play size={16} />}
           </button>
           <button
-            onClick={() => { setPlayIndex(0); setIsPlaying(false); }}
+            onClick={() => {
+              setPlayIndex(0);
+              setIsPlaying(false);
+            }}
             className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-700"
           >
             <RotateCcw size={16} />
@@ -180,7 +263,9 @@ const ExpressionAddOperators = ({ navigate }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Stack of recent frames / step detail */}
         <div className="bg-gray-900/40 p-4 rounded-xl border border-gray-700">
-          <h3 className="text-lg font-semibold mb-3 text-gray-200">Step Viewer</h3>
+          <h3 className="text-lg font-semibold mb-3 text-gray-200">
+            Step Viewer
+          </h3>
           <div className="space-y-2">
             <AnimatePresence initial={false}>
               {current && (
@@ -191,13 +276,18 @@ const ExpressionAddOperators = ({ navigate }) => {
                   exit={{ opacity: 0, y: -8 }}
                 >
                   <Node
-                    text={`${current.note || ""} ${current.expr ? ` — expr: ${current.expr.replace(/^\+/, "")}` : ""}`}
+                    text={`${current.note || ""} ${
+                      current.expr
+                        ? ` — expr: ${current.expr.replace(/^\+/, "")}`
+                        : ""
+                    }`}
                     status={
                       current.type === "solution"
                         ? "solution"
                         : current.type === "trying" || current.type === "extend"
                         ? "trying"
-                        : current.type === "backtrack" || current.type === "dead"
+                        : current.type === "backtrack" ||
+                          current.type === "dead"
                         ? "backtrack"
                         : "normal"
                     }
@@ -210,39 +300,64 @@ const ExpressionAddOperators = ({ navigate }) => {
           <div className="mt-4 text-sm text-gray-400">
             <div>Index: {current.index ?? "-"}</div>
             <div>Value: {current.value ?? "-"}</div>
-            <div>Frame: {playIndex + 1}/{frames.length || 0}</div>
+            <div>
+              Frame: {playIndex + 1}/{frames.length || 0}
+            </div>
           </div>
         </div>
 
         {/* Center: "Recursion Path" visual stack */}
         <div className="bg-gray-900/40 p-4 rounded-xl border border-gray-700 flex flex-col items-center">
-          <h3 className="text-lg font-semibold mb-3 text-gray-200">Recursion Path</h3>
+          <h3 className="text-lg font-semibold mb-3 text-gray-200">
+            Recursion Path
+          </h3>
 
           <div className="w-full flex flex-col items-center gap-3">
             {/* Show a small vertical breadcrumb showing last few visited exprs */}
             <div className="w-full max-h-64 overflow-auto p-2 space-y-2">
-              {frames.slice(Math.max(0, playIndex - 6), playIndex + 1).map((f) => (
-                <motion.div key={f.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between gap-3">
-                  <div className="flex-1">
-                    <div className="text-xs text-gray-400">{f.note}</div>
-                    <div className="text-sm font-mono text-gray-200">{f.expr ? f.expr.replace(/^\+/, "") : "(start)"}</div>
-                  </div>
-                  <div className="text-sm font-mono text-gray-300">{f.value ?? "-"}</div>
-                </motion.div>
-              ))}
+              {frames
+                .slice(Math.max(0, playIndex - 6), playIndex + 1)
+                .map((f) => (
+                  <motion.div
+                    key={f.id}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex items-center justify-between gap-3"
+                  >
+                    <div className="flex-1">
+                      <div className="text-xs text-gray-400">{f.note}</div>
+                      <div className="text-sm font-mono text-gray-200">
+                        {f.expr ? f.expr.replace(/^\+/, "") : "(start)"}
+                      </div>
+                    </div>
+                    <div className="text-sm font-mono text-gray-300">
+                      {f.value ?? "-"}
+                    </div>
+                  </motion.div>
+                ))}
             </div>
           </div>
 
-          <div className="mt-4 text-xs text-gray-400">(recent steps shown — play to auto-advance)</div>
+          <div className="mt-4 text-xs text-gray-400">
+            (recent steps shown — play to auto-advance)
+          </div>
         </div>
 
         {/* Right: Solutions & Summary */}
         <div className="bg-gray-900/40 p-4 rounded-xl border border-gray-700">
-          <h3 className="text-lg font-semibold mb-3 text-gray-200">Solutions</h3>
+          <h3 className="text-lg font-semibold mb-3 text-gray-200">
+            Solutions
+          </h3>
           {solutions.length > 0 ? (
             <div className="space-y-2">
               {solutions.map((s, i) => (
-                <motion.div key={s + i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-2 rounded-md bg-green-800/30 border border-green-700 text-sm font-mono">
+                <motion.div
+                  key={s + i}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="p-2 rounded-md bg-green-800/30 border border-green-700 text-sm font-mono"
+                >
                   {s}
                 </motion.div>
               ))}
@@ -252,20 +367,40 @@ const ExpressionAddOperators = ({ navigate }) => {
           )}
 
           <div className="mt-6 text-sm text-gray-400">
-            <div><strong>Digits:</strong> {num}</div>
-            <div><strong>Target:</strong> {target}</div>
-            <div><strong>Frames:</strong> {frames.length}</div>
+            <div>
+              <strong>Digits:</strong> {num}
+            </div>
+            <div>
+              <strong>Target:</strong> {target}
+            </div>
+            <div>
+              <strong>Frames:</strong> {frames.length}
+            </div>
           </div>
 
           <div className="mt-4">
-            <button onClick={() => { setFrames([]); setSolutions([]); setPlayIndex(0); setIsPlaying(false); }} className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg">Clear</button>
+            <button
+              onClick={() => {
+                setFrames([]);
+                setSolutions([]);
+                setPlayIndex(0);
+                setIsPlaying(false);
+              }}
+              className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg"
+            >
+              Clear
+            </button>
           </div>
         </div>
       </div>
 
       {/* Footer status */}
       <div className="mt-6 text-sm text-gray-400 flex items-center gap-3">
-        <Zap /> <span>Visualization uses a depth-first recursion walk; frames record visits, tries, backtracks, and found solutions.</span>
+        <Zap />{" "}
+        <span>
+          Visualization uses a depth-first recursion walk; frames record visits,
+          tries, backtracks, and found solutions.
+        </span>
       </div>
     </div>
   );

@@ -29,13 +29,17 @@ import ReverseWordsVisualizer from "./ReverseWords.jsx";
 import StringCompressionVisualizer from "./StringCompression.jsx";
 import IsSubsequence from "./IsSubSequence.jsx";
 
+// importing problems as PROBLEM_CATALOG from catalog.js to see if this fixes the issue and star button - @prajithravisankar
+import { problems as PROBLEM_CATALOG } from "../../search/catalog.js";
+import StarButton from "../../components/StarButton.jsx";
+
 
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [filter, setFilter] = useState("all");
 
   // ✅ Get String problems directly from the master catalog
-  const stringAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'Strings');
+  const stringAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'Strings'); // the error's origin - @prajithravisankar
   
   // ❌ The local 'algorithms' array has been DELETED.
 

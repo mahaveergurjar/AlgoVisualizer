@@ -135,7 +135,19 @@ Before you begin, ensure you have the following installed:
    yarn install
    ```
 
-3. **Start the development server**
+3. **Set up environment variables**
+
+   ```bash
+   # Create .env file and add your Gemini API key
+   echo "VITE_GEMINI_API_KEY=your_actual_api_key_here" > .env
+   ```
+
+   To get a free Gemini API key:
+   - Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+   - Sign in with your Google account
+   - Click "Create API Key" and copy it
+
+4. **Start the development server**
 
    ```bash
    npm run dev
@@ -143,7 +155,7 @@ Before you begin, ensure you have the following installed:
    yarn dev
    ```
 
-4. **Open your browser**
+5. **Open your browser**
 
    Navigate to [http://localhost:5173](http://localhost:5173) to view the application.
 
@@ -156,6 +168,39 @@ yarn build
 ```
 
 The optimized production build will be generated in the `dist/` folder.
+
+---
+
+## 🤖 AI Learning Assistant
+
+AlgoVisualizer now includes an **AI-powered chatbot** that helps users learn algorithms interactively!
+
+### 🎯 Chatbot Features
+
+- 💬 **Real-time Chat Interface** - Floating chatbot widget on all pages
+- 🚀 **Smart Responses** - Powered by Google Gemini 2.0 Flash
+- 📊 **Algorithm Explanations** - Step-by-step breakdowns with examples
+- ⚡ **Complexity Analysis** - Time and space complexity explanations
+- 🎓 **Learning Guidance** - Interactive help for understanding concepts
+- 🌙 **Dark/Light Theme** - Matches your preference
+
+### 💬 Example Questions
+
+- "How does Merge Sort work?"
+- "What's the time complexity of Quick Sort?"
+- "Can you explain Big O notation?"
+- "How do I use the AlgoVisualizer?"
+- "What's the difference between BFS and DFS?"
+
+### 🔧 Setup
+
+The chatbot is automatically configured once you add your Gemini API key to `.env`:
+
+```bash
+VITE_GEMINI_API_KEY=your_actual_api_key_here
+```
+
+Just click the chat button in the bottom-right corner and start asking questions!
 
 ---
 
