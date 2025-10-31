@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { ArrowLeft, Play, RotateCw, Pause, SkipBack, SkipForward, Search } from "lucide-react";
 import VisualizerPointer from "../../components/VisualizerPointer";
+import Tooltip from "../../components/Tooltip";
 
 const SearchInRotatedSortedArray = () => {
   const initialArray = [4, 5, 6, 7, 0, 1, 2];
@@ -288,33 +289,48 @@ const SearchInRotatedSortedArray = () => {
         <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 mb-8 shadow-xl">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all shadow-lg"
-              >
-                {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-              </button>
-              <button
-                onClick={goToPrevStep}
-                disabled={currentStep === 0}
-                className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <SkipBack className="h-5 w-5" />
-              </button>
-              <button
-                onClick={goToNextStep}
-                disabled={currentStep >= history.length - 1}
-                className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <SkipForward className="h-5 w-5" />
-              </button>
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
-              >
-                <RotateCw className="h-5 w-5" />
-                Reset
-              </button>
+              <Tooltip content={isPlaying ? "Pause visualization" : "Play visualization"} position="top">
+                <button
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all shadow-lg"
+                  aria-label={isPlaying ? "Pause visualization" : "Play visualization"}
+                >
+                  {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                </button>
+              </Tooltip>
+              
+              <Tooltip content="Previous step" position="top">
+                <button
+                  onClick={goToPrevStep}
+                  disabled={currentStep === 0}
+                  className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Previous step"
+                >
+                  <SkipBack className="h-5 w-5" />
+                </button>
+              </Tooltip>
+              
+              <Tooltip content="Next step" position="top">
+                <button
+                  onClick={goToNextStep}
+                  disabled={currentStep >= history.length - 1}
+                  className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Next step"
+                >
+                  <SkipForward className="h-5 w-5" />
+                </button>
+              </Tooltip>
+              
+              <Tooltip content="Reset visualization" position="top">
+                <button
+                  onClick={handleReset}
+                  className="flex items-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                  aria-label="Reset visualization"
+                >
+                  <RotateCw className="h-5 w-5" />
+                  Reset
+                </button>
+              </Tooltip>
             </div>
             <div className="text-center">
               <div className="text-sm text-gray-400">Step</div>
