@@ -59,6 +59,7 @@ import {
   Users,
   Grid3x3,
   Zap,
+  PackageOpen
 } from "lucide-react";
 
 export const problems = [
@@ -1283,6 +1284,28 @@ export const problems = [
     technique: "Swapping",
     timeComplexity: "O(n²)",
     tags: ["Basic", "In-place"],
+  },
+  {
+    category: "Sorting",
+    subpage: "BucketSort",
+    label: "Bucket Sort",
+    keywords: ["sorting","bucket","linear-time","range-based","concatenate"],
+    number: "N/A",
+    icon: PackageOpen,
+    description:
+      "Distribution-based, non-comparative sorting: normalize values into buckets, sort each bucket (e.g., with a stable insertion sort), and concatenate.",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-teal-300",
+    difficultyBg: "bg-teal-400/10",
+    difficultyBorder: "border-teal-400/30",
+    gradient: "from-teal-600 to-cyan-600",
+    iconColor: "text-teal-300",
+    iconBg: "bg-teal-500/20",
+    borderColor: "border-teal-500/30",
+    technique: "Distribution",
+    timeComplexity: "O(n + k)",
+    tags: ["Stable (with insertion)","Not in-place","Range-dependent","Avg linear"],
   },
   {
     label: "Merge Sort",
