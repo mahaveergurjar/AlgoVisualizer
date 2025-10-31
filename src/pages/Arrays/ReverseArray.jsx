@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, RefreshCw, Play, RotateCcw, Code, Zap, Clock, Cpu, ArrowRight, ArrowLeft as ArrowLeftIcon } from "lucide-react";
+import Tooltip from "../../components/Tooltip";
 
 const ReverseArray = ({ navigate }) => {
   const [array, setArray] = useState([1, 2, 3, 4, 5, 6, 7, 8]);
@@ -101,34 +102,49 @@ const ReverseArray = ({ navigate }) => {
           <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
               <div className="flex items-center gap-4">
-                <button
-                  onClick={loadDefaultArray}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl font-medium transition-all cursor-pointer"
-                >
-                  Load & Visualize
-                </button>
-                <button
-                  onClick={startAnimation}
-                  disabled={isPlaying}
-                  className="flex items-center gap-2 px-6 py-3 cursor-pointer bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 rounded-xl font-medium transition-all disabled:cursor-not-allowed"
-                >
-                  <Play className="h-4 w-4" />
-                  {isPlaying ? "Running..." : "Start Animation"}
-                </button>
-                <button
-                  onClick={resetAnimation}
-                  className="flex items-center gap-2 px-4 py-2 cursor-pointer bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-all"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                  Reset
-                </button>
+                <Tooltip content="Load default array and visualize" position="top">
+                  <button
+                    onClick={loadDefaultArray}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl font-medium transition-all cursor-pointer"
+                    aria-label="Load default array and visualize"
+                  >
+                    Load & Visualize
+                  </button>
+                </Tooltip>
+                
+                <Tooltip content={isPlaying ? "Running..." : "Start animation"} position="top">
+                  <button
+                    onClick={startAnimation}
+                    disabled={isPlaying}
+                    className="flex items-center gap-2 px-6 py-3 cursor-pointer bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 rounded-xl font-medium transition-all disabled:cursor-not-allowed"
+                    aria-label={isPlaying ? "Running..." : "Start animation"}
+                  >
+                    <Play className="h-4 w-4" />
+                    {isPlaying ? "Running..." : "Start Animation"}
+                  </button>
+                </Tooltip>
+                
+                <Tooltip content="Reset animation" position="top">
+                  <button
+                    onClick={resetAnimation}
+                    className="flex items-center gap-2 px-4 py-2 cursor-pointer bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-all"
+                    aria-label="Reset animation"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    Reset
+                  </button>
+                </Tooltip>
               </div>
-              <button
-                onClick={generateNewArray}
-                className="px-4 py-2 bg-purple-500 cursor-pointer hover:bg-purple-600 rounded-xl font-medium transition-all"
-              >
-                New Array
-              </button>
+              
+              <Tooltip content="Generate new random array" position="top">
+                <button
+                  onClick={generateNewArray}
+                  className="px-4 py-2 bg-purple-500 cursor-pointer hover:bg-purple-600 rounded-xl font-medium transition-all"
+                  aria-label="Generate new random array"
+                >
+                  New Array
+                </button>
+              </Tooltip>
             </div>
 
             <div className="flex items-center gap-4">
