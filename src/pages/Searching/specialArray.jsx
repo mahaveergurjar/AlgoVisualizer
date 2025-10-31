@@ -2,18 +2,15 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   ArrowLeft,
   ArrowRight,
+  Code2,
   Play,
   Pause,
-  RotateCcw,
-  Terminal,
-  FileText,
   CheckCircle,
   XCircle,
+  Terminal,
+  FileText,
   Clock,
-  Code,
-  Cpu,
 } from "lucide-react";
-import Tooltip from "../../components/Tooltip";
 
 const LANG_TABS = ["C++", "Python", "Java"];
 
@@ -315,39 +312,28 @@ const SpecialArray = () => {
               Load & Visualize
             </button>
           ) : (
-            <div className="flex flex-wrap gap-3 items-center w-full">
+            <>
               <div className="flex items-center gap-2">
-                <Tooltip content="Previous step" position="top">
-                  <button
-                    onClick={stepBackward}
-                    disabled={currentStep <= 0}
-                    className="px-3 py-2 rounded-full bg-gray-800 hover:bg-purple-600 disabled:opacity-40 transition"
-                    aria-label="Previous step"
-                  >
-                    <ArrowLeft />
-                  </button>
-                </Tooltip>
-                
-                <Tooltip content={playing ? "Pause visualization" : "Play visualization"} position="top">
-                  <button
-                    onClick={togglePlay}
-                    className="px-3 py-2 rounded-full bg-gray-800 hover:bg-purple-600 transition"
-                    aria-label={playing ? "Pause visualization" : "Play visualization"}
-                  >
-                    {playing ? <Pause /> : <Play />}
-                  </button>
-                </Tooltip>
-                
-                <Tooltip content="Next step" position="top">
-                  <button
-                    onClick={stepForward}
-                    disabled={currentStep >= history.length - 1}
-                    className="px-3 py-2 rounded-full bg-gray-800 hover:bg-purple-600 disabled:opacity-40 transition"
-                    aria-label="Next step"
-                  >
-                    <ArrowRight />
-                  </button>
-                </Tooltip>
+                <button
+                  onClick={stepBackward}
+                  disabled={currentStep <= 0}
+                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-purple-600 disabled:opacity-40 transition"
+                >
+                  <ArrowLeft />
+                </button>
+                <button
+                  onClick={togglePlay}
+                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-purple-600 transition"
+                >
+                  {playing ? <Pause /> : <Play />}
+                </button>
+                <button
+                  onClick={stepForward}
+                  disabled={currentStep >= history.length - 1}
+                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-purple-600 disabled:opacity-40 transition"
+                >
+                  <ArrowRight />
+                </button>
               </div>
 
               <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200">
@@ -367,16 +353,13 @@ const SpecialArray = () => {
                 />
               </div>
 
-              <Tooltip content="Reset visualization" position="top">
-                <button
-                  onClick={resetAll}
-                  className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold cursor-pointer"
-                  aria-label="Reset visualization"
-                >
-                  Reset
-                </button>
-              </Tooltip>
-            </div>
+              <button
+                onClick={resetAll}
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold cursor-pointer"
+              >
+                Reset
+              </button>
+            </>
           )}
         </div>
       </section>
