@@ -6,7 +6,6 @@
 // --- ✅ Combined Icon Imports for ALL Categories ---
 import {
   AlignLeft,
-  ArrowDownUp,
   ArrowLeftRight,
   ArrowRightLeft,
   ArrowUpDown,
@@ -1269,7 +1268,7 @@ export const problems = [
     subpage: "BubbleSort",
     keywords: ["sorting", "bubble", "swap", "basic"],
     number: "912",
-    icon: ArrowDownUp,
+    icon: ArrowUpDown,
     description:
       "A simple algorithm that repeatedly steps through the list, comparing and swapping adjacent elements.",
     difficulty: "Easy",
