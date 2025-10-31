@@ -19,8 +19,8 @@ import LinearSearch from "./LinearSearch.jsx";
 import ExponentialSearch from "./ExponentialSearch.jsx";
 import SmallestLetter from "./SmallestLetter.jsx";
 import UnknownSizeSearch from "./UnknownSizeSearch.jsx";
-import KthMissing from "./kthMissingNumber.jsx";
-import SpecialArray from "./specialArray.jsx";
+import KthMissingNumber from "./KthMissingNumber.jsx";
+import SpecialArray from "./SpecialArray.jsx";
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -397,7 +397,7 @@ const SearchingPage = ({ navigate: parentNavigate, initialPage = null }) => {
       case "UnknownSizeSearch":
         return <UnknownSizeSearch navigate={navigate} />;
       case "KthMissing":
-        return <KthMissing navigate={navigate} />;
+        return <KthMissingNumber navigate={navigate} />;
       case "SpecialArray":
         return <SpecialArray navigate={navigate} />;
       case "home":
