@@ -62,14 +62,14 @@ AlgoVisualizer/
 
 ---
 
-## 🚀 Getting Started
+## 🚀 **Quick Start**
 
-### Prerequisites
+### **1️⃣ Prerequisites**
 
-- Node.js ≥ 14
-- npm ≥ 6 or yarn
+- Node.js **v14+**
+- npm **v6+** or **yarn**
 
-### Setup
+### **2️⃣ Installation**
 
 ```bash
 git clone https://github.com/mahaveergurjar/AlgoVisualizer.git
@@ -77,21 +77,23 @@ cd AlgoVisualizer
 npm install
 ```
 
-Create an `.env` file:
+### **3️⃣ Setup API Key**
 
 ```bash
-VITE_GEMINI_API_KEY=your_api_key_here
+echo "VITE_GEMINI_API_KEY=your_api_key_here" > .env
 ```
 
-Start the development server:
+> Get a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
+
+### **4️⃣ Run the App**
 
 ```bash
 npm run dev
 ```
 
-Now open **http://localhost:5173** in your browser.
+Open → **http://localhost:5173**
 
-To build for production:
+### **5️⃣ Build for Production**
 
 ```bash
 npm run build
