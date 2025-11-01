@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState } from "react";
+import Footer from "../components/Footer.jsx";
 import {
   ArrowLeft,
   Shapes,
@@ -891,6 +892,7 @@ const HomePage = () => {
         }
       `}</style>
       </div>
+      <Footer />
     </>
   );
   return <PageWrapper>{renderPage()}</PageWrapper>;

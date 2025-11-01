@@ -27,8 +27,8 @@ import HeapSortVisualizer from "./HeapSort";
 import SelectionSortVisualizer from "./SelectionSort";
 import CombSortVisualizer from "./CombSort";
 import BucketSortVisualizer from "./BucketSort";
-// import ShellSortVisualizer from "./ShellSort"; // Removed from switch below
-// import PancakeSortVisualizer from "./PancakeSort"; // Removed from switch below
+import ShellSortVisualizer from "./ShellSort"; // Removed from switch below
+import PancakeSortVisualizer from "./PancakeSort"; // Removed from switch below
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from "../../search/catalog";
@@ -222,8 +222,10 @@ const SortingPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <CombSortVisualizer navigate={navigate} />;
       case "BucketSort":
         return <BucketSortVisualizer navigate={navigate} />;
-      // case "ShellSort": return <ShellSortVisualizer navigate={navigate} />; // Removed: import is commented out
-      // case "PancakeSort": return <PancakeSortVisualizer navigate={navigate} />; // Removed: import is commented out
+      case "ShellSort":
+        return <ShellSortVisualizer navigate={navigate} />; // Removed: import is commented out
+      case "PancakeSort":
+        return <PancakeSortVisualizer navigate={navigate} />; // Removed: import is commented out
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;

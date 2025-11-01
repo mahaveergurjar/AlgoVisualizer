@@ -59,7 +59,8 @@ import {
   Users,
   Grid3x3,
   Zap,
-  PackageOpen
+  PackageOpen,
+  UtensilsCrossed,
 } from "lucide-react";
 
 export const problems = [
@@ -1289,7 +1290,13 @@ export const problems = [
     category: "Sorting",
     subpage: "BucketSort",
     label: "Bucket Sort",
-    keywords: ["sorting","bucket","linear-time","range-based","concatenate"],
+    keywords: [
+      "sorting",
+      "bucket",
+      "linear-time",
+      "range-based",
+      "concatenate",
+    ],
     number: "N/A",
     icon: PackageOpen,
     description:
@@ -1305,7 +1312,12 @@ export const problems = [
     borderColor: "border-teal-500/30",
     technique: "Distribution",
     timeComplexity: "O(n + k)",
-    tags: ["Stable (with insertion)","Not in-place","Range-dependent","Avg linear"],
+    tags: [
+      "Stable (with insertion)",
+      "Not in-place",
+      "Range-dependent",
+      "Avg linear",
+    ],
   },
   {
     label: "Merge Sort",
@@ -1504,7 +1516,31 @@ export const problems = [
     technique: "Gap Insertion",
     timeComplexity: "O(n log n)",
     tags: ["Optimization", "In-place"],
-  }, // HEAPS // =================================================================
+  },
+  {
+    label: "Pancake Sort",
+    category: "Sorting",
+    subpage: "PancakeSort",
+    keywords: ["sorting", "pancake", "flip", "reversal", "comparative"],
+    number: "N/A",
+    icon: UtensilsCrossed,
+    description:
+      "A comparison-based algorithm that repeatedly flips subarrays to bring the largest element to its correct position, similar to flipping pancakes in a stack.",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-pink-500 to-rose-500",
+    iconColor: "text-rose-400",
+    iconBg: "bg-rose-500/20",
+    borderColor: "border-rose-500/30",
+    technique: "Reversal-based Sorting",
+    timeComplexity: "O(n²)",
+    tags: ["In-place", "Comparison-based", "Unstable"],
+  },
+
+  // HEAPS // =================================================================
   // =================================================================
   {
     category: "Heaps",
@@ -2483,36 +2519,36 @@ export const problems = [
     tags: ["Set", "Arrays"],
   },
   {
-  label: "Equal Rows and Columns",
-  category: "Hashing",
-  subpage: "EqualRowsColumnPairs",
-  keywords: [
-    "hashing",
-    "equal",
-    "rows",
-    "columns",
-    "pairs",
-    "grid",
-    "matrix",
-    "2352",
-  ],
-  number: "2352",
-  icon: Grid3x3,
-  description:
-    "Count pairs where a row and column contain identical sequences.",
-  difficulty: "Medium",
-  tier: "Tier 3",
-  difficultyColor: "text-yellow-400",
-  difficultyBg: "bg-yellow-400/10",
-  difficultyBorder: "border-yellow-400/30",
-  gradient: "from-purple-500 to-pink-500",
-  iconColor: "text-purple-400",
-  iconBg: "bg-purple-500/20",
-  borderColor: "border-purple-500/30",
-  technique: "Hash Map Frequency",
-  timeComplexity: "O(n³)",
-  tags: ["Hash Map", "Matrix", "Arrays"],
-},
+    label: "Equal Rows and Columns",
+    category: "Hashing",
+    subpage: "EqualRowsColumnPairs",
+    keywords: [
+      "hashing",
+      "equal",
+      "rows",
+      "columns",
+      "pairs",
+      "grid",
+      "matrix",
+      "2352",
+    ],
+    number: "2352",
+    icon: Grid3x3,
+    description:
+      "Count pairs where a row and column contain identical sequences.",
+    difficulty: "Medium",
+    tier: "Tier 3",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-purple-500 to-pink-500",
+    iconColor: "text-purple-400",
+    iconBg: "bg-purple-500/20",
+    borderColor: "border-purple-500/30",
+    technique: "Hash Map Frequency",
+    timeComplexity: "O(n³)",
+    tags: ["Hash Map", "Matrix", "Arrays"],
+  },
 
   // =================================================================
   // GREEDY ALGORITHMS
