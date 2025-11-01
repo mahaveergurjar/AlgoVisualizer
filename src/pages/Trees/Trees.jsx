@@ -20,6 +20,7 @@ import ConstructBinaryTree from "./ConstructBinaryTree.jsx";
 import LCAofDeepestLeaves from "./LCAofDeepestLeaves";
 import AVLTree from "./AVLTree.jsx";
 import SymmetricTreeVisualizer from "./SymmetricTreeVisualizer.jsx";
+import BinaryTreeRightSideView from "./BinaryTreeRightSideView.jsx"
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from "../../search/catalog";
@@ -274,7 +275,7 @@ const ValidateBST = ({ navigate }) => {
       const { nodes, edges } = buildTreeFromInput(arr);
       setIsLoaded(true);
       generateHistory(nodes, edges);
-    } catch (e) {
+    } catch (err) {
       alert("Invalid array format.");
     }
   };
@@ -914,6 +915,8 @@ const TreesPage = ({ navigate: parentNavigate }) => {
         return <ValidateBST navigate={navigate} />; // ✅ Merged change
       case "SymmetricTreeVisualizer":
         return <SymmetricTreeVisualizer navigate={navigate} />;
+      case "BinaryTreeRightSideView":
+        return <BinaryTreeRightSideView navigate={navigate} />
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
