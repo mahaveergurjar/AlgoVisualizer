@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   Code,
   CheckCircle,
@@ -16,6 +16,10 @@ const RadixSortVisualizer = () => {
   const [currentStep, setCurrentStep] = useState(-1);
   const [arrayInput, setArrayInput] = useState("170,45,75,90,802,24,2,66");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [active, setActive] = useState(false);
+  const visualizerRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
 
   const generateRadixSortHistory = useCallback((initialArray) => {
     const arr = JSON.parse(JSON.stringify(initialArray));
@@ -75,7 +79,9 @@ const RadixSortVisualizer = () => {
           line: 8,
           digitIndex: i,
           bucketIndex: count[index] - 1,
-          explanation: `Place value ${arr[i].value} at position ${count[index] - 1}`,
+          explanation: `Place value ${arr[i].value} at position ${
+            count[index] - 1
+          }`,
         });
         count[index]--;
       }
@@ -131,6 +137,22 @@ const RadixSortVisualizer = () => {
     setCurrentStep(-1);
   };
 
+  const handleEnterKey = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const btn = document.getElementById("load-button"); // the Load & Visualize button
+      if (btn) btn.click();
+    }
+  };
+
+  const handleSpeedChange = (e) => {
+    setSpeed(parseFloat(e.target.value));
+  };
+
+  const playhead = useCallback(() => {
+    setIsPlaying((prev) => !prev); // toggle between play/pause
+  }, []);
+
   const stepForward = useCallback(
     () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
     [history.length]
@@ -141,16 +163,51 @@ const RadixSortVisualizer = () => {
     []
   );
 
+  // --- Keyboard control only when active ---
   useEffect(() => {
+    if (!active || !isLoaded) return;
+
     const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") stepBackward();
-        if (e.key === "ArrowRight") stepForward();
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        stepBackward();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        stepForward();
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, stepForward, stepBackward]);
+  }, [active, isLoaded, stepForward, stepBackward]);
+
+  // --- Click outside to deactivate ---
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (visualizerRef.current && !visualizerRef.current.contains(e.target)) {
+        setActive(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (!isPlaying || history.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => {
+        if (prev >= history.length - 1) {
+          clearInterval(interval);
+          setIsPlaying(false);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 1000 / speed); // faster speed = shorter delay
+
+    return () => clearInterval(interval); // cleanup
+  }, [isPlaying, speed, history.length]);
 
   const state = history[currentStep] || {};
   const { array = [] } = state;
@@ -190,11 +247,16 @@ const RadixSortVisualizer = () => {
     { l: 7, c: [{ t: "}", c: "" }] },
     { l: 8, c: [{ t: "", c: "" }] },
     { l: 9, c: [{ t: "function countingSort(arr, exp) {", c: "" }] },
-    { l: 10, c: [{ }] },
+    { l: 10, c: [{}] },
   ];
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
+    <div
+      ref={visualizerRef}
+      tabIndex={0}
+      onClick={() => setActive(true)}
+      className="p-4 max-w-7xl mx-auto focus:outline-none"
+    >
       <header className="text-center mb-6">
         <h1 className="text-4xl font-bold text-blue-400 flex items-center justify-center gap-3">
           <Shuffle /> Radix Sort Visualizer
@@ -204,42 +266,138 @@ const RadixSortVisualizer = () => {
         </p>
       </header>
 
-      <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-4 flex-grow w-full">
-          <label htmlFor="array-input" className="font-medium text-gray-300 font-mono">
-            Array:
-          </label>
-          <input
-            id="array-input"
-            type="text"
-            value={arrayInput}
-            onChange={(e) => setArrayInput(e.target.value)}
-            disabled={isLoaded}
-            className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          {!isLoaded ? (
-            <button
-              onClick={loadArray}
-              className="bg-blue-500 hover:bg-blue-600 text-white cursor-pointer font-bold py-2 px-4 rounded-lg"
+      <div className="w-full flex justify-center">
+        <div className="shadow-2xl border border-gray-700/50 bg-gray-800/50 p-4 rounded-lg  flex flex-col md:flex-row items-center justify-between gap-2 mb-6 w-full">
+          <div
+            className={`flex items-center gap-4 ${
+              isLoaded ? "w-full" : "w-full md:w-950"
+            }`}
+          >
+            <label
+              htmlFor="array-input"
+              className="font-medium text-gray-300 font-mono hidden md:block"
             >
-              Load & Visualize
-            </button>
-          ) : (
-            <>
-              <button onClick={stepBackward} disabled={currentStep <= 0} className="bg-gray-700 p-2 rounded-md disabled:opacity-50">
-                &larr;
+              Array:
+            </label>
+            <input
+              id="array-input"
+              type="text"
+              value={arrayInput}
+              onChange={(e) => setArrayInput(e.target.value)}
+              onKeyDown={handleEnterKey}
+              disabled={isLoaded}
+              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex items-center flex-wrap gap-4 md:flex-nowrap w-full md:w-150">
+            {!isLoaded ? (
+              <button
+                id="load-button"
+                onClick={loadArray}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full"
+              >
+                Load & Visualize
               </button>
-              <span className="font-mono w-24 text-center">{currentStep >= 0 ? currentStep + 1 : 0}/{history.length}</span>
-              <button onClick={stepForward} disabled={currentStep >= history.length - 1} className="bg-gray-700 p-2 rounded-md disabled:opacity-50">
-                &rarr;
+            ) : (
+              <>
+                <div className="flex gap-2 w-full md:w-40 justify-center">
+                  <button
+                    onClick={stepBackward}
+                    disabled={currentStep <= 0}
+                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  {/* on click change state form play to pause */}
+                  <button
+                    onClick={playhead}
+                    disabled={currentStep >= history.length - 1}
+                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
+                  >
+                    {isPlaying ? (
+                      // Pause icon
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="white"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
+                      </svg>
+                    ) : (
+                      // Play icon
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="white"
+                        viewBox="0 0 448 512"
+                      >
+                        <path d="M91.2 36.9c-12.4-6.8-27.4-6.5-39.6 .7S32 57.9 32 72v368c0 14.1 7.5 27.2 19.6 34.4s27.2 7.5 39.6 .7l336-184c12.8-7 20.8-20.5 20.8-35.1s-8-28.1-20.8-35.1L91.2 36.9z" />
+                      </svg>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={stepForward}
+                    disabled={currentStep >= history.length - 1}
+                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="flex gap-2 w-full lg:w-72 justify-center gap-4">
+                  <div className="flex items-center gap-2 rounded-lg flex-shrink-0 lg:w-72 w-full">
+                    <span className="text-sm font-semibold">Speed</span>
+                    <input
+                      type="range"
+                      className="w-full h-1.5 bg-gray-600 rounded-lg outline-none cursor-pointer"
+                      min="0.25"
+                      max="2"
+                      step="0.25"
+                      value={speed}
+                      onChange={handleSpeedChange}
+                    />
+                    <span className="text-sm min-w-8 font-mono text-gray-300  text-right">
+                      {speed}x
+                    </span>
+                    <span className="font-mono w-18 px-4 py-2 flex items-center justify-center text-center bg-gray-900 border border-gray-600 rounded-md">
+                      {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
+                    </span>
+                    {/* Array size display - showing current number of elements */}
+                    {isLoaded && arrayInput && (
+                      <span className="text-sm text-gray-400 font-medium ml-4">
+                        Array Size: {arrayInput.split(',').filter(item => item.trim() !== '').length}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+            <div className="flex w-full md:w-20">
+              <button
+                onClick={reset}
+                className="bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg whitespace-nowrap text-sm sm:text-base flex-shrink-0 mx-auto w-full "
+              >
+                Reset
               </button>
-            </>
-          )}
-          <button onClick={reset} className="ml-4 bg-red-600 cursor-pointer hover:bg-red-700 font-bold py-2 px-4 rounded-lg">
-            Reset
-          </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -259,70 +417,107 @@ const RadixSortVisualizer = () => {
             </pre>
           </div>
 
-<div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6">
             <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl">
               <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
                 <BarChart3 size={20} />
                 Array Visualization
               </h3>
-              <div className="flex justify-center items-center min-h-[150px] py-4">
-                  <div id="array-container" className="relative transition-all" style={{ width: `${array.length * 4.5}rem`, height: '4rem' }}>
-                      {array.map((item, index) => {
-                          const isInRange = state.low !== null && state.high !== null && index >= state.low && index <= state.high;
-                          const isPivot = state.pivotIndex === index;
-                          const isComparing = state.j === index;
-                          const isSorted = state.sortedIndices?.includes(index);
-                          
-                          let boxStyles = "bg-gray-700 border-gray-600";
-                          if (state.finished || isSorted) {
-                              boxStyles = "bg-green-700 border-green-500 text-white";
-                          } else if (isPivot) {
-                              boxStyles = "bg-red-600 border-red-400 text-white";
-                          } else if (isComparing) {
-                              boxStyles = "bg-amber-600 border-amber-400 text-white";
-                          } else if (isInRange) {
-                              boxStyles = "bg-blue-600 border-blue-400 text-white";
-                          }
+              <div className="flex justify-center items-center min-h-[170px] py-4 overflow-x-auto">
+                <div
+                  id="array-container"
+                  className="relative transition-all"
+                  style={{ width: `${array.length * 4.5}rem`, height: "4rem" }}
+                >
+                  {array.map((item, index) => {
+                    const isInRange =
+                      state.low !== null &&
+                      state.high !== null &&
+                      index >= state.low &&
+                      index <= state.high;
+                    const isPivot = state.pivotIndex === index;
+                    const isComparing = state.j === index;
+                    const isSorted = state.sortedIndices?.includes(index);
 
-                          return (
-                              <div
-                                  key={item.id} // Use stable ID for key
-                                  id={`array-container-element-${index}`}
-                                  className={`absolute w-16 h-16 flex items-center justify-center rounded-lg shadow-md border-2 font-bold text-2xl transition-all duration-500 ease-in-out ${boxStyles}`}
-                                  style={{ left: `${index * 4.5}rem` /* 4rem width + 0.5rem gap */ }}
-                              >
-                                  {item.value}
-                              </div>
-                          );
-                      })}
-                      {isLoaded && state.low !== null && state.high !== null && (
-                          <>
-                              <VisualizerPointer index={state.low} containerId="array-container" color="blue" label="L" />
-                              <VisualizerPointer index={state.high} containerId="array-container" color="purple" label="H" />
-                              {state.pivotIndex !== null && (
-                                  <VisualizerPointer index={state.pivotIndex} containerId="array-container" color="red" label="P" />
-                              )}
-                          </>
+                    let boxStyles = "bg-gray-700 border-gray-600";
+                    if (state.finished || isSorted) {
+                      boxStyles = "bg-green-700 border-green-500 text-white";
+                    } else if (isPivot) {
+                      boxStyles = "bg-red-600 border-red-400 text-white";
+                    } else if (isComparing) {
+                      boxStyles = "bg-amber-600 border-amber-400 text-white";
+                    } else if (isInRange) {
+                      boxStyles = "bg-blue-600 border-blue-400 text-white";
+                    }
+
+                    return (
+                      <div
+                        key={item.id} // Use stable ID for key
+                        id={`array-container-element-${index}`}
+                        className={`absolute w-16 h-16 flex items-center justify-center rounded-lg shadow-md border-2 font-bold text-2xl transition-all duration-500 ease-in-out ${boxStyles}`}
+                        style={{
+                          left: `${
+                            index * 4.5
+                          }rem` /* 4rem width + 0.5rem gap */,
+                        }}
+                      >
+                        {item.value}
+                      </div>
+                    );
+                  })}
+                  {isLoaded && state.low !== null && state.high !== null && (
+                    <>
+                      <VisualizerPointer
+                        index={state.low}
+                        containerId="array-container"
+                        color="blue"
+                        label="L"
+                      />
+                      <VisualizerPointer
+                        index={state.high}
+                        containerId="array-container"
+                        color="purple"
+                        label="H"
+                      />
+                      {state.pivotIndex !== null && (
+                        <VisualizerPointer
+                          index={state.pivotIndex}
+                          containerId="array-container"
+                          color="red"
+                          label="P"
+                        />
                       )}
-                  </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-cyan-800/30 p-4 rounded-xl border border-cyan-700/50">
-                <h3 className="text-cyan-300 text-sm flex items-center gap-2"><GitCompareArrows size={16} /> Total Comparisons</h3>
-                <p className="font-mono text-4xl text-cyan-400 mt-2">{state.totalComparisons ?? 0}</p>
+                <h3 className="text-cyan-300 text-sm flex items-center gap-2">
+                  <GitCompareArrows size={16} /> Total Comparisons
+                </h3>
+                <p className="font-mono text-4xl text-cyan-400 mt-2">
+                  {state.totalComparisons ?? 0}
+                </p>
               </div>
               <div className="bg-purple-800/30 p-4 rounded-xl border border-purple-700/50">
-                <h3 className="text-purple-300 text-sm flex items-center gap-2"><Repeat size={16} /> Total Swaps</h3>
-                <p className="font-mono text-4xl text-purple-400 mt-2">{state.totalSwaps ?? 0}</p>
+                <h3 className="text-purple-300 text-sm flex items-center gap-2">
+                  <Repeat size={16} /> Total Swaps
+                </h3>
+                <p className="font-mono text-4xl text-purple-400 mt-2">
+                  {state.totalSwaps ?? 0}
+                </p>
               </div>
             </div>
 
             <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem]">
               <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
               <p className="text-gray-300">{state.explanation}</p>
-              {state.finished && <CheckCircle className="inline-block ml-2 text-green-400"/>}
+              {state.finished && (
+                <CheckCircle className="inline-block ml-2 text-green-400" />
+              )}
             </div>
           </div>
 
@@ -331,16 +526,50 @@ const RadixSortVisualizer = () => {
               <Clock size={20} /> Complexity Analysis
             </h3>
             <div className="grid md:grid-cols-2 gap-6 text-sm">
-                <div className="space-y-4">
-                    <h4 className="font-semibold text-blue-300">Time Complexity</h4>
-                    <p className="text-gray-400"><strong className="text-teal-300 font-mono">Worst Case: O(N²)</strong><br/>Occurs when the pivot is always the smallest or largest element, creating unbalanced partitions. This happens with already sorted or reverse-sorted arrays.</p>
-                    <p className="text-gray-400"><strong className="text-teal-300 font-mono">Average Case: O(N log N)</strong><br/>With good pivot selection, the array is divided roughly in half at each step, leading to log N levels of recursion and O(N) work per level.</p>
-                    <p className="text-gray-400"><strong className="text-teal-300 font-mono">Best Case: O(N log N)</strong><br/>Occurs when the pivot always divides the array into equal halves, creating a balanced recursion tree.</p>
-                </div>
-                 <div className="space-y-4">
-                    <h4 className="font-semibold text-blue-300">Space Complexity</h4>
-                    <p className="text-gray-400"><strong className="text-teal-300 font-mono">O(log N)</strong><br/>The space complexity is determined by the recursion depth. In the best case, the recursion tree is balanced with depth log N. In the worst case, it can be O(N) for very unbalanced partitions. (Note: Our visualizer's history adds O(N log N) space for demonstration, but the algorithm itself is O(log N)).</p>
-                </div>
+              <div className="space-y-4">
+                <h4 className="font-semibold text-blue-300">Time Complexity</h4>
+                <p className="text-gray-400">
+                  <strong className="text-teal-300 font-mono">
+                    Worst Case: O(N²)
+                  </strong>
+                  <br />
+                  Occurs when the pivot is always the smallest or largest
+                  element, creating unbalanced partitions. This happens with
+                  already sorted or reverse-sorted arrays.
+                </p>
+                <p className="text-gray-400">
+                  <strong className="text-teal-300 font-mono">
+                    Average Case: O(N log N)
+                  </strong>
+                  <br />
+                  With good pivot selection, the array is divided roughly in
+                  half at each step, leading to log N levels of recursion and
+                  O(N) work per level.
+                </p>
+                <p className="text-gray-400">
+                  <strong className="text-teal-300 font-mono">
+                    Best Case: O(N log N)
+                  </strong>
+                  <br />
+                  Occurs when the pivot always divides the array into equal
+                  halves, creating a balanced recursion tree.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <h4 className="font-semibold text-blue-300">
+                  Space Complexity
+                </h4>
+                <p className="text-gray-400">
+                  <strong className="text-teal-300 font-mono">O(log N)</strong>
+                  <br />
+                  The space complexity is determined by the recursion depth. In
+                  the best case, the recursion tree is balanced with depth log
+                  N. In the worst case, it can be O(N) for very unbalanced
+                  partitions. (Note: Our visualizer's history adds O(N log N)
+                  space for demonstration, but the algorithm itself is O(log
+                  N)).
+                </p>
+              </div>
             </div>
           </div>
         </div>

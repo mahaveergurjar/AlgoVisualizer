@@ -71,22 +71,31 @@
 ```
 AlgoVisualizer/
 ├── public/                  # Static assets
-│   └── vite.svg            # Vite logo
+│   └── algo.svg            # Vite logo
 ├── src/                    # Source files
 │   ├── components/         # React components
-│   │   ├── Sorting/       # Sorting algorithm components
-│   │   ├── Pathfinding/   # Pathfinding components
-│   │   ├── Graph/         # Graph algorithm components
-│   │   └── UI/            # Reusable UI components
-│   ├── algorithms/         # Algorithm implementations
-│   │   ├── sorting/       # Sorting algorithm logic
-│   │   ├── pathfinding/   # Pathfinding algorithm logic
-│   │   └── graph/         # Graph algorithm logic
-│   ├── utils/             # Utility functions
-│   │   ├── helpers.js     # Helper functions
-│   │   └── constants.js   # App constants
-│   ├── styles/            # CSS modules and styles
-│   │   └── *.module.css   # Component-specific styles
+│   ├── pages/
+|   |   ├── Arrays            # Array Data Structure
+|   |   ├── BinarySearch      # Binary Search Questions
+|   |   ├── Graph             # Graph Data Structure
+|   |   ├── BitManipulation   # Bit Manipulation Questions
+|   |   ├── DynamicProgramming # Dynamic Programming Questions
+|   |   ├── Deque            # Deque Data Structure
+|   |   ├── GreedyAlgorithms # Greedy Algorithms Question
+|   |   ├── Hashing          # Hashing Data Structure
+|   |   ├── LinkedList       # Linked List Data Structure
+|   |   ├── Pathfinding      # Pathfinding Algorithms Question
+|   |   ├── Queue            # Queue Data Structure
+|   |   ├── Recursion        # Recursion Question
+|   |   ├── Stack            # Stack Data Structure
+|   |   ├── Strings          # Strings Data Structure
+|   |   ├── Tree             # Tree Data Structure
+|   |   ├── Trie             # Trie Data Structure
+|   |   ├── Sorting          # Sorting Algorithms Question
+|   |   ├── SlidingWindows   #Sliding Window Algorithm Question
+|   |   └── Heaps    # Heaps
+│   ├── search/         # Search 
+│   │   └── catalog.js/    # Catalog of algorithms
 │   ├── App.jsx            # Main App component
 │   ├── App.css            # Global styles
 │   ├── main.jsx           # Entry point
@@ -126,7 +135,19 @@ Before you begin, ensure you have the following installed:
    yarn install
    ```
 
-3. **Start the development server**
+3. **Set up environment variables**
+
+   ```bash
+   # Create .env file and add your Gemini API key
+   echo "VITE_GEMINI_API_KEY=your_actual_api_key_here" > .env
+   ```
+
+   To get a free Gemini API key:
+   - Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+   - Sign in with your Google account
+   - Click "Create API Key" and copy it
+
+4. **Start the development server**
 
    ```bash
    npm run dev
@@ -134,7 +155,7 @@ Before you begin, ensure you have the following installed:
    yarn dev
    ```
 
-4. **Open your browser**
+5. **Open your browser**
 
    Navigate to [http://localhost:5173](http://localhost:5173) to view the application.
 
@@ -147,6 +168,39 @@ yarn build
 ```
 
 The optimized production build will be generated in the `dist/` folder.
+
+---
+
+## 🤖 AI Learning Assistant
+
+AlgoVisualizer now includes an **AI-powered chatbot** that helps users learn algorithms interactively!
+
+### 🎯 Chatbot Features
+
+- 💬 **Real-time Chat Interface** - Floating chatbot widget on all pages
+- 🚀 **Smart Responses** - Powered by Google Gemini 2.0 Flash
+- 📊 **Algorithm Explanations** - Step-by-step breakdowns with examples
+- ⚡ **Complexity Analysis** - Time and space complexity explanations
+- 🎓 **Learning Guidance** - Interactive help for understanding concepts
+- 🌙 **Dark/Light Theme** - Matches your preference
+
+### 💬 Example Questions
+
+- "How does Merge Sort work?"
+- "What's the time complexity of Quick Sort?"
+- "Can you explain Big O notation?"
+- "How do I use the AlgoVisualizer?"
+- "What's the difference between BFS and DFS?"
+
+### 🔧 Setup
+
+The chatbot is automatically configured once you add your Gemini API key to `.env`:
+
+```bash
+VITE_GEMINI_API_KEY=your_actual_api_key_here
+```
+
+Just click the chat button in the bottom-right corner and start asking questions!
 
 ---
 

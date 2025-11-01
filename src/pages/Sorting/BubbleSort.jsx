@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   Code,
   CheckCircle,
@@ -16,6 +16,10 @@ const BubbleSortVisualizer = () => {
   const [currentStep, setCurrentStep] = useState(-1);
   const [arrayInput, setArrayInput] = useState("8,5,2,9,5,6,3");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [active, setActive] = useState(false);
+  const visualizerRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
 
   const generateBubbleSortHistory = useCallback((initialArray) => {
     // The array is now objects like {id, value}
@@ -145,6 +149,22 @@ const BubbleSortVisualizer = () => {
     setCurrentStep(-1);
   };
 
+  const handleEnterKey = (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    const btn = document.getElementById("load-button"); // the Load & Visualize button
+    if (btn) btn.click();
+  }
+};
+
+  const handleSpeedChange = (e) => {
+    setSpeed(parseFloat(e.target.value));
+  };
+
+  const playhead = useCallback(() => {
+    setIsPlaying((prev) => !prev); // toggle between play/pause
+  }, []);
+
   const stepForward = useCallback(
     () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
     [history.length]
@@ -155,16 +175,51 @@ const BubbleSortVisualizer = () => {
     []
   );
 
+  // --- Keyboard control only when active ---
   useEffect(() => {
+    if (!active || !isLoaded) return;
+
     const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") stepBackward();
-        if (e.key === "ArrowRight") stepForward();
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        stepBackward();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        stepForward();
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, stepForward, stepBackward]);
+  }, [active, isLoaded, stepForward, stepBackward]);
+
+  // --- Click outside to deactivate ---
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (visualizerRef.current && !visualizerRef.current.contains(e.target)) {
+        setActive(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (!isPlaying || history.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => {
+        if (prev >= history.length - 1) {
+          clearInterval(interval);
+          setIsPlaying(false);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 1000 / speed); // faster speed = shorter delay
+
+    return () => clearInterval(interval); // cleanup
+  }, [isPlaying, speed, history.length]);
 
   const state = history[currentStep] || {};
   const { array = [] } = state;
@@ -241,7 +296,12 @@ const BubbleSortVisualizer = () => {
   ];
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
+    <div
+      ref={visualizerRef}
+      tabIndex={0}
+      onClick={() => setActive(true)}
+      className="p-4 max-w-7xl mx-auto focus:outline-none"
+    >
       <header className="text-center mb-6">
         <h1 className="text-4xl font-bold text-blue-400 flex items-center justify-center gap-3">
           <List /> Bubble Sort Visualizer
@@ -250,78 +310,142 @@ const BubbleSortVisualizer = () => {
           Visualizing the classic comparison sorting algorithm
         </p>
       </header>
-
-      <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-4 flex-grow w-full">
-          <label
-            htmlFor="array-input"
-            className="font-medium text-gray-300 font-mono"
+      {/* ---------------------------------------under work---------------------------------------------- */}
+      <div className="w-full flex justify-center">
+        <div className="shadow-2xl border border-gray-700/50 bg-gray-800/50 p-4 rounded-lg  flex flex-col md:flex-row items-center justify-between gap-2 mb-6 w-full">
+          <div
+            className={`flex items-center gap-4 ${
+              isLoaded ? "w-full" : "w-full md:w-950"
+            }`}
           >
-            Array:
-          </label>
-          <input
-            id="array-input"
-            type="text"
-            value={arrayInput}
-            onChange={(e) => setArrayInput(e.target.value)}
-            disabled={isLoaded}
-            className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          {!isLoaded ? (
-            <button
-              onClick={loadArray}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
+            <label
+              htmlFor="array-input"
+              className="font-medium text-gray-300 font-mono hidden md:block"
             >
-              Load & Visualize
-            </button>
-          ) : (
-            <>
+              Array:
+            </label>
+            <input
+              id="array-input"
+              type="text"
+              value={arrayInput}
+              onChange={(e) => setArrayInput(e.target.value)}
+              onKeyDown={handleEnterKey}
+              disabled={isLoaded}
+              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex items-center flex-wrap gap-4 md:flex-nowrap w-full md:w-150">
+            {!isLoaded ? (
               <button
-                onClick={stepBackward}
-                disabled={currentStep <= 0}
-                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
+                id="load-button"
+                onClick={loadArray}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                </svg>
+                Load & Visualize
               </button>
-              <span className="font-mono w-24 text-center">
-                {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
-              </span>
+            ) : (
+              <>
+                <div className="flex gap-2 w-full md:w-40 justify-center">
+                  <button
+                    onClick={stepBackward}
+                    disabled={currentStep <= 0}
+                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  {/* on click change state form play to pause */}
+                  <button
+                    onClick={playhead}
+                    disabled={currentStep >= history.length - 1}
+                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
+                  >
+                    {isPlaying ? (
+                      // Pause icon
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="white"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
+                      </svg>
+                    ) : (
+                      // Play icon
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="white"
+                        viewBox="0 0 448 512"
+                      >
+                        <path d="M91.2 36.9c-12.4-6.8-27.4-6.5-39.6 .7S32 57.9 32 72v368c0 14.1 7.5 27.2 19.6 34.4s27.2 7.5 39.6 .7l336-184c12.8-7 20.8-20.5 20.8-35.1s-8-28.1-20.8-35.1L91.2 36.9z" />
+                      </svg>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={stepForward}
+                    disabled={currentStep >= history.length - 1}
+                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="flex gap-2 w-full lg:w-72 justify-center ">
+                  <div className="flex items-center gap-2 rounded-lg flex-shrink-0 lg:w-72 w-full">
+                    <span className="text-sm font-semibold">Speed</span>
+                    <input
+                      type="range"
+                      className="w-full h-1.5 bg-gray-600 rounded-lg outline-none cursor-pointer"
+                      min="0.25"
+                      max="2"
+                      step="0.25"
+                      value={speed}
+                      onChange={handleSpeedChange}
+                    />
+                    <span className="text-sm min-w-8 font-mono text-gray-300  text-right">
+                      {speed}x
+                    </span>
+                    <span className="font-mono w-18 px-4 py-2 flex items-center justify-center text-center bg-gray-900 border border-gray-600 rounded-md">
+                      {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
+                    </span>
+                    {/* Array size display - showing current number of elements */}
+                    {isLoaded && arrayInput && (
+                      <span className="text-sm text-gray-400 font-medium ml-4">
+                        Array Size: {arrayInput.split(',').filter(item => item.trim() !== '').length}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+            <div className="flex w-full md:w-20">
               <button
-                onClick={stepForward}
-                disabled={currentStep >= history.length - 1}
-                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
+                onClick={reset}
+                className="bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg whitespace-nowrap text-sm sm:text-base flex-shrink-0 mx-auto w-full "
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                </svg>
+                Reset
               </button>
-            </>
-          )}
-          <button
-            onClick={reset}
-            className="ml-4 bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg"
-          >
-            Reset
-          </button>
+            </div>
+          </div>
         </div>
       </div>
-
+      {/* ----------------------------------------------------------------------------------------------- */}
       {isLoaded ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
@@ -344,7 +468,7 @@ const BubbleSortVisualizer = () => {
                 <BarChart3 size={20} />
                 Swapping Boxes Visualization
               </h3>
-              <div className="flex justify-center items-center min-h-[150px] py-4">
+              <div className="flex justify-center items-center min-h-[170px] py-4 overflow-x-auto">
                 <div
                   id="array-container"
                   className="relative transition-all"

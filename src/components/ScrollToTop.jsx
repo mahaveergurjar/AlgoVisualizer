@@ -14,7 +14,16 @@ const ScrollToTop = () => {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const scrollDuration = 600; // Duration in milliseconds
+    const scrollStep = -window.scrollY / (scrollDuration / 15);
+    
+    const scrollInterval = setInterval(() => {
+      if (window.scrollY !== 0) {
+        window.scrollBy(0, scrollStep);
+      } else {
+        clearInterval(scrollInterval);
+      }
+    }, 15);
   };
 
   return (
@@ -28,8 +37,7 @@ const ScrollToTop = () => {
             rounded-full shadow-2xl text-white flex items-center justify-center
             hover:scale-110 hover:shadow-xl hover:shadow-purple-500/50
             transition-all duration-300
-            ring-2 ring-blue-300/50 cursor-pointer
-          "
+            ring-2 ring-blue-300/50 cursor-pointer"
           aria-label="Scroll to top"
         >
           <ArrowUp className="h-6 w-6 sm:h-7 sm:w-7 animate-bounce-subtle" />
@@ -48,5 +56,6 @@ const ScrollToTop = () => {
     </>
   );
 };
+
 
 export default ScrollToTop;

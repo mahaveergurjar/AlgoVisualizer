@@ -1,45 +1,53 @@
 import React, { useState } from "react";
 import {
   ArrowLeft,
-  Droplets,
-  Container,
-  ToggleRight,
-  ArrowUpDown,
-  Brackets,
+  Brackets, // Used as the main DP icon
   Code2,
   Clock,
   TrendingUp,
   Star,
   Zap,
+  ArrowRight, // Use ArrowRight for 'Solve' button
 } from "lucide-react";
 
 // --- Import your specific algorithm visualizer components here ---
 import KnapsackVisualizer from "./KnapSack.jsx";
+import LCSVisualizer from "./LongestCommonSubsequence.jsx";
+import CoinChangeVisualizer from "./CoinChange.jsx";
+import EditDistanceVisualizer from "./EditDistance.jsx";
+import LISVisualizer from "./LISubsequence.jsx";
+import BurstBalloonsVisualizer from "./BurstBalloons.jsx";
+import SellStockIVVisualizer from "./SellStockIVVisualizer.jsx";
+import UniquePathsVisualizer from "./UniquePaths.jsx";
+// NOTE: Add more visualizer imports here as you create them!
 
+// --- ✅ Import the master catalog and your StarButton ---
+import { problems as PROBLEM_CATALOG } from "../../search/catalog";
+import StarButton from "../../components/StarButton";
+
+// ✅ (Optional but Recommended) Default values for visual properties
+const defaultVisuals = {
+  icon: Brackets,
+  gradient: "from-gray-700 to-gray-800",
+  borderColor: "border-gray-600",
+  iconBg: "bg-gray-700/20",
+  iconColor: "text-gray-300",
+  technique: "Memoization/Tabulation",
+  timeComplexity: "O(n²)",
+  difficulty: "N/A",
+  difficultyColor: "text-gray-400",
+  difficultyBg: "bg-gray-400/10",
+  difficultyBorder: "border-gray-400/30",
+};
+
+// --- AlgorithmList Component for Dynamic Programming ---
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const algorithms = [
-    {
-      name: "0/1 Knapsack",
-      number: "416", // LeetCode problem: Partition Equal Subset Sum
-      icon: TrendingUp,
-      description:
-        "Given weights and values of N items, and a maximum capacity W, determine the maximum value that can be put in a knapsack of capacity W. Each item can be selected at most once.",
-      page: "KnapSack",
-      difficulty: "Medium",
-      difficultyColor: "text-yellow-400",
-      difficultyBg: "bg-yellow-400/10",
-      difficultyBorder: "border-yellow-400/30",
-      gradient: "from-yellow-400 to-orange-500",
-      iconColor: "text-yellow-400",
-      iconBg: "bg-yellow-500/20",
-      borderColor: "border-yellow-500/30",
-      technique: "Dynamic Programming",
-      timeComplexity: "O(N × W)"
-    }
-
-  ].sort((a, b) => parseInt(a.number) - parseInt(b.number));
+  // ✅ Get DP problems directly from the master catalog
+  const dpAlgorithms = PROBLEM_CATALOG.filter(
+    (p) => p.category === "Dynamic Programming"
+  );
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">
@@ -61,22 +69,21 @@ const AlgorithmList = ({ navigate }) => {
           <p className="text-lg sm:text-xl text-gray-300 mt-6 max-w-3xl mx-auto leading-relaxed px-4">
             Master classic dynamic programming problems with techniques like{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
-              0/1 Knapsack DP
+              Memoization
             </span>{" "}
             and{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-              subset sum optimization
+              Tabulation
             </span>
-            , and visualize how the DP table fills step by step.
+            .
           </p>
-
 
           <div className="flex flex-wrap justify-center gap-3 mt-8 px-4">
             <div className="px-4 py-2 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-full border border-amber-500/30 backdrop-blur-sm">
               <div className="flex items-center gap-2">
                 <Code2 className="h-3.5 w-3.5 text-amber-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  {algorithms.length} Problems
+                  {dpAlgorithms.length} Problems
                 </span>
               </div>
             </div>
@@ -84,7 +91,7 @@ const AlgorithmList = ({ navigate }) => {
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-3.5 w-3.5 text-green-400" />
                 <span className="text-xs font-medium text-gray-300">
-                  Multiple Techniques
+                  State Management
                 </span>
               </div>
             </div>
@@ -93,60 +100,85 @@ const AlgorithmList = ({ navigate }) => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-        {algorithms.map((algo, index) => {
+        {dpAlgorithms.map((algo, index) => {
           const isHovered = hoveredIndex === index;
-          const Icon = algo.icon;
+          // IMPORTANT: Use the icon specified in the catalog, or the default DP icon
+          const Icon = algo.icon || defaultVisuals.icon;
 
           return (
             <div
-              key={algo.name}
-              onClick={() => navigate(algo.page)}
+              key={algo.subpage}
+              onClick={() => navigate(algo.subpage)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className="group relative cursor-pointer animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
               <div
-                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${algo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${
+                  algo.gradient || defaultVisuals.gradient
+                } opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
               />
 
               <div
-                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${algo.borderColor} transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
+                className={`relative bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 border ${
+                  algo.borderColor || defaultVisuals.borderColor
+                } transition-all duration-300 transform group-hover:-translate-y-2 group-hover:scale-[1.02] group-hover:shadow-2xl`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
+                      className={`p-3 ${
+                        algo.iconBg || defaultVisuals.iconBg
+                      } rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
                       <Icon
-                        className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor
-                          } transition-colors duration-300`}
+                        className={`h-10 w-10 ${
+                          isHovered
+                            ? "text-white"
+                            : algo.iconColor || defaultVisuals.iconColor
+                        } transition-colors duration-300`}
                       />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-xs font-mono text-gray-500">
-                          #{algo.number}
+                          #{algo.number || "N/A"}
                         </span>
                         <div
-                          className={`px-2 py-0.5 rounded-md text-xs font-bold ${algo.difficultyBg} ${algo.difficultyColor} border ${algo.difficultyBorder}`}
+                          className={`px-2 py-0.5 rounded-md text-xs font-bold ${
+                            algo.difficultyBg || defaultVisuals.difficultyBg
+                          } ${
+                            algo.difficultyColor ||
+                            defaultVisuals.difficultyColor
+                          } border ${
+                            algo.difficultyBorder ||
+                            defaultVisuals.difficultyBorder
+                          }`}
                         >
-                          {algo.difficulty}
+                          {algo.difficulty || defaultVisuals.difficulty}
                         </div>
                       </div>
                       <h2
-                        className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"
-                          }`}
+                        className={`text-xl font-bold transition-colors duration-300 ${
+                          isHovered ? "text-white" : "text-gray-200"
+                        }`}
                       >
-                        {algo.name}
+                        {algo.label}
                       </h2>
                     </div>
+                  </div>
+
+                  {/* StarButton */}
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <StarButton problemId={algo.subpage} />
                   </div>
                 </div>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"
-                    }`}
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
+                    isHovered ? "text-gray-300" : "text-gray-400"
+                  }`}
                 >
                   {algo.description}
                 </p>
@@ -156,28 +188,29 @@ const AlgorithmList = ({ navigate }) => {
                     <div className="flex items-center gap-1.5">
                       <Star className="h-4 w-4 text-amber-400" />
                       <span className="text-xs font-medium text-gray-400">
-                        {algo.technique}
+                        {algo.technique || defaultVisuals.technique}
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-4 w-4 text-blue-400" />
                       <span className="text-xs font-mono text-gray-400">
-                        {algo.timeComplexity}
+                        {algo.timeComplexity || defaultVisuals.timeComplexity}
                       </span>
                     </div>
                   </div>
 
                   <div
-                    className={`transition-all duration-300 ${isHovered
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 -translate-x-2"
-                      }`}
+                    className={`transition-all duration-300 ${
+                      isHovered
+                        ? "opacity-100 translate-x-0"
+                        : "opacity-0 -translate-x-2"
+                    }`}
                   >
                     <div className="flex items-center gap-1">
                       <span className="text-xs font-medium text-gray-400">
                         Solve
                       </span>
-                      <ArrowLeft className="h-4 w-4 text-gray-400 rotate-180" />
+                      <ArrowRight className="h-4 w-4 text-gray-400" />
                     </div>
                   </div>
                 </div>
@@ -198,17 +231,36 @@ const AlgorithmList = ({ navigate }) => {
     </div>
   );
 };
+// --- End of AlgorithmList Component ---
 
+// --- DPPage Component ---
 const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
   const renderPage = () => {
     switch (page) {
+      // ✅ All DP Visualizers from your imports are listed here
       case "KnapSack":
         return <KnapsackVisualizer navigate={navigate} />;
+      case "LCS":
+        return <LCSVisualizer navigate={navigate} />;
+      case "CoinChange":
+        return <CoinChangeVisualizer navigate={navigate} />;
+      case "EditDistance":
+        return <EditDistanceVisualizer navigate={navigate} />;
+      case "LIS":
+        return <LISVisualizer navigate={navigate} />;
+      case "BurstBalloons":
+        return <BurstBalloonsVisualizer navigate={navigate} />;
+      case "SellStockIV":
+        return <SellStockIVVisualizer navigate={navigate} />;
+      case "UniquePaths":
+        return <UniquePathsVisualizer navigate={navigate} />;
+      // NOTE: Add a case for every visualizer you import!
       case "home":
       default:
+        // This is the component that displays all cards
         return <AlgorithmList navigate={navigate} />;
     }
   };
@@ -222,47 +274,16 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
       </div>
 
       <style>{`
-        .animated-gradient {
-          background-size: 200% auto;
-          animation: gradient-animation 4s ease-in-out infinite;
-        }
-        @keyframes gradient-animation {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0;
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animated-icon {
-          animation: float-rotate 8s ease-in-out infinite;
-          filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6));
-        }
-        @keyframes float-rotate {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          33% { transform: translateY(-8px) rotate(120deg); }
-          66% { transform: translateY(-4px) rotate(240deg); }
-        }
-        .animate-pulse-slow, .animate-pulse-slow-delayed {
-          animation: pulse-slow 4s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.6; }
-        }
-        .animate-float, .animate-float-delayed {
-          animation: float 20s ease-in-out infinite;
-          animation-delay: var(--animation-delay, 0s);
-        }
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(30px, -30px) scale(1.1); }
-        }
+        .animated-gradient { background-size: 200% auto; animation: gradient-animation 4s ease-in-out infinite; }
+        @keyframes gradient-animation { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animated-icon { animation: float-rotate 8s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6)); }
+        @keyframes float-rotate { 0%, 100% { transform: translateY(0) rotate(0deg); } 33% { transform: translateY(-8px) rotate(120deg); } 66% { transform: translateY(-4px) rotate(240deg); } }
+        .animate-pulse-slow, .animate-pulse-slow-delayed { animation: pulse-slow 4s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
+        @keyframes pulse-slow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+        .animate-float, .animate-float-delayed { animation: float 20s ease-in-out infinite; animation-delay: var(--animation-delay, 0s); }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.1); } }
       `}</style>
       <div className="relative z-10">{children}</div>
     </div>
@@ -270,7 +291,6 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
 
   return (
     <PageWrapper>
-      {/* Navigation to go back to the problem list within this category */}
       {page !== "home" && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
@@ -290,8 +310,6 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
           </div>
         </nav>
       )}
-
-      {/* Navigation to go back to the main category homepage */}
       {page === "home" && parentNavigate && (
         <nav className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
           <div className="max-w-7xl px-6 w-full mx-auto">
@@ -305,7 +323,6 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
           </div>
         </nav>
       )}
-
       {renderPage()}
     </PageWrapper>
   );

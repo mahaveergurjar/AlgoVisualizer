@@ -1,36 +1,96 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Move, Search, Code, CheckCircle, XCircle, Target } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Code,
+  Play,
+  Pause,
+  RotateCw,
+  FileText,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Terminal,
+  Move,
+  Search,
+  Target,
+} from "lucide-react";
 
 // Component to correctly tokenize and highlight a line of code
 const CodeLine = ({ text }) => {
-    const KEYWORDS = ['return', 'while', 'if', 'else', 'for'];
-    const TYPES = ['int', 'bool', 'vector<vector<int>>&'];
-    const FUNCTIONS = ['searchMatrix', 'helper'];
-    const tokens = text.split(/(\s+|[&,;<>(){}[\]=+\-!/])/g);
+  const KEYWORDS = ["return", "while", "if", "else", "public", "boolean"];
+  const TYPES = ["int", "int[][]", "vector<vector<int>>&"];
+  const FUNCTIONS = ["searchMatrix"];
+  const tokens = text.split(/(\s+|[&,;<>(){}[\]=+\-!/])/g);
 
-    return (
-        <>
-            {tokens.map((token, index) => {
-                if (KEYWORDS.includes(token)) return <span key={index} className="text-purple-400">{token}</span>;
-                if (TYPES.includes(token)) return <span key={index} className="text-cyan-400">{token}</span>;
-                if (FUNCTIONS.includes(token)) return <span key={index} className="text-yellow-400">{token}</span>;
-                if (/^-?\d+$/.test(token)) return <span key={index} className="text-orange-400">{token}</span>;
-                if (/([&,;<>(){}[\]=+\-!/])/.test(token)) return <span key={index} className="text-gray-500">{token}</span>;
-                return <span key={index} className="text-gray-300">{token}</span>;
-            })}
-        </>
-    );
+  return (
+    <>
+      {tokens.map((token, index) => {
+        if (KEYWORDS.includes(token))
+          return (
+            <span key={index} className="text-purple-400">
+              {token}
+            </span>
+          );
+        if (TYPES.includes(token))
+          return (
+            <span key={index} className="text-cyan-400">
+              {token}
+            </span>
+          );
+        if (FUNCTIONS.includes(token))
+          return (
+            <span key={index} className="text-yellow-400">
+              {token}
+            </span>
+          );
+        if (/^-?\d+$/.test(token))
+          return (
+            <span key={index} className="text-orange-400">
+              {token}
+            </span>
+          );
+        if (/([&,;<>(){}[\]=+\-!/])/.test(token))
+          return (
+            <span key={index} className="text-gray-500">
+              {token}
+            </span>
+          );
+        return (
+          <span key={index} className="text-gray-300">
+            {token}
+          </span>
+        );
+      })}
+    </>
+  );
 };
 
 const Search2DMatrix = () => {
-    const [activeAlgorithm, setActiveAlgorithm] = useState('intuitive'); // 'intuitive' or 'optimal'
-    const [history, setHistory] = useState([]);
-    const [currentStep, setCurrentStep] = useState(-1);
-    const [matrixInput, setMatrixInput] = useState("[[1,3,5,7],[10,11,16,20],[23,30,34,60]]");
-    const [targetInput, setTargetInput] = useState("13");
-    const [isLoaded, setIsLoaded] = useState(false);
+  const [activeAlgorithm, setActiveAlgorithm] = useState("intuitive");
+  const [activeLanguage, setActiveLanguage] = useState("cpp");
 
-    const intuitiveCodeContent = {
+  const [history, setHistory] = useState([]);
+  const [currentStep, setCurrentStep] = useState(-1);
+
+  const [matrixInput, setMatrixInput] = useState(
+    "[[1,3,5,7],[10,11,16,20],[23,30,34,60]]"
+  );
+  const [targetInput, setTargetInput] = useState("13");
+
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1000);
+  const playRef = useRef(null);
+
+  const minSpeed = 100;
+  const maxSpeed = 2000;
+
+  const state = history[currentStep] || {};
+
+  const codeContent = {
+    intuitive: {
+      cpp: {
         1: `bool searchMatrix(vector<vector<int>>& matrix, int target) {`,
         2: `    int m = matrix.size(), n = matrix[0].size();`,
         3: `    int i = 0, j = n - 1;`,
@@ -41,12 +101,29 @@ const Search2DMatrix = () => {
         8: `        } else {`,
         9: `            i++;`,
         10: `       }`,
-        11: `    }`,
-        12: `    return false;`,
+        11: `   }`,
+        12: `   return false;`,
         13: `}`,
-    };
-    
-    const optimalCodeContent = {
+      },
+      java: {
+        1: `public boolean searchMatrix(int[][] matrix, int target) {`,
+        2: `    int row = 0;`,
+        3: `    int col = matrix[0].length - 1;`,
+        4: `    while(row < matrix.length && col >= 0){`,
+        5: `        if(matrix[row][col] == target){`,
+        6: `            return true;`,
+        7: `        } else if(target < matrix[row][col]){`,
+        8: `            col--;`,
+        9: `        } else {`,
+        10: `           row++;`,
+        11: `       }`,
+        12: `   }`,
+        13: `   return false;`,
+        14: `}`,
+      },
+    },
+    optimal: {
+      cpp: {
         1: `bool searchMatrix(vector<vector<int>>& matrix, int target) {`,
         2: `    int m = matrix.size(), n = matrix[0].size();`,
         3: `    int left = 0, right = m * n - 1;`,
@@ -56,245 +133,591 @@ const Search2DMatrix = () => {
         7: `        int val = matrix[row][col];`,
         8: `        if (val == target) return true;`,
         9: `        if (val < target) left = mid + 1;`,
-        10: `        else right = mid - 1;`,
-        11: `    }`,
-        12: `    return false;`,
+        10: `       else right = mid - 1;`,
+        11: `   }`,
+        12: `   return false;`,
         13: `}`,
+      },
+    },
+  };
+
+  const generateHistoryForIntuitive = (matrix, target, m, n) => {
+    const newHistory = [];
+    const addState = (props) =>
+      newHistory.push({ matrix, target, m, n, ...props });
+    let i = 0,
+      j = n - 1,
+      found = false;
+    addState({
+      line: 3,
+      i,
+      j,
+      message: `Start search at top-right corner [${i}, ${j}].`,
+    });
+    while (i < m && j >= 0) {
+      const val = matrix[i][j];
+      addState({
+        line: 4,
+        i,
+        j,
+        val,
+        message: `Checking value at [${i}, ${j}]: ${val}.`,
+      });
+      if (val === target) {
+        addState({
+          line: 5,
+          i,
+          j,
+          val,
+          found: true,
+          message: `Target found at [${i},${j}]!`,
+        });
+        found = true;
+        break;
+      }
+      if (val > target) {
+        addState({
+          line: 7,
+          i,
+          j,
+          val,
+          message: `${val} > ${target}. Value too large, moving left.`,
+        });
+        j--;
+      } else {
+        addState({
+          line: 9,
+          i,
+          j,
+          val,
+          message: `${val} < ${target}. Value too small, moving down.`,
+        });
+        i++;
+      }
+    }
+    if (!found)
+      addState({
+        line: 12,
+        i,
+        j,
+        found: false,
+        message: `Search space exhausted. Target not found.`,
+      });
+    return newHistory;
+  };
+
+  const generateHistoryForOptimal = (matrix, target, m, n) => {
+    const newHistory = [];
+    const addState = (props) =>
+      newHistory.push({ matrix, target, m, n, ...props });
+    let left = 0,
+      right = m * n - 1,
+      found = false;
+    addState({
+      line: 3,
+      left,
+      right,
+      message: `Initialize 1D search space [${left}, ${right}].`,
+    });
+    while (left <= right) {
+      const mid = Math.floor(left + (right - left) / 2);
+      const row = Math.floor(mid / n);
+      const col = mid % n;
+      const val = matrix[row][col];
+      addState({
+        line: 5,
+        left,
+        right,
+        mid,
+        row,
+        col,
+        val,
+        message: `Calculated mid-point index: ${mid} -> [${row}, ${col}].`,
+      });
+      if (val === target) {
+        addState({
+          line: 8,
+          left,
+          right,
+          mid,
+          row,
+          col,
+          val,
+          found: true,
+          message: `Target found at [${row},${col}]!`,
+        });
+        found = true;
+        break;
+      }
+      if (val < target) {
+        addState({
+          line: 9,
+          left,
+          right,
+          mid,
+          row,
+          col,
+          val,
+          message: `${val} < ${target}. Searching right half.`,
+        });
+        left = mid + 1;
+      } else {
+        addState({
+          line: 10,
+          left,
+          right,
+          mid,
+          row,
+          col,
+          val,
+          message: `${val} > ${target}. Searching left half.`,
+        });
+        right = mid - 1;
+      }
+    }
+    if (!found)
+      addState({
+        line: 12,
+        left,
+        right,
+        found: false,
+        message: `Search complete. Target not found.`,
+      });
+    return newHistory;
+  };
+
+  const load = useCallback(() => {
+    let localMatrix;
+    try {
+      localMatrix = JSON.parse(matrixInput.replace(/'/g, '"'));
+      if (!Array.isArray(localMatrix) || !localMatrix.every(Array.isArray))
+        throw new Error();
+    } catch (e) {
+      alert("Invalid matrix format.");
+      return;
+    }
+    const localTarget = parseInt(targetInput, 10);
+    if (isNaN(localTarget)) {
+      alert("Invalid target.");
+      return;
+    }
+    const m = localMatrix.length,
+      n = m > 0 ? localMatrix[0].length : 0;
+    if (m === 0 || n === 0) {
+      alert("Matrix cannot be empty.");
+      return;
+    }
+
+    const newHistory =
+      activeAlgorithm === "intuitive"
+        ? generateHistoryForIntuitive(localMatrix, localTarget, m, n)
+        : generateHistoryForOptimal(localMatrix, localTarget, m, n);
+
+    setHistory(newHistory);
+    setCurrentStep(0);
+    setIsLoaded(true);
+  }, [matrixInput, targetInput, activeAlgorithm]);
+
+  const resetAll = () => {
+    setIsLoaded(false);
+    setHistory([]);
+    setCurrentStep(-1);
+    setIsPlaying(false);
+  };
+  const stepForward = useCallback(
+    () => currentStep < history.length - 1 && setCurrentStep((s) => s + 1),
+    [currentStep, history.length]
+  );
+  const stepBackward = useCallback(
+    () => currentStep > 0 && setCurrentStep((s) => s - 1),
+    [currentStep]
+  );
+  const togglePlay = useCallback(() => setIsPlaying((p) => !p), []);
+
+  useEffect(() => {
+    if (isPlaying) {
+      if (currentStep >= history.length - 1) {
+        setIsPlaying(false);
+        return;
+      }
+      playRef.current = setInterval(() => {
+        setCurrentStep((s) => {
+          if (s >= history.length - 1) {
+            clearInterval(playRef.current);
+            setIsPlaying(false);
+            return s;
+          }
+          return s + 1;
+        });
+      }, (maxSpeed - speed));
+    } else {
+      clearInterval(playRef.current);
+    }
+    return () => clearInterval(playRef.current);
+  }, [isPlaying, speed, history.length, currentStep]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (!isLoaded) return;
+      if (e.key === "ArrowRight") stepForward();
+      if (e.key === "ArrowLeft") stepBackward();
+      if (e.key === " ") {
+        e.preventDefault();
+        togglePlay();
+      }
     };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isLoaded, stepForward, stepBackward, togglePlay]);
 
-    const generateHistoryForIntuitive = (localMatrix, localTarget, m, n) => {
-        const newHistory = [];
-        const addState = (props) => newHistory.push({ matrix: localMatrix, target: localTarget, m, n, ...props });
-        let i = 0, j = n - 1, found = false;
-        addState({ line: 3, i, j, val: null, message: `Start search at top-right corner: [${i}, ${j}].` });
-        while (i < m && j >= 0) {
-            const val = localMatrix[i][j];
-            addState({ line: 4, i, j, val, message: `Checking value at [${i}, ${j}]: ${val}.` });
-            if (val === localTarget) {
-                addState({ line: 5, i, j, val, found: true, message: `Target found at [${i},${j}]!` });
-                found = true; break;
-            }
-            if (val > localTarget) {
-                addState({ line: 6, i, j, val, message: `${val} > ${localTarget}. Value is too large.` });
-                const prev_j = j; j--;
-                addState({ line: 7, i, j: prev_j, val, message: `Eliminate column and move left to [${i}, ${j}].` });
-            } else {
-                addState({ line: 8, i, j, val, message: `${val} < ${localTarget}. Value is too small.` });
-                const prev_i = i; i++;
-                addState({ line: 9, i: prev_i, j, val, message: `Eliminate row and move down to [${i}, ${j}].` });
-            }
-        }
-        if (!found) addState({ line: 12, i, j, val: null, found: false, message: `Search space exhausted. Target not found.` });
-        return newHistory;
-    };
-    
-    const generateHistoryForOptimal = (localMatrix, localTarget, m, n) => {
-        const newHistory = [];
-        const addState = (props) => newHistory.push({ matrix: localMatrix, target: localTarget, m, n, ...props });
-        let left = 0, right = m * n - 1, found = false;
-        addState({ line: 3, left, right, mid: null, message: "Initialize search space for the flattened matrix." });
-        while (left <= right) {
-            const mid = Math.floor(left + (right - left) / 2);
-            const row = Math.floor(mid / n); const col = mid % n;
-            const val = localMatrix[row][col];
-            addState({ line: 5, left, right, mid, row, col, val, message: `Calculate mid-point index: ${mid}.` });
-            addState({ line: 6, left, right, mid, row, col, val, message: `Convert to 2D coordinates: [${row}, ${col}].` });
-            if (val === localTarget) {
-                addState({ line: 8, left, right, mid, row, col, val, found: true, message: `Target found at [${row},${col}]!` });
-                found = true; break;
-            }
-            if (val < localTarget) {
-                addState({ line: 9, left, right, mid, row, col, val, message: `${val} < ${localTarget}. Search right half.` });
-                left = mid + 1;
-            } else {
-                addState({ line: 10, left, right, mid, row, col, val, message: `${val} > ${localTarget}. Search left half.` });
-                right = mid - 1;
-            }
-        }
-        if (!found) addState({ line: 12, left, right, mid: null, found: false, message: `Search complete. Target not found.` });
-        return newHistory;
-    };
+  const currentCode =
+    activeAlgorithm === "optimal"
+      ? codeContent.optimal.cpp
+      : codeContent.intuitive[activeLanguage];
+  const {
+    line,
+    matrix,
+    target,
+    left,
+    right,
+    mid,
+    row,
+    col,
+    i,
+    j,
+    found,
+    message,
+    m,
+    n,
+  } = state;
 
-    const generateHistory = useCallback(() => {
-        let localMatrix;
-        try {
-            localMatrix = JSON.parse(matrixInput.replace(/'/g, '"'));
-            if (!Array.isArray(localMatrix) || !localMatrix.every(row => Array.isArray(row))) throw new Error();
-        } catch (e) { alert("Invalid matrix format."); return; }
-        const localTarget = parseInt(targetInput, 10);
-        if (isNaN(localTarget)) { alert("Invalid target."); return; }
-        const m = localMatrix.length; if (m === 0) { alert("Matrix cannot be empty."); return; }
-        const n = localMatrix[0].length; if (n === 0) { alert("Matrix rows cannot be empty."); return; }
-        
-        let newHistory = [];
-        if(activeAlgorithm === 'intuitive') {
-            newHistory = generateHistoryForIntuitive(localMatrix, localTarget, m, n);
-        } else {
-            newHistory = generateHistoryForOptimal(localMatrix, localTarget, m, n);
-        }
-        setHistory(newHistory); setCurrentStep(0); setIsLoaded(true);
-    }, [matrixInput, targetInput, activeAlgorithm]);
-    
-    const resetVisualization = () => { setHistory([]); setCurrentStep(-1); setIsLoaded(false); };
-    const stepForward = useCallback(() => setCurrentStep(prev => Math.min(prev + 1, history.length - 1)), [history.length]);
-    const stepBackward = useCallback(() => setCurrentStep(prev => Math.max(prev - 1, 0)), []);
-    
-    const handleTabClick = (algorithm) => {
-        setActiveAlgorithm(algorithm);
-        resetVisualization();
-    };
+  return (
+    <div className="bg-gray-900 text-white min-h-screen">
+      <div className="px-6 py-8 max-w-7xl mx-auto relative">
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-sky-500/10 rounded-full blur-3xl -z-0" />
 
-    useEffect(() => {
-        const handleKeyDown = (e) => { if (isLoaded) { if (e.key === "ArrowLeft") { e.preventDefault(); stepBackward(); } else if (e.key === "ArrowRight") { e.preventDefault(); stepForward(); } } };
-        window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [isLoaded, stepBackward, stepForward]);
+        <header className="relative z-10 mb-12 text-center">
+          <h1 className="text-4xl sm:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
+            Search a 2D Matrix
+          </h1>
+          <p className="text-gray-300 mt-2 text-sm sm:text-base max-w-2xl mx-auto">
+            Visualizing two common approaches for LeetCode #74.
+          </p>
+        </header>
 
-    const state = history[currentStep] || {};
-    const { line, matrix, target, left, right, mid, row, col, i, j, val, found, message, m, n } = state;
+        {/* --- CONTROLS SECTION --- */}
+        <section className="mb-6 z-10 relative p-4 bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700">
+          <div className="flex flex-col md:flex-row gap-3 items-center">
+            <input
+              type="text"
+              value={matrixInput}
+              onChange={(e) => setMatrixInput(e.target.value)}
+              disabled={isLoaded}
+              className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 font-mono focus:ring-2 focus:ring-sky-400"
+              placeholder="Matrix, e.g., [[1,2],[3,4]]"
+            />
+            <input
+              type="text"
+              value={targetInput}
+              onChange={(e) => setTargetInput(e.target.value)}
+              disabled={isLoaded}
+              className="w-48 p-3 rounded-xl bg-gray-900 border border-gray-700 font-mono focus:ring-2 focus:ring-sky-400"
+              placeholder="Target"
+            />
 
-    return (
-        <div className="min-h-screen bg-gray-950 text-gray-100">
-             <style>{`
-                .custom-scrollbar::-webkit-scrollbar { height: 8px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: #1a202c; border-radius: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #718096; }
-            `}</style>
-            <div className="p-4 max-w-7xl mx-auto">
-                 <header className="text-center mb-8 pt-6">
-                    <h1 className="text-5xl font-bold bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent mb-3"> Search a 2D Matrix </h1>
-                    <p className="text-lg text-gray-400"> Visualizing LeetCode 74 </p>
-                     <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-500">
-                        <span className="flex items-center gap-2"> <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">←</kbd> <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">→</kbd> Navigate </span>
-                    </div>
-                </header>
-                 
-                <div className="bg-gray-900/70 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50 mb-8">
-                    {/* Controls section */}
-                    <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
-                        <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto flex-wrap">
-                            <div className="flex items-center gap-3 w-full sm:w-auto">
-                                <label htmlFor="matrix-input" className="font-semibold text-gray-300 text-sm whitespace-nowrap">Matrix:</label>
-                                <input id="matrix-input" type="text" value={matrixInput} onChange={(e) => setMatrixInput(e.target.value)} disabled={isLoaded} className="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 w-full sm:w-96 focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm" placeholder="e.g., [[1,3,5],[10,11,16]]"/>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <label htmlFor="target-input" className="font-semibold text-gray-300 text-sm">Target:</label>
-                                <input id="target-input" type="number" value={targetInput} onChange={(e) => setTargetInput(e.target.value)} disabled={isLoaded} className="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 w-24 focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm"/>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            {!isLoaded ? ( <button onClick={generateHistory} className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white font-bold py-2.5 px-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer"> Load & Visualize </button> ) : (
-                                <>
-                                    <button onClick={stepBackward} disabled={currentStep <= 0} className="bg-gray-700 hover:bg-gray-600 font-bold p-2.5 rounded-lg transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed" title="Previous step (←)"> <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" /></svg> </button>
-                                    <span className="font-mono text-base text-gray-300 min-w-[100px] text-center bg-gray-800/80 px-4 py-2 rounded-lg border border-gray-700"> Step <span className="text-sky-400 font-bold">{currentStep + 1}</span>/{history.length} </span>
-                                    <button onClick={stepForward} disabled={currentStep >= history.length - 1} className="bg-gray-700 hover:bg-gray-600 font-bold p-2.5 rounded-lg transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed" title="Next step (→)"> <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg> </button>
-                                </>
-                            )}
-                            <button onClick={resetVisualization} className="ml-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 cursor-pointer active:scale-95"> Reset </button>
-                        </div>
-                    </div>
+            {!isLoaded ? (
+              <button
+                onClick={load}
+                className="px-5 py-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:opacity-90 transition text-white font-bold shadow-lg"
+              >
+                Load & Visualize
+              </button>
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={stepBackward}
+                    disabled={currentStep <= 0}
+                    className="p-3 rounded-full bg-gray-700 hover:bg-sky-600 disabled:opacity-40 transition"
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+                  <button
+                    onClick={togglePlay}
+                    className="p-3 rounded-full bg-gray-700 hover:bg-sky-600 transition"
+                  >
+                    {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+                  </button>
+                  <button
+                    onClick={stepForward}
+                    disabled={currentStep >= history.length - 1}
+                    className="p-3 rounded-full bg-gray-700 hover:bg-sky-600 disabled:opacity-40 transition"
+                  >
+                    <ArrowRight size={18} />
+                  </button>
                 </div>
-
-                <div className="mb-6">
-                    <div className="flex border-b border-gray-700">
-                        <button onClick={() => handleTabClick('intuitive')} className={`px-4 py-3 text-sm font-medium transition-colors duration-200 ${activeAlgorithm === 'intuitive' ? 'border-b-2 border-sky-400 text-sky-400' : 'text-gray-500 hover:text-gray-300'}`}>Intuitive O(m+n)</button>
-                        <button onClick={() => handleTabClick('optimal')} className={`px-4 py-3 text-sm font-medium transition-colors duration-200 ${activeAlgorithm === 'optimal' ? 'border-b-2 border-sky-400 text-sky-400' : 'text-gray-500 hover:text-gray-300'}`}>Optimal O(log(m*n))</button>
-                    </div>
+                <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200">
+                  {currentStep + 1}/{history.length}
                 </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-1 bg-gray-900/70 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-                        <h3 className="font-bold text-xl text-sky-400 mb-4 border-b border-gray-700 pb-3 flex items-center gap-2">
-                           <Code className="w-5 h-5"/> {activeAlgorithm === 'intuitive' ? 'C++ O(m+n) Solution' : 'C++ O(log(m*n)) Solution'}
-                        </h3>
-                        <div className="overflow-x-auto custom-scrollbar">
-                             <pre className="text-sm font-mono leading-relaxed w-max">
-                                {Object.entries(activeAlgorithm === 'intuitive' ? intuitiveCodeContent : optimalCodeContent).map(([lineNum, text]) => (
-                                    <div key={lineNum} className={`flex items-start transition-all duration-300 ${line === parseInt(lineNum) ? "bg-sky-500/20" : ""}`}>
-                                        <span className="text-gray-600 select-none text-right inline-block w-8 mr-3 pt-0.5">{lineNum}</span>
-                                        <div className="flex-1 pt-0.5"> <CodeLine text={text} /> </div>
-                                    </div>
-                                ))}
-                            </pre>
-                        </div>
-                    </div>
-
-                    <div className="lg:col-span-2 space-y-6">
-                        <div className="relative bg-gray-900/70 p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-                           <h3 className="font-bold text-lg text-gray-300 mb-4 text-center">Matrix Visualization</h3>
-                            <p className="text-sm text-gray-400 mb-4 text-center h-5">{message || "Load data to begin visualization."}</p>
-                            
-                            <div className="flex justify-center items-center">
-                                <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${n || 1}, minmax(0, 1fr))` }}>
-                                    {isLoaded && matrix.map((r_val, r_idx) => 
-                                        r_val.map((cell_val, c_idx) => {
-                                            let cellStyle = "bg-gray-800/50 border-gray-700/50 opacity-40"; // Default: eliminated
-                                            
-                                            if (activeAlgorithm === 'intuitive') {
-                                                const isCurrent = r_idx === i && c_idx === j;
-                                                const isEliminated = r_idx < i || c_idx > j;
-                                                const isFoundCell = found && isCurrent;
-
-                                                if (isFoundCell) cellStyle = "bg-green-500 border-green-400 scale-110 shadow-lg shadow-green-500/50";
-                                                else if (isCurrent) cellStyle = "bg-sky-500 border-sky-400 scale-110 shadow-lg shadow-sky-500/50";
-                                                else if (!isEliminated) cellStyle = "bg-gray-700 border-gray-600";
-                                            } else { // optimal
-                                                const flat_idx = r_idx * n + c_idx;
-                                                const isInSearchSpace = flat_idx >= left && flat_idx <= right;
-                                                const isMid = r_idx === row && c_idx === col;
-                                                const isFoundCell = found && isMid;
-
-                                                if (isFoundCell) cellStyle = "bg-green-500 border-green-400 scale-110 shadow-lg shadow-green-500/50";
-                                                else if (isMid) cellStyle = "bg-sky-500 border-sky-400 scale-110 shadow-lg shadow-sky-500/50";
-                                                else if (isInSearchSpace) cellStyle = "bg-gray-700 border-gray-600";
-                                            }
-
-                                            return (
-                                                <div key={`${r_idx}-${c_idx}`} className={`w-16 h-16 flex items-center justify-center text-xl font-bold rounded-lg border-2 transition-all duration-300 transform ${cellStyle}`}>
-                                                    {cell_val}
-                                                </div>
-                                            )
-                                        })
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                             <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 p-6 rounded-xl shadow-xl border border-purple-700/50 text-center">
-                                {activeAlgorithm === 'intuitive' ? (
-                                    <>
-                                        <h3 className="font-bold text-lg text-purple-300 mb-3 flex items-center justify-center gap-2"><Move className="w-5 h-5"/> Pointers [i, j]</h3>
-                                        <div className="font-mono text-5xl font-bold text-purple-300">{isLoaded ? `[${i}, ${j}]` : '-'}</div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <h3 className="font-bold text-lg text-purple-300 mb-3 flex items-center justify-center gap-2"><Search className="w-5 h-5"/> Linear Index [L, R]</h3>
-                                        <div className="font-mono text-4xl font-bold text-purple-300">{isLoaded ? `[${left}, ${right}]` : '-'}</div>
-                                    </>
-                                )}
-                            </div>
-
-                            <div className="bg-gradient-to-br from-orange-900/40 to-orange-800/40 p-6 rounded-xl shadow-xl border border-orange-700/50 text-center">
-                                <h3 className="font-bold text-lg text-orange-300 mb-3 flex items-center justify-center gap-2"><Target className="w-5 h-5"/> Target</h3>
-                                <div className="font-mono text-5xl font-bold text-orange-300">{isLoaded ? target : '-'}</div>
-                            </div>
-
-                            <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 p-6 rounded-xl shadow-xl border border-green-700/50 text-center">
-                                <h3 className="font-bold text-lg text-green-300 mb-3 flex items-center justify-center gap-2"> {found ? <CheckCircle className="w-5 h-5"/> : <XCircle className="w-5 h-5"/>} Result </h3>
-                                <div className="font-mono text-4xl font-bold text-green-400 mt-4">{isLoaded ? (found ? 'Found' : (currentStep === history.length - 1 ? 'Not Found' : 'Searching...')) : '-'}</div>
-                            </div>
-                        </div>
-                    </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-300">Speed</label>
+                  <input
+                    type="range"
+                    min={minSpeed}
+                    max={maxSpeed}
+                    step={50}
+                    value={speed}
+                    onChange={(e) =>
+                      setSpeed(parseInt(e.target.value, 10))
+                    }
+                    className="w-24"
+                  />
                 </div>
+                <button
+                  onClick={resetAll}
+                  className="px-4 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold flex items-center gap-2"
+                >
+                  <RotateCw size={16} /> Reset
+                </button>
+              </>
+            )}
+          </div>
+        </section>
 
-                <footer className="text-center mt-12 pb-6 text-gray-500 text-sm">
-                    <p>Use arrow keys ← → to navigate through steps</p>
-                </footer>
+        {/* TABS */}
+        <div className="z-10 relative mb-4">
+          <div className="border-b border-gray-700 flex items-center">
+            <button
+              onClick={() => {
+                setActiveAlgorithm("intuitive");
+                resetAll();
+              }}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeAlgorithm === "intuitive"
+                  ? "border-b-2 border-sky-400 text-sky-400"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              Intuitive O(m+n)
+            </button>
+            <button
+              onClick={() => {
+                setActiveAlgorithm("optimal");
+                resetAll();
+              }}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeAlgorithm === "optimal"
+                  ? "border-b-2 border-sky-400 text-sky-400"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              Optimal O(log(mn))
+            </button>
+          </div>
+          {activeAlgorithm === "intuitive" && (
+            <div className="pt-2 flex gap-2">
+              <button
+                onClick={() => setActiveLanguage("cpp")}
+                className={`px-3 py-1 rounded text-xs ${
+                  activeLanguage === "cpp"
+                    ? "bg-sky-500 text-white"
+                    : "bg-gray-700 text-gray-300"
+                }`}
+              >
+                C++
+              </button>
+              <button
+                onClick={() => setActiveLanguage("java")}
+                className={`px-3 py-1 rounded text-xs ${
+                  activeLanguage === "java"
+                    ? "bg-sky-500 text-white"
+                    : "bg-gray-700 text-gray-300"
+                }`}
+              >
+                Java
+              </button>
             </div>
+          )}
         </div>
-    );
+
+        {/* MAIN GRID */}
+        {!isLoaded ? (
+          <div className="mt-10 text-center text-gray-400">
+            Enter a matrix and target, then click{" "}
+            <span className="font-semibold text-sky-400">Load & Visualize</span>
+            .
+          </div>
+        ) : (
+          <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
+            <aside className="lg:col-span-1 p-4 bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-700/60 shadow-2xl">
+              <h3 className="text-sky-300 flex items-center gap-2 font-semibold mb-3">
+                <FileText size={18} /> Algorithm Steps
+              </h3>
+              <div className="bg-[#0b1020] rounded-lg border border-gray-700/80 p-3 font-mono text-sm">
+                {Object.entries(currentCode).map(([ln, txt]) => (
+                  <div
+                    key={ln}
+                    className={`flex items-start ${
+                      line === parseInt(ln, 10) ? "bg-sky-500/10" : ""
+                    }`}
+                  >
+                    <span className="text-gray-600 w-8 mr-3 text-right select-none">
+                      {ln}
+                    </span>
+                    <div className="flex-1 whitespace-pre-wrap">
+                      <CodeLine text={txt} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </aside>
+
+            <section className="lg:col-span-2 flex flex-col gap-6">
+              <div className="p-6 bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-700/60 shadow-2xl">
+                <h3 className="text-lg font-semibold text-sky-300 mb-4 text-center">
+                  Matrix Visualization
+                </h3>
+                <div className="flex justify-center items-center">
+                  <div
+                    className="grid gap-2"
+                    style={{
+                      gridTemplateColumns: `repeat(${n || 1}, minmax(0, 1fr))`,
+                    }}
+                  >
+                    {matrix.map((r_val, r_idx) =>
+                      r_val.map((cell_val, c_idx) => {
+                        let cellStyle =
+                          "bg-gray-800/50 border-gray-700/50 opacity-40";
+                        if (activeAlgorithm === "intuitive") {
+                          const isCurrent = r_idx === i && c_idx === j,
+                            isEliminated = r_idx < i || c_idx > j,
+                            isFoundCell = found && isCurrent;
+                          if (isFoundCell)
+                            cellStyle =
+                              "bg-green-500 border-green-400 scale-110 shadow-lg shadow-green-500/50";
+                          else if (isCurrent)
+                            cellStyle =
+                              "bg-sky-500 border-sky-400 scale-110 shadow-lg shadow-sky-500/50";
+                          else if (!isEliminated)
+                            cellStyle = "bg-gray-700 border-gray-600";
+                        } else {
+                          const flat_idx = r_idx * n + c_idx,
+                            isInSearchSpace =
+                              flat_idx >= left && flat_idx <= right,
+                            isMid = r_idx === row && c_idx === col,
+                            isFoundCell = found && isMid;
+                          if (isFoundCell)
+                            cellStyle =
+                              "bg-green-500 border-green-400 scale-110 shadow-lg shadow-green-500/50";
+                          else if (isMid)
+                            cellStyle =
+                              "bg-sky-500 border-sky-400 scale-110 shadow-lg shadow-sky-500/50";
+                          else if (isInSearchSpace)
+                            cellStyle = "bg-gray-700 border-gray-600";
+                        }
+                        return (
+                          <div
+                            key={`${r_idx}-${c_idx}`}
+                            className={`w-14 h-14 flex items-center justify-center text-lg font-bold rounded-lg border-2 transition-all duration-300 transform ${cellStyle}`}
+                          >
+                            {cell_val}
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
+                <h4 className="text-gray-300 text-sm mb-2 font-semibold">
+                  Explanation
+                </h4>
+                <p className="text-gray-200 min-h-[2rem]">{message || "..."}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
+                  <h4 className="text-gray-300 text-sm mb-2 font-semibold flex items-center gap-2">
+                    <Terminal size={16} /> State Variables
+                  </h4>
+                  {activeAlgorithm === "intuitive" ? (
+                    <div className="text-lg">
+                      <span className="text-gray-400">Current [i, j]:</span>{" "}
+                      <span className="font-mono text-sky-300">
+                        [{i ?? "-"}, {j ?? "-"}]
+                      </span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="text-sm">
+                        <span className="text-gray-400">Range [L, R]:</span>{" "}
+                        <span className="font-mono text-sky-300">
+                          [{left ?? "-"}, {right ?? "-"}]
+                        </span>
+                      </div>
+                      <div className="text-sm">
+                        <span className="text-gray-400">Mid Index:</span>{" "}
+                        <span className="font-mono text-sky-300">
+                          {mid ?? "-"}
+                        </span>
+                      </div>
+                      <div className="text-sm">
+                        <span className="text-gray-400">Mid Coords:</span>{" "}
+                        <span className="font-mono text-sky-300">
+                          [{row ?? "-"}, {col ?? "-"}]
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
+                  <h4 className="font-semibold flex items-center gap-2 mb-2 text-green-300">
+                    <CheckCircle size={16} /> Result for{" "}
+                    <span className="font-mono text-orange-300">
+                      {target ?? "?"}
+                    </span>
+                  </h4>
+                  <div
+                    className={`text-2xl font-bold ${
+                      found ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
+                    {isLoaded
+                      ? found
+                        ? "Found"
+                        : currentStep === history.length - 1
+                        ? "Not Found"
+                        : "Searching..."
+                      : "-"}
+                  </div>
+                </div>
+                <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60 shadow-lg">
+                  <h4 className="text-sky-300 font-semibold flex items-center gap-2 mb-2">
+                    <Clock size={16} /> Complexity
+                  </h4>
+                  <div className="text-sm text-gray-300 space-y-1">
+                    <div>
+                      <strong>Time:</strong>{" "}
+                      <span className="font-mono text-cyan-300">
+                        {activeAlgorithm === "intuitive"
+                          ? "O(m + n)"
+                          : "O(log(m*n))"}
+                      </span>
+                    </div>
+                    <div>
+                      <strong>Space:</strong>{" "}
+                      <span className="font-mono text-cyan-300">O(1)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </main>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Search2DMatrix;

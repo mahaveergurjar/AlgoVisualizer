@@ -1,5 +1,3 @@
-
-
 # 🤝 Contributing to AlgoVisualizer
 
 Thank you for your interest in contributing to **AlgoVisualizer**! This project is part of **Hacktoberfest**, and we welcome contributors of all experience levels. Follow the steps below to get started. 🚀
@@ -53,11 +51,11 @@ docs/update-readme
 
 ## 🧠 Code Style Guidelines
 
-* Use **Tailwind CSS** for styling.
-* Follow the **ESLint** rules defined in the project (`eslint.config.js`).
-* Keep components modular and reusable.
-* Use meaningful variable and function names.
-* Prefer functional components and React Hooks.
+- Use **Tailwind CSS** for styling.
+- Follow the **ESLint** rules defined in the project (`eslint.config.js`).
+- Keep components modular and reusable.
+- Use meaningful variable and function names.
+- Prefer functional components and React Hooks.
 
 ---
 
@@ -81,12 +79,12 @@ docs: update contributing guidelines
 
 Common types:
 
-* `feat`: New feature
-* `fix`: Bug fix
-* `docs`: Documentation only changes
-* `refactor`: Code restructuring without behavior change
-* `style`: UI or formatting improvements
-* `chore`: Maintenance or dependency updates
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation only changes
+- `refactor`: Code restructuring without behavior change
+- `style`: UI or formatting improvements
+- `chore`: Maintenance or dependency updates
 
 ---
 
@@ -94,10 +92,10 @@ Common types:
 
 Before opening a Pull Request:
 
-* Run the app locally (`npm run dev`).
-* Test your feature manually in the browser.
-* Confirm that no existing functionality is broken.
-* Check the browser console for any errors or warnings.
+- Run the app locally (`npm run dev`).
+- Test your feature manually in the browser.
+- Confirm that no existing functionality is broken.
+- Check the browser console for any errors or warnings.
 
 If you’re confident the feature works as expected, you’re good to go!
 
@@ -115,14 +113,14 @@ git push origin <branch-name>
 
 3. In your PR description:
 
-* Clearly explain what you changed and why.
-* Mention the issue number if applicable (e.g., `Fixes #10`).
-* Add screenshots or GIFs for UI-related changes.
+- Clearly explain what you changed and why.
+- Mention the issue number if applicable (e.g., `Fixes #10`).
+- Add screenshots or GIFs for UI-related changes.
 
 4. Wait for maintainers to review your PR.
 
-* Be open to feedback — we’re here to help!
-* Once approved, your PR will be merged.
+- Be open to feedback — we’re here to help!
+- Once approved, your PR will be merged.
 
 ---
 
@@ -130,9 +128,9 @@ git push origin <branch-name>
 
 If you run into any problems:
 
-* Check existing issues.
-* Open a new issue with clear details if needed.
-* Tag maintainers or contributors for clarification.
+- Check existing issues.
+- Open a new issue with clear details if needed.
+- Tag maintainers or contributors for clarification.
 
 ---
 

@@ -87,6 +87,14 @@ const SortingVisualizerLayout = ({
             >
               Generate Random
             </button>
+            {/* Array size display - showing current number of elements */}
+            {isLoaded && arrayInput && (
+              <div className="ml-4 flex items-center">
+                <span className="text-sm text-gray-400 font-medium">
+                  Array Size: {arrayInput.split(',').filter(item => item.trim() !== '').length}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
