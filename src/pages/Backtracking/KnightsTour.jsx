@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Play, Pause, RotateCcw, Zap } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 /*
   KnightsTourVisualizer.jsx
@@ -31,7 +31,7 @@ const Node = ({ text, status }) => {
   );
 };
 
-const KnightsTourVisualizer = ({ navigate }) => {
+const KnightsTour = ({ navigate }) => {
   const [n, setN] = useState(5);
   const [frames, setFrames] = useState([]);
   const [playIndex, setPlayIndex] = useState(0);
@@ -49,8 +49,7 @@ const KnightsTourVisualizer = ({ navigate }) => {
       .map(() => Array(size).fill(-1));
     let solved = false;
 
-    const push = (obj) =>
-      localFrames.push({ ...obj, id: localFrames.length });
+    const push = (obj) => localFrames.push({ ...obj, id: localFrames.length });
 
     const isSafe = (x, y) =>
       x >= 0 && y >= 0 && x < size && y < size && board[x][y] === -1;
@@ -162,7 +161,9 @@ const KnightsTourVisualizer = ({ navigate }) => {
           </button>
           <h2 className="text-2xl font-bold text-blue-300">Knight’s Tour</h2>
         </div>
-        <div className="text-sm text-gray-400">Backtracking • Tier 3 (Hard)</div>
+        <div className="text-sm text-gray-400">
+          Backtracking • Tier 3 (Hard)
+        </div>
       </div>
 
       {/* Inputs */}
@@ -206,7 +207,9 @@ const KnightsTourVisualizer = ({ navigate }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Step Viewer */}
         <div className="bg-gray-900/40 p-4 rounded-xl border border-gray-700">
-          <h3 className="text-lg font-semibold mb-3 text-gray-200">Step Viewer</h3>
+          <h3 className="text-lg font-semibold mb-3 text-gray-200">
+            Step Viewer
+          </h3>
           <AnimatePresence initial={false}>
             {current && (
               <motion.div
@@ -232,7 +235,9 @@ const KnightsTourVisualizer = ({ navigate }) => {
           </AnimatePresence>
           <div className="mt-4 text-sm text-gray-400">
             <div>Move: {current.movei ?? "-"}</div>
-            <div>Position: ({current.x ?? "-"}, {current.y ?? "-"})</div>
+            <div>
+              Position: ({current.x ?? "-"}, {current.y ?? "-"})
+            </div>
             <div>
               Frame: {playIndex + 1}/{frames.length}
             </div>
@@ -241,7 +246,9 @@ const KnightsTourVisualizer = ({ navigate }) => {
 
         {/* Recursion Path */}
         <div className="bg-gray-900/40 p-4 rounded-xl border border-gray-700 flex flex-col items-center">
-          <h3 className="text-lg font-semibold mb-3 text-gray-200">Recursion Path</h3>
+          <h3 className="text-lg font-semibold mb-3 text-gray-200">
+            Recursion Path
+          </h3>
           <div className="grid grid-cols-5 gap-1">
             {Array.from({ length: n }).map((_, i) =>
               Array.from({ length: n }).map((_, j) => {
@@ -249,7 +256,9 @@ const KnightsTourVisualizer = ({ navigate }) => {
                   .slice(0, playIndex)
                   .find((f) => f.x === i && f.y === j);
                 const active =
-                  current.x === i && current.y === j && current.type !== "backtrack";
+                  current.x === i &&
+                  current.y === j &&
+                  current.type !== "backtrack";
                 return (
                   <motion.div
                     key={`${i}-${j}`}
@@ -269,7 +278,9 @@ const KnightsTourVisualizer = ({ navigate }) => {
               })
             )}
           </div>
-          <div className="mt-3 text-xs text-gray-400">(Knight positions visualized)</div>
+          <div className="mt-3 text-xs text-gray-400">
+            (Knight positions visualized)
+          </div>
         </div>
 
         {/* Solutions */}
@@ -280,7 +291,9 @@ const KnightsTourVisualizer = ({ navigate }) => {
               ✅ Knight’s Tour completed successfully!
             </div>
           ) : (
-            <div className="text-gray-400 text-sm">No complete tour found yet.</div>
+            <div className="text-gray-400 text-sm">
+              No complete tour found yet.
+            </div>
           )}
           <div className="mt-6 text-sm text-gray-400">
             <div>
@@ -296,12 +309,12 @@ const KnightsTourVisualizer = ({ navigate }) => {
       <div className="mt-6 text-sm text-gray-400 flex items-center gap-3">
         <Zap />{" "}
         <span>
-          Visualizes DFS-based Knight’s Tour recursion with live step and backtrack
-          updates.
+          Visualizes DFS-based Knight’s Tour recursion with live step and
+          backtrack updates.
         </span>
       </div>
     </div>
   );
 };
 
-export default KnightsTourVisualizer;
+export default KnightsTour;

@@ -16,7 +16,7 @@ import {
   List,
   Puzzle,
   Map,
-  MoveDiagonal
+  MoveDiagonal,
 } from "lucide-react";
 
 import PermutationsVisualizer from "./Permutations.jsx";
@@ -27,7 +27,7 @@ import KnightsTourVisualizer from "./KnightsTour.jsx"; // 🆕 NEW IMPORT
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [filter, setFilter] = useState("all");
+  const [filter] = useState("all");
 
   const algorithms = [
     {
@@ -112,14 +112,15 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking + Expression Parsing",
       timeComplexity: "O(4^N)",
       platforms: ["LeetCode #282", "GfG"],
-      tags: ["Strings", "Math", "Recursion", "Operators"]
+      tags: ["Strings", "Math", "Recursion", "Operators"],
     },
     // 🆕 NEW ADDITION
     {
       name: "Knight's Tour",
       number: "Backtracking Challenge",
       icon: MoveDiagonal,
-      description: "Move a knight on a chessboard to visit every square exactly once.",
+      description:
+        "Move a knight on a chessboard to visit every square exactly once.",
       page: "KnightsTourVisualizer",
       difficulty: "Hard",
       tier: "Tier 3",
@@ -133,8 +134,8 @@ const AlgorithmList = ({ navigate }) => {
       technique: "Backtracking + Graph Traversal",
       timeComplexity: "O(8^(N*N))",
       platforms: ["Classic Backtracking Problem"],
-      tags: ["Recursion", "DFS", "Chess", "Matrix"]
-    }
+      tags: ["Recursion", "DFS", "Chess", "Matrix"],
+    },
   ];
 
   const filteredAlgorithms = algorithms.filter((algo) => {
@@ -173,24 +174,53 @@ const AlgorithmList = ({ navigate }) => {
                     <div
                       className={`p-3 ${algo.iconBg} rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}
                     >
-                      <Icon className={`h-10 w-10 ${isHovered ? "text-white" : algo.iconColor} transition-colors duration-300`} />
+                      <Icon
+                        className={`h-10 w-10 ${
+                          isHovered ? "text-white" : algo.iconColor
+                        } transition-colors duration-300`}
+                      />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-mono text-gray-500">#{algo.number}</span>
-                        <div className={`px-2 py-0.5 rounded-md text-xs font-bold ${algo.difficultyBg} ${algo.difficultyColor} border ${algo.difficultyBorder}`}>{algo.difficulty}</div>
-                        <div className="px-2 py-0.5 bg-gray-700/50 rounded-md text-xs text-gray-300 border border-gray-600">{algo.tier}</div>
+                        <span className="text-xs font-mono text-gray-500">
+                          #{algo.number}
+                        </span>
+                        <div
+                          className={`px-2 py-0.5 rounded-md text-xs font-bold ${algo.difficultyBg} ${algo.difficultyColor} border ${algo.difficultyBorder}`}
+                        >
+                          {algo.difficulty}
+                        </div>
+                        <div className="px-2 py-0.5 bg-gray-700/50 rounded-md text-xs text-gray-300 border border-gray-600">
+                          {algo.tier}
+                        </div>
                       </div>
-                      <h2 className={`text-xl font-bold transition-colors duration-300 ${isHovered ? "text-white" : "text-gray-200"}`}>{algo.name}</h2>
+                      <h2
+                        className={`text-xl font-bold transition-colors duration-300 ${
+                          isHovered ? "text-white" : "text-gray-200"
+                        }`}
+                      >
+                        {algo.name}
+                      </h2>
                     </div>
                   </div>
                 </div>
 
-                <p className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${isHovered ? "text-gray-300" : "text-gray-400"}`}>{algo.description}</p>
+                <p
+                  className={`text-sm leading-relaxed mb-5 transition-colors duration-300 ${
+                    isHovered ? "text-gray-300" : "text-gray-400"
+                  }`}
+                >
+                  {algo.description}
+                </p>
 
                 <div className="flex flex-wrap gap-2 mb-4">
                   {algo.tags.map((tag, tagIndex) => (
-                    <span key={tagIndex} className="px-2 py-1 bg-gray-700/30 rounded text-xs text-gray-300 border border-gray-600">{tag}</span>
+                    <span
+                      key={tagIndex}
+                      className="px-2 py-1 bg-gray-700/30 rounded text-xs text-gray-300 border border-gray-600"
+                    >
+                      {tag}
+                    </span>
                   ))}
                 </div>
 
@@ -198,15 +228,21 @@ const AlgorithmList = ({ navigate }) => {
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1.5">
                       <Star className="h-4 w-4 text-amber-400" />
-                      <span className="text-xs font-medium text-gray-400">{algo.technique}</span>
+                      <span className="text-xs font-medium text-gray-400">
+                        {algo.technique}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-4 w-4 text-blue-400" />
-                      <span className="text-xs font-mono text-gray-400">{algo.timeComplexity}</span>
+                      <span className="text-xs font-mono text-gray-400">
+                        {algo.timeComplexity}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-gray-400">Solve</span>
+                    <span className="text-xs font-medium text-gray-400">
+                      Solve
+                    </span>
                     <ArrowRight className="h-4 w-4 text-gray-400" />
                   </div>
                 </div>
@@ -219,7 +255,7 @@ const AlgorithmList = ({ navigate }) => {
   );
 };
 
-const BacktrackingPage = ({ navigate: parentNavigate, initialPage = null }) => {
+const BacktrackingPage = ({ navigate: initialPage = null }) => {
   const [page, setPage] = useState(initialPage || "home");
   const navigate = (newPage) => setPage(newPage);
 
