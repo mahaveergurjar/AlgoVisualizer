@@ -2965,5 +2965,35 @@ export const problems = [
     "DFS",
     "Level Order"
   ]
-}
+},
+{
+    label: "Burst Balloons Top Down",
+    category: "Dynamic Programming",
+    subpage: "BurstBalloonsTopDown", // This MUST match the case in DynamicProgramming.jsx
+    keywords: [
+      "dp",
+      "dynamic programming",
+      "burst",
+      "balloons",
+      "312",
+      "interval dp",
+      "matrix chain multiplication",
+    ],
+    number: "312",
+    icon: Zap, // Using Zap for the "burst" theme
+    description:
+      "Find the maximum coins you can collect by bursting balloons in an optimal order using interval DP.",
+    difficulty: "Hard",
+    tier: "Tier 1", // Tiers are subjective, adjust as needed
+    difficultyColor: "text-red-400",
+    difficultyBg: "bg-red-400/10",
+    difficultyBorder: "border-red-400/30",
+    gradient: "from-red-500 to-orange-600", // Fiery gradient for "burst"
+    iconColor: "text-red-400",
+    iconBg: "bg-red-500/20",
+    borderColor: "border-red-500/30",
+    technique: "Interval DP",
+    timeComplexity: "O(n³)",
+    tags: ["Interval DP", "Optimization"],
+  },
 ];
