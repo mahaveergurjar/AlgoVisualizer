@@ -1,2 +1,24 @@
 /* src/index.css */
 @import "tailwindcss";
+
+:root {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --border-color: #374151;
+}
+
+.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+}
+
+.bg-gray-950 { background-color: var(--bg-primary); }
+.text-white { color: var(--text-primary); }
+.text-gray-200 { color: var(--text-secondary); }
+.bg-gray-900\/95 { background-color: var(--bg-primary); }
+.border-gray-800 { border-color: var(--border-color); }
