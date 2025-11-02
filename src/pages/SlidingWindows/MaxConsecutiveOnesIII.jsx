@@ -322,7 +322,7 @@ const MaxConsecutiveOnes = () => {
     <div
       ref={visualizerRef}
       tabIndex={0}
-      className="p-4 max-w-7xl mx-auto focus:outline-none"
+      className="p-4 max-w-7xl mx-auto"
     >
       <header className="text-center mb-6">
         <h1 className="text-5xl font-bold text-amber-400 flex items-center justify-center gap-3">
