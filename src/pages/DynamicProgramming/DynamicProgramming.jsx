@@ -19,6 +19,7 @@ import LISVisualizer from "./LISubsequence.jsx";
 import BurstBalloonsVisualizer from "./BurstBalloons.jsx";
 import SellStockIVVisualizer from "./SellStockIVVisualizer.jsx";
 import UniquePathsVisualizer from "./UniquePaths.jsx";
+import BurstBalloonsTopDownVisualizer from "./BurstBallonsTopDown.jsx"
 // NOTE: Add more visualizer imports here as you create them!
 
 // --- ✅ Import the master catalog and your StarButton ---
@@ -253,6 +254,8 @@ const DPPage = ({ navigate: parentNavigate, initialPage = null }) => {
         return <LISVisualizer navigate={navigate} />;
       case "BurstBalloons":
         return <BurstBalloonsVisualizer navigate={navigate} />;
+      case "BurstBalloonsTopDown":
+        return <BurstBalloonsTopDownVisualizer navigate={navigate} />
       case "SellStockIV":
         return <SellStockIVVisualizer navigate={navigate} />;
       case "UniquePaths":
