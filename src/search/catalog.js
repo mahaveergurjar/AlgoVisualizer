@@ -61,6 +61,7 @@ import {
   Zap,
   PackageOpen,
   UtensilsCrossed,
+  Eye,
 } from "lucide-react";
 
 export const problems = [
@@ -2928,4 +2929,41 @@ export const problems = [
     timeComplexity: "EK: O(V·E²), Dinic: O(V²·E)",
     tags: ["Residual Graph", "Augmenting Path", "Blocking Flow"],
   },
+  {
+  label: "Binary Tree Right Side View",
+  category: "Trees",
+  subpage: "BinaryTreeRightSideView",
+  keywords: [
+    "binary tree",
+    "tree",
+    "right side view",
+    "bfs",
+    "dfs",
+    "level order"
+  ],
+  number: "199",
+  icon: Eye, // Assuming 'Eye' is a variable or component reference
+  description: "Return the values of the nodes you can see ordered from top to bottom when standing on the right side of a binary tree.",
+  difficulty: "Medium",
+  tier: "Tier 2",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-purple-500 to-pink-500",
+  iconColor: "text-purple-400",
+  iconBg: "bg-purple-500/20",
+  borderColor: "border-purple-500/30",
+  technique: "BFS (Level Order Traversal)",
+  timeComplexity: "O(n)",
+  platforms: [
+    "LeetCode",
+    "All Platforms"
+  ],
+  tags: [
+    "Tree",
+    "BFS",
+    "DFS",
+    "Level Order"
+  ]
+}
 ];
