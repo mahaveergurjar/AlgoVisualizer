@@ -59,7 +59,9 @@ import {
   Users,
   Grid3x3,
   Zap,
-  PackageOpen
+  PackageOpen,
+  UtensilsCrossed,
+  Eye,
 } from "lucide-react";
 
 export const problems = [
@@ -1289,7 +1291,13 @@ export const problems = [
     category: "Sorting",
     subpage: "BucketSort",
     label: "Bucket Sort",
-    keywords: ["sorting","bucket","linear-time","range-based","concatenate"],
+    keywords: [
+      "sorting",
+      "bucket",
+      "linear-time",
+      "range-based",
+      "concatenate",
+    ],
     number: "N/A",
     icon: PackageOpen,
     description:
@@ -1305,7 +1313,12 @@ export const problems = [
     borderColor: "border-teal-500/30",
     technique: "Distribution",
     timeComplexity: "O(n + k)",
-    tags: ["Stable (with insertion)","Not in-place","Range-dependent","Avg linear"],
+    tags: [
+      "Stable (with insertion)",
+      "Not in-place",
+      "Range-dependent",
+      "Avg linear",
+    ],
   },
   {
     label: "Merge Sort",
@@ -1504,7 +1517,31 @@ export const problems = [
     technique: "Gap Insertion",
     timeComplexity: "O(n log n)",
     tags: ["Optimization", "In-place"],
-  }, // HEAPS // =================================================================
+  },
+  {
+    label: "Pancake Sort",
+    category: "Sorting",
+    subpage: "PancakeSort",
+    keywords: ["sorting", "pancake", "flip", "reversal", "comparative"],
+    number: "N/A",
+    icon: UtensilsCrossed,
+    description:
+      "A comparison-based algorithm that repeatedly flips subarrays to bring the largest element to its correct position, similar to flipping pancakes in a stack.",
+    difficulty: "Medium",
+    tier: "Tier 2",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-pink-500 to-rose-500",
+    iconColor: "text-rose-400",
+    iconBg: "bg-rose-500/20",
+    borderColor: "border-rose-500/30",
+    technique: "Reversal-based Sorting",
+    timeComplexity: "O(n²)",
+    tags: ["In-place", "Comparison-based", "Unstable"],
+  },
+
+  // HEAPS // =================================================================
   // =================================================================
   {
     category: "Heaps",
@@ -2483,36 +2520,36 @@ export const problems = [
     tags: ["Set", "Arrays"],
   },
   {
-  label: "Equal Rows and Columns",
-  category: "Hashing",
-  subpage: "EqualRowsColumnPairs",
-  keywords: [
-    "hashing",
-    "equal",
-    "rows",
-    "columns",
-    "pairs",
-    "grid",
-    "matrix",
-    "2352",
-  ],
-  number: "2352",
-  icon: Grid3x3,
-  description:
-    "Count pairs where a row and column contain identical sequences.",
-  difficulty: "Medium",
-  tier: "Tier 3",
-  difficultyColor: "text-yellow-400",
-  difficultyBg: "bg-yellow-400/10",
-  difficultyBorder: "border-yellow-400/30",
-  gradient: "from-purple-500 to-pink-500",
-  iconColor: "text-purple-400",
-  iconBg: "bg-purple-500/20",
-  borderColor: "border-purple-500/30",
-  technique: "Hash Map Frequency",
-  timeComplexity: "O(n³)",
-  tags: ["Hash Map", "Matrix", "Arrays"],
-},
+    label: "Equal Rows and Columns",
+    category: "Hashing",
+    subpage: "EqualRowsColumnPairs",
+    keywords: [
+      "hashing",
+      "equal",
+      "rows",
+      "columns",
+      "pairs",
+      "grid",
+      "matrix",
+      "2352",
+    ],
+    number: "2352",
+    icon: Grid3x3,
+    description:
+      "Count pairs where a row and column contain identical sequences.",
+    difficulty: "Medium",
+    tier: "Tier 3",
+    difficultyColor: "text-yellow-400",
+    difficultyBg: "bg-yellow-400/10",
+    difficultyBorder: "border-yellow-400/30",
+    gradient: "from-purple-500 to-pink-500",
+    iconColor: "text-purple-400",
+    iconBg: "bg-purple-500/20",
+    borderColor: "border-purple-500/30",
+    technique: "Hash Map Frequency",
+    timeComplexity: "O(n³)",
+    tags: ["Hash Map", "Matrix", "Arrays"],
+  },
 
   // =================================================================
   // GREEDY ALGORITHMS
@@ -2892,4 +2929,102 @@ export const problems = [
     timeComplexity: "EK: O(V·E²), Dinic: O(V²·E)",
     tags: ["Residual Graph", "Augmenting Path", "Blocking Flow"],
   },
+  {
+  label: "Binary Tree Right Side View",
+  category: "Trees",
+  subpage: "BinaryTreeRightSideView",
+  keywords: [
+    "binary tree",
+    "tree",
+    "right side view",
+    "bfs",
+    "dfs",
+    "level order"
+  ],
+  number: "199",
+  icon: Eye, // Assuming 'Eye' is a variable or component reference
+  description: "Return the values of the nodes you can see ordered from top to bottom when standing on the right side of a binary tree.",
+  difficulty: "Medium",
+  tier: "Tier 2",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-purple-500 to-pink-500",
+  iconColor: "text-purple-400",
+  iconBg: "bg-purple-500/20",
+  borderColor: "border-purple-500/30",
+  technique: "BFS (Level Order Traversal)",
+  timeComplexity: "O(n)",
+  platforms: [
+    "LeetCode",
+    "All Platforms"
+  ],
+  tags: [
+    "Tree",
+    "BFS",
+    "DFS",
+    "Level Order"
+  ]
+},
+{
+    label: "Burst Balloons Top Down",
+    category: "Dynamic Programming",
+    subpage: "BurstBalloonsTopDown", // This MUST match the case in DynamicProgramming.jsx
+    keywords: [
+      "dp",
+      "dynamic programming",
+      "burst",
+      "balloons",
+      "312",
+      "interval dp",
+      "matrix chain multiplication",
+    ],
+    number: "312",
+    icon: Zap, // Using Zap for the "burst" theme
+    description:
+      "Find the maximum coins you can collect by bursting balloons in an optimal order using interval DP.",
+    difficulty: "Hard",
+    tier: "Tier 1", // Tiers are subjective, adjust as needed
+    difficultyColor: "text-red-400",
+    difficultyBg: "bg-red-400/10",
+    difficultyBorder: "border-red-400/30",
+    gradient: "from-red-500 to-orange-600", // Fiery gradient for "burst"
+    iconColor: "text-red-400",
+    iconBg: "bg-red-500/20",
+    borderColor: "border-red-500/30",
+    technique: "Interval DP",
+    timeComplexity: "O(n³)",
+    tags: ["Interval DP", "Optimization"],
+  },
+  {
+  label: "Print Binary Tree",
+  category: "Trees",
+  subpage: "PrintBinaryTree", // This MUST match the case in your routing/components
+  keywords: [
+    "tree",
+    "binary tree",
+    "print",
+    "matrix",
+    "layout",
+    "recursion",
+    "dfs",
+    "655",
+  ],
+  number: "655",
+  icon: GitBranch, // Using GitBranch as it represents a tree structure
+  description:
+    "Construct a 2D string matrix representing the layout of a binary tree.",
+  difficulty: "Medium",
+  tier: "Tier 3", // Tiers are subjective, adjust as needed
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-blue-500 to-green-600", // Cool gradient for trees
+  iconColor: "text-blue-400",
+  iconBg: "bg-blue-500/20",
+  borderColor: "border-blue-500/30",
+  technique: "Recursion (DFS)",
+  timeComplexity: "O(h * 2ʰ)",
+  tags: ["Binary Tree", "Recursion", "DFS"],
+},
 ];
