@@ -1,4 +1,6 @@
 import React, { useMemo, useRef, useState } from "react";
+import { useTheme } from "../context/ThemeContext.jsx";
+import {Sun,Moon} from "lucide-react";
 import Footer from "../components/Footer.jsx";
 import {
   ArrowLeft,
@@ -57,6 +59,7 @@ import MathsMiscPage from "./MathematicalMiscellaneous/MathematicalMiscellaneous
 import StarredProblems from "./Starred/StarredProblems.jsx";
 
 const AlgorithmCategories = ({ navigate }) => {
+  const { theme, toggleTheme } = useTheme();
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -531,6 +534,22 @@ const AlgorithmCategories = ({ navigate }) => {
                 </span>
               </div>
             </div>
+            <button
+              onClick={toggleTheme}
+              className="group px-6 py-3 bg-gradient-to-r from-gray-500/15 to-slate-500/15 rounded-2xl border border-gray-500/40 backdrop-blur-sm hover:scale-110 hover:shadow-lg hover:shadow-gray-500/20 transition-all duration-300 cursor-pointer"
+              aria-label="Toggle theme"
+            >
+              <div className="flex items-center gap-3">
+                {theme === 'dark' ? (
+                  <Sun className="h-5 w-5 text-yellow-400" />
+                ) : (
+                  <Moon className="h-5 w-5 text-blue-400" />
+                )}
+                <span className="text-base font-semibold text-gray-200">
+                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                </span>
+              </div>
+            </button>
           </div>
 
           {/* Call to Action */}
