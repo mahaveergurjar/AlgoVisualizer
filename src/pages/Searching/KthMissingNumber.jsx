@@ -139,7 +139,9 @@ const KthMissingNumber = () => {
           missing,
           line: 7,
           missingNumbers: [...missingNumbers],
-          explanation: `Missing count increased to ${missing}. Found missing: [${missingNumbers.join(", ")}]`,
+          explanation: `Missing count increased to ${missing}. Found missing: [${missingNumbers.join(
+            ", "
+          )}]`,
         });
 
         if (missing === targetK) {
@@ -193,7 +195,9 @@ const KthMissingNumber = () => {
     const kVal = parseInt(kInput, 10);
 
     if (array.length === 0 || array.some(isNaN) || isNaN(kVal) || kVal < 1) {
-      return alert("Invalid input. Enter comma-separated positive integers and k >= 1.");
+      return alert(
+        "Invalid input. Enter comma-separated positive integers and k >= 1."
+      );
     }
 
     setArr(array);
@@ -277,7 +281,9 @@ const KthMissingNumber = () => {
     return (
       <div
         key={l}
-        className={`relative flex font-mono text-sm ${active ? "bg-green-500/10" : ""}`}
+        className={`relative flex font-mono text-sm ${
+          active ? "bg-green-500/10" : ""
+        }`}
       >
         <div className="flex-none w-10 text-right text-gray-500 select-none pr-3">
           {l}
@@ -424,7 +430,9 @@ const KthMissingNumber = () => {
 
           <section className="lg:col-span-2 flex flex-col gap-6">
             <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
-              <h4 className="text-gray-300 text-sm mb-3">📊 Array (pointer at i={state.i ?? 0})</h4>
+              <h4 className="text-gray-300 text-sm mb-3">
+                📊 Array (pointer at i={state.i ?? 0})
+              </h4>
               <div className="flex gap-3 flex-wrap mb-4">
                 {arr.map((num, idx) => (
                   <div
@@ -442,11 +450,17 @@ const KthMissingNumber = () => {
               <div className="grid grid-cols-3 gap-3 text-sm">
                 <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
                   <div className="text-gray-400 text-xs mb-1">Current</div>
-                  <div className="text-xl font-mono text-cyan-300">{state.current ?? 1}</div>
+                  <div className="text-xl font-mono text-cyan-300">
+                    {state.current ?? 1}
+                  </div>
                 </div>
                 <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
-                  <div className="text-gray-400 text-xs mb-1">Missing Count</div>
-                  <div className="text-xl font-mono text-amber-300">{state.missing ?? 0}</div>
+                  <div className="text-gray-400 text-xs mb-1">
+                    Missing Count
+                  </div>
+                  <div className="text-xl font-mono text-amber-300">
+                    {state.missing ?? 0}
+                  </div>
                 </div>
                 <div className="p-3 bg-gray-900 rounded-lg border border-gray-700">
                   <div className="text-gray-400 text-xs mb-1">Target k</div>
@@ -456,13 +470,16 @@ const KthMissingNumber = () => {
             </div>
 
             <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
-              <h4 className="text-gray-300 text-sm mb-2">🔢 Missing Numbers Found</h4>
+              <h4 className="text-gray-300 text-sm mb-2">
+                🔢 Missing Numbers Found
+              </h4>
               <div className="flex gap-2 flex-wrap min-h-[2.5rem]">
                 {(state.missingNumbers || []).map((num, idx) => (
                   <div
                     key={idx}
                     className={`px-3 py-2 rounded-lg font-mono text-sm ${
-                      idx === state.missingNumbers.length - 1 && state.result === null
+                      idx === state.missingNumbers.length - 1 &&
+                      state.result === null
                         ? "bg-amber-500 text-white"
                         : "bg-gray-700 text-gray-200"
                     }`}
@@ -470,8 +487,11 @@ const KthMissingNumber = () => {
                     {num}
                   </div>
                 ))}
-                {(!state.missingNumbers || state.missingNumbers.length === 0) && (
-                  <div className="text-gray-500 italic text-sm">None yet...</div>
+                {(!state.missingNumbers ||
+                  state.missingNumbers.length === 0) && (
+                  <div className="text-gray-500 italic text-sm">
+                    None yet...
+                  </div>
                 )}
               </div>
             </div>
@@ -479,36 +499,53 @@ const KthMissingNumber = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="col-span-2 p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
                 <h4 className="text-gray-300 text-sm mb-2">📝 Explanation</h4>
-                <p className="text-gray-200">{state.explanation || "Load and visualize to begin"}</p>
+                <p className="text-gray-200">
+                  {state.explanation || "Load and visualize to begin"}
+                </p>
               </div>
 
               <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
                 <h4 className="text-gray-300 text-sm mb-2">
                   {state.result !== null ? "✓" : "⏳"} Result
                 </h4>
-                <div className={`text-3xl font-mono ${state.result !== null ? "text-green-400" : "text-gray-400"}`}>
+                <div
+                  className={`text-3xl font-mono ${
+                    state.result !== null ? "text-green-400" : "text-gray-400"
+                  }`}
+                >
                   {state.result !== null ? state.result : "..."}
                 </div>
                 <div className="mt-2 text-xs text-gray-400">
-                  {state.result !== null ? `${k}th missing: ${state.result}` : "Computing..."}
+                  {state.result !== null
+                    ? `${k}th missing: ${state.result}`
+                    : "Computing..."}
                 </div>
               </div>
             </div>
 
             <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
-              <h4 className="text-green-300 font-semibold mb-3">⏱ Complexity & Approach</h4>
+              <h4 className="text-green-300 font-semibold mb-3">
+                ⏱ Complexity & Approach
+              </h4>
               <div className="text-sm text-gray-300 space-y-2">
                 <div>
-                  <strong>Time:</strong> <span className="font-mono text-teal-300">O(N + K)</span> — linear scan through array + missing numbers
+                  <strong>Time:</strong>{" "}
+                  <span className="font-mono text-teal-300">O(N + K)</span> —
+                  linear scan through array + missing numbers
                 </div>
                 <div>
-                  <strong>Space:</strong> <span className="font-mono text-teal-300">O(1)</span> — constant extra space
+                  <strong>Space:</strong>{" "}
+                  <span className="font-mono text-teal-300">O(1)</span> —
+                  constant extra space
                 </div>
                 <div>
-                  <strong>Approach:</strong> Check each positive integer starting from 1. If it's in array, skip. Otherwise, count as missing.
+                  <strong>Approach:</strong> Check each positive integer
+                  starting from 1. If it's in array, skip. Otherwise, count as
+                  missing.
                 </div>
                 <div>
-                  <strong>Optimization:</strong> Binary search approach can solve in O(log N) + O(1) extra
+                  <strong>Optimization:</strong> Binary search approach can
+                  solve in O(log N) + O(1) extra
                 </div>
               </div>
             </div>
