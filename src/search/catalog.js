@@ -2996,4 +2996,35 @@ export const problems = [
     timeComplexity: "O(n³)",
     tags: ["Interval DP", "Optimization"],
   },
+  {
+  label: "Print Binary Tree",
+  category: "Trees",
+  subpage: "PrintBinaryTree", // This MUST match the case in your routing/components
+  keywords: [
+    "tree",
+    "binary tree",
+    "print",
+    "matrix",
+    "layout",
+    "recursion",
+    "dfs",
+    "655",
+  ],
+  number: "655",
+  icon: GitBranch, // Using GitBranch as it represents a tree structure
+  description:
+    "Construct a 2D string matrix representing the layout of a binary tree.",
+  difficulty: "Medium",
+  tier: "Tier 3", // Tiers are subjective, adjust as needed
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-blue-500 to-green-600", // Cool gradient for trees
+  iconColor: "text-blue-400",
+  iconBg: "bg-blue-500/20",
+  borderColor: "border-blue-500/30",
+  technique: "Recursion (DFS)",
+  timeComplexity: "O(h * 2ʰ)",
+  tags: ["Binary Tree", "Recursion", "DFS"],
+},
 ];

@@ -21,6 +21,7 @@ import LCAofDeepestLeaves from "./LCAofDeepestLeaves";
 import AVLTree from "./AVLTree.jsx";
 import SymmetricTreeVisualizer from "./SymmetricTreeVisualizer.jsx";
 import BinaryTreeRightSideView from "./BinaryTreeRightSideView.jsx"
+import PrintBinaryTreeVisualizer from "./PrintBinaryTree.jsx"
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from "../../search/catalog";
@@ -917,6 +918,8 @@ const TreesPage = ({ navigate: parentNavigate }) => {
         return <SymmetricTreeVisualizer navigate={navigate} />;
       case "BinaryTreeRightSideView":
         return <BinaryTreeRightSideView navigate={navigate} />
+      case "PrintBinaryTree":
+        return <PrintBinaryTreeVisualizer navigate={navigate} />
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
