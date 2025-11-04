@@ -3027,4 +3027,35 @@ export const problems = [
   timeComplexity: "O(h * 2ʰ)",
   tags: ["Binary Tree", "Recursion", "DFS"],
 },
+{
+  label: "Morris Traversal (Inorder)",
+  category: "Trees",
+  subpage: "MorrisTraversal", // This MUST match the case in your routing/components
+  keywords: [
+    "tree",
+    "binary tree",
+    "inorder",
+    "traversal",
+    "morris",
+    "threaded",
+    "94",
+    "o(1) space",
+  ],
+  number: "94",
+  icon: GitBranch, // Using GitBranch as it represents the "threading"
+  description:
+    "Perform an O(1) space inorder traversal using a threaded binary tree approach.",
+  difficulty: "Medium",
+  tier: "Tier 2", // Tiers are subjective, adjust as needed
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-orange-500 to-amber-600", // Match visualizer theme
+  iconColor: "text-orange-400",
+  iconBg: "bg-orange-500/20",
+  borderColor: "border-orange-500/30",
+  technique: "Morris Traversal",
+  timeComplexity: "O(n)",
+  tags: ["Binary Tree", "Traversal", "O(1) Space"],
+},
 ];
