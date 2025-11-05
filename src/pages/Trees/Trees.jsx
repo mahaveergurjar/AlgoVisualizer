@@ -23,6 +23,7 @@ import SymmetricTreeVisualizer from "./SymmetricTreeVisualizer.jsx";
 import BinaryTreeRightSideView from "./BinaryTreeRightSideView.jsx"
 import PrintBinaryTreeVisualizer from "./PrintBinaryTree.jsx"
 import MorrisTraversalVisualizer from "./MorrisTraversal.jsx"
+import FlattenBinaryTreeVisualizer from "./FlattenBinaryTree.jsx"
 
 // --- ✅ Import the master catalog and your StarButton ---
 import { problems as PROBLEM_CATALOG } from "../../search/catalog";
@@ -923,6 +924,8 @@ const TreesPage = ({ navigate: parentNavigate }) => {
         return <PrintBinaryTreeVisualizer navigate={navigate} />
       case "MorrisTraversal":
         return <MorrisTraversalVisualizer navigate={navigate} />
+      case "FlattenBinaryTree":
+        return <FlattenBinaryTreeVisualizer navigate={navigate} />
       case "home":
       default:
         return <AlgorithmList navigate={navigate} />;
