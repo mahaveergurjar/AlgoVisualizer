@@ -3058,4 +3058,37 @@ export const problems = [
   timeComplexity: "O(n)",
   tags: ["Binary Tree", "Traversal", "O(1) Space"],
 },
+{
+  label: "Flatten Binary Tree to Linked List",
+  category: "Trees",
+  subpage: "FlattenBinaryTree", // This MUST match the case in your routing/components
+  keywords: [
+    "tree",
+    "binary tree",
+    "flatten",
+    "linked list",
+    "preorder",
+    "dfs",
+    "recursion",
+    "114",
+    "in-place",
+    "post-order",
+  ],
+  number: "114",
+  icon: GitBranch, // Using GitBranch as it represents tree structure transformation
+  description:
+    "Transform a binary tree into a flattened linked list using right pointers in pre-order traversal order.",
+  difficulty: "Medium",
+  tier: "Tier 2",
+  difficultyColor: "text-yellow-400",
+  difficultyBg: "bg-yellow-400/10",
+  difficultyBorder: "border-yellow-400/30",
+  gradient: "from-blue-500 to-purple-600", // Match visualizer theme
+  iconColor: "text-blue-400",
+  iconBg: "bg-blue-500/20",
+  borderColor: "border-blue-500/30",
+  technique: "Post-order DFS",
+  timeComplexity: "O(n)",
+  tags: ["Binary Tree", "DFS", "Linked List", "Recursion", "In-place"],
+},
 ];
