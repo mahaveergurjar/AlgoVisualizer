@@ -1,55 +1,38 @@
-import React, { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Play, Pause, RotateCcw, Zap } from "lucide-react";
-import { AnimatePresence } from "framer-motion";
+import React, { useState, useCallback } from "react";
+import { useVisualizer } from "../../hooks/useVisualizer";
+import VisualizerLayout from "../../components/VisualizerLayout";
 
-/*
-  KnightsTourVisualizer.jsx
-  - Interactive recursion visualizer for Knight's Tour problem.
-  - Shows step-by-step exploration of knight moves on an N×N board.
-*/
+const dx = [2, 1, -1, -2, -2, -1, 1, 2];
+const dy = [1, 2, 2, 1, -1, -2, -2, -1];
 
-const Node = ({ text, status }) => {
-  const bg =
-    status === "solution"
-      ? "bg-green-600/30 border-green-500"
-      : status === "trying"
-      ? "bg-blue-600/30 border-blue-500"
-      : status === "backtrack"
-      ? "bg-red-600/30 border-red-500"
-      : "bg-gray-800/40 border-gray-700";
-
-  return (
-    <motion.div
-      layout
-      initial={{ scale: 0.95, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className={`p-3 rounded-lg border ${bg} text-sm font-mono text-gray-100`}
-    >
-      {text}
-    </motion.div>
-  );
-};
-
-const KnightsTour = ({ navigate }) => {
+const KnightsTour = () => {
   const [n, setN] = useState(5);
-  const [frames, setFrames] = useState([]);
-  const [playIndex, setPlayIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [solution, setSolution] = useState([]);
-  const timerRef = useRef(null);
 
-  const dx = [2, 1, -1, -2, -2, -1, 1, 2];
-  const dy = [1, 2, 2, 1, -1, -2, -2, -1];
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
-  const buildFrames = (size) => {
-    const localFrames = [];
+  const handleLoad = useCallback((customN) => {
+    let size = customN !== undefined ? customN : n;
+    if (size < 3 || size > 6) {
+      alert("Please select a board size between 3 and 6 (larger sizes can be extremely slow).");
+      return;
+    }
+    setN(size);
+
+    const newHistory = [];
     const board = Array(size)
       .fill(0)
       .map(() => Array(size).fill(-1));
     let solved = false;
 
-    const push = (obj) => localFrames.push({ ...obj, id: localFrames.length });
+    const push = (obj) => {
+      newHistory.push({
+        ...obj,
+        id: newHistory.length,
+        board: board.map((r) => [...r]),
+        solved,
+      });
+    };
 
     const isSafe = (x, y) =>
       x >= 0 && y >= 0 && x < size && y < size && board[x][y] === -1;
@@ -61,17 +44,19 @@ const KnightsTour = ({ navigate }) => {
         y,
         movei,
         note: `Move ${movei}: Knight at (${x}, ${y})`,
+        line: 1,
       });
 
       if (movei === size * size) {
+        solved = true;
         push({
           type: "solution",
           x,
           y,
           movei,
           note: `✅ Completed Knight's Tour!`,
+          line: 2,
         });
-        solved = true;
         return true;
       }
 
@@ -86,6 +71,7 @@ const KnightsTour = ({ navigate }) => {
             y: nextY,
             movei,
             note: `Trying move ${movei} → (${nextX}, ${nextY})`,
+            line: 9,
           });
 
           if (backtrack(nextX, nextY, movei + 1)) return true;
@@ -98,6 +84,7 @@ const KnightsTour = ({ navigate }) => {
             y: nextY,
             movei,
             note: `Backtrack from (${nextX}, ${nextY})`,
+            line: 12,
           });
         }
       }
@@ -112,208 +99,167 @@ const KnightsTour = ({ navigate }) => {
       y: 0,
       movei: 0,
       note: `Start Knight's Tour on ${size}×${size} board.`,
+      line: 19,
     });
     backtrack(0, 0, 1);
+    
     push({
       type: "end",
-      note: `Finished exploration.`,
+      note: solved ? `Finished. Knight's Tour completed successfully!` : `Finished. No complete tour found.`,
+      line: 23,
     });
 
-    setFrames(localFrames);
-    setSolution(solved ? board.map((r) => [...r]) : []);
-    setPlayIndex(0);
+    load(newHistory);
+  }, [n, load]);
+
+  const {
+    line,
+    x,
+    y,
+    movei,
+    board = [],
+    solved = false
+  } = currentState;
+
+  const codeContent = {
+    1: `bool solveKTUtil(int x, int y, int movei, vector<vector<int>>& board, int dx[], int dy[], int N) {`,
+    2: `    if (movei == N * N) return true;`,
+    3: ``,
+    4: `    for (int k = 0; k < 8; k++) {`,
+    5: `        int next_x = x + dx[k];`,
+    6: `        int next_y = y + dy[k];`,
+    7: `        if (isSafe(next_x, next_y, N, board)) {`,
+    8: `            board[next_x][next_y] = movei;`,
+    9: `            if (solveKTUtil(next_x, next_y, movei + 1, board, dx, dy, N))`,
+    10: `                return true;`,
+    11: `            else`,
+    12: `                board[next_x][next_y] = -1; // backtracking`,
+    13: `        }`,
+    14: `    }`,
+    15: `    return false;`,
+    16: `}`,
+    17: ``,
+    18: `bool solveKT(int N) {`,
+    19: `    vector<vector<int>> board(N, vector<int>(N, -1));`,
+    20: `    board[0][0] = 0;`,
+    21: `    int dx[8] = { 2, 1, -1, -2, -2, -1, 1, 2 };`,
+    22: `    int dy[8] = { 1, 2, 2, 1, -1, -2, -2, -1 };`,
+    23: `    return solveKTUtil(0, 0, 1, board, dx, dy, N);`,
+    24: `}`
   };
 
-  // autoplay frames
-  useEffect(() => {
-    if (isPlaying && frames.length > 0) {
-      if (playIndex < frames.length - 1) {
-        timerRef.current = setTimeout(() => setPlayIndex((p) => p + 1), 600);
-      } else {
-        setIsPlaying(false);
-      }
-    }
-    return () => clearTimeout(timerRef.current);
-  }, [isPlaying, playIndex, frames.length]);
+  const inputSection = (
+    <>
+      <input
+        type="number"
+        min={3}
+        max={6}
+        value={n}
+        onChange={(e) => setN(Number(e.target.value))}
+        disabled={isLoaded}
+        className="w-32 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
+        placeholder="Board size"
+      />
+      {!isLoaded && (
+        <>
+          <button
+            onClick={() => handleLoad()}
+            className="px-5 py-3 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+          >
+            Load & Visualize
+          </button>
+          <button
+            onClick={() => handleLoad(5)}
+            className="px-4 py-3 bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 rounded-xl font-medium transition-all cursor-pointer"
+          >
+            Default (5x5)
+          </button>
+        </>
+      )}
+    </>
+  );
 
-  const handleStart = () => {
-    setIsPlaying(false);
-    setFrames([]);
-    setSolution([]);
-    setPlayIndex(0);
-    setTimeout(() => {
-      buildFrames(n);
-      setIsPlaying(true);
-    }, 100);
-  };
-
-  const current = frames[playIndex] || {};
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-blue-300 select-none">
+          Move Number
+        </h4>
+        <div className="text-3xl font-mono text-blue-300">
+          {movei !== undefined ? movei : "-"}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-cyan-300 select-none">
+          Knight Position
+        </h4>
+        <div className="text-3xl font-mono text-cyan-300">
+          {x !== undefined && y !== undefined ? `(${x}, ${y})` : "-"}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-emerald-300 select-none">
+          Status
+        </h4>
+        <div className="text-xl font-mono text-emerald-300 pt-1">
+          {solved ? "Completed" : "Exploring"}
+        </div>
+      </div>
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-indigo-300 font-semibold flex items-center gap-2 mb-2 select-none">
+          Complexity
+        </h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <div>
+            <strong>Time Complexity:</strong> <span className="font-mono text-cyan-300">O(8^(N²))</span>
+          </div>
+          <div>
+            <strong>Space Complexity:</strong> <span className="font-mono text-cyan-300">O(N²)</span>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
   return (
-    <div className="p-6 min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-black text-white">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("home")}
-            className="px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 hover:bg-gray-800"
-          >
-            <ArrowLeft size={18} /> Back
-          </button>
-          <h2 className="text-2xl font-bold text-blue-300">Knight’s Tour</h2>
-        </div>
-        <div className="text-sm text-gray-400">
-          Backtracking • Tier 3 (Hard)
-        </div>
-      </div>
-
-      {/* Inputs */}
-      <div className="flex gap-3 mb-6 items-center">
-        <input
-          type="number"
-          min={4}
-          max={8}
-          value={n}
-          onChange={(e) => setN(Number(e.target.value))}
-          className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 w-32"
-          placeholder="Board size"
-        />
-        <button
-          onClick={handleStart}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg"
-        >
-          Start
-        </button>
-
-        <div className="ml-auto flex items-center gap-2">
-          <button
-            onClick={() => setIsPlaying((p) => !p)}
-            className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-700"
-            disabled={frames.length === 0}
-          >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-          </button>
-          <button
-            onClick={() => {
-              setPlayIndex(0);
-              setIsPlaying(false);
-            }}
-            className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-700"
-          >
-            <RotateCcw size={16} />
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Step Viewer */}
-        <div className="bg-gray-900/40 p-4 rounded-xl border border-gray-700">
-          <h3 className="text-lg font-semibold mb-3 text-gray-200">
-            Step Viewer
-          </h3>
-          <AnimatePresence initial={false}>
-            {current && (
-              <motion.div
-                key={current.id || "none"}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-              >
-                <Node
-                  text={current.note}
-                  status={
-                    current.type === "solution"
-                      ? "solution"
-                      : current.type === "trying"
-                      ? "trying"
-                      : current.type === "backtrack"
-                      ? "backtrack"
-                      : "normal"
-                  }
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <div className="mt-4 text-sm text-gray-400">
-            <div>Move: {current.movei ?? "-"}</div>
-            <div>
-              Position: ({current.x ?? "-"}, {current.y ?? "-"})
-            </div>
-            <div>
-              Frame: {playIndex + 1}/{frames.length}
-            </div>
-          </div>
-        </div>
-
-        {/* Recursion Path */}
-        <div className="bg-gray-900/40 p-4 rounded-xl border border-gray-700 flex flex-col items-center">
-          <h3 className="text-lg font-semibold mb-3 text-gray-200">
-            Recursion Path
-          </h3>
-          <div className="grid grid-cols-5 gap-1">
-            {Array.from({ length: n }).map((_, i) =>
-              Array.from({ length: n }).map((_, j) => {
-                const visited = frames
-                  .slice(0, playIndex)
-                  .find((f) => f.x === i && f.y === j);
-                const active =
-                  current.x === i &&
-                  current.y === j &&
-                  current.type !== "backtrack";
+    <VisualizerLayout
+      title="Knight's Tour"
+      description="Find a sequence of moves for a knight on an N×N board such that the knight visits every square exactly once."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={currentState.note || "Enter board size to begin."}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+    >
+      <div className="flex flex-col items-center justify-center gap-4 py-4">
+        <div className="flex flex-col gap-1 bg-gray-950 p-4 rounded-xl border border-gray-800">
+          {board.map((row, rIdx) => (
+            <div key={rIdx} className="flex gap-1">
+              {row.map((cell, cIdx) => {
+                const active = x === rIdx && y === cIdx;
                 return (
-                  <motion.div
-                    key={`${i}-${j}`}
-                    layout
-                    className={`w-8 h-8 rounded-md flex items-center justify-center border text-xs font-mono
+                  <div
+                    key={cIdx}
+                    className={`w-12 h-12 rounded-lg flex flex-col items-center justify-center border transition-all duration-300 text-sm font-mono
                     ${
                       active
-                        ? "bg-blue-600/60 border-blue-400"
-                        : visited
-                        ? "bg-gray-700/50 border-gray-600"
-                        : "bg-gray-900/50 border-gray-700"
+                        ? "bg-blue-500/40 border-blue-400 font-bold scale-105 shadow-lg shadow-blue-500/20 text-white"
+                        : cell !== -1
+                        ? "bg-gray-700/60 border-gray-600 text-gray-200"
+                        : "bg-gray-800/20 border-gray-800 text-gray-500"
                     }`}
                   >
-                    {visited ? visited.movei % 10 : ""}
-                  </motion.div>
+                    {cell !== -1 ? cell : ""}
+                  </div>
                 );
-              })
-            )}
-          </div>
-          <div className="mt-3 text-xs text-gray-400">
-            (Knight positions visualized)
-          </div>
-        </div>
-
-        {/* Solutions */}
-        <div className="bg-gray-900/40 p-4 rounded-xl border border-gray-700">
-          <h3 className="text-lg font-semibold mb-3 text-gray-200">Result</h3>
-          {solution.length > 0 ? (
-            <div className="text-green-400 text-sm">
-              ✅ Knight’s Tour completed successfully!
+              })}
             </div>
-          ) : (
-            <div className="text-gray-400 text-sm">
-              No complete tour found yet.
-            </div>
-          )}
-          <div className="mt-6 text-sm text-gray-400">
-            <div>
-              <strong>Board Size:</strong> {n}×{n}
-            </div>
-            <div>
-              <strong>Total Frames:</strong> {frames.length}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
-
-      <div className="mt-6 text-sm text-gray-400 flex items-center gap-3">
-        <Zap />{" "}
-        <span>
-          Visualizes DFS-based Knight’s Tour recursion with live step and
-          backtrack updates.
-        </span>
-      </div>
-    </div>
+    </VisualizerLayout>
   );
 };
 

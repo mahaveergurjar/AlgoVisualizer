@@ -1,31 +1,148 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, RefreshCw, Play, RotateCcw, Code, Zap, Clock, Cpu, ArrowLeftRight } from "lucide-react";
+import { ArrowLeft, Hash, Zap, Cpu, ArrowLeftRight } from "lucide-react";
+import { useVisualizer } from "../../hooks/useVisualizer";
+import VisualizerLayout from "../../components/VisualizerLayout";
+
+const codeContent = {
+  1: "void reverseString(vector<char>& s) {",
+  2: "    int left = 0;",
+  3: "    int right = s.size() - 1;",
+  4: "    while (left < right) {",
+  5: "        swap(s[left], s[right]);",
+  6: "        left++;",
+  7: "        right--;",
+  8: "    }",
+  9: "}"
+};
+
+const generateHistory = (str) => {
+  const steps = [];
+  const charArray = str.split('');
+  
+  let left = 0;
+  let right = charArray.length - 1;
+  let swaps = [];
+  
+  // Step 1: Initialize left = 0
+  steps.push({
+    line: 2,
+    leftPointer: left,
+    rightPointer: right,
+    chars: [...charArray],
+    currentSwap: null,
+    swapHistory: [...swaps],
+    explanation: "Initialize left pointer to 0 (start of string)."
+  });
+
+  // Step 2: Initialize right = s.size() - 1
+  steps.push({
+    line: 3,
+    leftPointer: left,
+    rightPointer: right,
+    chars: [...charArray],
+    currentSwap: null,
+    swapHistory: [...swaps],
+    explanation: `Initialize right pointer to ${right} (last index of string).`
+  });
+
+  let loopCheck = true;
+  while (left < right) {
+    // Step 3a: loop header (while (left < right))
+    steps.push({
+      line: 4,
+      leftPointer: left,
+      rightPointer: right,
+      chars: [...charArray],
+      currentSwap: null,
+      swapHistory: [...swaps],
+      explanation: `Check loop condition: left (${left}) < right (${right}) is true.`
+    });
+
+    const swapObj = {
+      left,
+      right,
+      leftChar: charArray[left],
+      rightChar: charArray[right]
+    };
+    
+    // Step 3b: swap
+    const temp = charArray[left];
+    charArray[left] = charArray[right];
+    charArray[right] = temp;
+    swaps.push(swapObj);
+
+    steps.push({
+      line: 5,
+      leftPointer: left,
+      rightPointer: right,
+      chars: [...charArray],
+      currentSwap: swapObj,
+      swapHistory: [...swaps],
+      explanation: `Swap character at left index s[${left}] ('${swapObj.leftChar}') with right index s[${right}] ('${swapObj.rightChar}').`
+    });
+
+    // Step 3c: left++
+    left++;
+    steps.push({
+      line: 6,
+      leftPointer: left,
+      rightPointer: right,
+      chars: [...charArray],
+      currentSwap: swapObj,
+      swapHistory: [...swaps],
+      explanation: `Increment left pointer to ${left}.`
+    });
+
+    // Step 3d: right--
+    right--;
+    steps.push({
+      line: 7,
+      leftPointer: left,
+      rightPointer: right,
+      chars: [...charArray],
+      currentSwap: swapObj,
+      swapHistory: [...swaps],
+      explanation: `Decrement right pointer to ${right}.`
+    });
+  }
+
+  if (loopCheck) {
+    // Final loop check: left < right is false
+    steps.push({
+      line: 4,
+      leftPointer: left,
+      rightPointer: right,
+      chars: [...charArray],
+      currentSwap: null,
+      swapHistory: [...swaps],
+      explanation: `Loop check: left (${left}) < right (${right}) is now false (pointers met or crossed).`
+    });
+
+    // Step 4: finished
+    steps.push({
+      line: 9,
+      leftPointer: left,
+      rightPointer: right,
+      chars: [...charArray],
+      currentSwap: null,
+      swapHistory: [...swaps],
+      explanation: `Algorithm finished. String has been reversed in-place.`
+    });
+  }
+
+  return steps;
+};
 
 const ReverseString = ({ navigate }) => {
   const [inputString, setInputString] = useState("hello");
-  const [chars, setChars] = useState([]);
-  const [leftPointer, setLeftPointer] = useState(0);
-  const [rightPointer, setRightPointer] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1000);
-  const [isComplete, setIsComplete] = useState(false);
-  const [swapHistory, setSwapHistory] = useState([]);
-  const [currentSwap, setCurrentSwap] = useState(null);
+  const [loadedString, setLoadedString] = useState("hello");
+  const visualizerState = useVisualizer({ defaultSpeed: 1000 });
+  const { isLoaded, currentState } = visualizerState;
 
-  const resetAnimation = () => {
-    const charArray = inputString.split('');
-    setChars(charArray);
-    setLeftPointer(0);
-    setRightPointer(charArray.length - 1);
-    setIsPlaying(false);
-    setIsComplete(false);
-    setSwapHistory([]);
-    setCurrentSwap(null);
-  };
-
-  const startAnimation = () => {
-    resetAnimation();
-    setIsPlaying(true);
+  const handleLoad = () => {
+    if (!inputString.trim()) return;
+    setLoadedString(inputString);
+    visualizerState.load(generateHistory(inputString));
   };
 
   const loadExamples = (example) => {
@@ -37,398 +154,227 @@ const ReverseString = ({ navigate }) => {
       example5: "javascript",
       example6: "react"
     };
-    setInputString(examples[example]);
+    const val = examples[example];
+    setInputString(val);
+    setLoadedString(val);
+    visualizerState.load(generateHistory(val));
   };
 
   useEffect(() => {
-    if (inputString) {
-      resetAnimation();
-    }
-  }, [inputString]);
+    handleLoad();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  useEffect(() => {
-    let interval;
-    if (isPlaying && leftPointer < rightPointer && !isComplete) {
-      interval = setInterval(() => {
-        setChars(prevChars => {
-          const newChars = [...prevChars];
-          
-          // Record the swap
-          setCurrentSwap({
-            left: leftPointer,
-            right: rightPointer,
-            leftChar: newChars[leftPointer],
-            rightChar: newChars[rightPointer]
-          });
+  const {
+    leftPointer = 0,
+    rightPointer = 0,
+    chars = loadedString.split(''),
+    currentSwap = null,
+    swapHistory = []
+  } = currentState;
 
-          setSwapHistory(prev => [...prev, {
-            left: leftPointer,
-            right: rightPointer,
-            leftChar: newChars[leftPointer],
-            rightChar: newChars[rightPointer]
-          }]);
-
-          // Perform the swap
-          const temp = newChars[leftPointer];
-          newChars[leftPointer] = newChars[rightPointer];
-          newChars[rightPointer] = temp;
-
-          // Update pointers for next iteration
-          const newLeft = leftPointer + 1;
-          const newRight = rightPointer - 1;
-
-          if (newLeft >= newRight) {
-            setIsPlaying(false);
-            setIsComplete(true);
-          } else {
-            setLeftPointer(newLeft);
-            setRightPointer(newRight);
-          }
-
-          return newChars;
-        });
-      }, speed);
-    }
-
-    return () => clearInterval(interval);
-  }, [isPlaying, leftPointer, rightPointer, isComplete, speed]);
-
-  return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
-      <div className="max-w-6xl mx-auto mb-8">
+  const inputSection = (
+    <div className="flex flex-wrap items-center gap-4 w-full">
+      <div className="flex items-center gap-3">
+        <input
+          type="text"
+          value={inputString}
+          onChange={(e) => setInputString(e.target.value)}
+          className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-blue-500 focus:outline-none w-48"
+          placeholder="Enter a string..."
+        />
         <button
-          onClick={() => navigate("home")}
-          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group"
+          onClick={handleLoad}
+          className="px-4 py-2 bg-blue-650 hover:bg-blue-700 rounded-lg font-medium text-sm transition-all text-white cursor-pointer"
         >
-          <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-          Back to String Problems
+          Load & Visualize
         </button>
+      </div>
 
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <RefreshCw className="h-12 w-12 text-blue-400" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
-              Reverse String
-            </h1>
+      {/* Example Buttons */}
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => loadExamples("example1")} className="px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-blue-400 text-xs hover:bg-blue-500/20 transition-all cursor-pointer">hello</button>
+        <button onClick={() => loadExamples("example2")} className="px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded text-cyan-400 text-xs hover:bg-cyan-500/20 transition-all cursor-pointer">world</button>
+        <button onClick={() => loadExamples("example3")} className="px-2.5 py-1 bg-purple-500/10 border border-purple-500/20 rounded text-purple-400 text-xs hover:bg-purple-500/20 transition-all cursor-pointer">algorithm</button>
+        <button onClick={() => loadExamples("example4")} className="px-2.5 py-1 bg-green-500/10 border border-green-500/20 rounded text-green-400 text-xs hover:bg-green-500/20 transition-all cursor-pointer">racecar</button>
+        <button onClick={() => loadExamples("example5")} className="px-2.5 py-1 bg-orange-500/10 border border-orange-500/20 rounded text-orange-400 text-xs hover:bg-orange-500/20 transition-all cursor-pointer">javascript</button>
+        <button onClick={() => loadExamples("example6")} className="px-2.5 py-1 bg-pink-500/10 border border-pink-500/20 rounded text-pink-400 text-xs hover:bg-pink-500/20 transition-all cursor-pointer">react</button>
+      </div>
+    </div>
+  );
+
+  const statsSection = (
+    <>
+      {/* Pointers Panel */}
+      <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+        <h3 className="text-xl font-bold text-white mb-4">Pointers</h3>
+        <div className="space-y-4">
+          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+            <div className="text-blue-400 text-xs font-bold mb-1">Left Pointer (left)</div>
+            <div className="text-white text-lg font-mono">
+              {leftPointer < chars.length ? `[${leftPointer}] = '${chars[leftPointer]}'` : "Out of bounds"}
+            </div>
           </div>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Reverse characters in a string in-place using two pointers
-          </p>
+          <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3">
+            <div className="text-purple-400 text-xs font-bold mb-1">Right Pointer (right)</div>
+            <div className="text-white text-lg font-mono">
+              {rightPointer >= 0 && rightPointer < chars.length ? `[${rightPointer}] = '${chars[rightPointer]}'` : "Out of bounds"}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={startAnimation}
-                  disabled={isPlaying}
-                  className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 rounded-xl font-medium transition-all disabled:cursor-not-allowed"
-                >
-                  <Play className="h-4 w-4" />
-                  {isPlaying ? "Running..." : "Start Animation"}
-                </button>
-                <button
-                  onClick={resetAnimation}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-all"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                  Reset
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <label className="text-gray-400 text-sm">Speed:</label>
-                <select 
-                  value={speed} 
-                  onChange={(e) => setSpeed(Number(e.target.value))}
-                  className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white"
-                >
-                  <option value={1500}>Slow</option>
-                  <option value={1000}>Medium</option>
-                  <option value={500}>Fast</option>
-                  <option value={250}>Very Fast</option>
-                </select>
+      {/* Current Swap Panel */}
+      <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+        <h3 className="text-xl font-bold text-white mb-4">Current Swap</h3>
+        <div className="h-full flex flex-col justify-center">
+          {currentSwap ? (
+            <div className="p-4 rounded-lg border bg-cyan-500/10 border-cyan-500/30">
+              <div className="text-center font-mono">
+                <div className="text-lg flex items-center justify-center gap-3">
+                  <span className="text-blue-400">'{currentSwap.leftChar}'</span>
+                  <ArrowLeftRight className="h-5 w-5 text-cyan-400 animate-pulse" />
+                  <span className="text-purple-400">'{currentSwap.rightChar}'</span>
+                </div>
+                <div className="text-xs text-gray-450 mt-2">
+                  Position {currentSwap.left} ↔ {currentSwap.right}
+                </div>
               </div>
             </div>
-
-            <div className="mb-4">
-              <label className="text-gray-400 text-sm mb-2 block">Input String:</label>
-              <input
-                type="text"
-                value={inputString}
-                onChange={(e) => setInputString(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white text-lg font-mono"
-                placeholder="Enter a string..."
-              />
+          ) : (
+            <div className="text-gray-500 text-center text-sm font-medium">
+              No swap active
             </div>
+          )}
+        </div>
+      </div>
 
-            <div className="flex flex-wrap gap-2">
-              <button onClick={() => loadExamples('example1')} className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-lg text-blue-400 text-sm hover:bg-blue-500/30 transition-all">
-                hello
-              </button>
-              <button onClick={() => loadExamples('example2')} className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-lg text-cyan-400 text-sm hover:bg-cyan-500/30 transition-all">
-                world
-              </button>
-              <button onClick={() => loadExamples('example3')} className="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-lg text-purple-400 text-sm hover:bg-purple-500/30 transition-all">
-                algorithm
-              </button>
-              <button onClick={() => loadExamples('example4')} className="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm hover:bg-green-500/30 transition-all">
-                racecar
-              </button>
-              <button onClick={() => loadExamples('example5')} className="px-3 py-1 bg-orange-500/20 border border-orange-500/30 rounded-lg text-orange-400 text-sm hover:bg-orange-500/30 transition-all">
-                javascript
-              </button>
-              <button onClick={() => loadExamples('example6')} className="px-3 py-1 bg-pink-500/20 border border-pink-500/30 rounded-lg text-pink-400 text-sm hover:bg-pink-500/30 transition-all">
-                react
-              </button>
+      {/* Complexity & Details Panel */}
+      <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+        <h3 className="text-xl font-bold text-white mb-4">Complexity</h3>
+        <div className="space-y-3 text-sm">
+          <div className="flex items-start gap-3">
+            <Zap className="h-4 w-4 text-green-400 mt-0.5" />
+            <div>
+              <div className="font-bold text-white">Time Complexity</div>
+              <div className="text-gray-400">O(n) - Swap half of characters</div>
             </div>
           </div>
+          <div className="flex items-start gap-3">
+            <Cpu className="h-4 w-4 text-blue-400 mt-0.5" />
+            <div>
+              <div className="font-bold text-white">Space Complexity</div>
+              <div className="text-gray-400">O(1) - Reversed in place</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
-          <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-6 text-center">Two-Pointer Swap Visualization</h3>
-            
-            {/* String Visualization */}
-            <div className="flex justify-center items-center gap-3 mb-8 flex-wrap min-h-[120px]">
-              {chars.map((char, index) => (
+  return (
+    <div className="min-h-screen bg-gray-950 text-white">
+      {/* Top Navigation Bar */}
+      <div className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
+        <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
+          <button
+            onClick={() => navigate("home")}
+            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+            Back to Problems
+          </button>
+          <div className="flex items-center gap-2">
+            <Hash className="h-5 w-5 text-blue-400" />
+            <span className="text-sm font-semibold text-gray-300">
+              String Problems
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <VisualizerLayout
+        title="Reverse String"
+        description="Reverse characters in a string in-place using two pointers."
+        isLoaded={isLoaded}
+        inputSection={inputSection}
+        codeContent={codeContent}
+        activeLine={currentState.line || 0}
+        message={currentState.explanation || ""}
+        visualizerState={visualizerState}
+        statsSection={statsSection}
+      >
+        {/* Children: String visualization content */}
+        <div className="flex flex-col w-full gap-6">
+          {/* Character Grids */}
+          <div className="flex justify-center items-center gap-3 flex-wrap min-h-[120px]">
+            {chars.map((char, index) => {
+              const isLeft = index === leftPointer;
+              const isRight = index === rightPointer;
+              const isSwapped = swapHistory.some(h => h.left === index || h.right === index);
+              
+              let charColorClass = "bg-gray-800 border-gray-600";
+              if (isLeft) {
+                charColorClass = "bg-blue-500/30 border-blue-400 scale-110 shadow-lg shadow-blue-500/25 animate-pulse";
+              } else if (isRight) {
+                charColorClass = "bg-purple-500/30 border-purple-400 scale-110 shadow-lg shadow-purple-500/25 animate-pulse";
+              } else if (isLoaded && (leftPointer >= rightPointer)) {
+                charColorClass = "bg-green-500/20 border-green-400";
+              } else if (isSwapped) {
+                charColorClass = "bg-cyan-500/20 border-cyan-400";
+              }
+
+              return (
                 <div key={index} className="flex flex-col items-center gap-2">
                   <div className="text-gray-400 text-xs font-mono">[{index}]</div>
-                  <div
-                    className={`w-16 h-16 flex items-center justify-center rounded-lg border-2 transition-all duration-500 ${
-                      index === leftPointer && isPlaying
-                        ? "bg-blue-500/30 border-blue-400 scale-110 shadow-lg shadow-blue-500/25 animate-pulse"
-                        : index === rightPointer && isPlaying
-                        ? "bg-purple-500/30 border-purple-400 scale-110 shadow-lg shadow-purple-500/25 animate-pulse"
-                        : isComplete
-                        ? "bg-green-500/20 border-green-400"
-                        : swapHistory.some(h => h.left === index || h.right === index)
-                        ? "bg-cyan-500/20 border-cyan-400"
-                        : "bg-gray-800 border-gray-600"
-                    }`}
-                  >
-                    <span className="text-white font-bold text-2xl font-mono">{char}</span>
+                  <div className={`w-14 h-14 flex items-center justify-center rounded-lg border-2 transition-all duration-300 ${charColorClass}`}>
+                    <span className="text-white font-bold text-xl font-mono">{char}</span>
                   </div>
-                  <div className="text-xs font-bold">
-                    {index === leftPointer && isPlaying && (
-                      <span className="text-blue-400">LEFT</span>
-                    )}
-                    {index === rightPointer && isPlaying && (
-                      <span className="text-purple-400">RIGHT</span>
-                    )}
+                  <div className="text-[10px] font-bold h-4">
+                    {isLeft && <span className="text-blue-400">LEFT</span>}
+                    {isRight && <span className="text-purple-400">RIGHT</span>}
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
+          </div>
 
-            {/* Pointer Indicators */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                <div className="text-blue-400 text-sm font-bold mb-1">Left Pointer</div>
-                <div className="text-white text-2xl font-mono">
-                  {isPlaying || isComplete ? `[${leftPointer}] = '${chars[leftPointer]}'` : "Not started"}
+          {/* Original vs Reversed Display */}
+          <div className="bg-gray-950/45 rounded-xl border border-gray-800/40 p-4">
+            <div className="grid grid-cols-2 gap-4 text-center font-mono">
+              <div>
+                <div className="text-gray-400 text-xs mb-1">Original:</div>
+                <div className="text-gray-250 text-base">{loadedString}</div>
+              </div>
+              <div>
+                <div className="text-gray-400 text-xs mb-1">Reversed:</div>
+                <div className={`text-base transition-colors ${
+                  leftPointer >= rightPointer ? "text-green-400 font-bold" : "text-gray-250"
+                }`}>
+                  {chars.join('')}
                 </div>
               </div>
-              <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-4">
-                <div className="text-purple-400 text-sm font-bold mb-1">Right Pointer</div>
-                <div className="text-white text-2xl font-mono">
-                  {isPlaying || isComplete ? `[${rightPointer}] = '${chars[rightPointer]}'` : "Not started"}
-                </div>
-              </div>
-            </div>
-
-            {/* Current Swap */}
-            {currentSwap && isPlaying && (
-              <div className="mb-6 p-4 rounded-lg border-2 bg-cyan-500/10 border-cyan-500/30">
-                <div className="text-center">
-                  <div className="text-sm text-gray-400 mb-2">Current Swap</div>
-                  <div className="text-xl font-mono flex items-center justify-center gap-3">
-                    <span className="text-blue-400">'{currentSwap.leftChar}'</span>
-                    <ArrowLeftRight className="h-5 w-5 text-cyan-400 animate-pulse" />
-                    <span className="text-purple-400">'{currentSwap.rightChar}'</span>
-                  </div>
-                  <div className="text-sm text-gray-400 mt-2">
-                    Swapping positions [{currentSwap.left}] ↔ [{currentSwap.right}]
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Result Display */}
-            <div className="bg-gray-800 rounded-lg p-4 mb-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-gray-400 text-sm mb-2">Original:</div>
-                  <div className="text-white text-xl font-mono">{inputString}</div>
-                </div>
-                <div>
-                  <div className="text-gray-400 text-sm mb-2">Reversed:</div>
-                  <div className={`text-xl font-mono transition-colors ${
-                    isComplete ? "text-green-400 font-bold" : "text-white"
-                  }`}>
-                    {chars.join('')}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Status */}
-            <div className="text-center">
-              {isComplete ? (
-                <div className="flex items-center justify-center gap-3 text-2xl font-bold text-green-400 animate-pulse">
-                  <RefreshCw className="h-8 w-8" />
-                  String Reversed Successfully!
-                </div>
-              ) : isPlaying ? (
-                <div className="text-lg text-yellow-400">
-                  Swapping characters at positions {leftPointer} and {rightPointer}...
-                </div>
-              ) : (
-                <div className="text-gray-400">
-                  Click "Start Animation" to reverse the string
-                </div>
-              )}
             </div>
           </div>
 
           {/* Swap History */}
           {swapHistory.length > 0 && (
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">Swap History</h3>
-              <div className="space-y-2 max-h-48 overflow-y-auto">
-                {swapHistory.map((swap, index) => (
-                  <div key={index} className="p-3 rounded-lg border bg-cyan-500/10 border-cyan-500/30">
-                    <div className="text-sm font-mono flex items-center justify-between">
-                      <span>
-                        Step {index + 1}: 
-                        <span className="text-blue-400"> [{swap.left}]='{swap.leftChar}' </span>
-                        <ArrowLeftRight className="h-3 w-3 inline text-cyan-400" />
-                        <span className="text-purple-400"> [{swap.right}]='{swap.rightChar}'</span>
-                      </span>
-                      <span className="text-cyan-400">Swapped ✓</span>
-                    </div>
+            <div className="bg-gray-950/30 rounded-xl p-4 border border-gray-800/60 max-h-40 overflow-y-auto custom-scrollbar">
+              <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">Swap History</h4>
+              <div className="space-y-1">
+                {swapHistory.map((swap, idx) => (
+                  <div key={idx} className="p-2 rounded border bg-cyan-500/10 border-cyan-500/20 text-xs font-mono flex items-center justify-between">
+                    <span>
+                      Step {idx + 1}: swap s[{swap.left}]='{swap.leftChar}' ↔ s[{swap.right}]='{swap.rightChar}'
+                    </span>
+                    <span className="text-cyan-400">Swapped ✓</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
         </div>
-
-        <div className="space-y-6">
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">Platform</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                <Code className="h-5 w-5 text-blue-400" />
-                <div>
-                  <div className="font-bold text-white">LeetCode #344</div>
-                  <div className="text-sm text-gray-400">Reverse String</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">C++ Solution</h3>
-            <div className="bg-gray-950 rounded-lg p-4 font-mono text-sm overflow-x-auto">
-              <div className="text-blue-400">void reverseString(vector<span className="text-pink-400">{'<'}</span>char<span className="text-pink-400">{'>'}</span>& s) {'{'}</div>
-              <div className={`text-green-400 ml-4 ${isPlaying ? "bg-green-500/20 px-2 rounded" : ""}`}>
-                int left = 0;
-              </div>
-              <div className={`text-green-400 ml-4 ${isPlaying ? "bg-green-500/20 px-2 rounded" : ""}`}>
-                int right = s.size() - 1;
-              </div>
-              <div className="text-green-400 ml-4 mt-2">while (left {'<'} right) {'{'}</div>
-              <div className={`text-yellow-400 ml-8 ${isPlaying ? "bg-yellow-500/20 px-2 rounded" : ""}`}>
-                swap(s[left], s[right]);
-              </div>
-              <div className={`text-cyan-400 ml-8 ${isPlaying ? "bg-cyan-500/20 px-2 rounded" : ""}`}>
-                left++;
-              </div>
-              <div className={`text-purple-400 ml-8 ${isPlaying ? "bg-purple-500/20 px-2 rounded" : ""}`}>
-                right--;
-              </div>
-              <div className="text-green-400 ml-4">{'}'}</div>
-              <div className="text-blue-400">{'}'}</div>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">Algorithm Details</h3>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <Zap className="h-5 w-5 text-green-400 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">Time Complexity</div>
-                  <div className="text-sm text-gray-400">O(n/2) ≈ O(n) - Swap half the characters</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Cpu className="h-5 w-5 text-blue-400 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">Space Complexity</div>
-                  <div className="text-sm text-gray-400">O(1) - In-place reversal with two pointers</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-purple-400 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">Approach</div>
-                  <div className="text-sm text-gray-400">Two Pointers - Swap characters from both ends moving inward</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">How It Works</h3>
-            <div className="space-y-3 text-sm text-gray-400">
-              <div className="flex gap-2">
-                <span className="text-blue-400 font-bold">1.</span>
-                <span>Initialize two pointers: left at start, right at end</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-blue-400 font-bold">2.</span>
-                <span>Swap characters at both pointer positions</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-blue-400 font-bold">3.</span>
-                <span>Move left pointer forward and right pointer backward</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-blue-400 font-bold">4.</span>
-                <span>Continue until pointers meet or cross</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-blue-400 font-bold">5.</span>
-                <span>String is now reversed in-place</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">Key Points</h3>
-            <div className="space-y-2 text-sm text-gray-400">
-              <div className="flex items-start gap-2">
-                <span className="text-cyan-400">•</span>
-                <span>In-place algorithm - no extra space needed</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-cyan-400">•</span>
-                <span>Classic two-pointer technique application</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-cyan-400">•</span>
-                <span>Only n/2 swaps needed to reverse entire string</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-cyan-400">•</span>
-                <span>Works for any string length including odd/even</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </VisualizerLayout>
     </div>
   );
 };

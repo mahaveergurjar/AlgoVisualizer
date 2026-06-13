@@ -1,71 +1,39 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
+import { Code, Clock, Cpu, Terminal, CheckCircle, Hash, Zap } from "lucide-react";
+import VisualizerPointer from "../../components/VisualizerPointer";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 
-// Pointer Component
-const Pointer = ({ index, containerId, color, label }) => {
-  const [position, setPosition] = useState({ left: 0, top: 0 });
-
-  useEffect(() => {
-    const container = document.getElementById(containerId);
-    const element = document.getElementById(`${containerId}-element-${index}`);
-
-    if (container && element) {
-      const containerRect = container.getBoundingClientRect();
-      const elementRect = element.getBoundingClientRect();
-
-      setPosition({
-        left: elementRect.left - containerRect.left + elementRect.width / 2,
-        top: elementRect.bottom - containerRect.top + 8,
-      });
-    }
-  }, [index, containerId]);
-
-  const colors = {
-    red: { bg: "bg-red-500", text: "text-red-500" },
-    blue: { bg: "bg-blue-500", text: "text-blue-500" },
-  };
-
-  return (
-    <div
-      className="absolute transition-all duration-500 ease-out"
-      style={{
-        left: `${position.left}px`,
-        top: `${position.top}px`,
-        transform: "translateX(-50%)",
-      }}
-    >
-      <div
-        className={`w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent ${colors[color].bg}`}
-        style={{ borderBottomColor: color === "red" ? "#ef4444" : "#3b82f6" }}
-      />
-      <div
-        className={`text-xs font-bold mt-1 text-center ${colors[color].text}`}
-      >
-        {label}
-      </div>
-    </div>
-  );
-};
-
-// Main Component
 const MaxConsecutiveOnes = () => {
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
   const [numsInput, setNumsInput] = useState("1,1,1,0,0,0,1,1,1,1,0");
   const [kInput, setKInput] = useState("2");
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  const generateHistory = useCallback(() => {
-    const localNums = numsInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter((s) => s !== "")
-      .map(Number);
-    const localK = parseInt(kInput, 10);
+  const [nums, setNums] = useState([1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0]);
+  const [k, setK] = useState(2);
 
-    if (localNums.some(isNaN) || isNaN(localK)) {
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
+  const state = currentState || {};
+
+  const handleLoad = useCallback((customNums, customK) => {
+    let numsArr = customNums;
+    let kVal = customK;
+    if (!numsArr) {
+      numsArr = numsInput
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => s !== "")
+        .map(Number);
+      kVal = parseInt(kInput, 10);
+    }
+    if (numsArr.some(isNaN) || isNaN(kVal)) {
       alert("Invalid input. Please use comma-separated numbers for the array.");
       return;
     }
+    setNums(numsArr);
+    setNumsInput(numsArr.join(", "));
+    setK(kVal);
+    setKInput(String(kVal));
 
     const newHistory = [];
     let left = 0;
@@ -74,443 +42,242 @@ const MaxConsecutiveOnes = () => {
 
     const addState = (props) =>
       newHistory.push({
-        nums: [...localNums],
+        nums: [...numsArr],
         left,
         right: null,
         zeroCount,
         maxLength,
         line: null,
-        k: localK,
+        k: kVal,
+        explanation: "",
         ...props,
       });
 
-    addState({ line: 2 });
-    addState({ line: 3 });
-    addState({ line: 4 });
+    addState({ line: 2, explanation: "Initialize left pointer to 0." });
+    addState({ line: 3, explanation: "Initialize zeroCount to 0." });
+    addState({ line: 4, explanation: "Initialize maxLength to 0." });
 
-    for (let right = 0; right < localNums.length; right++) {
-      addState({ line: 6, right });
-      addState({ line: 7, right });
-      if (localNums[right] === 0) {
+    for (let right = 0; right < numsArr.length; right++) {
+      addState({ line: 6, right, explanation: `Move right pointer to index ${right} (value: ${numsArr[right]}).` });
+      if (numsArr[right] === 0) {
         zeroCount++;
-        addState({ line: 8, right });
+        addState({ line: 8, right, explanation: `Element at index ${right} is 0. Increment zeroCount to ${zeroCount}.` });
       }
-      addState({ line: 11, right });
-      while (zeroCount > localK) {
-        addState({ line: 12, right });
-        if (localNums[left] === 0) {
+
+      while (zeroCount > kVal) {
+        addState({ line: 11, right, explanation: `zeroCount (${zeroCount}) exceeds k (${kVal}). Shrink window from left.` });
+        if (numsArr[left] === 0) {
           zeroCount--;
-          addState({ line: 13, right });
+          addState({ line: 13, right, explanation: `Element at left pointer (index ${left}) is 0. Decrement zeroCount to ${zeroCount}.` });
         }
         left++;
-        addState({ line: 15, right });
-        addState({ line: 11, right });
+        addState({ line: 15, right, explanation: `Increment left pointer to index ${left}.` });
       }
+
       maxLength = Math.max(maxLength, right - left + 1);
-      addState({ line: 18, right });
+      addState({ line: 18, right, explanation: `Calculate window length: right - left + 1 = ${right - left + 1}. Update maxLength to ${maxLength}.` });
     }
-    addState({ line: 21, left: left, right: localNums.length - 1 });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-    setIsLoaded(true);
-  }, [numsInput, kInput]);
+    addState({ line: 21, left, right: numsArr.length - 1, explanation: `Traversal complete. Return maximum consecutive ones with flipped zeros: ${maxLength}` });
 
-  const resetVisualization = () => {
-    setHistory([]);
-    setCurrentStep(-1);
-    setIsLoaded(false);
+    load(newHistory);
+  }, [numsInput, kInput, load]);
+
+  const loadDefault = () => {
+    handleLoad([1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0], 2);
   };
 
-  const stepForward = useCallback(() => {
-    setCurrentStep((prev) => Math.min(prev + 1, history.length - 1));
-  }, [history.length]);
+  const generateNewArray = () => {
+    const size = 10 + Math.floor(Math.random() * 5);
+    const newArray = Array.from({ length: size }, () => (Math.random() > 0.3 ? 1 : 0));
+    const randomK = 1 + Math.floor(Math.random() * 3);
+    handleLoad(newArray, randomK);
+  };
 
-  const stepBackward = useCallback(() => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
-  }, []);
+  const codeContent = {
+    1: `int longestOnes(vector<int>& nums, int k) {`,
+    2: `    int left = 0;`,
+    3: `    int zeroCount = 0;`,
+    4: `    int maxLength = 0;`,
+    5: ``,
+    6: `    for (int right = 0; right < nums.size(); right++) {`,
+    7: `        if (nums[right] == 0) {`,
+    8: `            zeroCount++;`,
+    9: `        }`,
+    10: ``,
+    11: `        while (zeroCount > k) {`,
+    12: `            if (nums[left] == 0) {`,
+    13: `                zeroCount--;`,
+    14: `            }`,
+    15: `            left++;`,
+    16: `        }`,
+    17: ``,
+    18: `        maxLength = max(maxLength, right - left + 1);`,
+    19: `    }`,
+    20: ``,
+    21: `    return maxLength;`,
+    22: `}`
+  };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          stepBackward();
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          stepForward();
-        }
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, stepBackward, stepForward]);
+  const currentNums = isLoaded ? (state.nums || nums) : nums;
+  const leftIdx = isLoaded ? state.left : null;
+  const rightIdx = isLoaded ? state.right : null;
 
-  const state = history[currentStep] || {};
-  const {
-    nums = [],
-    left,
-    right,
-    zeroCount,
-    maxLength,
-    line,
-    k = kInput,
-  } = state;
+  const inputSection = (
+    <div className="flex flex-col gap-3 w-full">
+      <div className="flex flex-wrap gap-3 items-center">
+        <input
+          type="text"
+          value={numsInput}
+          onChange={(e) => setNumsInput(e.target.value)}
+          disabled={isLoaded}
+          className="flex-1 min-w-[200px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400 shadow-sm text-sm"
+          placeholder="Array e.g. 1,1,1,0,0,0,1"
+        />
+        <input
+          type="number"
+          value={kInput}
+          onChange={(e) => setKInput(e.target.value)}
+          disabled={isLoaded}
+          className="w-24 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400 shadow-sm text-sm"
+          placeholder="k"
+        />
+        {!isLoaded && (
+          <button
+            onClick={() => handleLoad()}
+            className="px-5 py-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/40 text-white font-bold transition shadow-lg cursor-pointer text-sm"
+          >
+            Load & Visualize
+          </button>
+        )}
+      </div>
+      {!isLoaded && (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={loadDefault}
+            className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 rounded-lg font-medium transition cursor-pointer text-xs"
+          >
+            Default
+          </button>
+          <button
+            onClick={generateNewArray}
+            className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 rounded-lg font-medium transition cursor-pointer text-xs"
+          >
+            Random
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-yellow-300 select-none text-sm">
+          <Terminal size={14} /> Pointers
+        </h4>
+        <div className="text-3xl font-mono text-yellow-300">
+          L={leftIdx ?? "-"} | R={rightIdx ?? "-"}
+        </div>
+      </div>
+
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-red-300 select-none text-sm">
+          <Hash size={14} /> Zeros Flipped
+        </h4>
+        <div className="text-3xl font-mono text-red-300 font-bold">
+          {state.zeroCount ?? 0} <span className="text-xs text-gray-500">/ {k}</span>
+        </div>
+      </div>
+
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-emerald-300 select-none text-sm">
+          <CheckCircle size={14} /> Max Length
+        </h4>
+        <div className="text-3xl font-bold text-emerald-300">
+          {state.maxLength ?? 0}
+        </div>
+      </div>
+
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-amber-300 font-semibold flex items-center gap-2 mb-2 select-none text-sm">
+          <Clock size={16} /> Complexity
+        </h4>
+        <div className="text-xs text-gray-300 space-y-1">
+          <div>
+            <strong>Time:</strong> <span className="font-mono text-cyan-300">O(N)</span> — Sliding window pointers traverse the array at most twice.
+          </div>
+          <div>
+            <strong>Space:</strong> <span className="font-mono text-cyan-300">O(1)</span> — Only uses auxiliary pointers and zero counters.
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
-      <div className="p-4 max-w-fit mx-auto">
-        <header className="text-center mb-8 pt-6">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent mb-3">
-            Max Consecutive Ones III
-          </h1>
-          <p className="text-lg text-gray-400">
-            Visualizing LeetCode 1004 - Sliding Window Algorithm
-          </p>
-          <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-500">
-            <span className="flex items-center gap-2">
-              <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">←</kbd>
-              <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">→</kbd>
-              Navigate
-            </span>
-          </div>
-        </header>
+    <VisualizerLayout
+      title="Max Consecutive Ones III"
+      description="Find the maximum number of consecutive 1s in the array if you can flip at most k 0s."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={state.line}
+      message={state.explanation || "Enter inputs to begin visualization."}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter array and k values to begin the visualization."
+    >
+      <div className="w-full space-y-8">
+        <div className="p-6 bg-gray-900/40 rounded-xl border border-gray-800">
+          <div
+            id="main-array-container"
+            className="w-full h-24 flex justify-center items-center gap-2 flex-wrap relative"
+          >
+            {currentNums.map((num, index) => {
+              const isInWindow = leftIdx !== null && rightIdx !== null && index >= leftIdx && index <= rightIdx;
+              const isFlipped = isInWindow && num === 0;
 
-        {/* Input and Controls Section */}
-        <div className="bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50 mb-8">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
-              <div className="flex items-center gap-3 w-full sm:w-auto">
-                <label
-                  htmlFor="array-input"
-                  className="font-semibold text-gray-300 text-sm whitespace-nowrap"
-                >
-                  Array:
-                </label>
-                <input
-                  id="array-input"
-                  type="text"
-                  value={numsInput}
-                  onChange={(e) => setNumsInput(e.target.value)}
-                  disabled={isLoaded}
-                  className="bg-gray-900/80 border border-gray-600 rounded-lg px-4 py-2.5 w-full sm:w-72 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm"
-                  placeholder="e.g., 1,1,1,0,0,0,1,1,1,1,0"
-                />
-              </div>
-              <div className="flex items-center gap-3">
-                <label
-                  htmlFor="k-input"
-                  className="font-semibold text-gray-300 text-sm"
-                >
-                  k:
-                </label>
-                <input
-                  id="k-input"
-                  type="number"
-                  value={kInput}
-                  onChange={(e) => setKInput(e.target.value)}
-                  disabled={isLoaded}
-                  className="bg-gray-900/80 border border-gray-600 rounded-lg px-4 py-2.5 w-24 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm"
-                />
-              </div>
-            </div>
+              let cellStyle = "bg-gray-700/50 border-gray-600 hover:scale-105";
+              if (isFlipped) {
+                cellStyle = "bg-gradient-to-br from-amber-400 to-yellow-500 text-gray-900 border-amber-400 scale-110 shadow-lg shadow-amber-500/50";
+              } else if (isInWindow) {
+                cellStyle = "bg-gray-600 border-amber-400 scale-105 shadow-lg text-white";
+              }
 
-            <div className="flex items-center gap-3">
-              {!isLoaded ? (
-                <button
-                  onClick={generateHistory}
-                  className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-gray-900 font-bold py-2.5 px-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer"
+              return (
+                <div
+                  key={index}
+                  id={`main-array-container-element-${index}`}
+                  className={`w-12 h-12 flex flex-col items-center justify-center text-lg font-bold rounded-lg border-2 transition-all duration-300 ${cellStyle}`}
                 >
-                  Load & Visualize
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={stepBackward}
-                    disabled={currentStep <= 0}
-                    className="bg-gray-700 hover:bg-gray-600 font-bold p-2.5 rounded-lg transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg transform hover:scale-105 active:scale-95"
-                    title="Previous step (←)"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
-                      />
-                    </svg>
-                  </button>
-                  <span className="font-mono text-base text-gray-300 min-w-[100px] text-center bg-gray-900/50 px-4 py-2 rounded-lg">
-                    Step{" "}
-                    <span className="text-amber-400 font-bold">
-                      {currentStep + 1}
-                    </span>
-                    /{history.length}
-                  </span>
-                  <button
-                    onClick={stepForward}
-                    disabled={currentStep >= history.length - 1}
-                    className="bg-gray-700 hover:bg-gray-600 font-bold p-2.5 rounded-lg transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg transform hover:scale-105 active:scale-95"
-                    title="Next step (→)"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M13 5l7 7-7 7M5 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                </>
-              )}
-              <button
-                onClick={resetVisualization}
-                className="ml-2 bg-red-600 hover:bg-red-700 cursor-pointer text-white font-bold py-2.5 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95"
-              >
-                Reset
-              </button>
-            </div>
+                  <span className="text-xs text-[10px] text-gray-400 font-mono scale-75">[{index}]</span>
+                  <span>{num}</span>
+                </div>
+              );
+            })}
           </div>
+
+          {isLoaded && leftIdx !== null && (
+            <VisualizerPointer
+              index={leftIdx}
+              containerId="main-array-container"
+              color="red"
+              label="L"
+            />
+          )}
+          {isLoaded && rightIdx !== null && (
+            <VisualizerPointer
+              index={rightIdx}
+              containerId="main-array-container"
+              color="blue"
+              label="R"
+              direction="up"
+            />
+          )}
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Code Section */}
-          <div className="lg:col-span-1 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50 overflow-hidden">
-            <h3 className="font-bold text-xl text-amber-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                />
-              </svg>
-              C++ Sliding Window Solution
-            </h3>
-            <div className="overflow-x-auto overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-              <pre className="text-sm">
-                <code className="language-cpp font-mono leading-relaxed block">
-                  {[...Array(22)].map((_, i) => {
-                    const lineNum = i + 1;
-                    return (
-                      <span
-                        key={lineNum}
-                        className={`block px-3 py-0.5 transition-all duration-300 ${
-                          line === lineNum
-                            ? "bg-amber-500/20 border-l-4 border-amber-500 shadow-lg"
-                            : "hover:bg-gray-700/30"
-                        }`}
-                      >
-                        <span className="text-gray-500 select-none inline-block w-8 text-right mr-3">
-                          {lineNum}
-                        </span>
-                        <span
-                          className={
-                            line === lineNum
-                              ? "text-amber-300"
-                              : "text-gray-300"
-                          }
-                        >
-                          {lineNum === 1 &&
-                            `int longestOnes(vector<int>& nums, int k) {`}
-                          {lineNum === 2 && `    int left = 0;`}
-                          {lineNum === 3 && `    int zeroCount = 0;`}
-                          {lineNum === 4 && `    int maxLength = 0;`}
-                          {lineNum === 5 && ` `}
-                          {lineNum === 6 &&
-                            `    for (int right = 0; right < nums.size(); right++) {`}
-                          {lineNum === 7 && `        if (nums[right] == 0) {`}
-                          {lineNum === 8 && `            zeroCount++;`}
-                          {lineNum === 9 && `        }`}
-                          {lineNum === 10 && ` `}
-                          {lineNum === 11 && `        while (zeroCount > k) {`}
-                          {lineNum === 12 &&
-                            `            if (nums[left] == 0) {`}
-                          {lineNum === 13 && `                zeroCount--;`}
-                          {lineNum === 14 && `            }`}
-                          {lineNum === 15 && `            left++;`}
-                          {lineNum === 16 && `        }`}
-                          {lineNum === 17 && ` `}
-                          {lineNum === 18 &&
-                            `        maxLength = max(maxLength, right - left + 1);`}
-                          {lineNum === 19 && `    }`}
-                          {lineNum === 20 && ` `}
-                          {lineNum === 21 && `    return maxLength;`}
-                          {lineNum === 22 && `}`}
-                        </span>
-                      </span>
-                    );
-                  })}
-                </code>
-              </pre>
-            </div>
-          </div>
-
-          {/* Visualization Section */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Array Visualization */}
-            <div className="relative bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl min-h-[180px]">
-              <h3 className="font-bold text-lg text-gray-300 mb-4">
-                Array Visualization
-              </h3>
-              <div
-                id="main-array-container"
-                className="w-full h-24 flex justify-center items-center gap-2 flex-wrap"
-              >
-                {isLoaded ? (
-                  nums.map((num, index) => {
-                    const isInWindow = index >= left && index <= right;
-                    const isFlipped = isInWindow && num === 0;
-                    return (
-                      <div
-                        key={index}
-                        id={`main-array-container-element-${index}`}
-                        className={`w-14 h-14 flex items-center justify-center text-xl font-bold rounded-lg border-2 transition-all duration-500 transform ${
-                          isFlipped
-                            ? "bg-gradient-to-br from-amber-400 to-yellow-500 text-gray-900 border-amber-400 scale-110 shadow-lg shadow-amber-500/50"
-                            : isInWindow
-                            ? "bg-gray-600 border-amber-400 scale-105 shadow-lg"
-                            : "bg-gray-700/50 border-gray-600 hover:scale-105"
-                        }`}
-                      >
-                        {num}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="text-gray-500 text-center py-8">
-                    <svg
-                      className="w-16 h-16 mx-auto mb-3 opacity-50"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                      />
-                    </svg>
-                    <p>Load an array to start visualizing</p>
-                  </div>
-                )}
-              </div>
-              {isLoaded && left !== null && (
-                <Pointer
-                  index={left}
-                  containerId="main-array-container"
-                  color="red"
-                  label="left"
-                />
-              )}
-              {isLoaded && right !== null && (
-                <Pointer
-                  index={right}
-                  containerId="main-array-container"
-                  color="blue"
-                  label="right"
-                />
-              )}
-            </div>
-
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-blue-700/50">
-                <h3 className="font-bold text-lg text-blue-300 mb-3 flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Zeros Flipped
-                </h3>
-                <div className="text-center">
-                  <span className="font-mono text-5xl font-bold text-blue-300">
-                    {zeroCount ?? 0}
-                  </span>
-                  <span className="text-gray-400 text-3xl mx-2">/</span>
-                  <span className="font-mono text-5xl font-bold text-gray-300">
-                    {k}
-                  </span>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-purple-700/50">
-                <h3 className="font-bold text-lg text-purple-300 mb-3 flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Window Length
-                </h3>
-                <div className="font-mono text-5xl font-bold text-center text-purple-300">
-                  {right === null || left === null || right < left
-                    ? 0
-                    : right - left + 1}
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-green-700/50">
-                <h3 className="font-bold text-lg text-green-300 mb-3 flex items-center gap-2">
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Max Length Found
-                </h3>
-                <div className="font-mono text-5xl font-bold text-center text-green-400">
-                  {maxLength ?? 0}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <footer className="text-center mt-12 pb-6 text-gray-500 text-sm">
-          <p>Use arrow keys ← → to navigate through steps</p>
-        </footer>
       </div>
-    </div>
+    </VisualizerLayout>
   );
 };
 

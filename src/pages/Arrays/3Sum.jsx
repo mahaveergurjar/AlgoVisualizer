@@ -1,47 +1,220 @@
-import { useState, useEffect } from "react";
-import {
-  ArrowLeft,
-  Play,
-  RotateCcw,
-  Code,
-  Clock,
-  Cpu,
-  Hash,
-} from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { Code, Clock, Cpu, Hash, Terminal, CheckCircle } from "lucide-react";
+import { useVisualizer } from "../../hooks/useVisualizer";
+import VisualizerLayout from "../../components/VisualizerLayout";
 
-const ThreeSum = ({ navigate }) => {
+const ThreeSum = () => {
+  const [arrInput, setArrInput] = useState("-1, 0, 1, 2, -1, -4");
   const [array, setArray] = useState([-1, 0, 1, 2, -1, -4]);
-  const [sortedArray, setSortedArray] = useState([]);
-  const [originalArray] = useState([-1, 0, 1, 2, -1, -4]);
-  const [i, setI] = useState(-1);
-  const [left, setLeft] = useState(-1);
-  const [right, setRight] = useState(-1);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1000);
-  const [, setIsComplete] = useState(false);
-  const [currentSum, setCurrentSum] = useState(null);
-  const [foundTriplets, setFoundTriplets] = useState([]);
-  const [currentStep, setCurrentStep] = useState("");
-  const [phase, setPhase] = useState("sorting");
 
-  const resetAnimation = () => {
-    const sorted = [...array].sort((a, b) => a - b);
-    setSortedArray(sorted);
-    setI(-1);
-    setLeft(-1);
-    setRight(-1);
-    setIsPlaying(false);
-    setIsComplete(false);
-    setCurrentSum(null);
-    setFoundTriplets([]);
-    setCurrentStep("Ready to start");
-    setPhase("sorting");
-  };
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
-  const startAnimation = () => {
-    resetAnimation();
-    setIsPlaying(true);
-    setPhase("sorting");
+  const handleLoad = useCallback((customArr) => {
+    let arr = customArr;
+    if (!arr) {
+      arr = arrInput.split(",").map((s) => parseInt(s.trim(), 10));
+    }
+    if (arr.some(isNaN) || arr.length === 0) {
+      alert("Invalid input");
+      return;
+    }
+    setArray(arr);
+    setArrInput(arr.join(", "));
+
+    const sorted = [...arr].sort((a, b) => a - b);
+    const newHistory = [];
+
+    // Step 1: Sorting
+    newHistory.push({
+      array: arr,
+      displayArray: arr,
+      i: -1,
+      left: -1,
+      right: -1,
+      currentSum: null,
+      foundTriplets: [],
+      message: "Sort the array in ascending order.",
+      line: 3,
+      phase: "sorting",
+    });
+
+    newHistory.push({
+      array: sorted,
+      displayArray: sorted,
+      i: -1,
+      left: -1,
+      right: -1,
+      currentSum: null,
+      foundTriplets: [],
+      message: "Array sorted, starting 3Sum algorithm.",
+      line: 4,
+      phase: "finding",
+    });
+
+    const triplets = [];
+    for (let i = 0; i < sorted.length - 2; i++) {
+      newHistory.push({
+        array: sorted,
+        displayArray: sorted,
+        i,
+        left: i + 1,
+        right: sorted.length - 1,
+        currentSum: null,
+        foundTriplets: [...triplets],
+        message: `Set i pointer at index ${i} (value: ${sorted[i]}). Initialize left and right pointers.`,
+        line: 4,
+        phase: "finding",
+      });
+
+      if (i > 0 && sorted[i] === sorted[i - 1]) {
+        newHistory.push({
+          array: sorted,
+          displayArray: sorted,
+          i,
+          left: i + 1,
+          right: sorted.length - 1,
+          currentSum: null,
+          foundTriplets: [...triplets],
+          message: `Duplicate value at index ${i} (${sorted[i]}), skipping to avoid duplicate triplets.`,
+          line: 5,
+          phase: "finding",
+        });
+        continue;
+      }
+
+      let left = i + 1;
+      let right = sorted.length - 1;
+
+      while (left < right) {
+        const sum = sorted[i] + sorted[left] + sorted[right];
+
+        newHistory.push({
+          array: sorted,
+          displayArray: sorted,
+          i,
+          left,
+          right,
+          currentSum: sum,
+          foundTriplets: [...triplets],
+          message: `Calculate sum: ${sorted[i]} + ${sorted[left]} + ${sorted[right]} = ${sum}.`,
+          line: 8,
+          phase: "finding",
+        });
+
+        if (sum === 0) {
+          const tripletValues = [sorted[i], sorted[left], sorted[right]];
+          const isDuplicate = triplets.some(
+            (t) =>
+              t.values[0] === tripletValues[0] &&
+              t.values[1] === tripletValues[1] &&
+              t.values[2] === tripletValues[2]
+          );
+
+          if (!isDuplicate) {
+            triplets.push({
+              indices: [i, left, right],
+              values: tripletValues,
+            });
+          }
+
+          newHistory.push({
+            array: sorted,
+            displayArray: sorted,
+            i,
+            left,
+            right,
+            currentSum: sum,
+            foundTriplets: [...triplets],
+            message: `Sum is 0! Found triplet: [${tripletValues.join(", ")}].`,
+            line: 10,
+            phase: "finding",
+          });
+
+          left++;
+          right--;
+
+          while (left < right && sorted[left] === sorted[left - 1]) {
+            newHistory.push({
+              array: sorted,
+              displayArray: sorted,
+              i,
+              left,
+              right,
+              currentSum: sum,
+              foundTriplets: [...triplets],
+              message: `Skip duplicate left element: ${sorted[left]}.`,
+              line: 11,
+              phase: "finding",
+            });
+            left++;
+          }
+          while (left < right && sorted[right] === sorted[right + 1]) {
+            newHistory.push({
+              array: sorted,
+              displayArray: sorted,
+              i,
+              left,
+              right,
+              currentSum: sum,
+              foundTriplets: [...triplets],
+              message: `Skip duplicate right element: ${sorted[right]}.`,
+              line: 12,
+              phase: "finding",
+            });
+            right--;
+          }
+        } else if (sum < 0) {
+          newHistory.push({
+            array: sorted,
+            displayArray: sorted,
+            i,
+            left,
+            right,
+            currentSum: sum,
+            foundTriplets: [...triplets],
+            message: `Sum (${sum}) < 0. Move left pointer right to increase sum.`,
+            line: 15,
+            phase: "finding",
+          });
+          left++;
+        } else {
+          newHistory.push({
+            array: sorted,
+            displayArray: sorted,
+            i,
+            left,
+            right,
+            currentSum: sum,
+            foundTriplets: [...triplets],
+            message: `Sum (${sum}) > 0. Move right pointer left to decrease sum.`,
+            line: 17,
+            phase: "finding",
+          });
+          right--;
+        }
+      }
+    }
+
+    newHistory.push({
+      array: sorted,
+      displayArray: sorted,
+      i: -1,
+      left: -1,
+      right: -1,
+      currentSum: null,
+      foundTriplets: [...triplets],
+      message: `Complete! Found ${triplets.length} unique triplet(s).`,
+      line: 21,
+      phase: "finding",
+    });
+
+    load(newHistory);
+  }, [arrInput, load]);
+
+  const loadDefault = () => {
+    const defaultArr = [-1, 0, 1, 2, -1, -4];
+    handleLoad(defaultArr);
   };
 
   const generateNewArray = () => {
@@ -50,452 +223,220 @@ const ThreeSum = ({ navigate }) => {
     for (let i = 0; i < size; i++) {
       newArray.push(Math.floor(Math.random() * 11) - 5);
     }
-    setArray(newArray);
-    resetAnimation();
+    handleLoad(newArray);
   };
 
-  const loadDefaultArray = () => {
-    setArray([...originalArray]);
-    resetAnimation();
+  const codeContent = {
+    1: `vector<vector<int>> threeSum(vector<int>& nums) {`,
+    2: `    vector<vector<int>> result;`,
+    3: `    sort(nums.begin(), nums.end());`,
+    4: `    for (int i = 0; i < nums.size() - 2; i++) {`,
+    5: `        if (i > 0 && nums[i] == nums[i-1]) continue;`,
+    6: `        int left = i + 1, right = nums.size() - 1;`,
+    7: `        while (left < right) {`,
+    8: `            int sum = nums[i] + nums[left] + nums[right];`,
+    9: `            if (sum == 0) {`,
+    10: `                result.push_back({nums[i], nums[left], nums[right]});`,
+    11: `                while (left < right && nums[left] == nums[left+1]) left++;`,
+    12: `                while (left < right && nums[right] == nums[right-1]) right--;`,
+    13: `                left++; right--;`,
+    14: `            } else if (sum < 0) {`,
+    15: `                left++;`,
+    16: `            } else {`,
+    17: `                right--;`,
+    18: `            }`,
+    19: `        }`,
+    20: `    }`,
+    21: `    return result;`,
+    22: `}`
   };
 
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    const timer = setTimeout(() => {
-      if (phase === "sorting") {
-        const sorted = [...array].sort((a, b) => a - b);
-        setSortedArray(sorted);
-        setCurrentStep("Array sorted, starting 3Sum algorithm");
-        setPhase("finding");
-        setI(0);
-        setLeft(1);
-        setRight(sorted.length - 1);
-        return;
-      }
-
-      if (phase === "finding") {
-        const arr = sortedArray;
-
-        if (i >= arr.length - 2) {
-          setIsPlaying(false);
-          setIsComplete(true);
-          setCurrentStep(
-            `Complete! Found ${foundTriplets.length} unique triplet(s)`
-          );
-          setI(-1);
-          setLeft(-1);
-          setRight(-1);
-          return;
-        }
-
-        if (i > 0 && arr[i] === arr[i - 1]) {
-          setCurrentStep(`Skipping duplicate value at index ${i}`);
-          setI(i + 1);
-          setLeft(i + 2);
-          setRight(arr.length - 1);
-          return;
-        }
-
-        if (left >= right) {
-          setCurrentStep(`Moving to next i position`);
-          setI(i + 1);
-          setLeft(i + 2);
-          setRight(arr.length - 1);
-          return;
-        }
-
-        const sum = arr[i] + arr[left] + arr[right];
-        setCurrentSum(sum);
-
-        if (sum === 0) {
-          const newTriplet = {
-            indices: [i, left, right],
-            values: [arr[i], arr[left], arr[right]],
-          };
-
-          const isDuplicate = foundTriplets.some(
-            (t) =>
-              t.values[0] === newTriplet.values[0] &&
-              t.values[1] === newTriplet.values[1] &&
-              t.values[2] === newTriplet.values[2]
-          );
-
-          if (!isDuplicate) {
-            setFoundTriplets([...foundTriplets, newTriplet]);
-            setCurrentStep(
-              `Found triplet: [${arr[i]}, ${arr[left]}, ${arr[right]}]`
-            );
-          }
-
-          let newLeft = left + 1;
-          let newRight = right - 1;
-
-          while (newLeft < newRight && arr[newLeft] === arr[newLeft - 1])
-            newLeft++;
-          while (newLeft < newRight && arr[newRight] === arr[newRight + 1])
-            newRight--;
-
-          setLeft(newLeft);
-          setRight(newRight);
-        } else if (sum < 0) {
-          setCurrentStep(`Sum ${sum} < 0, move left pointer right`);
-          setLeft(left + 1);
-        } else {
-          setCurrentStep(`Sum ${sum} > 0, move right pointer left`);
-          setRight(right - 1);
-        }
-      }
-    }, speed);
-
-    return () => clearTimeout(timer);
-  }, [
-    isPlaying,
-    phase,
+  const {
+    line,
     i,
     left,
     right,
-    sortedArray,
-    array,
-    speed,
-    foundTriplets,
-  ]);
+    currentSum,
+    displayArray = array,
+    phase = "sorting",
+    foundTriplets = []
+  } = currentState;
 
-  const displayArray = phase === "sorting" ? array : sortedArray;
+  const inputSection = (
+    <>
+      <input
+        type="text"
+        value={arrInput}
+        onChange={(e) => setArrInput(e.target.value)}
+        disabled={isLoaded}
+        className="flex-1 min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm"
+        placeholder="Array (e.g. -1,0,1,2,-1,-4)"
+      />
+      {!isLoaded ? (
+        <>
+          <button
+            onClick={() => handleLoad()}
+            className="px-5 py-3 rounded-xl bg-green-500/20 hover:bg-green-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+          >
+            Load & Visualize
+          </button>
+          <button
+            onClick={loadDefault}
+            className="px-4 py-3 bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 rounded-xl font-medium transition-all cursor-pointer"
+          >
+            Default
+          </button>
+          <button
+            onClick={generateNewArray}
+            className="px-4 py-3 bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-300 rounded-xl font-medium transition-all cursor-pointer"
+          >
+            Random
+          </button>
+        </>
+      ) : null}
+    </>
+  );
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        <button
-          onClick={() => navigate("home")}
-          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group"
-        >
-          <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-          Back to Problems
-        </button>
-
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <Hash className="h-12 w-12 text-cyan-400" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
-              3Sum Problem
-            </h1>
-          </div>
-          <p className="text-gray-400 text-lg max-w-3xl mx-auto">
-            Find all unique triplets in the array that sum to zero using the
-            two-pointer technique
-          </p>
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-red-300 select-none">
+          <Terminal size={16} /> Pointers
+        </h4>
+        <div className="text-3xl font-mono text-red-300">
+          i={i >= 0 ? i : "-"} | L={left >= 0 ? left : "-"} | R={right >= 0 ? right : "-"}
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={loadDefaultArray}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl font-medium transition-all"
-                  >
-                    Load Default
-                  </button>
-                  <button
-                    onClick={startAnimation}
-                    disabled={isPlaying}
-                    className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 rounded-xl font-medium transition-all disabled:cursor-not-allowed"
-                  >
-                    <Play className="h-4 w-4" />
-                    {isPlaying ? "Running..." : "Start Animation"}
-                  </button>
-                  <button
-                    onClick={resetAnimation}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-all"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                    Reset
-                  </button>
-                </div>
-                <button
-                  onClick={generateNewArray}
-                  className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-xl font-medium transition-all"
-                >
-                  New Array
-                </button>
-              </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-cyan-300 select-none">
+          <Hash size={16} /> Sum
+        </h4>
+        <div
+          className={`text-3xl font-mono ${
+            currentSum === 0
+              ? "text-green-400 font-bold"
+              : currentSum < 0
+              ? "text-blue-400"
+              : "text-orange-400"
+          }`}
+        >
+          {currentSum !== null ? currentSum : "-"}
+        </div>
+      </div>
 
-              <div className="flex items-center gap-4">
-                <label className="text-gray-400 text-sm">Speed:</label>
-                <select
-                  value={speed}
-                  onChange={(e) => setSpeed(Number(e.target.value))}
-                  className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white"
-                >
-                  <option value={1500}>Slow</option>
-                  <option value={1000}>Medium</option>
-                  <option value={500}>Fast</option>
-                  <option value={250}>Very Fast</option>
-                </select>
-              </div>
-            </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-emerald-300 select-none">
+          <CheckCircle size={16} /> Triplets
+        </h4>
+        <div className="text-3xl font-bold text-emerald-300">
+          {foundTriplets.length}
+        </div>
+      </div>
 
-            <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-2 text-center">
-                {phase === "sorting"
-                  ? "Step 1: Sort Array"
-                  : "Step 2: Find Triplets"}
-              </h3>
-              <p className="text-center text-gray-400 mb-6 text-sm">
-                {currentStep}
-              </p>
-
-              {phase === "finding" && (
-                <div className="flex justify-center gap-8 mb-6 text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-red-500 rounded-full"></div>
-                    <span className="text-gray-400">
-                      i = {i >= 0 ? i : "-"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-                    <span className="text-gray-400">
-                      left = {left >= 0 ? left : "-"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
-                    <span className="text-gray-400">
-                      right = {right >= 0 ? right : "-"}
-                    </span>
-                  </div>
-                  {currentSum !== null && (
-                    <div className="flex items-center gap-2 ml-4 font-bold">
-                      <span
-                        className={`${
-                          currentSum === 0
-                            ? "text-green-400"
-                            : currentSum < 0
-                            ? "text-blue-400"
-                            : "text-orange-400"
-                        }`}
-                      >
-                        sum = {currentSum}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              <div className="flex justify-center items-end gap-3 mb-8 min-h-[200px]">
-                {displayArray.map((value, index) => {
-                  const isI = phase === "finding" && index === i;
-                  const isLeft = phase === "finding" && index === left;
-                  const isRight = phase === "finding" && index === right;
-                  const isInRange =
-                    phase === "finding" &&
-                    index > i &&
-                    index >= left &&
-                    index <= right;
-
-                  return (
-                    <div
-                      key={index}
-                      className="flex flex-col items-center gap-3"
-                    >
-                      <div className="text-gray-400 text-xs font-mono">
-                        [{index}]
-                      </div>
-                      <div
-                        className={`w-14 flex flex-col items-center justify-end rounded-lg border-2 transition-all duration-300 ${
-                          isI
-                            ? "bg-red-500/30 border-red-400 scale-110 shadow-lg shadow-red-500/25"
-                            : isLeft
-                            ? "bg-green-500/30 border-green-400 scale-110 shadow-lg shadow-green-500/25"
-                            : isRight
-                            ? "bg-yellow-500/30 border-yellow-400 scale-110 shadow-lg shadow-yellow-500/25"
-                            : isInRange
-                            ? "bg-blue-500/20 border-blue-400"
-                            : "bg-gray-700/30 border-gray-600"
-                        }`}
-                        style={{ height: `${Math.abs(value) * 15 + 60}px` }}
-                      >
-                        <div className="flex-1 flex items-center justify-center">
-                          <span className="text-white font-bold text-base">
-                            {value}
-                          </span>
-                        </div>
-                        <div
-                          className={`w-full text-center py-1 text-xs font-bold ${
-                            isI
-                              ? "bg-red-500 text-white"
-                              : isLeft
-                              ? "bg-green-500 text-white"
-                              : isRight
-                              ? "bg-yellow-500 text-white"
-                              : "bg-gray-700 text-gray-400"
-                          }`}
-                        >
-                          {isI ? "i" : isLeft ? "L" : isRight ? "R" : ""}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="bg-gray-950 rounded-xl p-4 border border-gray-800">
-                <h4 className="text-sm font-bold text-gray-300 mb-3">
-                  Found Triplets ({foundTriplets.length}):
-                </h4>
-                {foundTriplets.length === 0 ? (
-                  <p className="text-gray-500 text-sm">
-                    No triplets found yet...
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {foundTriplets.map((triplet, idx) => (
-                      <div
-                        key={idx}
-                        className="bg-green-500/10 border border-green-500/30 rounded-lg p-2 text-center"
-                      >
-                        <span className="text-green-400 font-mono text-sm">
-                          [{triplet.values.join(", ")}]
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-green-300 font-semibold flex items-center gap-2 mb-2 select-none">
+          <Clock size={16} /> Complexity
+        </h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <div>
+            <strong>Time:</strong> <span className="font-mono text-cyan-300">O(N²)</span> - Sorting is O(N log N) + two nested loops O(N²).
           </div>
-
-          <div className="space-y-6">
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">
-                Problem Info
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-lg">
-                  <Code className="h-5 w-5 text-cyan-400" />
-                  <div>
-                    <div className="font-bold text-white">LeetCode #15</div>
-                    <div className="text-sm text-gray-400">Medium</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">
-                Algorithm Steps
-              </h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-500 flex items-center justify-center text-cyan-400 font-bold text-xs">
-                    1
-                  </div>
-                  <p className="text-gray-300">
-                    Sort the array in ascending order
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-500 flex items-center justify-center text-cyan-400 font-bold text-xs">
-                    2
-                  </div>
-                  <p className="text-gray-300">
-                    Fix pointer i, use two pointers (left, right) for remaining
-                    array
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-500 flex items-center justify-center text-cyan-400 font-bold text-xs">
-                    3
-                  </div>
-                  <p className="text-gray-300">
-                    If sum = 0: found triplet, skip duplicates
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-500 flex items-center justify-center text-cyan-400 font-bold text-xs">
-                    4
-                  </div>
-                  <p className="text-gray-300">
-                    If sum &lt; 0: move left pointer right
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-500 flex items-center justify-center text-cyan-400 font-bold text-xs">
-                    5
-                  </div>
-                  <p className="text-gray-300">
-                    If sum &gt; 0: move right pointer left
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">
-                C++ Solution
-              </h3>
-              <div className="bg-gray-950 rounded-lg p-4 font-mono text-xs overflow-x-auto">
-                <pre className="text-gray-300">
-                  {`vector<vector<int>> threeSum(vector<int>& nums) {
-  vector<vector<int>> result;
-  sort(nums.begin(), nums.end());
-
-  for (int i = 0; i < nums.size() - 2; i++) {
-    if (i > 0 && nums[i] == nums[i-1]) continue;
-
-    int left = i + 1, right = nums.size() - 1;
-
-    while (left < right) {
-      int sum = nums[i] + nums[left] + nums[right];
-
-      if (sum == 0) {
-        result.push_back({nums[i], nums[left], nums[right]});
-        while (left < right && nums[left] == nums[left+1]) left++;
-        while (left < right && nums[right] == nums[right-1]) right--;
-        left++; right--;
-      } else if (sum < 0) {
-        left++;
-      } else {
-        right--;
-      }
-    }
-  }
-  return result;
-}`}
-                </pre>
-              </div>
-            </div>
-
-            <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">Complexity</h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <Clock className="h-5 w-5 text-blue-400 mt-1" />
-                  <div>
-                    <div className="font-bold text-white">Time: O(N²)</div>
-                    <div className="text-sm text-gray-400">
-                      Sorting O(N log N) + nested loops O(N²)
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Cpu className="h-5 w-5 text-green-400 mt-1" />
-                  <div>
-                    <div className="font-bold text-white">Space: O(1)</div>
-                    <div className="text-sm text-gray-400">
-                      Excluding output array, constant extra space
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div>
+            <strong>Space:</strong> <span className="font-mono text-cyan-300">O(1)</span> or <span className="font-mono text-cyan-300">O(N)</span> for sorting space.
           </div>
         </div>
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <VisualizerLayout
+      title="3Sum"
+      description="Find all unique triplets in the array that sum to zero using sorting and the two-pointer technique."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={currentState.message || "Enter array inputs to begin the visualization."}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter a list of numbers to begin the visualization."
+    >
+      <div className="w-full space-y-8">
+        <div className="flex justify-center items-end gap-3 min-h-[220px] pt-4">
+          {displayArray.map((value, index) => {
+            const isI = phase === "finding" && index === i;
+            const isLeft = phase === "finding" && index === left;
+            const isRight = phase === "finding" && index === right;
+            const isInRange =
+              phase === "finding" &&
+              index > i &&
+              index >= left &&
+              index <= right;
+
+            return (
+              <div key={index} className="flex flex-col items-center gap-3">
+                <div className="text-gray-400 text-xs font-mono">[{index}]</div>
+                <div
+                  className={`w-14 flex flex-col items-center justify-end rounded-lg border-2 transition-all duration-300 ${
+                    isI
+                      ? "bg-red-500/30 border-red-400 scale-110 shadow-lg shadow-red-500/25"
+                      : isLeft
+                      ? "bg-green-500/30 border-green-400 scale-110 shadow-lg shadow-green-500/25"
+                      : isRight
+                      ? "bg-yellow-500/30 border-yellow-400 scale-110 shadow-lg shadow-yellow-500/25"
+                      : isInRange
+                      ? "bg-blue-500/20 border-blue-400"
+                      : "bg-gray-700/30 border-gray-600"
+                  }`}
+                  style={{ height: `${Math.min(150, Math.abs(value) * 15 + 60)}px` }}
+                >
+                  <div className="flex-1 flex items-center justify-center">
+                    <span className="text-white font-bold text-base">{value}</span>
+                  </div>
+                  <div
+                    className={`w-full text-center py-1 text-xs font-bold ${
+                      isI
+                        ? "bg-red-500 text-white"
+                        : isLeft
+                        ? "bg-green-500 text-white"
+                        : isRight
+                        ? "bg-yellow-500 text-white"
+                        : "bg-gray-700 text-gray-400"
+                    }`}
+                  >
+                    {isI ? "i" : isLeft ? "L" : isRight ? "R" : ""}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="bg-gray-950 rounded-xl p-4 border border-gray-800 max-w-lg mx-auto">
+          <h4 className="text-sm font-bold text-gray-300 mb-3">
+            Found Triplets ({foundTriplets.length}):
+          </h4>
+          {foundTriplets.length === 0 ? (
+            <p className="text-gray-500 text-sm">No triplets found yet...</p>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {foundTriplets.map((triplet, idx) => (
+                <div
+                  key={idx}
+                  className="bg-green-500/10 border border-green-500/30 rounded-lg p-2 text-center"
+                >
+                  <span className="text-green-400 font-mono text-sm">
+                    [{triplet.values.join(", ")}]
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </VisualizerLayout>
   );
 };
 

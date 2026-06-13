@@ -1,28 +1,16 @@
-// AVLTree.jsx
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
-  Code,
   CheckCircle,
-  BarChart3,
   Clock,
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  RotateCcw,
   Zap,
   Cpu,
-  TreePine,
   GitBranch,
   Scale,
-  RefreshCw,
   Target,
   Gauge,
-  ArrowUp,
-  ArrowDown,
-  RotateCw,
-  List,
 } from "lucide-react";
+import { useVisualizer } from "../../hooks/useVisualizer";
+import VisualizerLayout from "../../components/VisualizerLayout";
 
 // TreeNode class for building the tree
 class TreeNode {
@@ -200,15 +188,18 @@ const TreeVisualization = ({ tree, avlState }) => {
     const edges = [];
 
     if (parentX !== null && parentY !== null) {
+      const isRotationTarget = avlState?.currentNode === node.val;
+
       edges.push(
         <line
-          key={`edge-${node.val}-${parentX}-${parentY}`}
+          key={`edge-${node.val}`}
           x1={parentX}
-          y1={parentY}
+          y1={parentY + 20}
           x2={x}
-          y2={y}
-          stroke="#6b7280"
-          strokeWidth={2}
+          y2={y - 20}
+          stroke={isRotationTarget ? "#f59e0b" : "#4b5563"}
+          strokeWidth={isRotationTarget ? 3 : 2}
+          strokeDasharray={isRotationTarget ? "4,4" : "none"}
           className="transition-all duration-500"
         />
       );
@@ -221,236 +212,101 @@ const TreeVisualization = ({ tree, avlState }) => {
   };
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-      <h3 className="font-bold text-lg text-purple-300 mb-4 flex items-center gap-2">
-        <Scale size={20} />
-        AVL Tree Visualization
-        {tree && (
-          <span className="text-sm text-gray-400 ml-2">
-            (Root: {tree.val}, Height: {tree.height}, Balance: {avlState?.balanceFactors?.[tree.val] || 0})
-          </span>
+    <div className="w-full flex flex-col items-center">
+      <svg
+        ref={svgRef}
+        width={dimensions.width}
+        height={dimensions.height}
+        className="border border-gray-800 rounded-2xl bg-gray-950/40 backdrop-blur-sm"
+      >
+        {/* Render edges first */}
+        {tree && renderEdges(tree)}
+        
+        {/* Render nodes on top */}
+        {nodes.map((nodeData, index) => (
+          <Tree key={`node-${index}`} {...nodeData} />
+        ))}
+        
+        {!tree && (
+          <text
+            x="50%"
+            y="50%"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            className="fill-gray-500 font-mono text-sm"
+          >
+            Empty Tree
+          </text>
         )}
-      </h3>
-      
-      <div className="flex justify-center">
-        <svg
-          ref={svgRef}
-          width={dimensions.width}
-          height={dimensions.height}
-          className="border border-gray-600 rounded-lg bg-gray-900/50"
-        >
-          {/* Render edges first */}
-          {tree && renderEdges(tree)}
-          
-          {/* Render nodes on top */}
-          {nodes.map((nodeData, index) => (
-            <Tree key={`node-${nodeData.node.val}-${index}`} {...nodeData} />
-          ))}
-        </svg>
-      </div>
-
-      {/* Tree Info */}
-      {tree && (
-        <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
-          <div className="bg-gray-700/50 p-3 rounded-lg">
-            <div className="text-gray-400">Tree Height</div>
-            <div className="font-mono text-emerald-400">
-              {tree.height}
-            </div>
-          </div>
-          <div className="bg-gray-700/50 p-3 rounded-lg">
-            <div className="text-gray-400">Total Nodes</div>
-            <div className="font-mono text-emerald-400">
-              {nodes.length}
-            </div>
-          </div>
-          <div className="bg-gray-700/50 p-3 rounded-lg">
-            <div className="text-gray-400">Root Balance</div>
-            <div className="font-mono text-emerald-400">
-              {avlState?.balanceFactors?.[tree.val] || 0}
-            </div>
-          </div>
-        </div>
-      )}
+      </svg>
     </div>
   );
 };
 
 // Array Visualization Component
 const ArrayVisualization = ({ inorder, avlState }) => {
-  const getArrayElementStyle = (value, index) => {
-    const isCurrent = avlState?.currentIndex === index;
-    const isPivot = avlState?.pivotIndex === index;
-    const isInRange = 
-      avlState?.start !== undefined && 
-      avlState?.end !== undefined &&
-      index >= avlState.start && 
-      index <= avlState.end;
-
-    const baseStyle = "w-12 h-12 rounded-lg border-2 flex items-center justify-center font-bold text-lg transition-all duration-500 transform";
-    
-    if (isCurrent) {
-      return `${baseStyle} bg-emerald-500 border-emerald-400 text-white scale-110 shadow-lg shadow-emerald-500/50`;
-    } else if (isPivot) {
-      return `${baseStyle} bg-purple-500 border-purple-400 text-white scale-110 shadow-lg shadow-purple-500/50`;
-    } else if (isInRange) {
-      return `${baseStyle} bg-blue-500/30 border-blue-400/50 text-gray-300 scale-105`;
-    }
-    
-    return `${baseStyle} bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600/50 scale-100`;
-  };
+  const { start, end, pivotIndex } = avlState;
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-      <h3 className="font-bold text-lg text-blue-300 mb-4 flex items-center gap-2">
-        <List size={20} />
-        Inorder Traversal (Sorted)
-      </h3>
-
-      <div className="space-y-6">
-        {/* Inorder Array */}
-        <div>
-          <h4 className="text-sm text-gray-400 mb-3 flex items-center gap-2">
-            <RefreshCw size={16} />
-            Sorted Array for Balanced BST Construction
-            {avlState?.start !== undefined && avlState?.end !== undefined && (
-              <span className="text-amber-400 font-mono ml-2">
-                Range: [{avlState.start}, {avlState.end}]
+    <div className="w-full bg-gray-900/40 backdrop-blur-sm p-4 rounded-xl border border-gray-800">
+      <h4 className="text-gray-400 text-xs font-mono mb-3 uppercase tracking-wider select-none text-center">
+        Inorder array (Sorted)
+      </h4>
+      <div className="flex justify-center items-center gap-1.5 overflow-x-auto py-2">
+        {inorder.map((val, idx) => {
+          const isPivot = idx === pivotIndex;
+          const isSelected = idx >= start && idx <= end;
+          
+          return (
+            <div key={idx} className="flex flex-col items-center gap-1">
+              <div
+                className={`w-10 h-10 flex items-center justify-center font-mono font-bold rounded-lg border text-sm transition-all duration-300 ${
+                  isPivot
+                    ? "bg-purple-500/30 border-purple-400 text-purple-300 scale-110 shadow-lg shadow-purple-500/25"
+                    : isSelected
+                    ? "bg-blue-500/20 border-blue-400/50 text-blue-300"
+                    : "bg-gray-800/40 border-gray-700/50 text-gray-500"
+                }`}
+              >
+                {val}
+              </div>
+              <span className="text-[10px] text-gray-600 font-mono">
+                {idx}
               </span>
-            )}
-          </h4>
-          <div className="flex gap-2 flex-wrap justify-center">
-            {inorder.map((value, index) => (
-              <div key={`inorder-${index}`} className="flex flex-col items-center">
-                <div className="text-xs text-gray-500 mb-1 font-mono">{index}</div>
-                <div
-                  className={getArrayElementStyle(value, index)}
-                >
-                  {value}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          );
+        })}
       </div>
-
-      {/* Current Range Visualization */}
-      {avlState?.start !== undefined && avlState?.end !== undefined && (
-        <div className="mt-4 bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg p-4 border border-gray-700">
-          <h4 className="text-sm text-gray-400 mb-2 flex items-center gap-2">
-            <Target size={16} />
-            Current Subarray Range
-          </h4>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <div className="text-gray-500">Start Index:</div>
-              <div className="font-mono text-amber-400">{avlState.start}</div>
-            </div>
-            <div>
-              <div className="text-gray-500">End Index:</div>
-              <div className="font-mono text-amber-400">{avlState.end}</div>
-            </div>
-            {avlState.pivotIndex !== undefined && (
-              <div className="col-span-2">
-                <div className="text-gray-500">Mid Index (Root):</div>
-                <div className="font-mono text-purple-400">{avlState.pivotIndex}</div>
-              </div>
-            )}
-          </div>
-          {avlState.currentRoot !== undefined && (
-            <div className="mt-2 text-xs text-gray-400">
-              Creating node: <span className="font-mono text-emerald-400">{avlState.currentRoot}</span>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };
 
-// Rotation Visualization Component
+// Rotation Animation Component (Simulated)
 const RotationVisualization = ({ rotationState }) => {
-  if (!rotationState || !rotationState.type) return null;
-
-  const getRotationDescription = (type) => {
-    switch (type) {
-      case 'left':
-        return "Left Rotation (LL Case)";
-      case 'right':
-        return "Right Rotation (RR Case)";
-      case 'leftRight':
-        return "Left-Right Rotation (LR Case)";
-      case 'rightLeft':
-        return "Right-Left Rotation (RL Case)";
-      default:
-        return "Rotation";
-    }
-  };
-
-  const getRotationExplanation = (type, node) => {
-    switch (type) {
-      case 'left':
-        return `Left rotation at node ${node} to fix right-heavy subtree`;
-      case 'right':
-        return `Right rotation at node ${node} to fix left-heavy subtree`;
-      case 'leftRight':
-        return `Left-Right rotation at node ${node} to fix left-right case`;
-      case 'rightLeft':
-        return `Right-Left rotation at node ${node} to fix right-left case`;
-      default:
-        return `Balancing node ${node}`;
-    }
-  };
+  const { type, node, balanceFactor, case: rotationCase } = rotationState;
 
   return (
-    <div className="bg-gradient-to-br from-purple-900/40 to-pink-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-purple-700/50">
-      <h3 className="font-bold text-lg text-purple-300 mb-3 flex items-center gap-2">
-        <RefreshCw size={20} />
-        AVL Rotation
-      </h3>
-      <div className="text-center mb-4">
-        <div className="font-mono text-2xl font-bold text-purple-400 mb-2">
-          {getRotationDescription(rotationState.type)}
-        </div>
-        <div className="text-sm text-gray-300">
-          {getRotationExplanation(rotationState.type, rotationState.node)}
-        </div>
+    <div className="w-full bg-gradient-to-r from-red-900/20 via-yellow-900/10 to-red-900/20 p-4 rounded-xl border border-red-900/30 text-center animate-pulse">
+      <div className="flex items-center justify-center gap-2 text-yellow-400 mb-1">
+        <span className="font-bold text-sm uppercase tracking-wide">
+          ⚠️ Unbalanced detected at node {node} (BF: {balanceFactor})
+        </span>
       </div>
-      
-      <div className="grid grid-cols-2 gap-4 text-sm">
-        <div className="bg-purple-900/30 p-3 rounded-lg">
-          <div className="text-gray-400">Unbalanced Node</div>
-          <div className="font-mono text-red-400 text-lg">{rotationState.node}</div>
-        </div>
-        <div className="bg-purple-900/30 p-3 rounded-lg">
-          <div className="text-gray-400">Balance Factor</div>
-          <div className="font-mono text-yellow-400 text-lg">{rotationState.balanceFactor}</div>
-        </div>
-      </div>
-      
-      {rotationState.case && (
-        <div className="mt-3 text-xs text-gray-400 text-center">
-          Case: <span className="font-mono text-amber-400">{rotationState.case}</span>
-        </div>
-      )}
+      <p className="text-xs text-gray-300">
+        Triggering <span className="font-mono text-yellow-300 font-bold">{rotationCase}</span>. Performing a <span className="font-bold text-purple-300 capitalize">{type}</span> rotation.
+      </p>
     </div>
   );
 };
 
 // Main Component
 const AVLTree = () => {
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
   const [treeInput, setTreeInput] = useState("1,2,3,4,5,6,7");
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1000);
-  const visualizerRef = useRef(null);
-
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState, currentStep, history } = visualizer;
 
   // Generate history for AVL tree construction
   const generateHistory = useCallback(() => {
-    // Local helpers to avoid external dependencies
     const height = (node) => (node ? node.height : 0);
     const getBalance = (node) => (node ? height(node.left) - height(node.right) : 0);
     const values = treeInput.split(",").map(s => parseInt(s.trim())).filter(n => !isNaN(n));
@@ -488,7 +344,7 @@ const AVLTree = () => {
           end,
           currentRoot: null,
           processingNode: null,
-          line: 3,
+          line: 10,
           callStack: [...callStack],
           depth,
           side,
@@ -513,7 +369,7 @@ const AVLTree = () => {
         currentRoot: rootVal,
         processingNode: rootVal,
         tree: JSON.parse(JSON.stringify(rootNode)),
-        line: 5,
+        line: 13,
         callStack: [...callStack],
         depth,
         side,
@@ -531,7 +387,7 @@ const AVLTree = () => {
           currentRoot: rootVal,
           processingNode: null,
           tree: JSON.parse(JSON.stringify(rootNode)),
-          line: 7,
+          line: 15,
           callStack: [...callStack],
           depth: depth + 1,
           side: 'left',
@@ -556,7 +412,7 @@ const AVLTree = () => {
           processingNode: rootVal,
           tree: JSON.parse(JSON.stringify(rootNode)),
           balanceFactors: { [rootVal]: getBalance(rootNode) },
-          line: 9,
+          line: 17,
           callStack: [...callStack],
           depth,
           side,
@@ -575,7 +431,7 @@ const AVLTree = () => {
           currentRoot: rootVal,
           processingNode: null,
           tree: JSON.parse(JSON.stringify(rootNode)),
-          line: 7,
+          line: 17,
           callStack: [...callStack],
           depth: depth + 1,
           side: 'right',
@@ -600,7 +456,7 @@ const AVLTree = () => {
         processingNode: rootVal,
         tree: JSON.parse(JSON.stringify(rootNode)),
         balanceFactors: { [rootVal]: balance },
-        line: 11,
+        line: 23,
         callStack: [...callStack],
         depth,
         side,
@@ -644,7 +500,7 @@ const AVLTree = () => {
             balanceFactor: balance,
             case: rotationCase
           },
-          line: 13,
+          line: 26,
           phase: "balancing"
         });
 
@@ -659,7 +515,7 @@ const AVLTree = () => {
           tree: balancedTree,
           balanceFactors: { [rootVal]: 0 },
           newNodes: [rootVal],
-          line: 14,
+          line: 39,
           phase: "balancing"
         });
       }
@@ -675,46 +531,14 @@ const AVLTree = () => {
       explanation: `🎉 AVL Tree construction complete! Built balanced BST with root ${root.val}, height ${root.height}`,
       inorder: sortedValues,
       tree: root,
-      line: 16,
+      line: 39,
       isComplete: true,
       phase: "complete",
       balanceFactors: { [root.val]: getBalance(root) }
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-    setIsLoaded(true);
-  }, [treeInput]);
-
-  const resetVisualization = () => {
-    setHistory([]);
-    setCurrentStep(-1);
-    setIsLoaded(false);
-    setIsPlaying(false);
-  };
-
-  const stepForward = useCallback(() => {
-    setCurrentStep((prev) => Math.min(prev + 1, history.length - 1));
-  }, [history.length]);
-
-  const stepBackward = useCallback(() => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
-  }, []);
-
-  const handleSpeedChange = (e) => {
-    setSpeed(Number(e.target.value));
-  };
-
-  const playAnimation = useCallback(() => {
-    if (currentStep >= history.length - 1) {
-      setCurrentStep(0);
-    }
-    setIsPlaying(true);
-  }, [currentStep, history.length]);
-
-  const pauseAnimation = useCallback(() => {
-    setIsPlaying(false);
-  }, []);
+    load(newHistory);
+  }, [treeInput, load]);
 
   const generateRandomTree = () => {
     const size = Math.floor(Math.random() * 8) + 5; // 5-12 nodes
@@ -727,46 +551,9 @@ const AVLTree = () => {
     }
 
     setTreeInput(values.join(','));
-    resetVisualization();
+    visualizer.reset();
   };
 
-  // Auto-play
-  useEffect(() => {
-    let timer;
-    if (isPlaying && currentStep < history.length - 1) {
-      timer = setTimeout(() => {
-        stepForward();
-      }, speed);
-    } else if (currentStep >= history.length - 1) {
-      setIsPlaying(false);
-    }
-    return () => clearTimeout(timer);
-  }, [isPlaying, currentStep, history.length, stepForward, speed]);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          stepBackward();
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          stepForward();
-        } else if (e.key === " ") {
-          e.preventDefault();
-          if (isPlaying) {
-            pauseAnimation();
-          } else {
-            playAnimation();
-          }
-        }
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, isPlaying, stepBackward, stepForward, playAnimation, pauseAnimation]);
-
-  const state = history[currentStep] || {};
   const {
     inorder = [],
     tree = null,
@@ -785,393 +572,197 @@ const AVLTree = () => {
     balanceFactors = {},
     rotationState = null,
     newNodes = []
-  } = state;
+  } = currentState;
 
-  const CodeLine = ({ lineNum, content }) => (
-    <div
-      className={`block rounded-md transition-all duration-300 ${
-        line === lineNum
-          ? "bg-emerald-500/20 border-l-4 border-emerald-500 shadow-lg"
-          : "hover:bg-gray-700/30"
-      }`}
-    >
-      <span className="text-gray-500 select-none inline-block w-8 text-right mr-3">
-        {lineNum}
-      </span>
-      <span className={line === lineNum ? "text-emerald-300 font-semibold" : "text-gray-300"}>
-        {content}
-      </span>
-    </div>
+  const codeContent = {
+    1: "TreeNode* balanceBST(TreeNode* root) {",
+    2: "    vector<int> inorder;",
+    3: "    inOrderTraversal(root, inorder);",
+    4: "    return buildBalancedBST(inorder, 0,",
+    5: "                            inorder.size()-1);",
+    6: "}",
+    7: "",
+    8: "TreeNode* buildBalancedBST(vector<int>& arr,",
+    9: "                          int start, int end) {",
+    10: "    if (start > end) return nullptr;",
+    11: "",
+    12: "    int mid = start + (end - start) / 2;",
+    13: "    TreeNode* root = new TreeNode(arr[mid]);",
+    14: "",
+    15: "    root->left = buildBalancedBST(arr,",
+    16: "                               start, mid-1);",
+    17: "    root->right = buildBalancedBST(arr,",
+    18: "                                mid+1, end);",
+    19: "",
+    20: "    root->height = 1 + max(height(root->left),",
+    21: "                           height(root->right));",
+    22: "",
+    23: "    int balance = getBalance(root);",
+    24: "",
+    25: "    // AVL Rotations if needed",
+    26: "    if (balance > 1) {",
+    27: "        if (getBalance(root->left) >= 0)",
+    28: "            return rightRotate(root);  // LL",
+    29: "        else",
+    30: "            return leftRightRotate(root);// LR",
+    31: "    }",
+    32: "    if (balance < -1) {",
+    33: "        if (getBalance(root->right) <= 0)",
+    34: "            return leftRotate(root);   // RR",
+    35: "        else",
+    36: "            return rightLeftRotate(root);// RL",
+    37: "    }",
+    38: "",
+    39: "    return root;",
+    40: "}"
+  };
+
+  const inputSection = (
+    <>
+      <div className="flex items-center gap-2 flex-grow">
+        <label htmlFor="tree-input" className="font-medium text-gray-300 font-mono text-sm whitespace-nowrap">
+          Tree Values:
+        </label>
+        <input
+          id="tree-input"
+          type="text"
+          value={treeInput}
+          onChange={(e) => setTreeInput(e.target.value)}
+          disabled={isLoaded}
+          placeholder="e.g., 1,2,3,4,5,6,7"
+          className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+        />
+      </div>
+      {!isLoaded && (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={generateHistory}
+            className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+          >
+            Load & Visualize
+          </button>
+          <button
+            onClick={generateRandomTree}
+            className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+          >
+            Random Tree
+          </button>
+        </div>
+      )}
+    </>
   );
 
-  const avlTreeCode = [
-    { line: 1, content: "TreeNode* balanceBST(TreeNode* root) {" },
-    { line: 2, content: "    vector<int> inorder;" },
-    { line: 3, content: "    inOrderTraversal(root, inorder);" },
-    { line: 4, content: "    return buildBalancedBST(inorder, 0," },
-    { line: 5, content: "                            inorder.size()-1);" },
-    { line: 6, content: "}" },
-    { line: 7, content: "" },
-    { line: 8, content: "TreeNode* buildBalancedBST(vector<int>& arr," },
-    { line: 9, content: "                          int start, int end) {" },
-    { line: 10, content: "    if (start > end) return nullptr;" },
-    { line: 11, content: "" },
-    { line: 12, content: "    int mid = start + (end - start) / 2;" },
-    { line: 13, content: "    TreeNode* root = new TreeNode(arr[mid]);" },
-    { line: 14, content: "" },
-    { line: 15, content: "    root->left = buildBalancedBST(arr," },
-    { line: 16, content: "                               start, mid-1);" },
-    { line: 17, content: "    root->right = buildBalancedBST(arr," },
-    { line: 18, content: "                                mid+1, end);" },
-    { line: 19, content: "" },
-    { line: 20, content: "    root->height = 1 + max(height(root->left)," },
-    { line: 21, content: "                           height(root->right));" },
-    { line: 22, content: "" },
-    { line: 23, content: "    int balance = getBalance(root);" },
-    { line: 24, content: "" },
-    { line: 25, content: "    // AVL Rotations if needed" },
-    { line: 26, content: "    if (balance > 1) {" },
-    { line: 27, content: "        if (getBalance(root->left) >= 0)" },
-    { line: 28, content: "            return rightRotate(root);  // LL" },
-    { line: 29, content: "        else" },
-    { line: 30, content: "            return leftRightRotate(root);// LR" },
-    { line: 31, content: "    }" },
-    { line: 32, content: "    if (balance < -1) {" },
-    { line: 33, content: "        if (getBalance(root->right) <= 0)" },
-    { line: 34, content: "            return leftRotate(root);   // RR" },
-    { line: 35, content: "        else" },
-    { line: 36, content: "            return rightLeftRotate(root);// RL" },
-    { line: 37, content: "    }" },
-    { line: 38, content: "" },
-    { line: 39, content: "    return root;" },
-    { line: 40, content: "}" },
-  ];
-
-  return (
-    <div
-      ref={visualizerRef}
-      tabIndex={0}
-      className="p-4 max-w-7xl mx-auto focus:outline-none"
-    >
-      <header className="text-center mb-6">
-        <h1 className="text-5xl font-bold text-purple-400 flex items-center justify-center gap-3">
-          <Scale size={28} />
-          Balance BST (AVL Tree)
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">
-          Convert any Binary Search Tree to a balanced AVL Tree (LeetCode #1382)
-        </p>
-      </header>
-
-      {/* Enhanced Controls Section */}
-      <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl shadow-2xl border border-gray-700/50 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex flex-col md:flex-row gap-4 flex-grow">
-          <div className="flex items-center gap-4 flex-grow">
-            <label htmlFor="tree-input" className="font-medium text-gray-300 font-mono">
-              Tree Values:
-            </label>
-            <input
-              id="tree-input"
-              type="text"
-              value={treeInput}
-              onChange={(e) => setTreeInput(e.target.value)}
-              disabled={isLoaded}
-              placeholder="e.g., 1,2,3,4,5,6,7"
-              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
-            />
-          </div>
+  const statsSection = (
+    <>
+      <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/40 backdrop-blur-sm p-4 rounded-xl border border-blue-700/50 text-center">
+        <h4 className="font-semibold text-blue-300 mb-2 flex items-center justify-center gap-2 select-none">
+          <Gauge size={16} /> Current Phase
+        </h4>
+        <div className="text-2xl font-mono font-bold text-blue-300 capitalize">
+          {phase}
         </div>
-        
-        <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
-          {!isLoaded ? (
-            <>
-              <button
-                onClick={generateHistory}
-                className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                Load & Visualize
-              </button>
-              <button
-                onClick={generateRandomTree}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                Random Tree
-              </button>
-            </>
-          ) : (
-            <>
-              <div className="flex gap-2">
-                <button
-                  onClick={stepBackward}
-                  disabled={currentStep <= 0}
-                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                >
-                  <SkipBack size={20} />
-                </button>
-                
-                {!isPlaying ? (
-                  <button
-                    onClick={playAnimation}
-                    disabled={currentStep >= history.length - 1}
-                    className="bg-green-500 hover:bg-green-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                  >
-                    <Play size={20} />
-                  </button>
-                ) : (
-                  <button
-                    onClick={pauseAnimation}
-                    className="bg-yellow-500 hover:bg-yellow-600 p-3 rounded-lg transition-all duration-300 cursor-pointer"
-                  >
-                    <Pause size={20} />
-                  </button>
-                )}
-
-                <button
-                  onClick={stepForward}
-                  disabled={currentStep >= history.length - 1}
-                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                >
-                  <SkipForward size={20} />
-                </button>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <label className="text-gray-400 text-sm">Speed:</label>
-                  <select
-                    value={speed}
-                    onChange={handleSpeedChange}
-                    className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm cursor-pointer"
-                  >
-                    <option value={1500}>Slow</option>
-                    <option value={1000}>Medium</option>
-                    <option value={500}>Fast</option>
-                    <option value={250}>Very Fast</option>
-                  </select>
-                </div>
-
-                <div className="font-mono px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-center min-w-20">
-                  {currentStep + 1}/{history.length}
-                </div>
-              </div>
-
-              <button
-                onClick={resetVisualization}
-                className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg cursor-pointer"
-              >
-                <RotateCcw size={16} />
-                Reset
-              </button>
-            </>
-          )}
+        <div className="text-xs text-gray-400 mt-1">
+          {side} subtree • Depth: {depth}
         </div>
       </div>
 
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Pseudocode Panel */}
-          <div className="lg:col-span-1 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-purple-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
-              <Code size={20} />
-              AVL Tree Algorithm
-            </h3>
-            <div className="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-              <pre className="text-sm">
-                <code className="font-mono leading-relaxed block">
-                  {avlTreeCode.map((codeLine) => (
-                    <CodeLine 
-                      key={codeLine.line} 
-                      lineNum={codeLine.line} 
-                      content={codeLine.content}
-                    />
-                  ))}
-                </code>
-              </pre>
-            </div>
-
-            {/* Call Stack Visualization */}
-            {callStack.length > 0 && (
-              <div className="mt-4 bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                <h4 className="text-sm text-gray-400 mb-2 flex items-center gap-2">
-                  <GitBranch size={16} />
-                  Call Stack (Depth: {depth})
-                </h4>
-                <div className="space-y-1 max-h-24 overflow-y-auto">
-                  {callStack.map((call, idx) => (
-                    <div key={idx} className="text-xs font-mono bg-gray-800/50 p-1 rounded">
-                      {call.side}: [{call.start}, {call.end}]
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Enhanced Visualization Panels */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Rotation Visualization */}
-            {rotationState && <RotationVisualization rotationState={rotationState} />}
-
-            {/* Tree Visualization */}
-            <TreeVisualization 
-              tree={tree}
-              avlState={{
-                currentNode: currentRoot,
-                processingNode,
-                start,
-                end,
-                pivotIndex,
-                balanceFactors,
-                newNodes
-              }}
-            />
-
-            {/* Array Visualization */}
-            <ArrayVisualization
-              inorder={inorder}
-              avlState={{
-                start,
-                end,
-                pivotIndex,
-                currentIndex: pivotIndex,
-                currentRoot
-              }}
-            />
-
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-blue-700/50">
-                <h3 className="font-bold text-lg text-blue-300 mb-3 flex items-center gap-2">
-                  <Gauge size={20} />
-                  Current Phase
-                </h3>
-                <div className="text-center">
-                  <span className="font-mono text-lg font-bold text-blue-300 capitalize">
-                    {phase}
-                  </span>
-                </div>
-                <div className="text-xs text-gray-400 text-center mt-2">
-                  {side} subtree • Depth: {depth}
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-purple-700/50">
-                <h3 className="font-bold text-lg text-purple-300 mb-3 flex items-center gap-2">
-                  <Target size={20} />
-                  Current Root
-                </h3>
-                <div className="font-mono text-2xl font-bold text-center text-purple-400">
-                  {currentRoot || "null"}
-                </div>
-                {balanceFactors[currentRoot] !== undefined && (
-                  <div className="text-xs text-gray-400 text-center mt-2">
-                    Balance: {balanceFactors[currentRoot]}
-                  </div>
-                )}
-              </div>
-
-              <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-green-700/50">
-                <h3 className="font-bold text-lg text-green-300 mb-3 flex items-center gap-2">
-                  <CheckCircle size={20} />
-                  Progress
-                </h3>
-                <div className="font-mono text-2xl font-bold text-center text-green-400">
-                  {isComplete ? "Complete!" : "Building..."}
-                </div>
-                <div className="text-xs text-gray-400 text-center mt-2">
-                  {Math.round((currentStep / history.length) * 100)}% Complete
-                </div>
-              </div>
-            </div>
-
-            {/* Status and Explanation Panel */}
-            <div className="bg-gradient-to-br from-amber-900/40 to-yellow-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-amber-700/50">
-              <h3 className="font-bold text-lg text-amber-300 mb-3 flex items-center gap-2">
-                <BarChart3 size={20} />
-                Step Explanation
-              </h3>
-              <div className="text-gray-300 text-sm h-20 overflow-y-auto scrollbar-thin">
-                {explanation || "Starting AVL tree construction algorithm..."}
-              </div>
-            </div>
-          </div>
-
-          {/* Enhanced Complexity Analysis */}
-          <div className="lg:col-span-3 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-purple-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
-              <Clock size={20} /> Complexity Analysis
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6 text-sm">
-              <div className="space-y-4">
-                <h4 className="font-semibold text-purple-300 flex items-center gap-2">
-                  <Zap size={16} />
-                  Time Complexity
-                </h4>
-                <div className="space-y-3">
-                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">O(N)</strong>
-                    <p className="text-gray-400 text-sm">
-                      Inorder traversal takes O(N) time, and building the balanced BST 
-                      from sorted array also takes O(N) time.
-                    </p>
-                  </div>
-                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">Optimal Solution</strong>
-                    <p className="text-gray-400 text-sm">
-                      The algorithm ensures the tree is balanced in O(N) time, 
-                      providing optimal O(log N) operations for search, insert, and delete.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <h4 className="font-semibold text-purple-300 flex items-center gap-2">
-                  <Cpu size={16} />
-                  Space Complexity
-                </h4>
-                <div className="space-y-3">
-                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">O(N)</strong>
-                    <p className="text-gray-400 text-sm">
-                      The inorder array uses O(N) space, and the recursion stack 
-                      uses O(log N) space for the balanced tree construction.
-                    </p>
-                  </div>
-                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">AVL Benefits</strong>
-                    <p className="text-gray-400 text-sm">
-                      Balanced BST ensures O(log N) time for all operations and 
-                      prevents worst-case O(N) scenarios of unbalanced trees.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-sm p-4 rounded-xl border border-purple-700/50 text-center">
+        <h4 className="font-semibold text-purple-300 mb-2 flex items-center justify-center gap-2 select-none">
+          <Target size={16} /> Current Root
+        </h4>
+        <div className="font-mono text-2xl font-bold text-center text-purple-400">
+          {currentRoot || "null"}
         </div>
-      ) : (
-        <div className="text-center py-16 bg-gray-800/50 rounded-xl border border-gray-700/50">
-          <div className="text-gray-500 text-lg mb-4">
-            Enter BST values to visualize AVL tree balancing
+        {balanceFactors[currentRoot] !== undefined && (
+          <div className="text-xs text-gray-400 mt-1">
+            Balance: {balanceFactors[currentRoot]}
           </div>
-          <div className="text-gray-600 text-sm max-w-2xl mx-auto space-y-2">
-            <div className="flex items-center justify-center gap-4 text-xs mb-4">
-              <span className="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">Balanced Height</span>
-              <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full">O(log N) Operations</span>
-              <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full">Auto-Rebalancing</span>
-            </div>
-            <p>
-              <strong>Example:</strong> Input: "1,2,3,4,5,6,7" → Balanced AVL Tree
-            </p>
-            <p className="text-gray-500">
-              The algorithm converts any BST to a balanced AVL tree by:
-              1) Extracting values in sorted order, 2) Building balanced BST from sorted array,
-              3) Maintaining AVL property with rotations when needed.
-            </p>
+        )}
+      </div>
+
+      <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-sm p-4 rounded-xl border border-green-700/50 text-center">
+        <h4 className="font-semibold text-green-300 mb-2 flex items-center justify-center gap-2 select-none">
+          <CheckCircle size={16} /> Progress
+        </h4>
+        <div className="font-mono text-2xl font-bold text-center text-green-400">
+          {isComplete ? "Complete!" : "Building..."}
+        </div>
+        <div className="text-xs text-gray-400 mt-1">
+          {history.length > 0 ? Math.round((currentStep / history.length) * 100) : 0}% Complete
+        </div>
+      </div>
+
+      {callStack.length > 0 && (
+        <div className="sm:col-span-3 bg-gray-900/50 p-4 rounded-xl border border-gray-700">
+          <h4 className="text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2 select-none">
+            <GitBranch size={16} /> Call Stack (Depth: {depth})
+          </h4>
+          <div className="space-y-1 max-h-24 overflow-y-auto">
+            {callStack.map((call, idx) => (
+              <div key={idx} className="text-xs font-mono bg-gray-800/50 p-1.5 rounded text-gray-300">
+                {call.side}: [{call.start}, {call.end}]
+              </div>
+            ))}
           </div>
         </div>
       )}
-    </div>
+
+      <div className="sm:col-span-3 bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl border border-gray-700/50">
+        <h4 className="font-semibold text-purple-300 mb-2 flex items-center gap-2 select-none">
+          <Clock size={16} /> Complexity Analysis
+        </h4>
+        <div className="grid md:grid-cols-2 gap-4 text-xs">
+          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800">
+            <span className="text-teal-300 font-mono font-bold block mb-1">Time Complexity: O(N)</span>
+            <p className="text-gray-400">Inorder traversal is O(N), building balanced BST is also O(N).</p>
+          </div>
+          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800">
+            <span className="text-teal-300 font-mono font-bold block mb-1">Space Complexity: O(N)</span>
+            <p className="text-gray-400">The inorder array takes O(N) space; recursion stack uses O(log N) space.</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
+  return (
+    <VisualizerLayout
+      title="Balance BST (AVL Tree)"
+      description="Convert any Binary Search Tree to a balanced AVL Tree (LeetCode #1382)"
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={explanation || "Enter tree values to visualize AVL tree balancing"}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+    >
+      <div className="w-full space-y-6 flex flex-col items-center">
+        {rotationState && <RotationVisualization rotationState={rotationState} />}
+        <TreeVisualization 
+          tree={tree}
+          avlState={{
+            currentNode: currentRoot,
+            processingNode,
+            start,
+            end,
+            pivotIndex,
+            balanceFactors,
+            newNodes
+          }}
+        />
+        <ArrayVisualization
+          inorder={inorder}
+          avlState={{
+            start,
+            end,
+            pivotIndex,
+            currentIndex: pivotIndex,
+            currentRoot
+          }}
+        />
+      </div>
+    </VisualizerLayout>
   );
 };
 

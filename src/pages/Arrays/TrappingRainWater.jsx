@@ -1,26 +1,21 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 import {
   Code,
-  CheckCircle,
-  List,
-  Calculator,
-  Layers,
   BarChart3,
   Clock,
   Droplets,
 } from "lucide-react";
-import VisualizerPointer from "../../components/VisualizerPointer";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 
-// Main Visualizer Component
 const TrappingRainWater = () => {
   const [mode, setMode] = useState("brute-force");
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
   const [heightsInput, setHeightsInput] = useState("0,1,0,2,1,0,1,3,2,1,2,1");
-  const [isLoaded, setIsLoaded] = useState(false);
   const [maxHeight, setMaxHeight] = useState(1);
   const [codeLang, setCodeLang] = useState("cpp");
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
   const generateBruteForceHistory = useCallback((heights) => {
     const n = heights.length;
@@ -113,15 +108,13 @@ const TrappingRainWater = () => {
       finished: true,
       explanation: "Finished calculation. Returning total trapped water.",
     });
-    setHistory(newHistory);
-    setCurrentStep(0);
-  }, []);
+    load(newHistory);
+  }, [load]);
 
   const generateOptimalHistory = useCallback((heights) => {
     const n = heights.length;
     if (n === 0) {
-      setHistory([]);
-      setCurrentStep(-1);
+      load([]);
       return;
     }
     const newHistory = [];
@@ -208,9 +201,8 @@ const TrappingRainWater = () => {
       finished: true,
       explanation: "Finished calculation. Returning total trapped water.",
     });
-    setHistory(newHistory);
-    setCurrentStep(0);
-  }, []);
+    load(newHistory);
+  }, [load]);
 
   const loadArray = () => {
     const localHeights = heightsInput
@@ -223,17 +215,13 @@ const TrappingRainWater = () => {
       return;
     }
     setMaxHeight(Math.max(...localHeights, 1));
-    setIsLoaded(true);
-    mode === "brute-force"
-      ? generateBruteForceHistory(localHeights)
-      : generateOptimalHistory(localHeights);
+    if (mode === "brute-force") {
+      generateBruteForceHistory(localHeights);
+    } else {
+      generateOptimalHistory(localHeights);
+    }
   };
 
-  const reset = () => {
-    setIsLoaded(false);
-    setHistory([]);
-    setCurrentStep(-1);
-  };
   const parseInput = useCallback(() => {
     const localHeights = heightsInput
       .split(",")
@@ -244,6 +232,7 @@ const TrappingRainWater = () => {
       throw new Error("Invalid input");
     return localHeights;
   }, [heightsInput]);
+
   const handleModeChange = useModeHistorySwitch({
     mode,
     setMode,
@@ -253,614 +242,303 @@ const TrappingRainWater = () => {
       "brute-force": (h) => generateBruteForceHistory(h),
       optimal: (h) => generateOptimalHistory(h),
     },
-    setCurrentStep,
+    setCurrentStep: () => {},
     onError: () => {},
   });
-  const stepForward = useCallback(
-    () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
-    [history.length]
-  );
-  const stepBackward = useCallback(
-    () => setCurrentStep((prev) => Math.max(prev - 1, 0)),
-    []
-  );
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") stepBackward();
-        if (e.key === "ArrowRight") stepForward();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, stepForward, stepBackward]);
+  const state = currentState || {};
+  const { heights = [], waterLevels = [], line = 4 } = state;
 
-  const state = history[currentStep] || {};
-  const { heights = [], waterLevels = [] } = state;
-
-  const colorMapping = {
-    purple: "text-purple-400",
-    cyan: "text-cyan-400",
-    "light-blue": "text-sky-300",
-    yellow: "text-yellow-300",
-    orange: "text-orange-400",
-    red: "text-red-400",
-    "light-gray": "text-gray-400",
-    green: "text-green-400",
-    "": "text-gray-200",
+  const bruteForceCode = {
+    4: `int totalWater = 0;`,
+    5: `for (int i = 1; i < n - 1; i++) {`,
+    6: `    int lmax = 0;`,
+    7: `    for (int j = i; j >= 0; j--) lmax = max(lmax, height[j]);`,
+    10: `    int rmax = 0;`,
+    11: `    for (int j = i; j < n; j++) rmax = max(rmax, height[j]);`,
+    14: `    int water = min(lmax, rmax) - height[i];`,
+    15: `    if (water > 0) totalWater += water;`,
+    18: `}`
   };
-  const CodeLine = ({ line, content }) => (
-    <div
-      className={`block rounded-md transition-colors ${
-        state.line === line ? "bg-blue-500/20" : ""
-      }`}
-    >
-      <span className="text-gray-600 w-8 inline-block text-right pr-4 select-none">
-        {line}
-      </span>
-      {content.map((token, index) => (
-        <span key={index} className={colorMapping[token.c]}>
-          {token.t}
-        </span>
-      ))}
-    </div>
+
+  const optimalCode = {
+    3: `int n = height.size();`,
+    4: `vector<int> lmax(n, 0), rmax(n, 0);`,
+    7: `lmax[0] = height[0];`,
+    9: `for (int i = 1; i < n; i++) {`,
+    10: `    lmax[i] = max(lmax[i-1], height[i]);`,
+    11: `}`,
+    13: `rmax[n-1] = height[n-1];`,
+    15: `for (int i = n - 2; i >= 0; i--) {`,
+    16: `    rmax[i] = max(rmax[i+1], height[i]);`,
+    17: `}`,
+    19: `int ans = 0;`,
+    20: `for (int i = 0; i < n; i++) ans += min(lmax[i], rmax[i]) - height[i];`,
+    23: `return ans;`
+  };
+
+  const javaOptimalCode = {
+    1: `public int trap(int[] height) {`,
+    2: `    int n = height.length;`,
+    4: `    int[] leftMax = new int[n];`,
+    5: `    leftMax[0] = height[0];`,
+    7: `    for (int i = 1; i < n; i++) leftMax[i] = Math.max(height[i], leftMax[i-1]);`,
+    10: `    int[] rightMax = new int[n];`,
+    11: `    rightMax[n-1] = height[n-1];`,
+    13: `    for (int i = n - 2; i >= 0; i--) rightMax[i] = Math.max(height[i], rightMax[i+1]);`,
+    16: `    int trappedWater = 0;`,
+    18: `    for (int i = 0; i < n; i++) {`,
+    19: `        int waterLevel = Math.min(leftMax[i], rightMax[i]);`,
+    20: `        trappedWater += waterLevel - height[i];`,
+    22: `    }`,
+    24: `    return trappedWater;`,
+    25: `}`
+  };
+
+  const getActiveCode = () => {
+    if (mode === "brute-force") return bruteForceCode;
+    return codeLang === "cpp" ? optimalCode : javaOptimalCode;
+  };
+
+  const inputSection = (
+    <>
+      <input
+        id="heights-input"
+        type="text"
+        value={heightsInput}
+        onChange={(e) => setHeightsInput(e.target.value)}
+        disabled={isLoaded}
+        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        placeholder="e.g., 0,1,0,2,1,0,1,3,2,1,2,1"
+      />
+      {!isLoaded && (
+        <button
+          onClick={loadArray}
+          className="px-5 py-3 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+        >
+          Load & Visualize
+        </button>
+      )}
+    </>
   );
 
-  const bruteForceCode = [
-    {
-      l: 4,
-      c: [
-        { t: "int", c: "cyan" },
-        { t: " totalWater = ", c: "" },
-        { t: "0", c: "orange" },
-        { t: ";", c: "light-gray" },
-      ],
-    },
-    {
-      l: 5,
-      c: [
-        { t: "for", c: "purple" },
-        { t: " (int i = 1; i < n - 1; i++) {", c: "" },
-      ],
-    },
-    {
-      l: 6,
-      c: [
-        { t: "  int", c: "cyan" },
-        { t: " lmax = ", c: "" },
-        { t: "0", c: "orange" },
-        { t: ";", c: "light-gray" },
-      ],
-    },
-    {
-      l: 7,
-      c: [
-        { t: "  for", c: "purple" },
-        { t: " (int j = i; j >= 0; j--)", c: "" },
-        { t: " lmax = max(lmax, height[j]);", c: "" },
-      ],
-    },
-    {
-      l: 10,
-      c: [
-        { t: "  int", c: "cyan" },
-        { t: " rmax = ", c: "" },
-        { t: "0", c: "orange" },
-        { t: ";", c: "light-gray" },
-      ],
-    },
-    {
-      l: 11,
-      c: [
-        { t: "  for", c: "purple" },
-        { t: " (int j = i; j < n; j++)", c: "" },
-        { t: " rmax = max(rmax, height[j]);", c: "" },
-      ],
-    },
-    {
-      l: 14,
-      c: [
-        { t: "  int", c: "cyan" },
-        { t: " water = min(lmax, rmax) - height[i];", c: "" },
-      ],
-    },
-    {
-      l: 15,
-      c: [
-        { t: "  if", c: "purple" },
-        { t: " (water > 0) totalWater += water;", c: "" },
-      ],
-    },
-    { l: 17, c: [{ t: "}", c: "light-gray" }] },
-    {
-      l: 18,
-      c: [
-        { t: "return", c: "purple" },
-        { t: " totalWater;", c: "" },
-      ],
-    },
-  ];
-
-  const optimalCode = [
-    {
-      l: 3,
-      c: [
-        { t: "int", c: "cyan" },
-        { t: " n = height.size();", c: "" },
-      ],
-    },
-    {
-      l: 4,
-      c: [
-        { t: "vector<", c: "yellow" },
-        { t: "int", c: "cyan" },
-        { t: "> lmax(n,0), rmax(n,0);", c: "" },
-      ],
-    },
-    { l: 7, c: [{ t: "lmax[0] = height[0];", c: "" }] },
-    {
-      l: 9,
-      c: [
-        { t: "for", c: "purple" },
-        { t: " (int i=1; i<n; i++){", c: "" },
-      ],
-    },
-    { l: 10, c: [{ t: "  lmax[i] = max(lmax[i-1], height[i]);", c: "" }] },
-    { l: 11, c: [{ t: "}", c: "light-gray" }] },
-    { l: 13, c: [{ t: "rmax[n-1] = height[n-1];", c: "" }] },
-    {
-      l: 15,
-      c: [
-        { t: "for", c: "purple" },
-        { t: " (int i=n-2; i>=0; i--){", c: "" },
-      ],
-    },
-    { l: 16, c: [{ t: "  rmax[i] = max(rmax[i+1], height[i]);", c: "" }] },
-    { l: 17, c: [{ t: "}", c: "light-gray" }] },
-    {
-      l: 19,
-      c: [
-        { t: "int", c: "cyan" },
-        { t: " ans = ", c: "" },
-        { t: "0", c: "orange" },
-        { t: ";", c: "light-gray" },
-      ],
-    },
-    {
-      l: 20,
-      c: [
-        { t: "for", c: "purple" },
-        {
-          t: " (int i=0; i<n; i++) ans += min(lmax[i], rmax[i]) - height[i];",
-          c: "",
-        },
-      ],
-    },
-    {
-      l: 23,
-      c: [
-        { t: "return", c: "purple" },
-        { t: " ans;", c: "" },
-      ],
-    },
-  ];
-
-  //Java
-  const javaOptimalCode = [
-    {
-      l: 1,
-      c: [
-        { t: "public static int ", c: "purple" },
-        { t: "TrappingRainWater", c: "yellow" },
-        { t: "(int height[]){", c: "" },
-        { t: " // T.C. O(n)", c: "light-gray" },
-      ],
-    },
-    { l: 2, c: [{ t: "    int n = height.length;", c: "" }] },
-    { l: 4, c: [{ t: "    int leftMax[] = new int[n];", c: "" }] },
-    { l: 5, c: [{ t: "    leftMax[0] = height[0];", c: "" }] },
-    {
-      l: 7,
-      c: [
-        { t: "    for", c: "purple" },
-        { t: " (int i = 1; i < n; i++)", c: "" },
-        { t: " leftMax[i] = Math.max(height[i], leftMax[i-1]);", c: "" },
-      ],
-    },
-    { l: 10, c: [{ t: "    int rightMax[] = new int[n];", c: "" }] },
-    { l: 11, c: [{ t: "    rightMax[n-1] = height[n-1];", c: "" }] },
-    {
-      l: 13,
-      c: [
-        { t: "    for", c: "purple" },
-        { t: " (int i = n-2; i >= 0; i--)", c: "" },
-        { t: " rightMax[i] = Math.max(height[i], rightMax[i+1]);", c: "" },
-      ],
-    },
-    { l: 16, c: [{ t: "    int trapperWater = 0;", c: "" }] },
-    {
-      l: 18,
-      c: [
-        { t: "    for", c: "purple" },
-        { t: " (int i = 0; i < n; i++) {", c: "" },
-      ],
-    },
-    {
-      l: 19,
-      c: [
-        {
-          t: "        int waterLevel = Math.min(leftMax[i], rightMax[i]);",
-          c: "",
-        },
-      ],
-    },
-    {
-      l: 20,
-      c: [{ t: "        trapperWater += waterLevel - height[i];", c: "" }],
-    },
-    { l: 22, c: [{ t: "    }", c: "light-gray" }] },
-    { l: 24, c: [{ t: "    return trapperWater;", c: "" }] },
-    { l: 25, c: [{ t: "}", c: "light-gray" }] },
-  ];
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-blue-300 select-none">
+          Total Water
+        </h4>
+        <div className="text-3xl font-mono text-blue-400">
+          {state.totalWater ?? 0}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-amber-300 select-none">
+          Left Max
+        </h4>
+        <div className="text-3xl font-mono text-amber-400">
+          {mode === "brute-force" ? (state.lmax ?? 0) : "-"}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-cyan-300 select-none">
+          Right Max
+        </h4>
+        <div className="text-3xl font-mono text-cyan-400">
+          {mode === "brute-force" ? (state.rmax ?? 0) : "-"}
+        </div>
+      </div>
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-blue-300 font-semibold flex items-center gap-2 mb-2 select-none">
+          <Clock size={16} /> Complexity ({mode === "brute-force" ? "Brute" : "Optimal"})
+        </h4>
+        {mode === "brute-force" ? (
+          <div className="text-sm text-gray-300 space-y-1">
+            <div><strong>Time:</strong> <span className="font-mono text-teal-300">O(n²)</span> - Scanning left & right for each index.</div>
+            <div><strong>Space:</strong> <span className="font-mono text-teal-300">O(1)</span> - Constant extra variables.</div>
+          </div>
+        ) : (
+          <div className="text-sm text-gray-300 space-y-1">
+            <div><strong>Time:</strong> <span className="font-mono text-teal-300">O(n)</span> - Precalculating max bounds.</div>
+            <div><strong>Space:</strong> <span className="font-mono text-teal-300">O(n)</span> - Storage of prefix/suffix bounds.</div>
+          </div>
+        )}
+      </div>
+    </>
+  );
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <header className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-blue-400">
-          Trapping Rain Water
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">Visualizing LeetCode 42</p>
-      </header>
-
-      <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-4 flex-grow">
-          <label
-            htmlFor="heights-input"
-            className="font-medium text-gray-300 font-mono"
-          >
-            Heights:
-          </label>
-          <input
-            id="heights-input"
-            type="text"
-            value={heightsInput}
-            onChange={(e) => setHeightsInput(e.target.value)}
-            disabled={isLoaded}
-            className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          {!isLoaded ? (
-            <button
-              onClick={loadArray}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg cursor-pointer"
-            >
-              Load & Visualize
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={stepBackward}
-                disabled={currentStep <= 0}
-                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                </svg>
-              </button>
-              <span className="font-mono w-24 text-center">
-                {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
-              </span>
-              <button
-                onClick={stepForward}
-                disabled={currentStep >= history.length - 1}
-                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                </svg>
-              </button>
-            </>
-          )}
+    <VisualizerLayout
+      title="Trapping Rain Water"
+      description="LeetCode #42 - Compute the total amount of water trapped between heights of building structures."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={getActiveCode()}
+      activeLine={line}
+      message={state.explanation || ""}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter height bars to begin visualization."
+    >
+      <div className="flex border-b border-gray-700 mb-6 items-center justify-between">
+        <div className="flex">
           <button
-            onClick={reset}
-            className="ml-4 bg-red-600 cursor-pointer hover:bg-red-700 font-bold py-2 px-4 rounded-lg"
+            onClick={() => handleModeChange("brute-force")}
+            className={`cursor-pointer p-3 px-6 border-b-4 transition-all font-bold ${
+              mode === "brute-force"
+                ? "border-blue-400 text-blue-400"
+                : "border-transparent text-gray-400"
+            }`}
           >
-            Reset
+            Brute Force O(n²)
+          </button>
+          <button
+            onClick={() => handleModeChange("optimal")}
+            className={`cursor-pointer p-3 px-6 border-b-4 transition-all font-bold ${
+              mode === "optimal"
+                ? "border-blue-400 text-blue-400"
+                : "border-transparent text-gray-400"
+            }`}
+          >
+            Optimal O(n)
           </button>
         </div>
+
+        {mode === "optimal" && (
+          <div className="flex gap-2 mr-2">
+            <button
+              onClick={() => setCodeLang("cpp")}
+              className={`px-3 py-1 rounded-md text-sm font-semibold transition-all cursor-pointer ${
+                codeLang === "cpp"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              }`}
+            >
+              C++
+            </button>
+            <button
+              onClick={() => setCodeLang("java")}
+              className={`px-3 py-1 rounded-md text-sm font-semibold transition-all cursor-pointer ${
+                codeLang === "java"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              }`}
+            >
+              Java
+            </button>
+          </div>
+        )}
       </div>
 
-      <div className="flex border-b border-gray-700 mb-6">
-        <div
-          onClick={() => handleModeChange("brute-force")}
-          className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
-            mode === "brute-force"
-              ? "border-blue-400 text-blue-400"
-              : "border-transparent text-gray-400"
-          }`}
-        >
-          Brute Force O(n²)
+      <div className="space-y-6">
+        <div className="relative bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl min-h-[340px]">
+          <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
+            <BarChart3 size={20} /> Elevation Map
+          </h3>
+          <div
+            id="elevation-map-container"
+            className="flex justify-center items-end gap-1 h-64 border-b-2 border-gray-600 pb-2"
+          >
+            {heights.map((h, index) => {
+              const isI = state.i === index;
+              const isJ = state.j === index && mode === "brute-force";
+              return (
+                <div
+                  key={index}
+                  id={`elevation-map-container-element-${index}`}
+                  className="flex-1 flex flex-col justify-end items-center h-full relative"
+                >
+                  <div
+                    className="absolute bottom-0 w-full bg-blue-500/30 transition-all duration-300"
+                    style={{
+                      height: `${
+                        (Math.min(
+                          state.lmax?.[index] ?? state.lmax ?? 0,
+                          state.rmax?.[index] ?? state.rmax ?? 0
+                        ) /
+                          maxHeight) *
+                        100
+                      }%`,
+                    }}
+                  ></div>
+                  <div
+                    className={`w-full rounded-t-md transition-all duration-300 bg-gray-600 relative z-10 border-x-2 border-t-2 ${
+                      isI
+                        ? "border-amber-400"
+                        : isJ
+                        ? "border-cyan-400"
+                        : "border-transparent"
+                    }`}
+                    style={{ height: `${(h / maxHeight) * 100}%` }}
+                  ></div>
+                  <div
+                    className="absolute bottom-0 w-full bg-blue-500 z-20 transition-all duration-300"
+                    style={{
+                      height: `${
+                        ((waterLevels[index] ?? 0) / maxHeight) * 100
+                      }%`,
+                    }}
+                  ></div>
+                  <span className="text-xs text-gray-400 mt-1">{h}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <div
-          onClick={() => handleModeChange("optimal")}
-          className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
-            mode === "optimal"
-              ? "border-blue-400 text-blue-400"
-              : "border-transparent text-gray-400"
-          }`}
-        >
-          Optimal O(n)
+
+        {mode === "optimal" && (
+          <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl space-y-4">
+            <div>
+              <h4 className="font-mono text-sm text-gray-400">
+                Left Max Array (lmax)
+              </h4>
+              <div className="flex gap-1 mt-2 flex-wrap">
+                {state.lmax?.map((val, index) => (
+                  <div
+                    key={index}
+                    className={`w-10 h-10 flex items-center justify-center rounded-md font-mono transition-colors duration-300 text-white ${
+                      state.i === index
+                        ? "bg-blue-500/50 border border-blue-400"
+                        : "bg-gray-700"
+                    }`}
+                  >
+                    {val}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="font-mono text-sm text-gray-400">
+                Right Max Array (rmax)
+              </h4>
+              <div className="flex gap-1 mt-2 flex-wrap">
+                {state.rmax?.map((val, index) => (
+                  <div
+                    key={index}
+                    className={`w-10 h-10 flex items-center justify-center rounded-md font-mono transition-colors duration-300 text-white ${
+                      state.i === index
+                        ? "bg-blue-500/50 border border-blue-400"
+                        : "bg-gray-700"
+                    }`}
+                  >
+                    {val}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="bg-green-850/20 p-4 rounded-xl border border-green-700/50">
+          <h3 className="text-green-300 text-sm flex items-center gap-2">
+            <Droplets size={16} /> Total Trapped Water
+          </h3>
+          <p className="font-mono text-4xl text-green-400 mt-2">
+            {state.totalWater ?? 0}
+          </p>
         </div>
       </div>
-
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-600/50">
-              <h3 className="font-bold text-xl text-blue-400 flex items-center gap-2">
-                <Code size={20} />
-                {mode === "brute-force"
-                  ? "C++ Brute Force Solution"
-                  : `${codeLang === "cpp" ? "C++" : "Java"} Optimal Solution`}
-              </h3>
-
-              {mode === "optimal" && (
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setCodeLang("cpp")}
-                    className={`px-3 py-1 rounded-md text-sm font-semibold ${
-                      codeLang === "cpp"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                    }`}
-                  >
-                    C++
-                  </button>
-                  <button
-                    onClick={() => setCodeLang("java")}
-                    className={`px-3 py-1 rounded-md text-sm font-semibold ${
-                      codeLang === "java"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                    }`}
-                  >
-                    Java
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <pre className="text-sm overflow-auto">
-              <code className="font-mono leading-relaxed">
-                {mode === "brute-force"
-                  ? bruteForceCode.map((line) => (
-                      <CodeLine key={line.l} line={line.l} content={line.c} />
-                    ))
-                  : codeLang === "cpp"
-                  ? optimalCode.map((line) => (
-                      <CodeLine key={line.l} line={line.l} content={line.c} />
-                    ))
-                  : javaOptimalCode.map((line) => (
-                      <CodeLine key={line.l} line={line.l} content={line.c} />
-                    ))}
-              </code>
-            </pre>
-          </div>
-
-          <div className="lg:col-span-2 space-y-6">
-            <div className="relative bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl min-h-[340px]">
-              <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
-                <BarChart3 size={20} />
-                Elevation Map
-              </h3>
-              <div
-                id="elevation-map-container"
-                className="flex justify-center items-end gap-1 h-64 border-b-2 border-gray-600 pb-2"
-              >
-                {heights.map((h, index) => {
-                  const isI = state.i === index;
-                  const isJ = state.j === index && mode === "brute-force";
-                  return (
-                    <div
-                      key={index}
-                      id={`elevation-map-container-element-${index}`}
-                      className="flex-1 flex flex-col justify-end items-center h-full relative"
-                    >
-                      <div
-                        className="absolute bottom-0 w-full bg-blue-500/30 transition-all duration-300"
-                        style={{
-                          height: `${
-                            (Math.min(
-                              state.lmax?.[index] ?? state.lmax ?? 0,
-                              state.rmax?.[index] ?? state.rmax ?? 0
-                            ) /
-                              maxHeight) *
-                            100
-                          }%`,
-                        }}
-                      ></div>
-                      <div
-                        className={`w-full rounded-t-md transition-all duration-300 bg-gray-600 relative z-10 border-x-2 border-t-2 ${
-                          isI
-                            ? "border-amber-400"
-                            : isJ
-                            ? "border-cyan-400"
-                            : "border-transparent"
-                        }`}
-                        style={{ height: `${(h / maxHeight) * 100}%` }}
-                      ></div>
-                      <div
-                        className="absolute bottom-0 w-full bg-blue-500 z-20 transition-all duration-300"
-                        style={{
-                          height: `${
-                            ((waterLevels[index] ?? 0) / maxHeight) * 100
-                          }%`,
-                        }}
-                      ></div>
-                      <span className="text-xs text-gray-400 mt-1">{h}</span>
-                    </div>
-                  );
-                })}
-              </div>
-              {isLoaded && (
-                <VisualizerPointer
-                  index={state.i}
-                  containerId="elevation-map-container"
-                  color="amber"
-                  label="i"
-                  direction="up"
-                />
-              )}
-              {isLoaded && mode === "brute-force" && (
-                <VisualizerPointer
-                  index={state.j}
-                  containerId="elevation-map-container"
-                  color="cyan"
-                  label="j"
-                  direction="up"
-                />
-              )}
-            </div>
-
-            {mode === "optimal" && (
-              <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl space-y-4">
-                <div>
-                  <h4 className="font-mono text-sm text-gray-400">
-                    Left Max Array (lmax)
-                  </h4>
-                  <div className="flex gap-1 mt-2 flex-wrap">
-                    {state.lmax?.map((val, index) => (
-                      <div
-                        key={index}
-                        className={`w-10 h-10 flex items-center justify-center rounded-md font-mono transition-colors duration-300 ${
-                          state.i === index
-                            ? "bg-blue-500/50 border border-blue-400"
-                            : "bg-gray-700"
-                        }`}
-                      >
-                        {val}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="font-mono text-sm text-gray-400">
-                    Right Max Array (rmax)
-                  </h4>
-                  <div className="flex gap-1 mt-2 flex-wrap">
-                    {state.rmax?.map((val, index) => (
-                      <div
-                        key={index}
-                        className={`w-10 h-10 flex items-center justify-center rounded-md font-mono transition-colors duration-300 ${
-                          state.i === index
-                            ? "bg-blue-500/50 border border-blue-400"
-                            : "bg-gray-700"
-                        }`}
-                      >
-                        {val}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="bg-green-800/30 p-4 rounded-xl border border-green-700/50">
-              <h3 className="text-green-300 text-sm flex items-center gap-2">
-                <Droplets size={16} />
-                Total Trapped Water
-              </h3>
-              <p className="font-mono text-4xl text-green-400 mt-2">
-                {state.totalWater ?? 0}
-              </p>
-            </div>
-            <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem]">
-              <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
-              <p className="text-gray-300">{state.explanation}</p>
-            </div>
-          </div>
-          <div className="lg:col-span-3 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Clock size={20} />
-              Complexity Analysis
-            </h3>
-            {mode === "brute-force" ? (
-              <div className="space-y-4 text-sm">
-                <div>
-                  <h4 className="font-semibold text-blue-300">
-                    Time Complexity:{" "}
-                    <span className="font-mono text-teal-300">O(N²)</span>
-                  </h4>
-                  <p className="text-gray-400 mt-1">
-                    For each element of the array, we iterate to its left to
-                    find the maximum height and to its right to find the maximum
-                    height. This results in nested loops, leading to a quadratic
-                    time complexity.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-blue-300">
-                    Space Complexity:{" "}
-                    <span className="font-mono text-teal-300">O(1)</span>
-                  </h4>
-                  <p className="text-gray-400 mt-1">
-                    We only use a few variables to store `lmax`, `rmax`, and
-                    `totalWater`. The space required does not scale with the
-                    size of the input array.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4 text-sm">
-                <div>
-                  <h4 className="font-semibold text-blue-300">
-                    Time Complexity:{" "}
-                    <span className="font-mono text-teal-300">O(N)</span>
-                  </h4>
-                  <p className="text-gray-400 mt-1">
-                    We make three separate passes through the array: one to
-                    compute `lmax` for all elements, one to compute `rmax`, and
-                    a final one to calculate the trapped water. Each pass is
-                    linear, so the total time complexity is O(N) + O(N) + O(N) =
-                    O(N).
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-blue-300">
-                    Space Complexity:{" "}
-                    <span className="font-mono text-teal-300">O(N)</span>
-                  </h4>
-                  <p className="text-gray-400 mt-1">
-                    We use two additional arrays, `lmax` and `rmax`, each of
-                    size N, to store the pre-calculated maximum heights. This
-                    results in a space complexity that is linear with respect to
-                    the input size.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
-        <p className="text-center text-gray-500 py-10">
-          Load heights to begin visualization.
-        </p>
-      )}
-    </div>
+    </VisualizerLayout>
   );
 };
 

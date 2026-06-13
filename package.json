@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node scripts/scanProgress.js && vite",
+    "build": "node scripts/scanProgress.js && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

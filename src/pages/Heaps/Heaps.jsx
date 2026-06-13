@@ -34,20 +34,8 @@ const defaultVisuals = {
 
 const AlgorithmList = ({ navigate }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [filter, setFilter] = useState("all");
-
-  // ✅ Get Heap problems directly from the master catalog
   const heapAlgorithms = PROBLEM_CATALOG.filter(p => p.category === 'Heaps');
-
-  // ❌ The local 'algorithms' array has been DELETED.
-
-  const filteredAlgorithms = heapAlgorithms.filter(algo => {
-    // Note: You can re-enable this filter once 'tier' is added to your catalog.js
-    if (filter === "all") return true;
-    // if (filter === "beginner") return algo.tier === "Tier 1";
-    // if (filter === "easy") return algo.tier === "Tier 2";
-    return true;
-  });
+  const filteredAlgorithms = heapAlgorithms;
 
   return (
     <div className="px-6 py-8 max-w-7xl mx-auto">

@@ -57,6 +57,8 @@ import BitPage from "./BitManipulation/BitManipulation.jsx";
 import HashingPage from "./Hashing/Hashing.jsx";
 import MathsMiscPage from "./MathematicalMiscellaneous/MathematicalMiscellaneous.jsx";
 import StarredProblems from "./Starred/StarredProblems.jsx";
+import QuestDashboard from "./QuestDashboard.jsx";
+
 
 const AlgorithmCategories = ({ navigate }) => {
   const { theme, toggleTheme } = useTheme();
@@ -67,6 +69,16 @@ const AlgorithmCategories = ({ navigate }) => {
 
   const categories = useMemo(
     () => [
+      {
+        name: "DSA Quest Odyssey",
+        icon: Trophy,
+        description: "Unlock achievements, level up, track streaks, and test your knowledge on your Strivers DSA sheet!",
+        page: "QuestDashboard",
+        gradient: "from-violet-500 via-purple-500 to-pink-500",
+        iconBg: "bg-violet-500/20",
+        borderColor: "border-violet-500/30",
+        iconColor: "text-violet-400",
+      },
       {
         name: "Starred Topics",
         icon: Star,
@@ -710,6 +722,8 @@ const HomePage = () => {
   const renderPage = () => {
     switch (page) {
       // ADD THE NEW CASE HERE
+      case "QuestDashboard":
+        return <QuestDashboard navigate={navigate} />;
       case "Starred":
         return <StarredProblems navigate={navigate} />;
       case "Arrays":

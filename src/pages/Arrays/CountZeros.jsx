@@ -1,255 +1,237 @@
-import React, { useState, useEffect } from "react";
-import { ArrowLeft, Hash, Play, RotateCcw, Code, Zap, Clock, Cpu } from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { Code, Clock, Cpu, Terminal, CheckCircle, Hash, Zap } from "lucide-react";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 
-const CountZeros = ({ navigate }) => {
+const CountZeros = () => {
+  const [arrInput, setArrInput] = useState("1, 0, 5, 0, 0, 3, 0, 8");
   const [array, setArray] = useState([1, 0, 5, 0, 0, 3, 0, 8]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [count, setCount] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1000);
-  const [isComplete, setIsComplete] = useState(false);
 
-  const resetAnimation = () => {
-    setCurrentIndex(0);
-    setCount(0);
-    setIsPlaying(false);
-    setIsComplete(false);
-  };
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
-  const startAnimation = () => {
-    resetAnimation();
-    setIsPlaying(true);
+  const handleLoad = useCallback((customArr) => {
+    let arr = customArr;
+    if (!arr) {
+      arr = arrInput.split(",").map((s) => parseInt(s.trim(), 10));
+    }
+    if (arr.some(isNaN) || arr.length === 0) {
+      alert("Invalid input");
+      return;
+    }
+    setArray(arr);
+    setArrInput(arr.join(", "));
+
+    const newHistory = [];
+    let count = 0;
+
+    // Init
+    newHistory.push({
+      array: arr,
+      currentIndex: -1,
+      count: 0,
+      message: "Initialize counter count = 0.",
+      line: 2,
+    });
+
+    for (let i = 0; i < arr.length; i++) {
+      newHistory.push({
+        array: arr,
+        currentIndex: i,
+        count,
+        message: `Check if element at index ${i} is 0 (arr[${i}] = ${arr[i]}).`,
+        line: 4,
+      });
+
+      if (arr[i] === 0) {
+        count++;
+        newHistory.push({
+          array: arr,
+          currentIndex: i,
+          count,
+          message: `Element at index ${i} is 0. Increment count to ${count}.`,
+          line: 5,
+        });
+      }
+    }
+
+    newHistory.push({
+      array: arr,
+      currentIndex: arr.length,
+      count,
+      message: `Loop finished. Return final count = ${count}.`,
+      line: 8,
+    });
+
+    load(newHistory);
+  }, [arrInput, load]);
+
+  const loadDefault = () => {
+    const defaultArr = [1, 0, 5, 0, 0, 3, 0, 8];
+    handleLoad(defaultArr);
   };
 
   const generateNewArray = () => {
-    const newArray = Array.from({ length: 8 }, () => 
+    const newArray = Array.from({ length: 8 }, () =>
       Math.random() > 0.5 ? Math.floor(Math.random() * 15) + 1 : 0
     );
-    setArray(newArray);
-    resetAnimation();
+    handleLoad(newArray);
   };
 
-  const loadDefaultArray = () => {
-    setArray([1, 0, 5, 0, 0, 3, 0, 8]);
-    resetAnimation();
+  const codeContent = {
+    1: `int countZeros(vector<int>& arr) {`,
+    2: `    int count = 0;`,
+    3: `    for (int i = 0; i < arr.size(); i++) {`,
+    4: `        if (arr[i] == 0) {`,
+    5: `            count++;`,
+    6: `        }`,
+    7: `    }`,
+    8: `    return count;`,
+    9: `}`
   };
 
-  useEffect(() => {
-    let interval;
-    if (isPlaying && currentIndex < array.length) {
-      interval = setInterval(() => {
-        setCurrentIndex(prev => {
-          const nextIndex = prev + 1;
-          
-          if (array[prev] === 0) {
-            setCount(c => c + 1);
-          }
+  const {
+    line,
+    currentIndex = -1,
+    count = 0,
+    displayArray = array
+  } = currentState;
 
-          if (nextIndex >= array.length) {
-            setIsPlaying(false);
-            setIsComplete(true);
-            return prev;
-          }
+  const isComplete = currentIndex >= displayArray.length;
 
-          return nextIndex;
-        });
-      }, speed);
-    }
+  const inputSection = (
+    <>
+      <input
+        type="text"
+        value={arrInput}
+        onChange={(e) => setArrInput(e.target.value)}
+        disabled={isLoaded}
+        className="flex-1 min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm text-sm"
+        placeholder="Array e.g. 1, 0, 5, 0"
+      />
+      {!isLoaded && (
+        <>
+          <button
+            onClick={() => handleLoad()}
+            className="px-5 py-3 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/40 text-white font-bold transition shadow-lg cursor-pointer text-sm"
+          >
+            Load & Visualize
+          </button>
+          <button
+            onClick={loadDefault}
+            className="px-4 py-3 bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 rounded-xl font-medium transition cursor-pointer text-sm"
+          >
+            Default
+          </button>
+          <button
+            onClick={generateNewArray}
+            className="px-4 py-3 bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 rounded-xl font-medium transition cursor-pointer text-sm"
+          >
+            Random
+          </button>
+        </>
+      )}
+    </>
+  );
 
-    return () => clearInterval(interval);
-  }, [isPlaying, currentIndex, array, speed]);
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-yellow-300 select-none text-sm">
+          <Terminal size={14} /> Pointers
+        </h4>
+        <div className="text-3xl font-mono text-yellow-300">
+          i = {currentIndex >= 0 && currentIndex < displayArray.length ? currentIndex : "-"}
+        </div>
+      </div>
+
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-cyan-300 select-none text-sm">
+          <Hash size={14} /> Zeros Count
+        </h4>
+        <div className="text-3xl font-mono text-cyan-300 font-bold">
+          {count}
+        </div>
+      </div>
+
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-emerald-300 select-none text-sm">
+          <CheckCircle size={14} /> Progress
+        </h4>
+        <div className="text-3xl font-bold text-emerald-300">
+          {isComplete ? "Done" : `${currentIndex + 1} / ${displayArray.length}`}
+        </div>
+      </div>
+
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-cyan-300 font-semibold flex items-center gap-2 mb-2 select-none text-sm">
+          <Clock size={16} /> Complexity
+        </h4>
+        <div className="text-xs text-gray-300 space-y-1">
+          <div>
+            <strong>Time Complexity:</strong> <span className="font-mono text-cyan-300">O(N)</span> — Single linear scan over all elements.
+          </div>
+          <div>
+            <strong>Space Complexity:</strong> <span className="font-mono text-cyan-300">O(1)</span> — Only uses a single count variable.
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
-      <div className="max-w-6xl mx-auto mb-8">
-        <button
-          onClick={() => navigate("home")}
-          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group cursor-pointer"
-        >
-          <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-          Back to Array Problems
-        </button>
+    <VisualizerLayout
+      title="Count Zeros"
+      description="Count the number of zero elements in an array through linear traversal."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={currentState.message || "Enter inputs to begin visualization."}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter numbers to begin the visualization."
+    >
+      <div className="w-full space-y-8">
+        <div className="flex justify-center items-end gap-3 min-h-[220px] pt-4">
+          {displayArray.map((value, index) => {
+            const isActive = index === currentIndex && !isComplete;
+            const isZero = value === 0;
+            const isProcessed = index < currentIndex;
 
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <Hash className="h-12 w-12 text-cyan-400" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">
-              Count Zeros in Array
-            </h1>
-          </div>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Count the number of zero elements in an array through linear traversal
-          </p>
-        </div>
-      </div>
+            let barBg = "bg-blue-500/20 border-blue-400";
+            if (isActive) {
+              barBg = "bg-yellow-500/30 border-yellow-400 scale-110 shadow-lg shadow-yellow-500/25";
+            } else if (isProcessed && isZero) {
+              barBg = "bg-red-500/40 border-red-400 shadow-lg shadow-red-500/25";
+            } else if (isZero) {
+              barBg = "bg-red-500/20 border-red-400 scale-105";
+            }
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={loadDefaultArray}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl font-medium transition-all cursor-pointer"
+            return (
+              <div key={index} className="flex flex-col items-center gap-3">
+                <div className="text-gray-400 text-xs font-mono">[{index}]</div>
+                <div
+                  className={`w-14 flex flex-col items-center justify-end rounded-lg border-2 transition-all duration-300 ${barBg}`}
+                  style={{ height: `${value === 0 ? 60 : Math.min(150, value * 10 + 60)}px` }}
                 >
-                  Load & Visualize
-                </button>
-                <button
-                  onClick={startAnimation}
-                  disabled={isPlaying}
-                  className="flex items-center gap-2 px-6 py-3 cursor-pointer bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 rounded-xl font-medium transition-all disabled:cursor-not-allowed"
-                >
-                  <Play className="h-4 w-4" />
-                  {isPlaying ? "Running..." : "Start Animation"}
-                </button>
-                <button
-                  onClick={resetAnimation}
-                  className="flex items-center gap-2 px-4 cursor-pointer py-2 bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-all"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                  Reset
-                </button>
-              </div>
-              <button
-                onClick={generateNewArray}
-                className="px-4 py-2 bg-purple-500 hover:bg-purple-600 cursor-pointer rounded-xl font-medium transition-all"
-              >
-                New Array
-              </button>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="text-gray-400 text-sm">Speed:</label>
-              <select 
-                value={speed} 
-                onChange={(e) => setSpeed(Number(e.target.value))}
-                className="bg-gray-800 border border-gray-700 rounded-lg cursor-pointer px-3 py-2 text-white"
-              >
-                <option value={1500}>Slow</option>
-                <option value={1000}>Medium</option>
-                <option value={500}>Fast</option>
-                <option value={250}>Very Fast</option>
-              </select>
-              <div className="flex items-center gap-2 ml-4">
-                <Hash className="h-4 w-4 text-cyan-400" />
-                <span className="text-sm text-gray-300">Zeros Count: {count}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-6 text-center">Array Visualization</h3>
-            
-            <div className="flex justify-center items-end gap-4 mb-8 min-h-[200px]">
-              {array.map((value, index) => (
-                <div key={index} className="flex flex-col items-center gap-3">
-                  <div className="text-gray-400 text-sm font-mono">[{index}]</div>
+                  <div className="flex-1 flex items-center justify-center">
+                    <span className="text-white font-bold text-base">{value}</span>
+                  </div>
                   <div
-                    className={`w-16 flex flex-col items-center justify-end rounded-lg border-2 transition-all duration-300 ${
-                      index === currentIndex && !isComplete
-                        ? "bg-yellow-500/30 border-yellow-400 scale-110 shadow-lg shadow-yellow-500/25"
-                        : value === 0
-                        ? "bg-red-500/30 border-red-400 scale-105"
-                        : "bg-blue-500/20 border-blue-400"
-                    } ${
-                      index < currentIndex && value === 0
-                        ? "bg-red-500/40 border-red-400 shadow-lg shadow-red-500/25"
-                        : ""
-                    }`}
-                    style={{ height: `${value === 0 ? 60 : value * 10 + 60}px` }}
-                  >
-                    <div className="flex-1 flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">{value}</span>
-                    </div>
-                    <div className={`w-full text-center py-1 text-xs font-bold ${
+                    className={`w-full text-center py-1 text-xs font-bold rounded-b-md ${
                       value === 0 ? "bg-red-500 text-white" : "bg-blue-500 text-white"
-                    }`}>
-                      {value === 0 ? "ZERO" : ""}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center">
-              {isComplete ? (
-                <div className="flex items-center justify-center gap-3 text-2xl font-bold text-green-400 animate-pulse">
-                  <Hash className="h-8 w-8" />
-                  Total Zeros Found: {count}
-                </div>
-              ) : isPlaying ? (
-                <div className="flex items-center justify-center gap-3 text-lg text-yellow-400">
-                  <Zap className="h-5 w-5" />
-                  Checking element at index {currentIndex}...
-                </div>
-              ) : (
-                <div className="text-gray-400">
-                  Click "Start Animation" to begin visualization
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">Platform</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
-                <Code className="h-5 w-5 text-green-400" />
-                <div>
-                  <div className="font-bold text-white">GfG Problem</div>
-                  <div className="text-sm text-gray-400">Count Zeros in Array</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">C++ Solution</h3>
-            <div className="bg-gray-950 rounded-lg p-4 font-mono text-sm">
-              <div className="text-blue-400">int countZeros(vector<span className="text-pink-400">{'<'}</span>int<span className="text-pink-400">{'>'}</span>& arr) {'{'}</div>
-              <div className="text-green-400 ml-4">int count = 0;</div>
-              <div className="text-green-400 ml-4">for (int i = 0; i {'<'} arr.size(); i++) {'{'}</div>
-              <div className={`text-yellow-400 ml-8 ${currentIndex > 0 ? "bg-yellow-500/20 px-2 rounded" : ""}`}>
-                if (arr[i] == 0) {'{'}
-              </div>
-              <div className={`text-red-400 ml-12 ${array[currentIndex] === 0 ? "bg-red-500/20 px-2 rounded" : ""}`}>
-                count++;
-              </div>
-              <div className="text-yellow-400 ml-8">{'}'}</div>
-              <div className="text-green-400 ml-4">{'}'}</div>
-              <div className="text-green-400 ml-4">return count;</div>
-              <div className="text-blue-400">{'}'}</div>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">Complexity Analysis</h3>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-blue-400 mt-1" />
-                <div>
-                  <div className="font-bold text-white">Time Complexity: O(N)</div>
-                  <div className="text-sm text-gray-400">
-                    Single pass through array, checking each element once
+                    }`}
+                  >
+                    {value === 0 ? "ZERO" : " "}
                   </div>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <Cpu className="h-5 w-5 text-green-400 mt-1" />
-                <div>
-                  <div className="font-bold text-white">Space Complexity: O(1)</div>
-                  <div className="text-sm text-gray-400">
-                    Only constant space for counter variable
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
-    </div>
+    </VisualizerLayout>
   );
 };
 

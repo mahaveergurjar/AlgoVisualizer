@@ -1,410 +1,362 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { ArrowLeft, ArrowRight, Play, Pause, Cpu, FileText, Clock } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ArrowLeft, Hash, Zap, Cpu } from "lucide-react";
+import { useVisualizer } from "../../hooks/useVisualizer";
+import VisualizerLayout from "../../components/VisualizerLayout";
 
-const LANG_TABS = ["C++", "Python", "Java"];
-
-const CODE_SNIPPETS = {
-  "C++": [
-    { l: 1, t: "#include <bits/stdc++.h>" },
-    { l: 2, t: "using namespace std;" },
-    { l: 4, t: "string reverseWords(string s) {" },
-    { l: 5, t: "    vector<string> words;" },
-    { l: 6, t: "    stringstream ss(s);" },
-    { l: 7, t: "    string word;" },
-    { l: 8, t: "    while (ss >> word) {" },
-    { l: 9, t: "        words.push_back(word);" },
-    { l: 10, t: "    }" },
-    { l: 11, t: "    reverse(words.begin(), words.end());" },
-    { l: 12, t: "    string result = \"\";" },
-    { l: 13, t: "    for (int i = 0; i < words.size(); i++) {" },
-    { l: 14, t: "        result += words[i];" },
-    { l: 15, t: "        if (i != words.size() - 1) result += \" \";" },
-    { l: 16, t: "    }" },
-    { l: 17, t: "    return result;" },
-    { l: 18, t: "}" },
-  ],
-  Python: [
-    { l: 1, t: "def reverseWords(s):" },
-    { l: 2, t: "    words = s.split()" },
-    { l: 3, t: "    words.reverse()" },
-    { l: 4, t: "    return ' '.join(words)" },
-  ],
-  Java: [
-    { l: 1, t: "public static String reverseWords(String s) {" },
-    { l: 2, t: "    String[] words = s.trim().split(\"\\\\s+\");" },
-    { l: 3, t: "    Collections.reverse(Arrays.asList(words));" },
-    { l: 4, t: "    return String.join(\" \", words);" },
-    { l: 5, t: "}" },
-  ],
+const codeContent = {
+  1: "string reverseWords(string s) {",
+  2: "    vector<string> words;",
+  3: "    stringstream ss(s);",
+  4: "    string word;",
+  5: "    while (ss >> word) {",
+  6: "        words.push_back(word);",
+  7: "    }",
+  8: "    reverse(words.begin(), words.end());",
+  9: "    string result = \"\";",
+  10: "    for (int i = 0; i < words.size(); i++) {",
+  11: "        result += words[i];",
+  12: "        if (i != words.size() - 1) result += \" \";",
+  13: "    }",
+  14: "    return result;",
+  15: "}"
 };
 
-const ReverseWordsVisualizer = () => {
-  const [stringInput, setStringInput] = useState("the sky is blue");
-  const [string, setString] = useState("");
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [playing, setPlaying] = useState(false);
-  const [speed, setSpeed] = useState(600);
-  const playRef = useRef(null);
-  const [activeLang, setActiveLang] = useState("C++");
-  const state = history[currentStep] || {};
+const generateHistory = (s) => {
+  const newHistory = [];
+  const addState = (props) =>
+    newHistory.push({
+      words: [],
+      currentWord: null,
+      reversedWords: [],
+      result: null,
+      line: null,
+      explanation: "",
+      phase: null,
+      ...props,
+    });
 
-  const generateHistory = useCallback((s) => {
-    const newHistory = [];
-    const addState = (props) =>
-      newHistory.push({
-        words: [],
-        currentWord: null,
-        reversedWords: [],
-        result: null,
-        line: null,
-        explanation: "",
-        phase: null,
-        ...props,
-      });
+  // Line 2: vector<string> words;
+  addState({
+    line: 2,
+    phase: "init",
+    explanation: "Initialize an empty vector of strings to hold the extracted words.",
+    words: [],
+  });
 
+  const words = s.trim().split(/\s+/);
+
+  for (let i = 0; i < words.length; i++) {
+    // Line 5: while (ss >> word)
     addState({
       line: 5,
-      phase: "init",
-      explanation: "Initialize empty words array.",
-      words: [],
+      phase: "extracting",
+      currentWord: words[i],
+      words: words.slice(0, i),
+      explanation: `Read next word from stringstream: "${words[i]}".`,
     });
 
-    const words = s.trim().split(/\s+/);
-
-    for (let i = 0; i < words.length; i++) {
-      addState({
-        line: 9,
-        phase: "extracting",
-        currentWord: words[i],
-        words: words.slice(0, i + 1),
-        explanation: `Extract word "${words[i]}" and add to array.`,
-      });
-    }
-
+    // Line 6: words.push_back(word)
     addState({
-      line: 11,
-      phase: "reversing",
-      words: [...words],
-      explanation: "Reverse the words array.",
+      line: 6,
+      phase: "extracting",
+      currentWord: words[i],
+      words: words.slice(0, i + 1),
+      explanation: `Push word "${words[i]}" into the words vector.`,
     });
+  }
 
-    const reversedWords = [...words].reverse();
-    
-    addState({
-      line: 11,
-      phase: "reversed",
-      words: [...words],
-      reversedWords: [...reversedWords],
-      explanation: `Words reversed: [${reversedWords.map(w => `"${w}"`).join(", ")}].`,
-    });
+  // Line 8: reverse(words.begin(), words.end());
+  addState({
+    line: 8,
+    phase: "reversing",
+    words: [...words],
+    explanation: "Reverse the vector of words in-place using two-pointer swapping under the hood.",
+  });
 
+  const reversedWords = [...words].reverse();
+  
+  addState({
+    line: 8,
+    phase: "reversed",
+    words: [...words],
+    reversedWords: [...reversedWords],
+    explanation: `Words vector reversed successfully: [${reversedWords.map(w => `"${w}"`).join(", ")}].`,
+  });
+
+  // Line 9: string result = "";
+  addState({
+    line: 9,
+    phase: "building",
+    reversedWords: [...reversedWords],
+    explanation: "Initialize an empty result string.",
+    result: "",
+  });
+
+  let currentBuilt = "";
+  for (let i = 0; i < reversedWords.length; i++) {
+    // Line 10: loop check
     addState({
-      line: 12,
+      line: 10,
       phase: "building",
       reversedWords: [...reversedWords],
-      explanation: "Build result string by joining reversed words.",
+      explanation: `Loop condition check: index i = ${i} < words.size() (${reversedWords.length}).`,
+      result: currentBuilt,
     });
 
-    const result = reversedWords.join(" ");
-    
+    // Line 11: result += words[i]
+    currentBuilt += reversedWords[i];
     addState({
-      line: 17,
-      phase: "complete",
+      line: 11,
+      phase: "building",
       reversedWords: [...reversedWords],
-      result,
-      explanation: `Final result: "${result}".`,
+      explanation: `Append word "${reversedWords[i]}" to the result string.`,
+      result: currentBuilt,
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-  }, []);
-
-  const load = () => {
-    const s = stringInput.trim();
-    if (!s) return alert("String must be non-empty.");
-    setString(s);
-    setIsLoaded(true);
-    generateHistory(s);
-  };
-
-  const resetAll = () => {
-    setIsLoaded(false);
-    setHistory([]);
-    setCurrentStep(-1);
-    setPlaying(false);
-    clearInterval(playRef.current);
-  };
-
-  const stepForward = useCallback(() => {
-    setCurrentStep((s) => Math.min(s + 1, history.length - 1));
-  }, [history.length]);
-
-  const stepBackward = useCallback(() => {
-    setCurrentStep((s) => Math.max(s - 1, 0));
-  }, []);
-
-  useEffect(() => {
-    const onKey = (e) => {
-      if (!isLoaded) return;
-      if (e.key === "ArrowRight") stepForward();
-      if (e.key === "ArrowLeft") stepBackward();
-      if (e.key === " ") {
-        e.preventDefault();
-        setPlaying((p) => !p);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [isLoaded, stepForward, stepBackward]);
-
-  useEffect(() => {
-    if (playing) {
-      if (currentStep >= history.length - 1) {
-        setPlaying(false);
-        return;
-      }
-      playRef.current = setInterval(() => {
-        setCurrentStep((s) => {
-          if (s >= history.length - 1) {
-            clearInterval(playRef.current);
-            setPlaying(false);
-            return s;
-          }
-          return s + 1;
-        });
-      }, speed);
-    } else {
-      clearInterval(playRef.current);
+    if (i !== reversedWords.length - 1) {
+      // Line 12: result += " "
+      currentBuilt += " ";
+      addState({
+        line: 12,
+        phase: "building",
+        reversedWords: [...reversedWords],
+        explanation: "Append space separator since this is not the last word.",
+        result: currentBuilt,
+      });
     }
-    return () => clearInterval(playRef.current);
-  }, [playing, speed, history.length, currentStep]);
+  }
 
-  return (
-    <div className="px-6 py-8 max-w-7xl mx-auto relative bg-gray-950 min-h-screen text-white">
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-orange-500/8 rounded-full blur-3xl pointer-events-none" />
+  // Line 14: return result;
+  addState({
+    line: 14,
+    phase: "complete",
+    reversedWords: [...reversedWords],
+    result: currentBuilt,
+    explanation: `All words joined. Return final reversed sentence: "${currentBuilt}".`,
+  });
 
-      <header className="relative z-10 mb-12 text-center">
-        <h1 className="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-red-400 to-pink-400">
-          Reverse Words
-        </h1>
-        <p className="text-gray-300 mt-2 text-lg">
-          Reverse the order of words in a string
-        </p>
-      </header>
+  return newHistory;
+};
 
-      <section className="mb-6 z-10 relative">
-        <div className="flex flex-col md:flex-row gap-3 items-center">
-          <input
-            type="text"
-            value={stringInput}
-            onChange={(e) => setStringInput(e.target.value)}
-            disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-orange-400"
-            placeholder="Enter sentence (e.g., the sky is blue)"
-          />
+const ReverseWordsVisualizer = ({ navigate }) => {
+  const [stringInput, setStringInput] = useState("the sky is blue");
+  const [loadedString, setLoadedString] = useState("the sky is blue");
+  const visualizerState = useVisualizer({ defaultSpeed: 950 });
+  const { isLoaded, currentState } = visualizerState;
 
-          {!isLoaded ? (
-            <button
-              onClick={load}
-              className="px-5 py-3 rounded-xl bg-orange-500/20 hover:bg-orange-500/40 transition text-white font-bold shadow-lg"
-            >
-              Load & Visualize
-            </button>
-          ) : (
-            <>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={stepBackward}
-                  disabled={currentStep <= 0}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-orange-600 disabled:opacity-40 transition"
-                >
-                  <ArrowLeft />
-                </button>
-                <button
-                  onClick={() => setPlaying((p) => !p)}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-orange-600 transition"
-                >
-                  {playing ? <Pause /> : <Play />}
-                </button>
-                <button
-                  onClick={stepForward}
-                  disabled={currentStep >= history.length - 1}
-                  className="px-3 py-2 rounded-full bg-gray-800 hover:bg-orange-600 disabled:opacity-40 transition"
-                >
-                  <ArrowRight />
-                </button>
-              </div>
+  const handleLoad = () => {
+    const s = stringInput.trim();
+    if (!s) return;
+    setLoadedString(s);
+    visualizerState.load(generateHistory(s));
+  };
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200">
-                {Math.max(0, currentStep + 1)}/{history.length}
-              </div>
+  const loadExamples = (example) => {
+    const examples = {
+      ex1: "the sky is blue",
+      ex2: "  hello world  ",
+      ex3: "a good   example",
+      ex4: "SingleWord"
+    };
+    const val = examples[example];
+    setStringInput(val);
+    setLoadedString(val);
+    visualizerState.load(generateHistory(val));
+  };
 
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-300">Speed</label>
-                <input
-                  type="range"
-                  min={100}
-                  max={1500}
-                  step={50}
-                  value={speed}
-                  onChange={(e) => setSpeed(parseInt(e.target.value, 10))}
-                  className="w-36"
-                />
-              </div>
+  useEffect(() => {
+    handleLoad();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-              <button
-                onClick={resetAll}
-                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold"
-              >
-                Reset
-              </button>
-            </>
-          )}
-        </div>
-      </section>
+  const {
+    words = [],
+    currentWord = null,
+    reversedWords = [],
+    result = null,
+    phase = null
+  } = currentState;
 
-      <section className="mb-4 z-10">
-        <div className="flex items-center gap-2">
-          {LANG_TABS.map((lang) => (
-            <button
-              key={lang}
-              onClick={() => setActiveLang(lang)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm ${
-                activeLang === lang
-                  ? "bg-orange-500/20 text-orange-300 ring-1 ring-orange-400"
-                  : "bg-gray-800/40 text-gray-300 hover:bg-gray-800/60"
-              }`}
-            >
-              {lang}
-            </button>
-          ))}
-          <div className="ml-auto text-sm text-gray-400 flex items-center gap-2">
-            <Cpu size={16} /> <span>Approach: Split, Reverse, Join</span>
+  const inputSection = (
+    <div className="flex flex-wrap items-center gap-4 w-full">
+      <div className="flex items-center gap-3">
+        <input
+          type="text"
+          value={stringInput}
+          onChange={(e) => setStringInput(e.target.value)}
+          className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-orange-500 focus:outline-none w-72"
+          placeholder="Enter sentence..."
+        />
+        <button
+          onClick={handleLoad}
+          className="px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded-lg font-medium text-sm transition-all text-white cursor-pointer"
+        >
+          Load & Visualize
+        </button>
+      </div>
+
+      {/* Example Buttons */}
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => loadExamples("ex1")} className="px-2.5 py-1 bg-orange-500/10 border border-orange-500/20 rounded text-orange-400 text-xs hover:bg-orange-500/20 transition-all cursor-pointer">sky is blue</button>
+        <button onClick={() => loadExamples("ex2")} className="px-2.5 py-1 bg-orange-500/10 border border-orange-500/20 rounded text-orange-400 text-xs hover:bg-orange-500/20 transition-all cursor-pointer">spaces</button>
+        <button onClick={() => loadExamples("ex3")} className="px-2.5 py-1 bg-orange-500/10 border border-orange-500/20 rounded text-orange-400 text-xs hover:bg-orange-500/20 transition-all cursor-pointer">multi spaces</button>
+        <button onClick={() => loadExamples("ex4")} className="px-2.5 py-1 bg-orange-500/10 border border-orange-500/20 rounded text-orange-400 text-xs hover:bg-orange-500/20 transition-all cursor-pointer">single word</button>
+      </div>
+    </div>
+  );
+
+  const statsSection = (
+    <>
+      {/* Variables Panel */}
+      <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+        <h3 className="text-xl font-bold text-white mb-4">Variables</h3>
+        <div className="space-y-4">
+          <div>
+            <div className="text-xs text-gray-400 mb-1">currentWord:</div>
+            <div className="text-lg font-mono text-orange-400">
+              {currentWord ? `"${currentWord}"` : "None"}
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-gray-400 mb-1">Phase:</div>
+            <div className="text-sm font-semibold text-cyan-300 uppercase tracking-wider">
+              {phase || "-"}
+            </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {!isLoaded ? (
-        <div className="mt-10 text-center text-gray-400 italic">
-          Enter a sentence and click{" "}
-          <span className="text-orange-400 font-semibold">Load & Visualize</span>
+      {/* Vector Details */}
+      <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+        <h3 className="text-xl font-bold text-white mb-4">State Sizes</h3>
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <span className="text-gray-400">Words Vector:</span>
+            <span className="text-blue-400 font-mono font-semibold">{words.length}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-400">Reversed Vector:</span>
+            <span className="text-green-400 font-mono font-semibold">{reversedWords.length}</span>
+          </div>
         </div>
-      ) : (
-        <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
-          <aside className="lg:col-span-1 p-6 bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-700/60 shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-green-300 flex items-center gap-2 font-semibold">
-                <FileText size={18} /> Code
-              </h3>
-              <div className="text-sm text-gray-400">{activeLang}</div>
+      </div>
+
+      {/* Complexity & Details Panel */}
+      <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
+        <h3 className="text-xl font-bold text-white mb-4">Complexity</h3>
+        <div className="space-y-3 text-sm">
+          <div className="flex items-start gap-3">
+            <Zap className="h-4 w-4 text-green-400 mt-0.5" />
+            <div>
+              <div className="font-bold text-white">Time Complexity</div>
+              <div className="text-gray-400">O(n) - Linear scan & join</div>
             </div>
-            <div className="bg-[#0b1020] rounded-lg border border-gray-700/80 max-h-[640px] overflow-auto p-3">
-              {CODE_SNIPPETS[activeLang].map((line) => (
-                <div
-                  key={line.l}
-                  className={`flex font-mono text-sm ${
-                    state.line === line.l ? "bg-green-500/10" : ""
-                  }`}
-                >
-                  <div className="w-10 text-right text-gray-500 pr-3">{line.l}</div>
-                  <pre className="flex-1 text-gray-200">{line.t}</pre>
-                </div>
-              ))}
+          </div>
+          <div className="flex items-start gap-3">
+            <Cpu className="h-4 w-4 text-blue-400 mt-0.5" />
+            <div>
+              <div className="font-bold text-white">Space Complexity</div>
+              <div className="text-gray-400">O(n) - To hold words copy</div>
             </div>
-          </aside>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
-          <section className="lg:col-span-2 flex flex-col gap-6">
-            <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
-              <h4 className="text-gray-300 text-sm mb-3">Original String</h4>
-              <div className="p-4 bg-gray-900 rounded-lg border border-gray-700 font-mono text-xl text-white">
-                "{string}"
+  return (
+    <div className="min-h-screen bg-gray-950 text-white">
+      {/* Top Navigation Bar */}
+      <div className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-800 sticky top-0 z-50 h-16 flex items-center shadow-xl">
+        <div className="max-w-7xl px-6 w-full mx-auto flex items-center justify-between">
+          <button
+            onClick={() => navigate("home")}
+            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+            Back to Problems
+          </button>
+          <div className="flex items-center gap-2">
+            <Hash className="h-5 w-5 text-orange-400" />
+            <span className="text-sm font-semibold text-gray-300">
+              String Problems
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <VisualizerLayout
+        title="Reverse Words"
+        description="Reverse the order of words in a sentence."
+        isLoaded={isLoaded}
+        inputSection={inputSection}
+        codeContent={codeContent}
+        activeLine={currentState.line || 0}
+        message={currentState.explanation || ""}
+        visualizerState={visualizerState}
+        statsSection={statsSection}
+      >
+        {/* Children: String visualization content */}
+        <div className="flex flex-col w-full gap-6">
+          {/* Loaded sentence info */}
+          <div className="p-4 bg-gray-950/45 rounded-xl border border-gray-800/60">
+            <h4 className="text-gray-400 text-xs font-semibold mb-2 uppercase tracking-wide">Original Sentence</h4>
+            <div className="p-3 bg-gray-900 rounded-lg border border-gray-800 font-mono text-lg text-white">
+              "{loadedString}"
+            </div>
+          </div>
+
+          {currentWord && (
+            <div className="p-4 bg-gray-950/45 rounded-xl border border-gray-800/60 animate-pulse">
+              <h4 className="text-gray-400 text-xs font-semibold mb-2 uppercase tracking-wide">Current Word</h4>
+              <div className="p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg font-mono text-2xl text-orange-400 text-center font-bold">
+                "{currentWord}"
               </div>
             </div>
+          )}
 
-            {state.currentWord && (
-              <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
-                <h4 className="text-gray-300 text-sm mb-2">Current Word</h4>
-                <div className="p-3 bg-orange-500/20 border border-orange-500 rounded-lg font-mono text-2xl text-orange-300">
-                  "{state.currentWord}"
-                </div>
-              </div>
-            )}
-
-            {state.words && state.words.length > 0 && (
-              <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
-                <h4 className="text-gray-300 text-sm mb-3">Extracted Words Array</h4>
-                <div className="flex gap-2 flex-wrap">
-                  {state.words.map((word, idx) => (
-                    <div
-                      key={idx}
-                      className="px-4 py-2 bg-blue-700/30 border border-blue-600 rounded-lg font-mono text-white"
-                    >
-                      <span className="text-xs text-gray-400">[{idx}]</span> {word}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {state.reversedWords && state.reversedWords.length > 0 && (
-              <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
-                <h4 className="text-gray-300 text-sm mb-3">Reversed Words Array</h4>
-                <div className="flex gap-2 flex-wrap">
-                  {state.reversedWords.map((word, idx) => (
-                    <div
-                      key={idx}
-                      className="px-4 py-2 bg-green-700/30 border border-green-600 rounded-lg font-mono text-white"
-                    >
-                      <span className="text-xs text-gray-400">[{idx}]</span> {word}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="col-span-2 p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
-                <h4 className="text-gray-300 text-sm mb-2 flex items-center gap-2">
-                  <FileText size={14} /> Explanation
-                </h4>
-                <p className="text-gray-200">{state.explanation}</p>
-                <div className="mt-3 text-sm text-gray-400">
-                  <strong>Phase:</strong>{" "}
-                  <span className="text-gray-200">{state.phase || "-"}</span>
-                </div>
-              </div>
-
-              <div className="p-4 bg-gray-800/50 rounded-xl border border-gray-700/60">
-                <h4 className="text-green-300 font-semibold flex items-center gap-2">
-                  <Clock size={16} /> Complexity
-                </h4>
-                <div className="mt-3 text-sm text-gray-300 space-y-2">
-                  <div>
-                    <strong>Time:</strong>{" "}
-                    <span className="font-mono text-teal-300">O(N)</span>
+          {words && words.length > 0 && (
+            <div className="p-4 bg-gray-950/45 rounded-xl border border-gray-800/60">
+              <h4 className="text-gray-400 text-xs font-semibold mb-3 uppercase tracking-wide">Extracted Words (vector)</h4>
+              <div className="flex gap-2 flex-wrap animate-fade-in-up">
+                {words.map((word, idx) => (
+                  <div
+                    key={idx}
+                    className="px-4 py-2 bg-blue-700/20 border border-blue-600/40 rounded-lg font-mono text-blue-300"
+                  >
+                    <span className="text-xs text-gray-500 mr-1.5">[{idx}]</span>
+                    {word}
                   </div>
-                  <div>
-                    <strong>Space:</strong>{" "}
-                    <span className="font-mono text-teal-300">O(N)</span>
-                  </div>
-                  <div className="text-xs text-gray-400 mt-2">
-                    N = length of string. Split and reverse operations.
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
+          )}
 
-            {state.result !== null && (
-              <div className="p-6 bg-gradient-to-r from-orange-900/30 to-red-900/30 rounded-xl border border-orange-500/50">
-                <h4 className="text-orange-300 font-semibold mb-3">Final Result</h4>
-                <div className="font-mono text-3xl text-white">"{state.result}"</div>
+          {reversedWords && reversedWords.length > 0 && (
+            <div className="p-4 bg-gray-950/45 rounded-xl border border-gray-800/60">
+              <h4 className="text-gray-400 text-xs font-semibold mb-3 uppercase tracking-wide">Reversed Words (vector)</h4>
+              <div className="flex gap-2 flex-wrap animate-fade-in-up">
+                {reversedWords.map((word, idx) => (
+                  <div
+                    key={idx}
+                    className="px-4 py-2 bg-green-700/20 border border-green-600/40 rounded-lg font-mono text-green-300"
+                  >
+                    <span className="text-xs text-gray-500 mr-1.5">[{idx}]</span>
+                    {word}
+                  </div>
+                ))}
               </div>
-            )}
-          </section>
-        </main>
-      )}
+            </div>
+          )}
+
+          {result !== null && (
+            <div className="p-4 bg-gradient-to-r from-orange-950/30 to-red-950/30 rounded-xl border border-orange-500/30 animate-fade-in-up">
+              <h4 className="text-orange-400 font-semibold mb-2 text-xs uppercase tracking-wide">Result String</h4>
+              <div className="font-mono text-2xl text-white">"{result}"</div>
+            </div>
+          )}
+        </div>
+      </VisualizerLayout>
     </div>
   );
 };

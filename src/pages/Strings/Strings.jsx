@@ -34,6 +34,14 @@ import { problems as PROBLEM_CATALOG } from "../../search/catalog.js";
 import StarButton from "../../components/StarButton.jsx";
 
 
+const defaultVisuals = {
+  icon: Type,
+  gradient: "from-purple-900 to-indigo-900",
+  borderColor: "border-purple-800",
+  iconBg: "bg-purple-900/20",
+  iconColor: "text-purple-400",
+};
+
 function AlgorithmList({ navigate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [filter, setFilter] = useState("all");

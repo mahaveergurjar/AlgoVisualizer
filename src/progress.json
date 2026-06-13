@@ -1,0 +1,3456 @@
+{
+  "lastUpdated": "2026-06-13T10:41:29.429Z",
+  "totalSolved": 369,
+  "xp": 36900,
+  "level": 74,
+  "xpProgress": 400,
+  "xpForNextLevel": 500,
+  "streak": {
+    "current": 0,
+    "max": 8,
+    "history": [
+      "2023-06-06",
+      "2023-06-07",
+      "2023-06-09",
+      "2023-06-11",
+      "2023-06-12",
+      "2023-06-13",
+      "2023-06-14",
+      "2023-06-15",
+      "2023-06-16",
+      "2023-06-18",
+      "2023-06-19",
+      "2023-06-20",
+      "2023-06-21",
+      "2023-06-22",
+      "2023-06-23",
+      "2023-06-24",
+      "2023-06-25",
+      "2023-06-27",
+      "2023-06-28",
+      "2023-06-29",
+      "2023-06-30",
+      "2023-07-01",
+      "2023-07-02",
+      "2023-07-03",
+      "2023-07-05",
+      "2023-07-06",
+      "2023-07-07",
+      "2023-07-08",
+      "2023-07-09",
+      "2023-07-10",
+      "2023-07-12",
+      "2023-07-13",
+      "2023-07-14",
+      "2023-07-15",
+      "2023-07-18",
+      "2023-07-19",
+      "2023-07-21",
+      "2023-07-24",
+      "2023-07-27",
+      "2023-07-28",
+      "2023-07-29",
+      "2023-07-31",
+      "2023-08-01",
+      "2023-08-03",
+      "2023-08-04",
+      "2023-08-07",
+      "2023-08-09",
+      "2023-08-14",
+      "2023-08-17",
+      "2023-08-27",
+      "2023-08-28",
+      "2023-08-30",
+      "2023-09-02"
+    ]
+  },
+  "categoryStats": {
+    "Arrays": {
+      "total": 39,
+      "rawCategory": "01.Arrays"
+    },
+    "Binary Search": {
+      "total": 31,
+      "rawCategory": "02.Binary Search"
+    },
+    "Strings": {
+      "total": 14,
+      "rawCategory": "03.Strings"
+    },
+    "Linked List": {
+      "total": 29,
+      "rawCategory": "04.Linked List"
+    },
+    "Recursion": {
+      "total": 21,
+      "rawCategory": "05.Recursion"
+    },
+    "Bit Manipulation": {
+      "total": 16,
+      "rawCategory": "06.Bit Manipulation"
+    },
+    "Stack and Queues": {
+      "total": 27,
+      "rawCategory": "07.Stack and Queues"
+    },
+    "Sliding Window": {
+      "total": 11,
+      "rawCategory": "08. Sliding Window"
+    },
+    "Heaps": {
+      "total": 16,
+      "rawCategory": "09. Heaps"
+    },
+    "Greedy Approach": {
+      "total": 12,
+      "rawCategory": "10. Greedy Approach"
+    },
+    "Binary Trees": {
+      "total": 35,
+      "rawCategory": "11. Binary Trees"
+    },
+    "Binary Search Trees": {
+      "total": 15,
+      "rawCategory": "12. Binary Search Trees"
+    },
+    "Graphs": {
+      "total": 42,
+      "rawCategory": "13. Graphs"
+    },
+    "Dynamic Programming": {
+      "total": 50,
+      "rawCategory": "14. Dynamic Programming"
+    },
+    "Tries": {
+      "total": 6,
+      "rawCategory": "15. Tries"
+    },
+    "Strings (Hard)": {
+      "total": 5,
+      "rawCategory": "16. Strings (Hard)"
+    }
+  },
+  "solvedProblems": [
+    {
+      "name": "Longest Happy Prefix",
+      "filename": "04. Longest Happy Prefix.cpp",
+      "category": "Strings (Hard)",
+      "rawCategory": "16. Strings (Hard)",
+      "path": "16. Strings (Hard)/Hard/04. Longest Happy Prefix.cpp",
+      "solvedAt": "2023-09-02T06:07:03.000Z",
+      "sizeBytes": 1492
+    },
+    {
+      "name": "Shortest Palindrome",
+      "filename": "05. Shortest Palindrome.cpp",
+      "category": "Strings (Hard)",
+      "rawCategory": "16. Strings (Hard)",
+      "path": "16. Strings (Hard)/Hard/05. Shortest Palindrome.cpp",
+      "solvedAt": "2023-09-02T06:07:03.000Z",
+      "sizeBytes": 1645
+    },
+    {
+      "name": "Minimum Number Of Insertions To Make Parenthesis Valid",
+      "filename": "01. Minimum number of insertions to make parenthesis valid.cpp",
+      "category": "Strings (Hard)",
+      "rawCategory": "16. Strings (Hard)",
+      "path": "16. Strings (Hard)/Hard/01. Minimum number of insertions to make parenthesis valid.cpp",
+      "solvedAt": "2023-08-30T14:21:12.000Z",
+      "sizeBytes": 1502
+    },
+    {
+      "name": "Count And Say",
+      "filename": "02. Count and Say.cpp",
+      "category": "Strings (Hard)",
+      "rawCategory": "16. Strings (Hard)",
+      "path": "16. Strings (Hard)/Hard/02. Count and Say.cpp",
+      "solvedAt": "2023-08-30T14:21:12.000Z",
+      "sizeBytes": 1682
+    },
+    {
+      "name": "KMP Or Z String Matching Algo",
+      "filename": "03. KMP or Z string matching algo.cpp",
+      "category": "Strings (Hard)",
+      "rawCategory": "16. Strings (Hard)",
+      "path": "16. Strings (Hard)/Hard/03. KMP or Z string matching algo.cpp",
+      "solvedAt": "2023-08-30T14:21:12.000Z",
+      "sizeBytes": 1819
+    },
+    {
+      "name": "Complete String",
+      "filename": "02. Complete String.cpp",
+      "category": "Tries",
+      "rawCategory": "15. Tries",
+      "path": "15. Tries/2. Problems/02. Complete String.cpp",
+      "solvedAt": "2023-08-30T03:19:54.000Z",
+      "sizeBytes": 3285
+    },
+    {
+      "name": "Count Distinct Subsitrings",
+      "filename": "03. Count distinct subsitrings.cpp",
+      "category": "Tries",
+      "rawCategory": "15. Tries",
+      "path": "15. Tries/2. Problems/03. Count distinct subsitrings.cpp",
+      "solvedAt": "2023-08-30T03:19:54.000Z",
+      "sizeBytes": 1525
+    },
+    {
+      "name": "Bitwise Basic Operations",
+      "filename": "04. Bitwise basic operations.cpp",
+      "category": "Tries",
+      "rawCategory": "15. Tries",
+      "path": "15. Tries/2. Problems/04. Bitwise basic operations.cpp",
+      "solvedAt": "2023-08-30T03:19:54.000Z",
+      "sizeBytes": 1459
+    },
+    {
+      "name": "Maximum XOR Of Two Numbers",
+      "filename": "05. Maximum XOR of two numbers.cpp",
+      "category": "Tries",
+      "rawCategory": "15. Tries",
+      "path": "15. Tries/2. Problems/05. Maximum XOR of two numbers.cpp",
+      "solvedAt": "2023-08-30T03:19:54.000Z",
+      "sizeBytes": 2330
+    },
+    {
+      "name": "Implement Trie (Prefix Tree)",
+      "filename": "01. Implement Trie (Prefix Tree).cpp",
+      "category": "Tries",
+      "rawCategory": "15. Tries",
+      "path": "15. Tries/1. Theory/01. Implement Trie (Prefix Tree).cpp",
+      "solvedAt": "2023-08-28T15:04:03.000Z",
+      "sizeBytes": 1991
+    },
+    {
+      "name": "Implement Trie 2",
+      "filename": "01. Implement Trie 2.cpp",
+      "category": "Tries",
+      "rawCategory": "15. Tries",
+      "path": "15. Tries/2. Problems/01. Implement Trie 2.cpp",
+      "solvedAt": "2023-08-28T15:04:03.000Z",
+      "sizeBytes": 2566
+    },
+    {
+      "name": "Print The LCS",
+      "filename": "02. Print the LCS.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/5. DP on Strings/02. Print the LCS.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2354
+    },
+    {
+      "name": "Minimum Steps To Make String Palindrome",
+      "filename": "05. Minimum steps to make string palindrome.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/5. DP on Strings/05. Minimum steps to make string palindrome.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1480
+    },
+    {
+      "name": "Minimum Steps To Make Other String",
+      "filename": "06. Minimum steps to make other string.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/5. DP on Strings/06. Minimum steps to make other string.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1516
+    },
+    {
+      "name": "Shortest Common Supersequence",
+      "filename": "07. Shortest Common Supersequence.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/5. DP on Strings/07. Shortest Common Supersequence.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2154
+    },
+    {
+      "name": "Distinct Subsequences",
+      "filename": "08. Distinct Subsequences.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/5. DP on Strings/08. Distinct Subsequences.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1977
+    },
+    {
+      "name": "Wildcard Matching",
+      "filename": "09. Wildcard Matching.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/5. DP on Strings/09. Wildcard Matching.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2078
+    },
+    {
+      "name": "Best Time To Buy And Sell Stocks",
+      "filename": "01. Best time to buy and sell stocks.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/6. DP on Stocks/01. Best time to buy and sell stocks.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1479
+    },
+    {
+      "name": "Best Time To Buy And Sell Stock 2",
+      "filename": "02. Best time to buy and sell stock 2.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/6. DP on Stocks/02. Best time to buy and sell stock 2.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2209
+    },
+    {
+      "name": "Best Time To Buy And Sell Stock Upto 2 Transaction",
+      "filename": "03. Best time to buy and sell stock upto 2 transaction.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/6. DP on Stocks/03. Best time to buy and sell stock upto 2 transaction.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2466
+    },
+    {
+      "name": "Best Time To Buy And Sell Stock Uoto K Transaction",
+      "filename": "04. Best time to buy and sell stock uoto k transaction.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/6. DP on Stocks/04. Best time to buy and sell stock uoto k transaction.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2598
+    },
+    {
+      "name": "Buy And Sell Stocks With Cooldown",
+      "filename": "05. Buy and sell stocks with cooldown.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/6. DP on Stocks/05. Buy and sell stocks with cooldown.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2222
+    },
+    {
+      "name": "Buy And Sell Stocks With Transaction Fee",
+      "filename": "06. Buy and sell stocks with transaction fee.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/6. DP on Stocks/06. Buy and sell stocks with transaction fee.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2407
+    },
+    {
+      "name": "Longest Increasing Subsequence",
+      "filename": "01. Longest Increasing Subsequence.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/7. DP on LIS/01. Longest Increasing Subsequence.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1348
+    },
+    {
+      "name": "Print LIS",
+      "filename": "02. Print LIS.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/7. DP on LIS/02. Print LIS.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1806
+    },
+    {
+      "name": "Largest Divisible Subset",
+      "filename": "03. Largest Divisible Subset.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/7. DP on LIS/03. Largest Divisible Subset.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1918
+    },
+    {
+      "name": "Longest Bitonic Subsequence",
+      "filename": "04. Longest Bitonic Subsequence.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/7. DP on LIS/04. Longest Bitonic Subsequence.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2167
+    },
+    {
+      "name": "Number Of LIS",
+      "filename": "05. Number of LIS.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/7. DP on LIS/05. Number of LIS.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1867
+    },
+    {
+      "name": "MCM",
+      "filename": "01. MCM.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/8. DP on Partition/01. MCM.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2048
+    },
+    {
+      "name": "Minimum Cost To Cut Stick",
+      "filename": "02. Minimum cost to cut stick.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/8. DP on Partition/02. Minimum cost to cut stick.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2106
+    },
+    {
+      "name": "Burst Ballons",
+      "filename": "03. Burst Ballons.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/8. DP on Partition/03. Burst Ballons.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 2173
+    },
+    {
+      "name": "Palindorme Partionting 2",
+      "filename": "05. Palindorme Partionting 2.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/8. DP on Partition/05. Palindorme Partionting 2.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1729
+    },
+    {
+      "name": "Partition Array For Maximum Sum",
+      "filename": "06. Partition array for maximum sum.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/8. DP on Partition/06. Partition array for maximum sum.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1884
+    },
+    {
+      "name": "Maximal Square",
+      "filename": "01. Maximal Square.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/9. DP on Squares/01. Maximal Square.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1768
+    },
+    {
+      "name": "Count Square Submatrices",
+      "filename": "02. Count square submatrices.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/9. DP on Squares/02. Count square submatrices.cpp",
+      "solvedAt": "2023-08-27T08:20:01.000Z",
+      "sizeBytes": 1762
+    },
+    {
+      "name": "Unbounded Knapsack",
+      "filename": "10. Unbounded Knapsack.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/10. Unbounded Knapsack.cpp",
+      "solvedAt": "2023-08-17T14:49:53.000Z",
+      "sizeBytes": 3044
+    },
+    {
+      "name": "Rod Cutting Problem",
+      "filename": "11. Rod Cutting Problem.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/11. Rod Cutting Problem.cpp",
+      "solvedAt": "2023-08-17T14:49:53.000Z",
+      "sizeBytes": 2037
+    },
+    {
+      "name": "Longest Common Subsequence",
+      "filename": "01. Longest Common Subsequence.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/5. DP on Strings/01. Longest Common Subsequence.cpp",
+      "solvedAt": "2023-08-17T14:49:53.000Z",
+      "sizeBytes": 2523
+    },
+    {
+      "name": "Longest Common Substring",
+      "filename": "03. Longest Common Substring.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/5. DP on Strings/03. Longest Common Substring.cpp",
+      "solvedAt": "2023-08-17T14:49:53.000Z",
+      "sizeBytes": 1541
+    },
+    {
+      "name": "Longest Palindromic Subsequence",
+      "filename": "04. Longest Palindromic Subsequence.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/5. DP on Strings/04. Longest Palindromic Subsequence.cpp",
+      "solvedAt": "2023-08-17T14:49:53.000Z",
+      "sizeBytes": 2035
+    },
+    {
+      "name": "Minimum Sum Partition",
+      "filename": "03. Minimum Sum Partition.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/03. Minimum Sum Partition.cpp",
+      "solvedAt": "2023-08-14T15:05:10.000Z",
+      "sizeBytes": 2159
+    },
+    {
+      "name": "Count Number Of Subsets With Sum K",
+      "filename": "04. Count number of subsets with sum K.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/04. Count number of subsets with sum K.cpp",
+      "solvedAt": "2023-08-14T15:05:10.000Z",
+      "sizeBytes": 3058
+    },
+    {
+      "name": "Partition With Given Difference",
+      "filename": "05. Partition with given difference.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/05. Partition with given difference.cpp",
+      "solvedAt": "2023-08-14T15:05:10.000Z",
+      "sizeBytes": 3643
+    },
+    {
+      "name": "01 Knapsack",
+      "filename": "06. 01 Knapsack.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/06. 01 Knapsack.cpp",
+      "solvedAt": "2023-08-14T15:05:10.000Z",
+      "sizeBytes": 2948
+    },
+    {
+      "name": "Coin Change",
+      "filename": "07. Coin Change.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/07. Coin Change.cpp",
+      "solvedAt": "2023-08-14T15:05:10.000Z",
+      "sizeBytes": 3261
+    },
+    {
+      "name": "Target Sum",
+      "filename": "08. Target Sum.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/08. Target Sum.cpp",
+      "solvedAt": "2023-08-14T15:05:10.000Z",
+      "sizeBytes": 3082
+    },
+    {
+      "name": "Coin Change 2",
+      "filename": "09. Coin Change 2.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/09. Coin Change 2.cpp",
+      "solvedAt": "2023-08-14T15:05:10.000Z",
+      "sizeBytes": 2937
+    },
+    {
+      "name": "Ninja Training",
+      "filename": "01. Ninja Training.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/3. 2D DP/01. Ninja Training.cpp",
+      "solvedAt": "2023-08-09T14:54:20.000Z",
+      "sizeBytes": 3859
+    },
+    {
+      "name": "Unique Paths",
+      "filename": "02. Unique Paths.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/3. 2D DP/02. Unique Paths.cpp",
+      "solvedAt": "2023-08-09T14:54:20.000Z",
+      "sizeBytes": 3032
+    },
+    {
+      "name": "Unique Paths 2",
+      "filename": "03. Unique Paths 2.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/3. 2D DP/03. Unique Paths 2.cpp",
+      "solvedAt": "2023-08-09T14:54:20.000Z",
+      "sizeBytes": 4137
+    },
+    {
+      "name": "Minimum Path Sum",
+      "filename": "04. Minimum Path Sum.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/3. 2D DP/04. Minimum Path Sum.cpp",
+      "solvedAt": "2023-08-09T14:54:20.000Z",
+      "sizeBytes": 3218
+    },
+    {
+      "name": "Minimum Path In Triangle",
+      "filename": "05. Minimum Path in Triangle.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/3. 2D DP/05. Minimum Path in Triangle.cpp",
+      "solvedAt": "2023-08-09T14:54:20.000Z",
+      "sizeBytes": 3034
+    },
+    {
+      "name": "Minimum Falling Path Sum",
+      "filename": "06. Minimum Falling Path Sum.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/3. 2D DP/06. Minimum Falling Path Sum.cpp",
+      "solvedAt": "2023-08-09T14:54:20.000Z",
+      "sizeBytes": 3598
+    },
+    {
+      "name": "Subset Sum Equal To K",
+      "filename": "01. Subset sum equal to k.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/01. Subset sum equal to k.cpp",
+      "solvedAt": "2023-08-09T14:54:20.000Z",
+      "sizeBytes": 3417
+    },
+    {
+      "name": "Partition Array In Two Equal Sum Subsets",
+      "filename": "02. Partition array in two equal sum subsets.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/4. DP on Subsequences/02. Partition array in two equal sum subsets.cpp",
+      "solvedAt": "2023-08-09T14:54:20.000Z",
+      "sizeBytes": 2897
+    },
+    {
+      "name": "Find The Nth Fibonacci Number",
+      "filename": "01. Find the nth fibonacci number.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/1. Intro to DP/01. Find the nth fibonacci number.cpp",
+      "solvedAt": "2023-08-07T03:31:30.000Z",
+      "sizeBytes": 1560
+    },
+    {
+      "name": "Climbing Stairs",
+      "filename": "01. Climbing Stairs.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/2. 1D DP/01. Climbing Stairs.cpp",
+      "solvedAt": "2023-08-07T03:31:30.000Z",
+      "sizeBytes": 1925
+    },
+    {
+      "name": "Frog Jump",
+      "filename": "02. Frog Jump.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/2. 1D DP/02. Frog Jump.cpp",
+      "solvedAt": "2023-08-07T03:31:30.000Z",
+      "sizeBytes": 2636
+    },
+    {
+      "name": "Frog K Jumps",
+      "filename": "03. Frog K Jumps.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/2. 1D DP/03. Frog K Jumps.cpp",
+      "solvedAt": "2023-08-07T03:31:30.000Z",
+      "sizeBytes": 2857
+    },
+    {
+      "name": "House Robber",
+      "filename": "04. House Robber.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/2. 1D DP/04. House Robber.cpp",
+      "solvedAt": "2023-08-07T03:31:30.000Z",
+      "sizeBytes": 2917
+    },
+    {
+      "name": "House Robber 2",
+      "filename": "05. House Robber 2.cpp",
+      "category": "Dynamic Programming",
+      "rawCategory": "14. Dynamic Programming",
+      "path": "14. Dynamic Programming/2. 1D DP/05. House Robber 2.cpp",
+      "solvedAt": "2023-08-07T03:31:30.000Z",
+      "sizeBytes": 4029
+    },
+    {
+      "name": "Number Of Ways To Arrive The Destination With Minimum Distance",
+      "filename": "11. Number of ways to arrive the destination with minimum distance.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/11. Number of ways to arrive the destination with minimum distance.cpp",
+      "solvedAt": "2023-08-04T15:03:19.000Z",
+      "sizeBytes": 2892
+    },
+    {
+      "name": "Bridges In Graph",
+      "filename": "01. Bridges in graph.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/6. Other Algorithms/01. Bridges in graph.cpp",
+      "solvedAt": "2023-08-04T15:03:19.000Z",
+      "sizeBytes": 2390
+    },
+    {
+      "name": "Strongly Connected Components",
+      "filename": "02. Strongly Connected Components.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/6. Other Algorithms/02. Strongly Connected Components.cpp",
+      "solvedAt": "2023-08-04T15:03:19.000Z",
+      "sizeBytes": 2033
+    },
+    {
+      "name": "Most Stones Removed",
+      "filename": "04. Most stones removed.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/5. MST Problems/04. Most stones removed.cpp",
+      "solvedAt": "2023-08-03T14:45:30.000Z",
+      "sizeBytes": 3016
+    },
+    {
+      "name": "Account Merge",
+      "filename": "05. Account Merge.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/5. MST Problems/05. Account Merge.cpp",
+      "solvedAt": "2023-08-03T14:45:30.000Z",
+      "sizeBytes": 3764
+    },
+    {
+      "name": "Number Of Islands 2",
+      "filename": "06. Number of islands 2.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/5. MST Problems/06. Number of islands 2.cpp",
+      "solvedAt": "2023-08-03T14:45:30.000Z",
+      "sizeBytes": 3445
+    },
+    {
+      "name": "Making Large Island",
+      "filename": "07. Making Large Island.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/5. MST Problems/07. Making Large Island.cpp",
+      "solvedAt": "2023-08-03T14:45:30.000Z",
+      "sizeBytes": 3573
+    },
+    {
+      "name": "Swim In Rising Water",
+      "filename": "08. Swim in rising water.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/5. MST Problems/08. Swim in rising water.cpp",
+      "solvedAt": "2023-08-03T14:45:30.000Z",
+      "sizeBytes": 2501
+    },
+    {
+      "name": "Prim's Algorithm",
+      "filename": "01. Prim's Algorithm.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/5. MST Problems/01. Prim's Algorithm.cpp",
+      "solvedAt": "2023-08-01T15:22:59.000Z",
+      "sizeBytes": 2065
+    },
+    {
+      "name": "Kruskal's Algorithm",
+      "filename": "02. Kruskal's Algorithm.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/5. MST Problems/02. Kruskal's Algorithm.cpp",
+      "solvedAt": "2023-08-01T15:22:59.000Z",
+      "sizeBytes": 2308
+    },
+    {
+      "name": "Number Of Operations To Make Network",
+      "filename": "03. Number of Operations to make Network.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/5. MST Problems/03. Number of Operations to make Network.cpp",
+      "solvedAt": "2023-08-01T15:22:59.000Z",
+      "sizeBytes": 3064
+    },
+    {
+      "name": "Cheapest Flights With K Stops",
+      "filename": "06. Cheapest Flights with K stops.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/06. Cheapest Flights with K stops.cpp",
+      "solvedAt": "2023-07-31T14:55:05.000Z",
+      "sizeBytes": 2487
+    },
+    {
+      "name": "Network Delay Time",
+      "filename": "07. Network Delay Time.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/07. Network Delay Time.cpp",
+      "solvedAt": "2023-07-31T14:55:05.000Z",
+      "sizeBytes": 2263
+    },
+    {
+      "name": "Bellman Ford Algorithm",
+      "filename": "08. Bellman Ford Algorithm.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/08. Bellman Ford Algorithm.cpp",
+      "solvedAt": "2023-07-31T14:55:05.000Z",
+      "sizeBytes": 2285
+    },
+    {
+      "name": "Floyd Warshall Algorithm",
+      "filename": "09. Floyd Warshall Algorithm.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/09. Floyd Warshall Algorithm.cpp",
+      "solvedAt": "2023-07-31T14:55:05.000Z",
+      "sizeBytes": 2064
+    },
+    {
+      "name": "Find City With Smallest Number Of Neighbours",
+      "filename": "10. Find city with smallest number of neighbours.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/10. Find city with smallest number of neighbours.cpp",
+      "solvedAt": "2023-07-31T14:55:05.000Z",
+      "sizeBytes": 3121
+    },
+    {
+      "name": "Shortest Path In Undirected Graph Having Unit Distance",
+      "filename": "01. Shortest path in Undirected Graph having unit distance.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/01. Shortest path in Undirected Graph having unit distance.cpp",
+      "solvedAt": "2023-07-29T09:03:40.000Z",
+      "sizeBytes": 2007
+    },
+    {
+      "name": "Shortest Path In DAG",
+      "filename": "02. Shortest path in DAG.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/02. Shortest path in DAG.cpp",
+      "solvedAt": "2023-07-29T09:03:40.000Z",
+      "sizeBytes": 2917
+    },
+    {
+      "name": "Dijkstra's Algorithm",
+      "filename": "03. Dijkstra's Algorithm.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/03. Dijkstra's Algorithm.cpp",
+      "solvedAt": "2023-07-29T09:03:40.000Z",
+      "sizeBytes": 2476
+    },
+    {
+      "name": "Shortest Path In Binary Matrix",
+      "filename": "04. Shortest Path in binary matrix.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/04. Shortest Path in binary matrix.cpp",
+      "solvedAt": "2023-07-29T09:03:40.000Z",
+      "sizeBytes": 2332
+    },
+    {
+      "name": "Path With Minimum Effort",
+      "filename": "05. Path with minimum effort.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/4. Shortest Path Problems/05. Path with minimum effort.cpp",
+      "solvedAt": "2023-07-29T09:03:40.000Z",
+      "sizeBytes": 2653
+    },
+    {
+      "name": "Kahn's Algorithm",
+      "filename": "02. Kahn's Algorithm.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/3. Topo Sort Problems/02. Kahn's Algorithm.cpp",
+      "solvedAt": "2023-07-28T15:07:45.000Z",
+      "sizeBytes": 1961
+    },
+    {
+      "name": "Course Scheduler 1",
+      "filename": "03. Course Scheduler 1.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/3. Topo Sort Problems/03. Course Scheduler 1.cpp",
+      "solvedAt": "2023-07-28T15:07:45.000Z",
+      "sizeBytes": 2338
+    },
+    {
+      "name": "Course Scheduler 2",
+      "filename": "04. Course Scheduler 2.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/3. Topo Sort Problems/04. Course Scheduler 2.cpp",
+      "solvedAt": "2023-07-28T15:07:45.000Z",
+      "sizeBytes": 2624
+    },
+    {
+      "name": "Find Eventual Safe State",
+      "filename": "05. Find Eventual Safe State.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/3. Topo Sort Problems/05. Find Eventual Safe State.cpp",
+      "solvedAt": "2023-07-28T15:07:45.000Z",
+      "sizeBytes": 2864
+    },
+    {
+      "name": "Alien Dictonary",
+      "filename": "06. Alien Dictonary.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/3. Topo Sort Problems/06. Alien Dictonary.cpp",
+      "solvedAt": "2023-07-28T15:07:45.000Z",
+      "sizeBytes": 2653
+    },
+    {
+      "name": "Count The Number Of Provinces",
+      "filename": "01. Count the number of provinces.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/01. Count the number of provinces.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 1838
+    },
+    {
+      "name": "Rotten Oranges",
+      "filename": "02. Rotten Oranges.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/02. Rotten Oranges.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 2407
+    },
+    {
+      "name": "Flood Fill Algorithm",
+      "filename": "03. Flood-Fill Algorithm.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/03. Flood-Fill Algorithm.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 1990
+    },
+    {
+      "name": "Detect Cycle In Undirected Graph",
+      "filename": "04. Detect Cycle in Undirected Graph.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/04. Detect Cycle in Undirected Graph.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 1481
+    },
+    {
+      "name": "01 Matrix",
+      "filename": "05. 01 Matrix.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/05. 01 Matrix.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 2093
+    },
+    {
+      "name": "Surrounded Regions",
+      "filename": "06. Surrounded Regions.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/06. Surrounded Regions.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 2162
+    },
+    {
+      "name": "Number Of Enclaves",
+      "filename": "07. Number of Enclaves.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/07. Number of Enclaves.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 2457
+    },
+    {
+      "name": "Word Ladder",
+      "filename": "08. Word Ladder.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/08. Word Ladder.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 2739
+    },
+    {
+      "name": "Distinct Islands",
+      "filename": "10. Distinct Islands.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/10. Distinct Islands.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 2239
+    },
+    {
+      "name": "Bipartite Graph",
+      "filename": "11. Bipartite Graph.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/11. Bipartite Graph.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 2294
+    },
+    {
+      "name": "Detect Cycle In Directed Graph",
+      "filename": "12. Detect Cycle in Directed Graph.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/2. Traversal Problems/12. Detect Cycle in Directed Graph.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 1590
+    },
+    {
+      "name": "Topological Sorting",
+      "filename": "01. Topological Sorting.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/3. Topo Sort Problems/01. Topological Sorting.cpp",
+      "solvedAt": "2023-07-27T14:41:54.000Z",
+      "sizeBytes": 1531
+    },
+    {
+      "name": "Count The Number Of Graphs",
+      "filename": "01. Count the number of graphs.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/1. Learning/01. Count the number of graphs.cpp",
+      "solvedAt": "2023-07-24T14:33:42.000Z",
+      "sizeBytes": 334
+    },
+    {
+      "name": "Graph Representation",
+      "filename": "02. Graph Representation.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/1. Learning/02. Graph Representation.cpp",
+      "solvedAt": "2023-07-24T14:33:42.000Z",
+      "sizeBytes": 1272
+    },
+    {
+      "name": "BFS",
+      "filename": "03. BFS.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/1. Learning/03. BFS.cpp",
+      "solvedAt": "2023-07-24T14:33:42.000Z",
+      "sizeBytes": 1616
+    },
+    {
+      "name": "DFS",
+      "filename": "04. DFS.cpp",
+      "category": "Graphs",
+      "rawCategory": "13. Graphs",
+      "path": "13. Graphs/1. Learning/04. DFS.cpp",
+      "solvedAt": "2023-07-24T14:33:42.000Z",
+      "sizeBytes": 1495
+    },
+    {
+      "name": "Validate BST",
+      "filename": "06. Validate BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/06. Validate BST.cpp",
+      "solvedAt": "2023-07-24T13:46:09.000Z",
+      "sizeBytes": 1555
+    },
+    {
+      "name": "LCA In BST",
+      "filename": "07. LCA in BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/07. LCA in BST.cpp",
+      "solvedAt": "2023-07-24T13:46:09.000Z",
+      "sizeBytes": 1865
+    },
+    {
+      "name": "Build BST From Preorder Traversal",
+      "filename": "08. Build BST from Preorder Traversal.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/08. Build BST from Preorder Traversal.cpp",
+      "solvedAt": "2023-07-24T13:46:09.000Z",
+      "sizeBytes": 2287
+    },
+    {
+      "name": "BST Iterator",
+      "filename": "09. BST Iterator.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/09. BST Iterator.cpp",
+      "solvedAt": "2023-07-24T13:46:09.000Z",
+      "sizeBytes": 1869
+    },
+    {
+      "name": "Two Sum In BST",
+      "filename": "10. Two Sum in BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/10. Two Sum in BST.cpp",
+      "solvedAt": "2023-07-24T13:46:09.000Z",
+      "sizeBytes": 2295
+    },
+    {
+      "name": "Recover BST",
+      "filename": "11. Recover BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/11. Recover BST.cpp",
+      "solvedAt": "2023-07-24T13:46:09.000Z",
+      "sizeBytes": 1289
+    },
+    {
+      "name": "Largest BST In Binary Tree",
+      "filename": "12. Largest BST in Binary Tree.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/12. Largest BST in Binary Tree.cpp",
+      "solvedAt": "2023-07-24T13:46:09.000Z",
+      "sizeBytes": 1615
+    },
+    {
+      "name": "Ceil In BST",
+      "filename": "01. Ceil in BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/01. Ceil in BST.cpp",
+      "solvedAt": "2023-07-21T14:54:32.000Z",
+      "sizeBytes": 1651
+    },
+    {
+      "name": "Floor In BST",
+      "filename": "02. Floor in BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/02. Floor in BST.cpp",
+      "solvedAt": "2023-07-21T14:54:32.000Z",
+      "sizeBytes": 1313
+    },
+    {
+      "name": "Insert Into BST",
+      "filename": "03. Insert into BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/03. Insert into BST.cpp",
+      "solvedAt": "2023-07-21T14:54:32.000Z",
+      "sizeBytes": 1825
+    },
+    {
+      "name": "Delete From BST",
+      "filename": "04. Delete from BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/04. Delete from BST.cpp",
+      "solvedAt": "2023-07-21T14:54:32.000Z",
+      "sizeBytes": 2621
+    },
+    {
+      "name": "Kth Smallest Element In BST",
+      "filename": "05. Kth smallest element in BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/2. Practice Problems/05. Kth smallest element in BST.cpp",
+      "solvedAt": "2023-07-21T14:54:32.000Z",
+      "sizeBytes": 1765
+    },
+    {
+      "name": "Intro To BST",
+      "filename": "01. Intro to BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/1. Concept/01. Intro to BST.cpp",
+      "solvedAt": "2023-07-21T02:54:30.000Z",
+      "sizeBytes": 1096
+    },
+    {
+      "name": "Search In BST",
+      "filename": "02. Search in BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/1. Concept/02. Search in BST.cpp",
+      "solvedAt": "2023-07-21T02:54:30.000Z",
+      "sizeBytes": 1949
+    },
+    {
+      "name": "Minimum Value In BST",
+      "filename": "03. Minimum value in BST.cpp",
+      "category": "Binary Search Trees",
+      "rawCategory": "12. Binary Search Trees",
+      "path": "12. Binary Search Trees/1. Concept/03. Minimum value in BST.cpp",
+      "solvedAt": "2023-07-21T02:54:30.000Z",
+      "sizeBytes": 938
+    },
+    {
+      "name": "Construct BT From Inorder And Preorder",
+      "filename": "08. Construct BT from inorder and preorder.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/08. Construct BT from inorder and preorder.cpp",
+      "solvedAt": "2023-07-19T15:11:38.000Z",
+      "sizeBytes": 2561
+    },
+    {
+      "name": "Construct BT From Inorder And Postorder",
+      "filename": "09. Construct BT from inorder and postorder.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/09. Construct BT from inorder and postorder.cpp",
+      "solvedAt": "2023-07-19T15:11:38.000Z",
+      "sizeBytes": 2472
+    },
+    {
+      "name": "Morris Preorder Traversal",
+      "filename": "11. Morris Preorder Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/11. Morris Preorder Traversal.cpp",
+      "solvedAt": "2023-07-19T15:11:38.000Z",
+      "sizeBytes": 1984
+    },
+    {
+      "name": "Morris Inorder Traversal",
+      "filename": "12. Morris Inorder Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/12. Morris Inorder Traversal.cpp",
+      "solvedAt": "2023-07-19T15:11:38.000Z",
+      "sizeBytes": 1933
+    },
+    {
+      "name": "Flatten Binary Tree",
+      "filename": "13. Flatten Binary Tree.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/13. Flatten Binary Tree.cpp",
+      "solvedAt": "2023-07-19T15:11:38.000Z",
+      "sizeBytes": 1398
+    },
+    {
+      "name": "Serialize And Deserialize",
+      "filename": "14. Serialize and Deserialize.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/14. Serialize and Deserialize.cpp",
+      "solvedAt": "2023-07-19T15:11:38.000Z",
+      "sizeBytes": 2515
+    },
+    {
+      "name": "All Root To Leaf Paths",
+      "filename": "01. All root to leaf paths.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/01. All root to leaf paths.cpp",
+      "solvedAt": "2023-07-18T15:10:56.000Z",
+      "sizeBytes": 1464
+    },
+    {
+      "name": "Lowest Common Ancestor",
+      "filename": "02. Lowest Common Ancestor.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/02. Lowest Common Ancestor.cpp",
+      "solvedAt": "2023-07-18T15:10:56.000Z",
+      "sizeBytes": 1642
+    },
+    {
+      "name": "Max Width Of Binary Tree",
+      "filename": "03. Max width of binary tree.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/03. Max width of binary tree.cpp",
+      "solvedAt": "2023-07-18T15:10:56.000Z",
+      "sizeBytes": 2113
+    },
+    {
+      "name": "Check Children Sum Property",
+      "filename": "04. Check children sum property.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/04. Check children sum property.cpp",
+      "solvedAt": "2023-07-18T15:10:56.000Z",
+      "sizeBytes": 1920
+    },
+    {
+      "name": "All Nodes At Distance K",
+      "filename": "05. All nodes at distance K.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/05. All nodes at distance K.cpp",
+      "solvedAt": "2023-07-18T15:10:56.000Z",
+      "sizeBytes": 2624
+    },
+    {
+      "name": "Min Time To Burn Binary Tree",
+      "filename": "06. Min time to burn binary tree.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/06. Min time to burn binary tree.cpp",
+      "solvedAt": "2023-07-18T15:10:56.000Z",
+      "sizeBytes": 2948
+    },
+    {
+      "name": "Count Nodes In Complete Binary Tree",
+      "filename": "07. Count nodes in complete binary tree.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/3. Hard/07. Count nodes in complete binary tree.cpp",
+      "solvedAt": "2023-07-18T15:10:56.000Z",
+      "sizeBytes": 2298
+    },
+    {
+      "name": "Maximum Path Sum",
+      "filename": "04. Maximum Path Sum.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/04. Maximum Path Sum.cpp",
+      "solvedAt": "2023-07-15T07:41:08.000Z",
+      "sizeBytes": 2089
+    },
+    {
+      "name": "Same Tree",
+      "filename": "05. Same Tree.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/05. Same Tree.cpp",
+      "solvedAt": "2023-07-15T07:41:08.000Z",
+      "sizeBytes": 1662
+    },
+    {
+      "name": "Zig Zag Traversal",
+      "filename": "06. Zig-Zag Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/06. Zig-Zag Traversal.cpp",
+      "solvedAt": "2023-07-15T07:41:08.000Z",
+      "sizeBytes": 2772
+    },
+    {
+      "name": "Boundary Traversal",
+      "filename": "07. Boundary Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/07. Boundary Traversal.cpp",
+      "solvedAt": "2023-07-15T07:41:08.000Z",
+      "sizeBytes": 3150
+    },
+    {
+      "name": "Vertical Order Traversal",
+      "filename": "08. Vertical Order Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/08. Vertical Order Traversal.cpp",
+      "solvedAt": "2023-07-15T07:41:08.000Z",
+      "sizeBytes": 2852
+    },
+    {
+      "name": "Top View",
+      "filename": "09. Top View.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/09. Top View.cpp",
+      "solvedAt": "2023-07-15T07:41:08.000Z",
+      "sizeBytes": 1771
+    },
+    {
+      "name": "Bottom View",
+      "filename": "10. Bottom View.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/10. Bottom View.cpp",
+      "solvedAt": "2023-07-15T07:41:08.000Z",
+      "sizeBytes": 1806
+    },
+    {
+      "name": "Left Or Right View",
+      "filename": "11. Left or Right View.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/11. Left or Right View.cpp",
+      "solvedAt": "2023-07-15T07:41:08.000Z",
+      "sizeBytes": 1308
+    },
+    {
+      "name": "Symmetric Tree",
+      "filename": "12. Symmetric Tree.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/12. Symmetric Tree.cpp",
+      "solvedAt": "2023-07-15T07:41:08.000Z",
+      "sizeBytes": 1598
+    },
+    {
+      "name": "Iterative Inorder Traversal",
+      "filename": "08. Iterative Inorder Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/08. Iterative Inorder Traversal.cpp",
+      "solvedAt": "2023-07-14T14:46:55.000Z",
+      "sizeBytes": 1354
+    },
+    {
+      "name": "Iterative Postorder",
+      "filename": "09. Iterative Postorder.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/09. Iterative Postorder.cpp",
+      "solvedAt": "2023-07-14T14:46:55.000Z",
+      "sizeBytes": 1730
+    },
+    {
+      "name": "All In One Traversal",
+      "filename": "10. All in one traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/10. All in one traversal.cpp",
+      "solvedAt": "2023-07-14T14:46:55.000Z",
+      "sizeBytes": 1698
+    },
+    {
+      "name": "Height Of Binary Tree",
+      "filename": "01. Height of binary tree.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/01. Height of binary tree.cpp",
+      "solvedAt": "2023-07-14T14:46:55.000Z",
+      "sizeBytes": 1090
+    },
+    {
+      "name": "Balanced Binary Tree",
+      "filename": "02. Balanced Binary Tree.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/02. Balanced Binary Tree.cpp",
+      "solvedAt": "2023-07-14T14:46:55.000Z",
+      "sizeBytes": 1614
+    },
+    {
+      "name": "Diameter Of Binary Tree",
+      "filename": "03. Diameter of Binary Tree.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/2. Medium Problems/03. Diameter of Binary Tree.cpp",
+      "solvedAt": "2023-07-14T14:46:55.000Z",
+      "sizeBytes": 1600
+    },
+    {
+      "name": "Introduction To Trees",
+      "filename": "01. Introduction to trees.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/01. Introduction to trees.cpp",
+      "solvedAt": "2023-07-13T14:31:56.000Z",
+      "sizeBytes": 640
+    },
+    {
+      "name": "Binary Tree Representation",
+      "filename": "02. Binary Tree representation.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/02. Binary Tree representation.cpp",
+      "solvedAt": "2023-07-13T14:31:56.000Z",
+      "sizeBytes": 1419
+    },
+    {
+      "name": "Preorder Traversal",
+      "filename": "03. Preorder Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/03. Preorder Traversal.cpp",
+      "solvedAt": "2023-07-13T14:31:56.000Z",
+      "sizeBytes": 974
+    },
+    {
+      "name": "Inorder Traversal",
+      "filename": "04. Inorder Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/04. Inorder Traversal.cpp",
+      "solvedAt": "2023-07-13T14:31:56.000Z",
+      "sizeBytes": 827
+    },
+    {
+      "name": "Postorder Traversal",
+      "filename": "05. Postorder Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/05. Postorder Traversal.cpp",
+      "solvedAt": "2023-07-13T14:31:56.000Z",
+      "sizeBytes": 835
+    },
+    {
+      "name": "Level Order Traversal",
+      "filename": "06. Level Order Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/06. Level Order Traversal.cpp",
+      "solvedAt": "2023-07-13T14:31:56.000Z",
+      "sizeBytes": 1516
+    },
+    {
+      "name": "Iterative Preorder Traversal",
+      "filename": "07. Iterative Preorder Traversal.cpp",
+      "category": "Binary Trees",
+      "rawCategory": "11. Binary Trees",
+      "path": "11. Binary Trees/1. Traversals/07. Iterative Preorder Traversal.cpp",
+      "solvedAt": "2023-07-13T14:31:56.000Z",
+      "sizeBytes": 1278
+    },
+    {
+      "name": "Insert Interval",
+      "filename": "07. Insert Interval.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/2. Medium/07. Insert Interval.cpp",
+      "solvedAt": "2023-07-13T03:06:46.000Z",
+      "sizeBytes": 2266
+    },
+    {
+      "name": "Non Overlapping Intervals",
+      "filename": "08. Non Overlapping Intervals.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/2. Medium/08. Non Overlapping Intervals.cpp",
+      "solvedAt": "2023-07-13T03:06:46.000Z",
+      "sizeBytes": 1890
+    },
+    {
+      "name": "N Meetings In One Room",
+      "filename": "01. N Meetings in one room.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/2. Medium/01. N Meetings in one room.cpp",
+      "solvedAt": "2023-07-12T03:20:59.000Z",
+      "sizeBytes": 1866
+    },
+    {
+      "name": "Jump Game",
+      "filename": "02. Jump Game.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/2. Medium/02. Jump Game.cpp",
+      "solvedAt": "2023-07-12T03:20:59.000Z",
+      "sizeBytes": 1474
+    },
+    {
+      "name": "Jump Game 2",
+      "filename": "03. Jump Game 2.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/2. Medium/03. Jump Game 2.cpp",
+      "solvedAt": "2023-07-12T03:20:59.000Z",
+      "sizeBytes": 1967
+    },
+    {
+      "name": "Minimum Platforms",
+      "filename": "04. Minimum Platforms.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/2. Medium/04. Minimum Platforms.cpp",
+      "solvedAt": "2023-07-12T03:20:59.000Z",
+      "sizeBytes": 2145
+    },
+    {
+      "name": "Job Sequencing Problem",
+      "filename": "05. Job Sequencing Problem.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/2. Medium/05. Job Sequencing Problem.cpp",
+      "solvedAt": "2023-07-12T03:20:59.000Z",
+      "sizeBytes": 2195
+    },
+    {
+      "name": "Candy",
+      "filename": "06. Candy.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/2. Medium/06. Candy.cpp",
+      "solvedAt": "2023-07-12T03:20:59.000Z",
+      "sizeBytes": 1928
+    },
+    {
+      "name": "Assign Cookies",
+      "filename": "01. Assign Cookies.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/1. Easy/01. Assign Cookies.cpp",
+      "solvedAt": "2023-07-10T14:41:32.000Z",
+      "sizeBytes": 1704
+    },
+    {
+      "name": "Fractional Knapsack",
+      "filename": "02. Fractional Knapsack.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/1. Easy/02. Fractional Knapsack.cpp",
+      "solvedAt": "2023-07-10T14:41:32.000Z",
+      "sizeBytes": 2006
+    },
+    {
+      "name": "Lemonade Exchange",
+      "filename": "03. Lemonade Exchange.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/1. Easy/03. Lemonade Exchange.cpp",
+      "solvedAt": "2023-07-10T14:41:32.000Z",
+      "sizeBytes": 2476
+    },
+    {
+      "name": "Valid Parenthesis String",
+      "filename": "04. Valid Parenthesis String.cpp",
+      "category": "Greedy Approach",
+      "rawCategory": "10. Greedy Approach",
+      "path": "10. Greedy Approach/1. Easy/04. Valid Parenthesis String.cpp",
+      "solvedAt": "2023-07-10T14:41:32.000Z",
+      "sizeBytes": 2503
+    },
+    {
+      "name": "Divide Array Into Sets Of K Consecutive Number",
+      "filename": "07. Divide array into sets of K consecutive number.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/2. Medium Problems/07. Divide array into sets of K consecutive number.cpp",
+      "solvedAt": "2023-07-09T07:44:51.000Z",
+      "sizeBytes": 1794
+    },
+    {
+      "name": "Median In A Stream",
+      "filename": "05. Median in a stream.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/3. Hard Problems/05. Median in a stream.cpp",
+      "solvedAt": "2023-07-09T07:44:51.000Z",
+      "sizeBytes": 2652
+    },
+    {
+      "name": "Top K Frequent Elements",
+      "filename": "06. Top K frequent elements.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/3. Hard Problems/06. Top K frequent elements.cpp",
+      "solvedAt": "2023-07-09T07:44:51.000Z",
+      "sizeBytes": 1526
+    },
+    {
+      "name": "Design Twitter",
+      "filename": "01. Design Twitter.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/3. Hard Problems/01. Design Twitter.cpp",
+      "solvedAt": "2023-07-08T09:16:07.000Z",
+      "sizeBytes": 4036
+    },
+    {
+      "name": "Minimum Cost To Join N Ropes",
+      "filename": "02. Minimum Cost to join n ropes.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/3. Hard Problems/02. Minimum Cost to join n ropes.cpp",
+      "solvedAt": "2023-07-08T09:16:07.000Z",
+      "sizeBytes": 2062
+    },
+    {
+      "name": "Kth Largest Element In Stream",
+      "filename": "03. Kth largest element in stream.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/3. Hard Problems/03. Kth largest element in stream.cpp",
+      "solvedAt": "2023-07-08T09:16:07.000Z",
+      "sizeBytes": 1935
+    },
+    {
+      "name": "Maximum K Sum Combinations",
+      "filename": "04. Maximum K sum combinations.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/3. Hard Problems/04. Maximum K sum combinations.cpp",
+      "solvedAt": "2023-07-08T09:16:07.000Z",
+      "sizeBytes": 1996
+    },
+    {
+      "name": "Merge K Sorted Arrays",
+      "filename": "03. Merge K sorted arrays.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/2. Medium Problems/03. Merge K sorted arrays.cpp",
+      "solvedAt": "2023-07-07T15:37:40.000Z",
+      "sizeBytes": 1838
+    },
+    {
+      "name": "Merge K Sorted Lists",
+      "filename": "04. Merge K sorted Lists.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/2. Medium Problems/04. Merge K sorted Lists.cpp",
+      "solvedAt": "2023-07-07T15:37:40.000Z",
+      "sizeBytes": 1923
+    },
+    {
+      "name": "Arrange By Rank",
+      "filename": "05. Arrange by rank.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/2. Medium Problems/05. Arrange by rank.cpp",
+      "solvedAt": "2023-07-07T15:37:40.000Z",
+      "sizeBytes": 1910
+    },
+    {
+      "name": "Task Scheduler",
+      "filename": "06. Task Scheduler.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/2. Medium Problems/06. Task Scheduler.cpp",
+      "solvedAt": "2023-07-07T15:37:40.000Z",
+      "sizeBytes": 1943
+    },
+    {
+      "name": "Implement Min Heap",
+      "filename": "01. Implement min heap.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/1. Learning/01. Implement min heap.cpp",
+      "solvedAt": "2023-07-06T14:43:30.000Z",
+      "sizeBytes": 2699
+    },
+    {
+      "name": "Check If Array Is Heap",
+      "filename": "02. Check if array is heap.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/1. Learning/02. Check if array is heap.cpp",
+      "solvedAt": "2023-07-06T14:43:30.000Z",
+      "sizeBytes": 1740
+    },
+    {
+      "name": "Convert Min Heap To Max Heap",
+      "filename": "03. Convert min heap to max heap.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/1. Learning/03. Convert min heap to max heap.cpp",
+      "solvedAt": "2023-07-06T14:43:30.000Z",
+      "sizeBytes": 1887
+    },
+    {
+      "name": "Kth Largest Element",
+      "filename": "01. Kth largest element.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/2. Medium Problems/01. Kth largest element.cpp",
+      "solvedAt": "2023-07-06T14:43:30.000Z",
+      "sizeBytes": 1523
+    },
+    {
+      "name": "Kth Smallest Element",
+      "filename": "02. Kth smallest element.cpp",
+      "category": "Heaps",
+      "rawCategory": "09. Heaps",
+      "path": "09. Heaps/2. Medium Problems/02. Kth smallest element.cpp",
+      "solvedAt": "2023-07-06T14:43:30.000Z",
+      "sizeBytes": 1606
+    },
+    {
+      "name": "Minimum Window Substring",
+      "filename": "03. Minimum Window Substring.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/2. Hard Problems/03. Minimum Window Substring.cpp",
+      "solvedAt": "2023-07-05T15:17:27.000Z",
+      "sizeBytes": 2789
+    },
+    {
+      "name": "Longest Substring Without Repeating Characters",
+      "filename": "01. Longest Substring Without Repeating Characters.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/1. Medium Problems/01. Longest Substring Without Repeating Characters.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 1550
+    },
+    {
+      "name": "Max Consecutive 1's",
+      "filename": "02. Max Consecutive 1's.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/1. Medium Problems/02. Max Consecutive 1's.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 1480
+    },
+    {
+      "name": "Fruit Into Baskets",
+      "filename": "03. Fruit into Baskets.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/1. Medium Problems/03. Fruit into Baskets.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 2480
+    },
+    {
+      "name": "Longest Repeating Character",
+      "filename": "04. Longest Repeating Character.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/1. Medium Problems/04. Longest Repeating Character.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 2395
+    },
+    {
+      "name": "Binary Subarrays With Sum",
+      "filename": "05. Binary Subarrays with Sum.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/1. Medium Problems/05. Binary Subarrays with Sum.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 2024
+    },
+    {
+      "name": "Count The Number Of Nice Subarrays",
+      "filename": "06. Count the number of nice subarrays.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/1. Medium Problems/06. Count the number of nice subarrays.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 1821
+    },
+    {
+      "name": "Number Of Substrings Containing All 3 Characters",
+      "filename": "07. Number of Substrings Containing all 3 characters.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/1. Medium Problems/07. Number of Substrings Containing all 3 characters.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 2249
+    },
+    {
+      "name": "Maximum Points You Can Obtaln Form The Card",
+      "filename": "08. Maximum Points you can obtaln form the card.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/1. Medium Problems/08. Maximum Points you can obtaln form the card.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 2336
+    },
+    {
+      "name": "Longest Substring With At Most K Unique Characters",
+      "filename": "01. Longest Substring with at most K unique characters.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/2. Hard Problems/01. Longest Substring with at most K unique characters.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 1828
+    },
+    {
+      "name": "Count The Number Of Substrings With Exactly K Unique Characters",
+      "filename": "02. Count the number of substrings with exactly K unique characters.cpp",
+      "category": "Sliding Window",
+      "rawCategory": "08. Sliding Window",
+      "path": "08. Sliding Window/2. Hard Problems/02. Count the number of substrings with exactly K unique characters.cpp",
+      "solvedAt": "2023-07-05T15:16:06.000Z",
+      "sizeBytes": 2484
+    },
+    {
+      "name": "Sliding Window Maximum",
+      "filename": "01. Sliding window maximum.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/4. Implementation/01. Sliding window maximum.cpp",
+      "solvedAt": "2023-07-03T14:44:57.000Z",
+      "sizeBytes": 2431
+    },
+    {
+      "name": "Stock Span Problem",
+      "filename": "02. Stock span problem.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/4. Implementation/02. Stock span problem.cpp",
+      "solvedAt": "2023-07-03T14:44:57.000Z",
+      "sizeBytes": 1770
+    },
+    {
+      "name": "Celebrity Problem",
+      "filename": "03. Celebrity Problem.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/4. Implementation/03. Celebrity Problem.cpp",
+      "solvedAt": "2023-07-03T14:44:57.000Z",
+      "sizeBytes": 2219
+    },
+    {
+      "name": "LRU Cache",
+      "filename": "04. LRU Cache.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/4. Implementation/04. LRU Cache.cpp",
+      "solvedAt": "2023-07-03T14:44:57.000Z",
+      "sizeBytes": 3101
+    },
+    {
+      "name": "Trapping Rainwater",
+      "filename": "04. Trapping Rainwater.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/04. Trapping Rainwater.cpp",
+      "solvedAt": "2023-07-02T14:02:55.000Z",
+      "sizeBytes": 2269
+    },
+    {
+      "name": "Sum Of Subarray Minimum",
+      "filename": "05. Sum of subarray minimum.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/05. Sum of subarray minimum.cpp",
+      "solvedAt": "2023-07-02T14:02:55.000Z",
+      "sizeBytes": 2827
+    },
+    {
+      "name": "Sum Of Range Of All Subarray",
+      "filename": "06. Sum of range of all subarray.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/06. Sum of range of all subarray.cpp",
+      "solvedAt": "2023-07-02T14:02:55.000Z",
+      "sizeBytes": 4484
+    },
+    {
+      "name": "Remove K Elements",
+      "filename": "07. Remove K elements.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/07. Remove K elements.cpp",
+      "solvedAt": "2023-07-02T14:02:55.000Z",
+      "sizeBytes": 1935
+    },
+    {
+      "name": "Largest Rectangle In Histogram",
+      "filename": "08. Largest Rectangle in Histogram.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/08. Largest Rectangle in Histogram.cpp",
+      "solvedAt": "2023-07-02T14:02:55.000Z",
+      "sizeBytes": 2401
+    },
+    {
+      "name": "Maximal Rectangle In Binary Matrix",
+      "filename": "09. Maximal Rectangle in binary matrix.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/09. Maximal Rectangle in binary matrix.cpp",
+      "solvedAt": "2023-07-02T14:02:55.000Z",
+      "sizeBytes": 3366
+    },
+    {
+      "name": "Asteroids Collision",
+      "filename": "10. Asteroids Collision.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/10. Asteroids Collision.cpp",
+      "solvedAt": "2023-07-02T14:02:55.000Z",
+      "sizeBytes": 2534
+    },
+    {
+      "name": "Next Greater Element",
+      "filename": "01. Next Greater Element.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/01. Next Greater Element.cpp",
+      "solvedAt": "2023-07-01T14:33:58.000Z",
+      "sizeBytes": 2453
+    },
+    {
+      "name": "Next Greater Element 2",
+      "filename": "02. Next Greater Element 2.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/02. Next Greater Element 2.cpp",
+      "solvedAt": "2023-07-01T14:33:58.000Z",
+      "sizeBytes": 2115
+    },
+    {
+      "name": "Previous Smaller Element",
+      "filename": "03. Previous Smaller Element.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/3. Monotonic Stack and Queue/03. Previous Smaller Element.cpp",
+      "solvedAt": "2023-07-01T14:33:58.000Z",
+      "sizeBytes": 1410
+    },
+    {
+      "name": "Infix To Postfix",
+      "filename": "01. Infix to postfix.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/2. Infix, Postfix, and Prefix/01. Infix to postfix.cpp",
+      "solvedAt": "2023-06-30T15:05:09.000Z",
+      "sizeBytes": 2940
+    },
+    {
+      "name": "Infix To Prefix",
+      "filename": "02. Infix to prefix.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/2. Infix, Postfix, and Prefix/02. Infix to prefix.cpp",
+      "solvedAt": "2023-06-30T15:05:09.000Z",
+      "sizeBytes": 2867
+    },
+    {
+      "name": "Prefix To Infix",
+      "filename": "03. Prefix to infix.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/2. Infix, Postfix, and Prefix/03. Prefix to infix.cpp",
+      "solvedAt": "2023-06-30T15:05:09.000Z",
+      "sizeBytes": 1679
+    },
+    {
+      "name": "Prefix To Postfix",
+      "filename": "04. Prefix to postfix.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/2. Infix, Postfix, and Prefix/04. Prefix to postfix.cpp",
+      "solvedAt": "2023-06-30T15:05:09.000Z",
+      "sizeBytes": 1687
+    },
+    {
+      "name": "Postfix To Infix",
+      "filename": "05. Postfix to infix.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/2. Infix, Postfix, and Prefix/05. Postfix to infix.cpp",
+      "solvedAt": "2023-06-30T15:05:09.000Z",
+      "sizeBytes": 1676
+    },
+    {
+      "name": "Postfix To Prefix",
+      "filename": "06. Postfix to prefix.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/2. Infix, Postfix, and Prefix/06. Postfix to prefix.cpp",
+      "solvedAt": "2023-06-30T15:05:09.000Z",
+      "sizeBytes": 1719
+    },
+    {
+      "name": "Implement Stack Using Array",
+      "filename": "01. Implement stack using array.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/1. Learning/01. Implement stack using array.cpp",
+      "solvedAt": "2023-06-29T08:08:58.000Z",
+      "sizeBytes": 1482
+    },
+    {
+      "name": "Implement Queue Using Array",
+      "filename": "02. Implement queue using array.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/1. Learning/02. Implement queue using array.cpp",
+      "solvedAt": "2023-06-29T08:08:58.000Z",
+      "sizeBytes": 1720
+    },
+    {
+      "name": "Implement Stack Using Queue",
+      "filename": "03. Implement stack using queue.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/1. Learning/03. Implement stack using queue.cpp",
+      "solvedAt": "2023-06-29T08:08:58.000Z",
+      "sizeBytes": 1104
+    },
+    {
+      "name": "Implement Queue Using Stacks",
+      "filename": "04. Implement queue using stacks.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/1. Learning/04. Implement queue using stacks.cpp",
+      "solvedAt": "2023-06-29T08:08:58.000Z",
+      "sizeBytes": 1499
+    },
+    {
+      "name": "Implement Stack Using Linked List",
+      "filename": "05. Implement stack using linked list.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/1. Learning/05. Implement stack using linked list.cpp",
+      "solvedAt": "2023-06-29T08:08:58.000Z",
+      "sizeBytes": 1688
+    },
+    {
+      "name": "Valid Parenthesis",
+      "filename": "06. Valid Parenthesis.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/1. Learning/06. Valid Parenthesis.cpp",
+      "solvedAt": "2023-06-29T08:08:58.000Z",
+      "sizeBytes": 1680
+    },
+    {
+      "name": "Implement Min Stack",
+      "filename": "07. Implement min stack.cpp",
+      "category": "Stack and Queues",
+      "rawCategory": "07.Stack and Queues",
+      "path": "07.Stack and Queues/1. Learning/07. Implement min stack.cpp",
+      "solvedAt": "2023-06-29T08:08:58.000Z",
+      "sizeBytes": 2339
+    },
+    {
+      "name": "Count Set Bit From Numbers 1 To N",
+      "filename": "08.Count set bit from numbers 1 to n.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/1. Learn Bit Manipulation/08.Count set bit from numbers 1 to n.cpp",
+      "solvedAt": "2023-06-28T15:19:52.000Z",
+      "sizeBytes": 910
+    },
+    {
+      "name": "XOR Of Numbers From L To R",
+      "filename": "03. XOR of numbers from L to R.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/2. Interview Problems/03. XOR of numbers from L to R.cpp",
+      "solvedAt": "2023-06-28T15:19:52.000Z",
+      "sizeBytes": 1300
+    },
+    {
+      "name": "Prime Factors Of Number",
+      "filename": "01. Prime factors of number.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/3. Advanced Maths/01. Prime factors of number.cpp",
+      "solvedAt": "2023-06-28T15:19:52.000Z",
+      "sizeBytes": 1051
+    },
+    {
+      "name": "All Divisors Of Number",
+      "filename": "02. All divisors of number.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/3. Advanced Maths/02. All divisors of number.cpp",
+      "solvedAt": "2023-06-28T15:19:52.000Z",
+      "sizeBytes": 1210
+    },
+    {
+      "name": "Sieve Of Eratosthenes",
+      "filename": "03. Sieve of Eratosthenes.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/3. Advanced Maths/03. Sieve of Eratosthenes.cpp",
+      "solvedAt": "2023-06-28T15:19:52.000Z",
+      "sizeBytes": 1171
+    },
+    {
+      "name": "Prime Factorization Using Sieve",
+      "filename": "04. Prime factorization using Sieve.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/3. Advanced Maths/04. Prime factorization using Sieve.cpp",
+      "solvedAt": "2023-06-28T15:19:52.000Z",
+      "sizeBytes": 1457
+    },
+    {
+      "name": "Fast Power",
+      "filename": "05. Fast Power.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/3. Advanced Maths/05. Fast Power.cpp",
+      "solvedAt": "2023-06-28T15:19:52.000Z",
+      "sizeBytes": 1149
+    },
+    {
+      "name": "Bit Manipulation",
+      "filename": "01.Bit Manipulation.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/1. Learn Bit Manipulation/01.Bit Manipulation.cpp",
+      "solvedAt": "2023-06-27T15:03:57.000Z",
+      "sizeBytes": 1306
+    },
+    {
+      "name": "Check For The Ith Bit",
+      "filename": "02.Check for the ith bit.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/1. Learn Bit Manipulation/02.Check for the ith bit.cpp",
+      "solvedAt": "2023-06-27T15:03:57.000Z",
+      "sizeBytes": 717
+    },
+    {
+      "name": "Check For Odd Even",
+      "filename": "03.Check for odd even.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/1. Learn Bit Manipulation/03.Check for odd even.cpp",
+      "solvedAt": "2023-06-27T15:03:57.000Z",
+      "sizeBytes": 630
+    },
+    {
+      "name": "Check For The Power Of 2",
+      "filename": "04.Check for the power of 2.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/1. Learn Bit Manipulation/04.Check for the power of 2.cpp",
+      "solvedAt": "2023-06-27T15:03:57.000Z",
+      "sizeBytes": 829
+    },
+    {
+      "name": "Set The Righmost Unset Bit",
+      "filename": "05.Set the righmost unset bit.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/1. Learn Bit Manipulation/05.Set the righmost unset bit.cpp",
+      "solvedAt": "2023-06-27T15:03:57.000Z",
+      "sizeBytes": 1270
+    },
+    {
+      "name": "Swap Two Numbers Without Temporary Variable",
+      "filename": "06.Swap two numbers without temporary variable.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/1. Learn Bit Manipulation/06.Swap two numbers without temporary variable.cpp",
+      "solvedAt": "2023-06-27T15:03:57.000Z",
+      "sizeBytes": 868
+    },
+    {
+      "name": "Divide Two Numbers Using Bit Maipulation",
+      "filename": "07.Divide two numbers using bit maipulation.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/1. Learn Bit Manipulation/07.Divide two numbers using bit maipulation.cpp",
+      "solvedAt": "2023-06-27T15:03:57.000Z",
+      "sizeBytes": 1890
+    },
+    {
+      "name": "Minimum Bit Flips",
+      "filename": "01. Minimum bit flips.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/2. Interview Problems/01. Minimum bit flips.cpp",
+      "solvedAt": "2023-06-27T15:03:57.000Z",
+      "sizeBytes": 1311
+    },
+    {
+      "name": "Exceptionally Odd",
+      "filename": "02. Exceptionally odd.cpp",
+      "category": "Bit Manipulation",
+      "rawCategory": "06.Bit Manipulation",
+      "path": "06.Bit Manipulation/2. Interview Problems/02. Exceptionally odd.cpp",
+      "solvedAt": "2023-06-27T15:03:57.000Z",
+      "sizeBytes": 879
+    },
+    {
+      "name": "Sudoku Solver",
+      "filename": "07.Sudoku solver.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/3.Try Out All Combos/07.Sudoku solver.cpp",
+      "solvedAt": "2023-06-25T06:29:04.000Z",
+      "sizeBytes": 3134
+    },
+    {
+      "name": "N Queens",
+      "filename": "05.N queens.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/3.Try Out All Combos/05.N queens.cpp",
+      "solvedAt": "2023-06-24T09:45:33.000Z",
+      "sizeBytes": 2449
+    },
+    {
+      "name": "Word Break",
+      "filename": "06.Word Break.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/3.Try Out All Combos/06.Word Break.cpp",
+      "solvedAt": "2023-06-24T09:45:33.000Z",
+      "sizeBytes": 1623
+    },
+    {
+      "name": "Palindrome Partioning",
+      "filename": "01.Palindrome partioning.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/3.Try Out All Combos/01.Palindrome partioning.cpp",
+      "solvedAt": "2023-06-23T15:42:07.000Z",
+      "sizeBytes": 2850
+    },
+    {
+      "name": "Word Search In Grid",
+      "filename": "02.Word search in grid.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/3.Try Out All Combos/02.Word search in grid.cpp",
+      "solvedAt": "2023-06-23T15:42:07.000Z",
+      "sizeBytes": 3844
+    },
+    {
+      "name": "Rat In Maze",
+      "filename": "03.Rat in maze.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/3.Try Out All Combos/03.Rat in maze.cpp",
+      "solvedAt": "2023-06-23T15:42:07.000Z",
+      "sizeBytes": 3112
+    },
+    {
+      "name": "M Coloring Problem",
+      "filename": "04.M coloring problem.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/3.Try Out All Combos/04.M coloring problem.cpp",
+      "solvedAt": "2023-06-23T15:42:07.000Z",
+      "sizeBytes": 2929
+    },
+    {
+      "name": "Combination Sum 1",
+      "filename": "07.Combination Sum 1.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/07.Combination Sum 1.cpp",
+      "solvedAt": "2023-06-22T14:39:02.000Z",
+      "sizeBytes": 3259
+    },
+    {
+      "name": "Combination Sum 2",
+      "filename": "08.Combination Sum 2.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/08.Combination Sum 2.cpp",
+      "solvedAt": "2023-06-22T14:39:02.000Z",
+      "sizeBytes": 3441
+    },
+    {
+      "name": "Combination Sum 3",
+      "filename": "09.Combination Sum 3.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/09.Combination Sum 3.cpp",
+      "solvedAt": "2023-06-22T14:39:02.000Z",
+      "sizeBytes": 3319
+    },
+    {
+      "name": "Letter Combinations Of Phone",
+      "filename": "10.Letter combinations of phone.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/10.Letter combinations of phone.cpp",
+      "solvedAt": "2023-06-22T14:39:02.000Z",
+      "sizeBytes": 2793
+    },
+    {
+      "name": "Genereate All Valid Parenthesis",
+      "filename": "01.Genereate all valid parenthesis.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/01.Genereate all valid parenthesis.cpp",
+      "solvedAt": "2023-06-21T14:57:51.000Z",
+      "sizeBytes": 2406
+    },
+    {
+      "name": "Power Set",
+      "filename": "02.Power set.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/02.Power set.cpp",
+      "solvedAt": "2023-06-21T14:57:51.000Z",
+      "sizeBytes": 2245
+    },
+    {
+      "name": "Count Distinct Substrings",
+      "filename": "03.Count distinct substrings.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/03.Count distinct substrings.cpp",
+      "solvedAt": "2023-06-21T14:57:51.000Z",
+      "sizeBytes": 2214
+    },
+    {
+      "name": "Count Subsets With Sum Equal To K",
+      "filename": "04.Count subsets with sum equal to k.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/04.Count subsets with sum equal to k.cpp",
+      "solvedAt": "2023-06-21T14:57:51.000Z",
+      "sizeBytes": 2187
+    },
+    {
+      "name": "Subset 1",
+      "filename": "05.Subset 1.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/05.Subset 1.cpp",
+      "solvedAt": "2023-06-21T14:57:51.000Z",
+      "sizeBytes": 1977
+    },
+    {
+      "name": "Subset 2",
+      "filename": "06.Subset 2.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/2.Subsequences Pattern/06.Subset 2.cpp",
+      "solvedAt": "2023-06-21T14:57:51.000Z",
+      "sizeBytes": 2497
+    },
+    {
+      "name": "Implement Atoi Via Recursion",
+      "filename": "01.Implement_atoi_via_recursion.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/1.Get Strong Hold/01.Implement_atoi_via_recursion.cpp",
+      "solvedAt": "2023-06-20T14:06:36.000Z",
+      "sizeBytes": 2319
+    },
+    {
+      "name": "Count Good Numbers",
+      "filename": "02.Count_good_numbers.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/1.Get Strong Hold/02.Count_good_numbers.cpp",
+      "solvedAt": "2023-06-20T14:06:36.000Z",
+      "sizeBytes": 1762
+    },
+    {
+      "name": "Reverse Stack Using Recursion",
+      "filename": "03.Reverse_stack_using_recursion.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/1.Get Strong Hold/03.Reverse_stack_using_recursion.cpp",
+      "solvedAt": "2023-06-20T14:06:36.000Z",
+      "sizeBytes": 1851
+    },
+    {
+      "name": "Sort Stack Using Recursion",
+      "filename": "04.Sort_stack_using_recursion.cpp",
+      "category": "Recursion",
+      "rawCategory": "05.Recursion",
+      "path": "05.Recursion/1.Get Strong Hold/04.Sort_stack_using_recursion.cpp",
+      "solvedAt": "2023-06-20T14:06:36.000Z",
+      "sizeBytes": 1826
+    },
+    {
+      "name": "Delete Nodes From Dll",
+      "filename": "01.Delete_nodes_from_dll.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/4.Medium Problems of DLL/01.Delete_nodes_from_dll.cpp",
+      "solvedAt": "2023-06-19T14:13:59.000Z",
+      "sizeBytes": 1530
+    },
+    {
+      "name": "Pair Sum In Dll",
+      "filename": "02.Pair_sum_in_dll.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/4.Medium Problems of DLL/02.Pair_sum_in_dll.cpp",
+      "solvedAt": "2023-06-19T14:13:59.000Z",
+      "sizeBytes": 1884
+    },
+    {
+      "name": "Remove Duplicates From Dll",
+      "filename": "03.Remove_duplicates_from_dll.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/4.Medium Problems of DLL/03.Remove_duplicates_from_dll.cpp",
+      "solvedAt": "2023-06-19T14:13:59.000Z",
+      "sizeBytes": 1644
+    },
+    {
+      "name": "Find Mid Of LL",
+      "filename": "01.Find_mid_of_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/01.Find_mid_of_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1349
+    },
+    {
+      "name": "Reverse LL",
+      "filename": "02.Reverse_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/02.Reverse_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1001
+    },
+    {
+      "name": "Detect Loop In LL",
+      "filename": "03.Detect_loop_in_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/03.Detect_loop_in_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1756
+    },
+    {
+      "name": "Start Of Cycle In LL",
+      "filename": "04.Start_of_cycle_in_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/04.Start_of_cycle_in_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 2284
+    },
+    {
+      "name": "Count Nodes In Loop",
+      "filename": "05.Count_nodes_in_loop.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/05.Count_nodes_in_loop.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 2258
+    },
+    {
+      "name": "Check For Palindrome LL",
+      "filename": "06.Check_for_palindrome_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/06.Check_for_palindrome_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1566
+    },
+    {
+      "name": "Odd Even LL",
+      "filename": "07.Odd_even_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/07.Odd_even_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1944
+    },
+    {
+      "name": "Delete Nth Node From Back",
+      "filename": "08.Delete_nth_node_from_back.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/08.Delete_nth_node_from_back.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1547
+    },
+    {
+      "name": "Delete Mid Of LL",
+      "filename": "09.Delete_mid_of_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/09.Delete_mid_of_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1397
+    },
+    {
+      "name": "Sort LL",
+      "filename": "10.Sort_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/10.Sort_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1550
+    },
+    {
+      "name": "Sort 0 1 2 In LL",
+      "filename": "11.Sort_0_1_2_in_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/11.Sort_0_1_2_in_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1429
+    },
+    {
+      "name": "Add 1 To LL",
+      "filename": "12.Add_1_to_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/12.Add_1_to_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1631
+    },
+    {
+      "name": "Add Two LL",
+      "filename": "13.Add_two_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/3.Medium Problems of LL/13.Add_two_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 2010
+    },
+    {
+      "name": "Reverse K Node In Groups",
+      "filename": "01.Reverse_k_node_in_groups.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/5.Hard Promblems of LL/01.Reverse_k_node_in_groups.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1653
+    },
+    {
+      "name": "Rotate LL K Times",
+      "filename": "02.Rotate_LL_k_times.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/5.Hard Promblems of LL/02.Rotate_LL_k_times.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1582
+    },
+    {
+      "name": "Copy LL With Random Pointers",
+      "filename": "03.Copy_LL_with_random_pointers.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/5.Hard Promblems of LL/03.Copy_LL_with_random_pointers.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 3015
+    },
+    {
+      "name": "Flatten LL",
+      "filename": "04.Flatten_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/5.Hard Promblems of LL/04.Flatten_LL.cpp",
+      "solvedAt": "2023-06-18T08:23:39.000Z",
+      "sizeBytes": 1664
+    },
+    {
+      "name": "Reverse DLL",
+      "filename": "04.Reverse_DLL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/2.Doubly Linked List/04.Reverse_DLL.cpp",
+      "solvedAt": "2023-06-16T03:59:47.000Z",
+      "sizeBytes": 2121
+    },
+    {
+      "name": "Intro To Linked List",
+      "filename": "01.Intro_to_linked_list.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/1. Single Linked List/01.Intro_to_linked_list.cpp",
+      "solvedAt": "2023-06-15T14:29:58.000Z",
+      "sizeBytes": 1228
+    },
+    {
+      "name": "Inserting Node To Linked List",
+      "filename": "02.Inserting_node_to_linked_list.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/1. Single Linked List/02.Inserting_node_to_linked_list.cpp",
+      "solvedAt": "2023-06-15T14:29:58.000Z",
+      "sizeBytes": 2538
+    },
+    {
+      "name": "Deleting Node In Linked List",
+      "filename": "03.Deleting_node_in_linked_list.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/1. Single Linked List/03.Deleting_node_in_linked_list.cpp",
+      "solvedAt": "2023-06-15T14:29:58.000Z",
+      "sizeBytes": 1711
+    },
+    {
+      "name": "Count The Number Of Nodes Linked List",
+      "filename": "04.Count_the_number_of_nodes_linked_list.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/1. Single Linked List/04.Count_the_number_of_nodes_linked_list.cpp",
+      "solvedAt": "2023-06-15T14:29:58.000Z",
+      "sizeBytes": 1388
+    },
+    {
+      "name": "Search Element In Linked List",
+      "filename": "05.Search_element_in_linked_list.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/1. Single Linked List/05.Search_element_in_linked_list.cpp",
+      "solvedAt": "2023-06-15T14:29:58.000Z",
+      "sizeBytes": 644
+    },
+    {
+      "name": "Introduction To Double LL",
+      "filename": "01.Introduction_to_Double_LL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/2.Doubly Linked List/01.Introduction_to_Double_LL.cpp",
+      "solvedAt": "2023-06-15T14:29:58.000Z",
+      "sizeBytes": 1735
+    },
+    {
+      "name": "Insert Node In DLL",
+      "filename": "02.Insert_node_in_DLL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/2.Doubly Linked List/02.Insert_node_in_DLL.cpp",
+      "solvedAt": "2023-06-15T14:29:58.000Z",
+      "sizeBytes": 2054
+    },
+    {
+      "name": "Delete Node In DLL",
+      "filename": "03.Delete_node_in_DLL.cpp",
+      "category": "Linked List",
+      "rawCategory": "04.Linked List",
+      "path": "04.Linked List/2.Doubly Linked List/03.Delete_node_in_DLL.cpp",
+      "solvedAt": "2023-06-15T14:29:58.000Z",
+      "sizeBytes": 2876
+    },
+    {
+      "name": "Count The Number Of Substrings With K Unique Characters",
+      "filename": "05.Count_the_number_of_substrings_with_k_unique_characters.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/2.Medium/05.Count_the_number_of_substrings_with_k_unique_characters.cpp",
+      "solvedAt": "2023-06-14T14:42:19.000Z",
+      "sizeBytes": 1877
+    },
+    {
+      "name": "Longest Palindromic Substring",
+      "filename": "06.Longest_palindromic_substring.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/2.Medium/06.Longest_palindromic_substring.cpp",
+      "solvedAt": "2023-06-14T14:42:19.000Z",
+      "sizeBytes": 2030
+    },
+    {
+      "name": "Sum Of Beauty Of All Substrings",
+      "filename": "07.Sum_of_beauty_of_all_substrings.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/2.Medium/07.Sum_of_beauty_of_all_substrings.cpp",
+      "solvedAt": "2023-06-14T14:42:19.000Z",
+      "sizeBytes": 2217
+    },
+    {
+      "name": "Check For Rotated String",
+      "filename": "06.Check_for_rotated_string.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/1.Easy/06.Check_for_rotated_string.cpp",
+      "solvedAt": "2023-06-13T15:09:13.000Z",
+      "sizeBytes": 1421
+    },
+    {
+      "name": "Valid Anagram",
+      "filename": "07.Valid_anagram.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/1.Easy/07.Valid_anagram.cpp",
+      "solvedAt": "2023-06-13T15:09:13.000Z",
+      "sizeBytes": 1284
+    },
+    {
+      "name": "Sort Characters By Frequency",
+      "filename": "01.Sort_characters_by_frequency.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/2.Medium/01.Sort_characters_by_frequency.cpp",
+      "solvedAt": "2023-06-13T15:09:13.000Z",
+      "sizeBytes": 1186
+    },
+    {
+      "name": "Max Nesting Depth Of Parenthesis",
+      "filename": "02.Max_nesting_depth_of_parenthesis.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/2.Medium/02.Max_nesting_depth_of_parenthesis.cpp",
+      "solvedAt": "2023-06-13T15:09:13.000Z",
+      "sizeBytes": 891
+    },
+    {
+      "name": "Roman To Integer",
+      "filename": "03.Roman_to_Integer.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/2.Medium/03.Roman_to_Integer.cpp",
+      "solvedAt": "2023-06-13T15:09:13.000Z",
+      "sizeBytes": 1406
+    },
+    {
+      "name": "Implement Atoi",
+      "filename": "04.Implement_atoi.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/2.Medium/04.Implement_atoi.cpp",
+      "solvedAt": "2023-06-13T15:09:13.000Z",
+      "sizeBytes": 3709
+    },
+    {
+      "name": "Remove Outer Parenthesis",
+      "filename": "01.Remove_outer_parenthesis.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/1.Easy/01.Remove_outer_parenthesis.cpp",
+      "solvedAt": "2023-06-12T15:17:45.000Z",
+      "sizeBytes": 1055
+    },
+    {
+      "name": "Reverse Words In String",
+      "filename": "02.Reverse_words_in_string.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/1.Easy/02.Reverse_words_in_string.cpp",
+      "solvedAt": "2023-06-12T15:17:45.000Z",
+      "sizeBytes": 2048
+    },
+    {
+      "name": "Largest Odd Number In String",
+      "filename": "03.Largest_odd_number_in_string.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/1.Easy/03.Largest_odd_number_in_string.cpp",
+      "solvedAt": "2023-06-12T15:17:45.000Z",
+      "sizeBytes": 1024
+    },
+    {
+      "name": "Longest Common Prefix",
+      "filename": "04.Longest_common_prefix.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/1.Easy/04.Longest_common_prefix.cpp",
+      "solvedAt": "2023-06-12T15:17:45.000Z",
+      "sizeBytes": 1125
+    },
+    {
+      "name": "Isomorphic String",
+      "filename": "05.Isomorphic_string.cpp",
+      "category": "Strings",
+      "rawCategory": "03.Strings",
+      "path": "03.Strings/1.Easy/05.Isomorphic_string.cpp",
+      "solvedAt": "2023-06-12T15:17:45.000Z",
+      "sizeBytes": 1771
+    },
+    {
+      "name": "Longest Subarray With Sum K Containg +ves And Ves",
+      "filename": "13.Longest_subarray_with_sum_k_containg_+ves_and_-ves.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/13.Longest_subarray_with_sum_k_containg_+ves_and_-ves.cpp",
+      "solvedAt": "2023-06-11T09:06:09.000Z",
+      "sizeBytes": 1745
+    },
+    {
+      "name": "Aggresive Cows",
+      "filename": "08.Aggresive_cows.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/08.Aggresive_cows.cpp",
+      "solvedAt": "2023-06-11T09:06:09.000Z",
+      "sizeBytes": 2293
+    },
+    {
+      "name": "Book Allocation",
+      "filename": "09.Book_allocation.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/09.Book_allocation.cpp",
+      "solvedAt": "2023-06-11T09:06:09.000Z",
+      "sizeBytes": 3017
+    },
+    {
+      "name": "Split Array Largest",
+      "filename": "10.Split_array_largest.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/10.Split_array_largest.cpp",
+      "solvedAt": "2023-06-11T09:06:09.000Z",
+      "sizeBytes": 2236
+    },
+    {
+      "name": "Kth Missing Number",
+      "filename": "11.Kth_missing_number.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/11.Kth_missing_number.cpp",
+      "solvedAt": "2023-06-11T09:06:09.000Z",
+      "sizeBytes": 1809
+    },
+    {
+      "name": "Gas Station",
+      "filename": "12.Gas_station.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/12.Gas_station.cpp",
+      "solvedAt": "2023-06-11T09:06:09.000Z",
+      "sizeBytes": 2531
+    },
+    {
+      "name": "Median Of Two Sorted Arrays",
+      "filename": "13.Median_of_two_sorted_arrays.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/13.Median_of_two_sorted_arrays.cpp",
+      "solvedAt": "2023-06-11T09:06:09.000Z",
+      "sizeBytes": 2730
+    },
+    {
+      "name": "Kth Element Of Two Sorted Arrays",
+      "filename": "14.Kth_element_of_two_sorted_arrays.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/14.Kth_element_of_two_sorted_arrays.cpp",
+      "solvedAt": "2023-06-11T09:06:09.000Z",
+      "sizeBytes": 2084
+    },
+    {
+      "name": "Square Root Of Number",
+      "filename": "01.Square_root_of_number.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/01.Square_root_of_number.cpp",
+      "solvedAt": "2023-06-09T15:04:51.000Z",
+      "sizeBytes": 1369
+    },
+    {
+      "name": "Nth Root Of Integer",
+      "filename": "02.Nth_root_of_integer.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/02.Nth_root_of_integer.cpp",
+      "solvedAt": "2023-06-09T15:04:51.000Z",
+      "sizeBytes": 1336
+    },
+    {
+      "name": "Koko Eating Banana",
+      "filename": "03.Koko_eating_banana.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/03.Koko_eating_banana.cpp",
+      "solvedAt": "2023-06-09T15:04:51.000Z",
+      "sizeBytes": 2025
+    },
+    {
+      "name": "Minimum Days To Make Boquets",
+      "filename": "04.Minimum_days_to_make_boquets.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/04.Minimum_days_to_make_boquets.cpp",
+      "solvedAt": "2023-06-09T15:04:51.000Z",
+      "sizeBytes": 2494
+    },
+    {
+      "name": "Find Smallest Integer",
+      "filename": "05.Find_smallest_integer.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/05.Find_smallest_integer.cpp",
+      "solvedAt": "2023-06-09T15:04:51.000Z",
+      "sizeBytes": 1830
+    },
+    {
+      "name": "Capacity To Ship Packages",
+      "filename": "06.Capacity_to_ship_packages.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/In Search Space/06.Capacity_to_ship_packages.cpp",
+      "solvedAt": "2023-06-09T15:04:51.000Z",
+      "sizeBytes": 2256
+    },
+    {
+      "name": "Find X In Sorted Array",
+      "filename": "01.Find_x_in_sorted_array.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/01.Find_x_in_sorted_array.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1704
+    },
+    {
+      "name": "Implement Lower Bound",
+      "filename": "02.Implement_lower_bound.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/02.Implement_lower_bound.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1419
+    },
+    {
+      "name": "Implement Lower Upper Bound",
+      "filename": "03.Implement_lower_upper_bound.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/03.Implement_lower_upper_bound.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1771
+    },
+    {
+      "name": "Search Insert Position",
+      "filename": "04.Search_insert_position.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/04.Search_insert_position.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 988
+    },
+    {
+      "name": "Check If Array Is Sorted",
+      "filename": "05.Check_If_array_is_sorted.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/05.Check_If_array_is_sorted.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1277
+    },
+    {
+      "name": "First And Last Position",
+      "filename": "06.First_and_last_position.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/06.First_and_last_position.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1074
+    },
+    {
+      "name": "Number Of Occurences",
+      "filename": "07.Number_of_occurences.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/07.Number_of_occurences.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 946
+    },
+    {
+      "name": "Find Peak Element",
+      "filename": "08.Find_peak_element.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/08.Find_peak_element.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1654
+    },
+    {
+      "name": "Search In Rotated Sorted Array",
+      "filename": "09.Search_in_rotated_sorted_array.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/09.Search_in_rotated_sorted_array.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 2279
+    },
+    {
+      "name": "Search In Rotated Sorted Array With Duplicates",
+      "filename": "10.Search_in_rotated_sorted_array_with_duplicates.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/10.Search_in_rotated_sorted_array_with_duplicates.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 2415
+    },
+    {
+      "name": "Find The Minimum Element In Sorted Rotated Array",
+      "filename": "11.Find_the_minimum_element_in_sorted_rotated_array.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/11.Find_the_minimum_element_in_sorted_rotated_array.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1209
+    },
+    {
+      "name": "Find Single Element In Sorted Array",
+      "filename": "12.Find_single_element_in_sorted_array.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/12.Find_single_element_in_sorted_array.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1651
+    },
+    {
+      "name": "Find How Many Times Array Is Rotated",
+      "filename": "13.Find_how_many_times_array_is_rotated.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/1D Arrays/13.Find_how_many_times_array_is_rotated.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1230
+    },
+    {
+      "name": "Row With Maximum Number Of 1's",
+      "filename": "1.Row_with_maximum_number_of_1's.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/2D Arrays/1.Row_with_maximum_number_of_1's.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1220
+    },
+    {
+      "name": "Search In Sorted Matrix",
+      "filename": "2.Search_in_sorted_matrix.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/2D Arrays/2.Search_in_sorted_matrix.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 1269
+    },
+    {
+      "name": "Search In Rowwise Sorted Matrix",
+      "filename": "3.Search_in_rowwise_sorted_matrix.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/2D Arrays/3.Search_in_rowwise_sorted_matrix.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 2104
+    },
+    {
+      "name": "Peak Element In Matrix",
+      "filename": "4.Peak_element_in_matrix.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/2D Arrays/4.Peak_element_in_matrix.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 2159
+    },
+    {
+      "name": "Matrix Median",
+      "filename": "5.Matrix_median.cpp",
+      "category": "Binary Search",
+      "rawCategory": "02.Binary Search",
+      "path": "02.Binary Search/2D Arrays/5.Matrix_median.cpp",
+      "solvedAt": "2023-06-09T03:38:40.000Z",
+      "sizeBytes": 2327
+    },
+    {
+      "name": "Pascal Triangle",
+      "filename": "01.Pascal_triangle.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/01.Pascal_triangle.cpp",
+      "solvedAt": "2023-06-07T15:05:01.000Z",
+      "sizeBytes": 1324
+    },
+    {
+      "name": "Largest Element In Array",
+      "filename": "01.Largest_element_in_array.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/01.Largest_element_in_array.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 610
+    },
+    {
+      "name": "Second Largest Element In Array",
+      "filename": "02.Second_largest_element_in_array.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/02.Second_largest_element_in_array.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 961
+    },
+    {
+      "name": "Check If Array Is Sorted And Rotated",
+      "filename": "03.Check_if_array_is_sorted_and_rotated.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/03.Check_if_array_is_sorted_and_rotated.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1344
+    },
+    {
+      "name": "Remove Duplicates From Sorted Array",
+      "filename": "04.Remove_duplicates_from_sorted_array.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/04.Remove_duplicates_from_sorted_array.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1826
+    },
+    {
+      "name": "Rotate Array Left By 1place",
+      "filename": "05.Rotate_array_left_by_1place.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/05.Rotate_array_left_by_1place.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1030
+    },
+    {
+      "name": "Rotate Array Left&right By K Places",
+      "filename": "06.Rotate_array_left&right_by_k_places.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/06.Rotate_array_left&right_by_k_places.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1276
+    },
+    {
+      "name": "Move 0's To End",
+      "filename": "07.Move_0's_to_end.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/07.Move_0's_to_end.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1184
+    },
+    {
+      "name": "Linear Search",
+      "filename": "08.Linear_search.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/08.Linear_search.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 143
+    },
+    {
+      "name": "Union Of 2 Sorted Arrays",
+      "filename": "09.Union_of_2_sorted_arrays.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/09.Union_of_2_sorted_arrays.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2280
+    },
+    {
+      "name": "Missing Number",
+      "filename": "10.Missing_number.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/10.Missing_number.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1058
+    },
+    {
+      "name": "Max Consecutive 1's",
+      "filename": "11.Max_consecutive_1's.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/11.Max_consecutive_1's.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1109
+    },
+    {
+      "name": "Longest Subarray With Given Sum",
+      "filename": "12.Longest_subarray_with_given_sum.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/12.Longest_subarray_with_given_sum.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1095
+    },
+    {
+      "name": "Find Element Present Only Once",
+      "filename": "13.Find_element_present_only_once.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/1.Easy/13.Find_element_present_only_once.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 878
+    },
+    {
+      "name": "2 Sum Problem",
+      "filename": "01.2_sum_problem.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/01.2_sum_problem.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1590
+    },
+    {
+      "name": "Sort 0 1 2",
+      "filename": "02.Sort_0_1_2.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/02.Sort_0_1_2.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1813
+    },
+    {
+      "name": "Majority Element",
+      "filename": "03.Majority_element.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/03.Majority_element.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1273
+    },
+    {
+      "name": "Kadane's Algorithm",
+      "filename": "04.Kadane's_algorithm.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/04.Kadane's_algorithm.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1290
+    },
+    {
+      "name": "Number Of Subarray Sum Equal K",
+      "filename": "05.Number_of_subarray_sum_equal_k.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/05.Number_of_subarray_sum_equal_k.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1663
+    },
+    {
+      "name": "Stock Buy Sell",
+      "filename": "06.Stock_buy_sell.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/06.Stock_buy_sell.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1408
+    },
+    {
+      "name": "Rearange Elements By Sign",
+      "filename": "07.Rearange_elements_by_sign.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/07.Rearange_elements_by_sign.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1909
+    },
+    {
+      "name": "Next Permutation",
+      "filename": "08.Next_permutation.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/08.Next_permutation.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2473
+    },
+    {
+      "name": "Leaders In Array",
+      "filename": "09.Leaders_in_array.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/09.Leaders_in_array.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1378
+    },
+    {
+      "name": "Longest Consecutive Subsequence",
+      "filename": "10.Longest_consecutive_subsequence.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/10.Longest_consecutive_subsequence.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1824
+    },
+    {
+      "name": "Set Matrix 0's",
+      "filename": "11.Set_matrix_0's.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/11.Set_matrix_0's.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2672
+    },
+    {
+      "name": "Rotate Matrix",
+      "filename": "12.Rotate_matrix.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/12.Rotate_matrix.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1248
+    },
+    {
+      "name": "Spiral Traversal",
+      "filename": "13.Spiral_traversal.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/2.Medium/13.Spiral_traversal.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2495
+    },
+    {
+      "name": "Majority Element 2",
+      "filename": "02.Majority_element_2.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/02.Majority_element_2.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2607
+    },
+    {
+      "name": "3 Sum",
+      "filename": "03.3_sum.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/03.3_sum.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2335
+    },
+    {
+      "name": "4 Sum",
+      "filename": "04.4_sum.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/04.4_sum.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 3143
+    },
+    {
+      "name": "Largest Subarray With 0sum",
+      "filename": "05.Largest_subarray_with_0sum.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/05.Largest_subarray_with_0sum.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1674
+    },
+    {
+      "name": "Subarrays With Xor K",
+      "filename": "06.Subarrays_with_xor_k.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/06.Subarrays_with_xor_k.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1929
+    },
+    {
+      "name": "Merge Overlapping Subinterval",
+      "filename": "07.Merge_overlapping_subinterval.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/07.Merge_overlapping_subinterval.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1973
+    },
+    {
+      "name": "Merge 2 Sorted Array Without Space",
+      "filename": "08.Merge_2_sorted_array_without_space.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/08.Merge_2_sorted_array_without_space.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2474
+    },
+    {
+      "name": "Repeating And Missing Numbers",
+      "filename": "09.Repeating_and_missing_numbers.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/09.Repeating_and_missing_numbers.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2038
+    },
+    {
+      "name": "Count Inversions",
+      "filename": "10.Count_inversions.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/10.Count_inversions.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2249
+    },
+    {
+      "name": "Reverse Pairs",
+      "filename": "11.Reverse_pairs.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/11.Reverse_pairs.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 2343
+    },
+    {
+      "name": "Maximum Product Subarray",
+      "filename": "12.Maximum_product_subarray.cpp",
+      "category": "Arrays",
+      "rawCategory": "01.Arrays",
+      "path": "01.Arrays/3.Hard/12.Maximum_product_subarray.cpp",
+      "solvedAt": "2023-06-06T14:55:31.000Z",
+      "sizeBytes": 1230
+    }
+  ]
+}

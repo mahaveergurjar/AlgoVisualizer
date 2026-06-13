@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Code, CheckCircle, Clock, RotateCw } from "lucide-react";
-import VisualizerPointer from "../../components/VisualizerPointer.jsx";
+import React, { useState, useCallback } from "react";
+import { Clock, RotateCw } from "lucide-react";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 
 const RotateArray = () => {
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
   const [arrayInput, setArrayInput] = useState("1,2,3,4,5,6,7");
   const [kInput, setKInput] = useState("3");
-  const [isLoaded, setIsLoaded] = useState(false);
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
   const generateRotateHistory = useCallback((arr, k) => {
     const newHistory = [];
@@ -22,24 +22,24 @@ const RotateArray = () => {
       });
 
     addState({ 
-      line: 1, 
-      explanation: `Rotate array [${arr.join(", ")}] right by k=${k} positions.` 
+      line: 3, 
+      explanation: `Rotate array [${arr.join(", ")}] right by k=${k} positions (k = k % n).` 
     });
 
     if (k === 0) {
       addState({ 
-        line: 2, 
+        line: 7, 
         finished: true,
-        explanation: `k=0 or k is multiple of n. No rotation needed.` 
+        explanation: `k=0 or k is a multiple of n. No rotation needed.` 
       });
-      setHistory(newHistory);
-      setCurrentStep(0);
+      load(newHistory);
       return;
     }
 
-    const reverse = (start, end) => {
+    const reverse = (start, end, parentLine, stepNum) => {
       addState({
-        line: 2,
+        line: parentLine,
+        step: stepNum,
         reverseStart: start,
         reverseEnd: end,
         explanation: `Reverse subarray from index ${start} to ${end}.`,
@@ -47,7 +47,10 @@ const RotateArray = () => {
 
       while (start < end) {
         addState({
-          line: 3,
+          line: parentLine,
+          step: stepNum,
+          reverseStart: start,
+          reverseEnd: end,
           swapIndices: [start, end],
           explanation: `Swap arr[${start}] (${arr[start]}) with arr[${end}] (${arr[end]}).`,
         });
@@ -62,21 +65,21 @@ const RotateArray = () => {
       step: 1,
       explanation: `Step 1: Reverse entire array.` 
     });
-    reverse(0, n - 1);
+    reverse(0, n - 1, 4, 1);
 
     addState({ 
       line: 5, 
       step: 2,
       explanation: `Step 2: Reverse first k elements.` 
     });
-    reverse(0, k - 1);
+    reverse(0, k - 1, 5, 2);
 
     addState({ 
       line: 6, 
       step: 3,
       explanation: `Step 3: Reverse remaining n-k elements.` 
     });
-    reverse(k, n - 1);
+    reverse(k, n - 1, 6, 3);
 
     addState({
       line: 7,
@@ -84,13 +87,12 @@ const RotateArray = () => {
       explanation: `Complete! Array rotated right by ${k}: [${arr.join(", ")}].`,
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-  }, []);
+    load(newHistory);
+  }, [load]);
 
   const loadProblem = () => {
-    const arr = arrayInput.split(",").map(x => parseInt(x.trim())).filter(x => !isNaN(x));
-    const k = parseInt(kInput);
+    const arr = arrayInput.split(",").map(x => parseInt(x.trim(), 10)).filter(x => !isNaN(x));
+    const k = parseInt(kInput, 10);
     
     if (arr.length === 0) {
       alert("Please enter a valid array.");
@@ -101,236 +103,177 @@ const RotateArray = () => {
       return;
     }
     
-    setIsLoaded(true);
     generateRotateHistory(arr, k);
   };
 
-  const reset = () => {
-    setIsLoaded(false);
-    setHistory([]);
-    setCurrentStep(-1);
+  const {
+    arr = [],
+    swapIndices = [],
+    reverseStart = -1,
+    reverseEnd = -1,
+    explanation = "",
+    finished = false,
+    step = 0,
+    line = 2
+  } = currentState;
+
+  const codeContent = {
+    1: `void rotate(vector<int>& nums, int k) {`,
+    2: `    int n = nums.size();`,
+    3: `    k = k % n;`,
+    4: `    reverse(nums.begin(), nums.end());`,
+    5: `    reverse(nums.begin(), nums.begin() + k);`,
+    6: `    reverse(nums.begin() + k, nums.end());`,
+    7: `}`
   };
 
-  const stepForward = useCallback(() => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)), [history.length]);
-  const stepBackward = useCallback(() => setCurrentStep((prev) => Math.max(prev - 1, 0)), []);
-
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (!isLoaded) return;
-      if (e.key === "ArrowRight") stepForward();
-      else if (e.key === "ArrowLeft") stepBackward();
-    };
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [isLoaded, stepForward, stepBackward]);
-
-  const state = history[currentStep] || {};
-  const { arr = [], swapIndices = [], reverseStart = -1, reverseEnd = -1, explanation = "", finished = false, step = 0 } = state;
-
-  const colorMapping = {
-    purple: "text-purple-400",
-    cyan: "text-cyan-400",
-    yellow: "text-yellow-300",
-    green: "text-green-400",
-    "light-gray": "text-gray-400",
-    "": "text-gray-200",
-  };
-
-  const CodeLine = ({ line, content }) => (
-    <div className={`block rounded-md transition-colors ${state.line === line ? "bg-blue-500/20" : ""}`}>
-      <span className="text-gray-600 w-8 inline-block text-right pr-4 select-none">{line}</span>
-      {content.map((token, index) => (
-        <span key={index} className={colorMapping[token.c]}>{token.t}</span>
-      ))}
-    </div>
+  const inputSection = (
+    <>
+      <input 
+        id="array-input" 
+        type="text" 
+        value={arrayInput} 
+        onChange={(e) => setArrayInput(e.target.value)} 
+        disabled={isLoaded} 
+        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        placeholder="e.g., 1,2,3,4,5,6,7"
+      />
+      <input 
+        id="k-input" 
+        type="number" 
+        min="0"
+        value={kInput} 
+        onChange={(e) => setKInput(e.target.value)} 
+        disabled={isLoaded} 
+        className="w-full md:w-32 p-3 bg-gray-900 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        placeholder="k"
+      />
+      {!isLoaded && (
+        <button 
+          onClick={loadProblem} 
+          className="px-5 py-3 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+        >
+          Load & Visualize
+        </button>
+      )}
+    </>
   );
 
-  const rotateCode = [
-    { l: 1, c: [{ t: "function rotate(nums, k) {", c: "" }] },
-    { l: 2, c: [{ t: "  k = k % n;", c: "" }] },
-    { l: 3, c: [{ t: "  reverse(nums, 0, n-1);", c: "cyan" }, { t: " // reverse all", c: "light-gray" }] },
-    { l: 4, c: [{ t: "  reverse(nums, 0, k-1);", c: "cyan" }, { t: " // reverse first k", c: "light-gray" }] },
-    { l: 5, c: [{ t: "  reverse(nums, k, n-1);", c: "cyan" }, { t: " // reverse rest", c: "light-gray" }] },
-    { l: 6, c: [{ t: "}", c: "light-gray" }] },
-    { l: 7, c: [{ t: "", c: "" }] },
-    { l: 8, c: [{ t: "function reverse(nums, start, end) {", c: "" }] },
-    { l: 9, c: [{ t: "  while", c: "purple" }, { t: " (start < end) {", c: "" }] },
-    { l: 10, c: [{ t: "    swap(nums[start++], nums[end--]);", c: "" }] },
-    { l: 11, c: [{ t: "  }", c: "light-gray" }] },
-    { l: 12, c: [{ t: "}", c: "light-gray" }] },
-  ];
-
-  return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <header className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-blue-400 flex items-center justify-center gap-3">
-          <RotateCw /> Rotate Array
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">
-          LeetCode #189 - Rotate array using reversal algorithm
-        </p>
-      </header>
-
-      <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 mb-6 space-y-3">
-        <div className="flex flex-col md:flex-row items-center gap-4">
-          <label htmlFor="array-input" className="font-medium text-gray-300 font-mono whitespace-nowrap">Array:</label>
-          <input 
-            id="array-input" 
-            type="text" 
-            value={arrayInput} 
-            onChange={(e) => setArrayInput(e.target.value)} 
-            disabled={isLoaded} 
-            className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500 w-full"
-            placeholder="e.g., 1,2,3,4,5,6,7"
-          />
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-cyan-300 select-none">
+          k Value
+        </h4>
+        <div className="text-3xl font-mono text-cyan-400">
+          {kInput}
         </div>
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 flex-grow">
-            <label htmlFor="k-input" className="font-medium text-gray-300 font-mono whitespace-nowrap">Rotate by k:</label>
-            <input 
-              id="k-input" 
-              type="number" 
-              min="0"
-              value={kInput} 
-              onChange={(e) => setKInput(e.target.value)} 
-              disabled={isLoaded} 
-              className="font-mono w-32 bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-            />
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-purple-300 select-none">
+          Current Phase
+        </h4>
+        <div className="text-xl font-bold text-purple-400 select-none uppercase">
+          {step > 0 ? `Step ${step}/3` : finished ? "Done" : "Init"}
+        </div>
+      </div>
+      <div className="sm:col-span-2 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-blue-300 font-semibold flex items-center gap-2 mb-2 select-none">
+          <Clock size={16} /> Complexity
+        </h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <div>
+            <strong>Time:</strong>{" "}
+            <span className="font-mono text-teal-300">O(n)</span> - Three reversals.
           </div>
-          <div className="flex items-center gap-2">
-            {!isLoaded ? (
-              <button onClick={loadProblem} className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg">Load & Visualize</button>
-            ) : (
-              <>
-                <button onClick={stepBackward} disabled={currentStep <= 0} className="bg-gray-700 p-2 rounded-md disabled:opacity-50">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" /></svg>
-                </button>
-                <span className="font-mono w-24 text-center">{currentStep >= 0 ? currentStep + 1 : 0}/{history.length}</span>
-                <button onClick={stepForward} disabled={currentStep >= history.length - 1} className="bg-gray-700 p-2 rounded-md disabled:opacity-50">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
-                </button>
-              </>
-            )}
-            <button onClick={reset} className="ml-4 bg-red-600 hover:bg-red-700 cursor-pointer font-bold py-2 px-4 rounded-lg">Reset</button>
+          <div>
+            <strong>Space:</strong>{" "}
+            <span className="font-mono text-teal-300">O(1)</span> - In-place rotation.
           </div>
         </div>
       </div>
+    </>
+  );
 
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Code size={20} />
-              Pseudocode
-            </h3>
-            <pre className="text-sm overflow-auto">
-              <code className="font-mono leading-relaxed">
-                {rotateCode.map((line) => (
-                  <CodeLine key={line.l} line={line.l} content={line.c} />
-                ))}
-              </code>
-            </pre>
-          </div>
+  return (
+    <VisualizerLayout
+      title="Rotate Array"
+      description="LeetCode #189 - Rotate an array to the right by k steps in-place using array reversals."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={explanation}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter array and rotation steps to begin visualization."
+    >
+      <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl space-y-6">
+        <div className="flex justify-between items-center">
+          <h3 className="font-bold text-lg text-gray-300">
+            Array Visualization {step > 0 && `(Step ${step}/3)`}
+          </h3>
+        </div>
 
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-              <h3 className="font-bold text-lg text-gray-300 mb-4">
-                Array Visualization {step > 0 && `(Step ${step}/3)`}
-              </h3>
-              <div className="flex gap-2 flex-wrap">
-                {arr.map((value, index) => {
-                  const isSwapping = swapIndices.includes(index);
-                  const inReverse = index >= reverseStart && index <= reverseEnd;
-                  
-                  let bgColor = "bg-gray-700";
-                  let borderColor = "border-gray-600";
-                  let textColor = "text-gray-200";
+        <div className="flex gap-2 flex-wrap min-h-[100px] items-end pb-2">
+          {arr.map((value, index) => {
+            const isSwapping = swapIndices.includes(index);
+            const inReverse = index >= reverseStart && index <= reverseEnd;
+            
+            let bgColor = "bg-gray-700";
+            let borderColor = "border-gray-600";
+            let textColor = "text-gray-200";
 
-                  if (inReverse && !isSwapping) {
-                    bgColor = "bg-cyan-600/30";
-                    borderColor = "border-cyan-500/50";
-                  }
+            if (inReverse && !isSwapping) {
+              bgColor = "bg-cyan-600/30";
+              borderColor = "border-cyan-500/50";
+            }
 
-                  if (isSwapping) {
-                    bgColor = "bg-amber-600/50";
-                    borderColor = "border-amber-500";
-                    textColor = "text-amber-100";
-                  }
+            if (isSwapping) {
+              bgColor = "bg-amber-600/50";
+              borderColor = "border-amber-500";
+              textColor = "text-amber-100";
+            }
 
-                  if (finished) {
-                    bgColor = "bg-green-600/30";
-                    borderColor = "border-green-500/50";
-                    textColor = "text-green-100";
-                  }
+            if (finished) {
+              bgColor = "bg-green-600/30";
+              borderColor = "border-green-500/50";
+              textColor = "text-green-100";
+            }
 
-                  return (
-                    <div key={index} className="flex flex-col items-center relative">
-                      {isSwapping && <VisualizerPointer />}
-                      <div className={`${bgColor} ${borderColor} border-2 rounded-lg w-16 h-16 flex flex-col items-center justify-center font-mono font-bold transition-all duration-300 ${textColor}`}>
-                        <span className="text-lg">{value}</span>
-                      </div>
-                      <span className="text-xs text-gray-500 mt-1">{index}</span>
-                    </div>
-                  );
-                })}
+            return (
+              <div key={index} className="flex flex-col items-center relative min-w-[64px]">
+                {isSwapping && (
+                  <div className="absolute bottom-full mb-1 flex flex-col items-center">
+                    <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[10px] border-t-yellow-400 animate-bounce" />
+                    <span className="text-yellow-400 text-xs font-bold font-mono">swap</span>
+                  </div>
+                )}
+                <div className={`${bgColor} ${borderColor} border-2 rounded-lg w-16 h-16 flex flex-col items-center justify-center font-mono font-bold transition-all duration-300 ${textColor}`}>
+                  <span className="text-lg">{value}</span>
+                </div>
+                <span className="text-xs text-gray-500 mt-1">{index}</span>
               </div>
+            );
+          })}
+        </div>
+
+        <div className="bg-gray-900/40 p-4 rounded-xl border border-gray-700/40">
+          <h4 className="text-gray-400 text-sm mb-2 font-mono">Rotation Steps Progress</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className={`p-2 rounded-lg border transition-colors ${step >= 1 ? 'bg-cyan-600/10 border-cyan-500/30 text-cyan-200' : 'bg-gray-800/20 border-gray-700/30 text-gray-500'}`}>
+              <span className="text-xs font-mono font-bold">1. Reverse all</span>
             </div>
-
-            <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
-              <h3 className="text-gray-400 text-sm mb-2">Algorithm Steps</h3>
-              <div className="space-y-2">
-                <div className={`p-2 rounded ${step >= 1 ? 'bg-green-600/20' : 'bg-gray-700/30'}`}>
-                  <span className="text-sm text-gray-300">1. Reverse entire array</span>
-                </div>
-                <div className={`p-2 rounded ${step >= 2 ? 'bg-green-600/20' : 'bg-gray-700/30'}`}>
-                  <span className="text-sm text-gray-300">2. Reverse first k elements</span>
-                </div>
-                <div className={`p-2 rounded ${step >= 3 ? 'bg-green-600/20' : 'bg-gray-700/30'}`}>
-                  <span className="text-sm text-gray-300">3. Reverse remaining elements</span>
-                </div>
-              </div>
+            <div className={`p-2 rounded-lg border transition-colors ${step >= 2 ? 'bg-cyan-600/10 border-cyan-500/30 text-cyan-200' : 'bg-gray-800/20 border-gray-700/30 text-gray-500'}`}>
+              <span className="text-xs font-mono font-bold">2. Reverse first k</span>
             </div>
-
-            <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem]">
-              <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
-              <p className="text-gray-300">{explanation}</p>
-              {finished && (
-                <div className="mt-2 flex items-center gap-2">
-                  <CheckCircle className="text-green-400" />
-                  <span className="text-green-400 font-bold">Algorithm Complete!</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="lg:col-span-3 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Clock size={20} /> Complexity Analysis
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6 text-sm">
-              <div className="space-y-4">
-                <h4 className="font-semibold text-blue-300">Time Complexity</h4>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">O(n)</strong>
-                  <br />
-                  We perform three reversals, each taking O(n/2) operations. Total is O(3n/2) = O(n). This is optimal since we need to touch each element at least once.
-                </p>
-              </div>
-              <div className="space-y-4">
-                <h4 className="font-semibold text-blue-300">Space Complexity</h4>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">O(1)</strong>
-                  <br />
-                  The reversal algorithm only uses a constant amount of extra space for swapping, making this solution extremely space-efficient. We rotate the array in-place.
-                </p>
-              </div>
+            <div className={`p-2 rounded-lg border transition-colors ${step >= 3 ? 'bg-cyan-600/10 border-cyan-500/30 text-cyan-200' : 'bg-gray-800/20 border-gray-700/30 text-gray-500'}`}>
+              <span className="text-xs font-mono font-bold">3. Reverse remaining</span>
             </div>
           </div>
         </div>
-      ) : (
-        <p className="text-center text-gray-500 py-10">Enter an array and rotation amount to begin visualization.</p>
-      )}
-    </div>
+      </div>
+    </VisualizerLayout>
   );
 };
 

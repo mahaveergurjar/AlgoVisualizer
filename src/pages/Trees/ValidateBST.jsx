@@ -1,27 +1,18 @@
-// ValidBST.jsx
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
-  Code,
   CheckCircle,
-  BarChart3,
   Clock,
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  RotateCcw,
   Zap,
   Cpu,
-  TreePine,
   Target,
   Gauge,
-  AlertTriangle,
   Check,
   X,
-  ArrowUp,
-  ArrowDown,
-  Minus,
+  BarChart3,
+  TreePine,
 } from "lucide-react";
+import { useVisualizer } from "../../hooks/useVisualizer";
+import VisualizerLayout from "../../components/VisualizerLayout";
 
 // BinaryTreeNode class for building the tree
 class BinaryTreeNode {
@@ -239,39 +230,26 @@ const TreeVisualization = ({ tree, traversalState }) => {
   };
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-      <h3 className="font-bold text-lg text-green-300 mb-4 flex items-center gap-2">
-        <TreePine size={20} />
-        BST Validation Visualization
-        {tree && (
-          <span className="text-sm text-gray-400 ml-2">
-            (Root: {tree.val}, Depth: {calculateTreeDepth(tree)})
-          </span>
-        )}
-      </h3>
+    <div className="w-full flex flex-col items-center">
+      <svg
+        ref={svgRef}
+        width={dimensions.width}
+        height={dimensions.height}
+        className="border border-gray-800 rounded-lg bg-gray-950/40 backdrop-blur-sm"
+      >
+        {/* Render edges first */}
+        {tree && renderEdges(tree)}
 
-      <div className="flex justify-center">
-        <svg
-          ref={svgRef}
-          width={dimensions.width}
-          height={dimensions.height}
-          className="border border-gray-600 rounded-lg bg-gray-900/50"
-        >
-          {/* Render edges first */}
-          {tree && renderEdges(tree)}
-
-          {/* Render nodes on top */}
-          {nodes.map((nodeData, index) => (
-            <TreeNode
-              key={`node-${nodeData.node.val}-${index}`}
-              {...nodeData}
-            />
-          ))}
-        </svg>
-      </div>
-
+        {/* Render nodes on top */}
+        {nodes.map((nodeData, index) => (
+          <TreeNode
+            key={`node-${nodeData.node.val}-${index}`}
+            {...nodeData}
+          />
+        ))}
+      </svg>
       {/* Validation Legend */}
-      <div className="mt-4 flex flex-wrap gap-4 justify-center text-xs">
+      <div className="mt-4 flex flex-wrap gap-4 justify-center text-xs select-none">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
           <span className="text-gray-300">Valid Node</span>
@@ -298,71 +276,55 @@ const RangeVisualization = ({ currentNode, currentRange, comparison }) => {
   if (!currentNode || !currentRange) return null;
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-      <h3 className="font-bold text-lg text-blue-300 mb-4 flex items-center gap-2">
-        <Target size={20} />
+    <div className="bg-gray-950/40 backdrop-blur-sm p-4 rounded-xl border border-gray-800 shadow-xl w-full">
+      <h3 className="font-bold text-sm text-blue-300 mb-3 flex items-center gap-2 select-none">
+        <Target size={16} />
         Range Validation
       </h3>
 
       <div className="space-y-4">
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="bg-gray-700/50 p-3 rounded-lg">
-            <div className="text-gray-400 text-sm">Minimum</div>
-            <div className="font-mono text-lg text-red-400">
-              {currentRange.min}
+        <div className="grid grid-cols-3 gap-2 text-center text-xs">
+          <div className="bg-gray-800/40 p-2 rounded-lg">
+            <div className="text-gray-500">Minimum</div>
+            <div className="font-mono text-sm text-red-400">
+              {currentRange.min === -Infinity ? "-∞" : currentRange.min}
             </div>
           </div>
-          <div className="bg-gray-700/50 p-3 rounded-lg border-2 border-amber-400">
-            <div className="text-gray-400 text-sm">Current Value</div>
-            <div className="font-mono text-lg text-amber-400">
+          <div className="bg-gray-800/40 p-2 rounded-lg border-2 border-amber-400">
+            <div className="text-gray-500">Current Value</div>
+            <div className="font-mono text-sm text-amber-400 font-bold">
               {currentNode}
             </div>
           </div>
-          <div className="bg-gray-700/50 p-3 rounded-lg">
-            <div className="text-gray-400 text-sm">Maximum</div>
-            <div className="font-mono text-lg text-green-400">
-              {currentRange.max}
+          <div className="bg-gray-800/40 p-2 rounded-lg">
+            <div className="text-gray-500">Maximum</div>
+            <div className="font-mono text-sm text-green-400">
+              {currentRange.max === Infinity ? "∞" : currentRange.max}
             </div>
           </div>
         </div>
 
         {comparison && (
-          <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 p-4 rounded-lg border border-purple-700/50">
-            <div className="flex items-center justify-center gap-3">
+          <div className="bg-gradient-to-br from-purple-950/40 to-purple-900/40 p-3 rounded-lg border border-purple-800/40">
+            <div className="flex items-center justify-center gap-4 text-xs font-mono">
               {comparison.leftCheck !== undefined && (
-                <div
-                  className={`flex items-center gap-2 ${
-                    comparison.leftCheck ? "text-green-400" : "text-red-400"
-                  }`}
-                >
-                  {comparison.leftCheck ? <Check size={16} /> : <X size={16} />}
-                  <span className="text-sm">
-                    Left: {currentNode} &gt; {comparison.leftValue}
-                  </span>
+                <div className={`flex items-center gap-1.5 ${comparison.leftCheck ? "text-green-400" : "text-red-400"}`}>
+                  {comparison.leftCheck ? <Check size={14} /> : <X size={14} />}
+                  <span>Left: {currentNode} &gt; {comparison.leftValue === -Infinity ? "-∞" : comparison.leftValue}</span>
                 </div>
               )}
               {comparison.rightCheck !== undefined && (
-                <div
-                  className={`flex items-center gap-2 ${
-                    comparison.rightCheck ? "text-green-400" : "text-red-400"
-                  }`}
-                >
-                  {comparison.rightCheck ? (
-                    <Check size={16} />
-                  ) : (
-                    <X size={16} />
-                  )}
-                  <span className="text-sm">
-                    Right: {currentNode} &lt; {comparison.rightValue}
-                  </span>
+                <div className={`flex items-center gap-1.5 ${comparison.rightCheck ? "text-green-400" : "text-red-400"}`}>
+                  {comparison.rightCheck ? <Check size={14} /> : <X size={14} />}
+                  <span>Right: {currentNode} &lt; {comparison.rightValue === Infinity ? "∞" : comparison.rightValue}</span>
                 </div>
               )}
             </div>
           </div>
         )}
 
-        <div className="flex items-center justify-between text-sm">
-          <div className="text-gray-400">BST Rule:</div>
+        <div className="flex items-center justify-between text-xs select-none">
+          <div className="text-gray-500">BST Rule:</div>
           <div className="font-mono text-amber-400">
             min &lt; node.val &lt; max
           </div>
@@ -374,15 +336,10 @@ const RangeVisualization = ({ currentNode, currentRange, comparison }) => {
 
 // Main Component
 const ValidateBST = () => {
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
   const [treeInput, setTreeInput] = useState("5,3,7,2,4,6,8");
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1000);
-  const visualizerRef = useRef(null);
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
-  // Build tree from level order input
   const buildTreeFromLevelOrder = (values) => {
     if (values.length === 0) return null;
 
@@ -415,9 +372,7 @@ const ValidateBST = () => {
     const root = buildTreeFromLevelOrder(values);
 
     if (!root) {
-      alert(
-        "Invalid tree input. Please provide comma-separated values in level order."
-      );
+      alert("Invalid tree input. Please provide comma-separated values in level order.");
       return;
     }
 
@@ -434,7 +389,6 @@ const ValidateBST = () => {
     ) => {
       callStack.push({ node: node?.val, min, max, depth, side });
 
-      // Base case: null node is always valid
       if (!node) {
         newHistory.push({
           step: stepCount++,
@@ -444,7 +398,7 @@ const ValidateBST = () => {
           processingNode: null,
           currentRange: { min, max },
           isValid: true,
-          line: 2,
+          line: 6,
           callStack: [...callStack],
           depth,
           side,
@@ -453,32 +407,24 @@ const ValidateBST = () => {
         return true;
       }
 
-      // Show current node being processed
       newHistory.push({
         step: stepCount++,
-        explanation: `Processing node ${node.val} with range [${
-          min === -Infinity ? "-∞" : min
-        }, ${max === Infinity ? "∞" : max}]`,
+        explanation: `Processing node ${node.val} with range [${min === -Infinity ? "-∞" : min}, ${max === Infinity ? "∞" : max}]`,
         tree: root,
         currentNode: node.val,
         processingNode: node.val,
         currentRange: { min, max },
-        line: 4,
+        line: 9,
         callStack: [...callStack],
         depth,
         side,
       });
 
-      // Check BST condition: min < node.val < max
       const isCurrentValid = node.val > min && node.val < max;
 
       newHistory.push({
         step: stepCount++,
-        explanation: `Checking BST condition: ${
-          min === -Infinity ? "-∞" : min
-        } < ${node.val} < ${max === Infinity ? "∞" : max} = ${
-          isCurrentValid ? "VALID" : "INVALID"
-        }`,
+        explanation: `Checking BST condition: ${min === -Infinity ? "-∞" : min} < ${node.val} < ${max === Infinity ? "∞" : max} = ${isCurrentValid ? "VALID" : "INVALID"}`,
         tree: root,
         currentNode: node.val,
         processingNode: node.val,
@@ -490,7 +436,7 @@ const ValidateBST = () => {
           rightCheck: node.val < max,
           rightValue: max,
         },
-        line: 5,
+        line: 9,
         callStack: [...callStack],
         depth,
         side,
@@ -506,7 +452,7 @@ const ValidateBST = () => {
           currentRange: { min, max },
           isValid: false,
           isComplete: true,
-          line: 6,
+          line: 10,
           callStack: [...callStack],
           depth,
           side,
@@ -515,17 +461,14 @@ const ValidateBST = () => {
         return false;
       }
 
-      // Process left subtree with updated max
       newHistory.push({
         step: stepCount++,
-        explanation: `Checking left subtree of ${
-          node.val
-        } with updated range [${min === -Infinity ? "-∞" : min}, ${node.val}]`,
+        explanation: `Checking left subtree of ${node.val} with updated range [${min === -Infinity ? "-∞" : min}, ${node.val}]`,
         tree: root,
         currentNode: node.val,
         processingNode: null,
         currentRange: { min, max: node.val },
-        line: 8,
+        line: 14,
         callStack: [...callStack],
         depth: depth + 1,
         side: "left",
@@ -538,17 +481,14 @@ const ValidateBST = () => {
         return false;
       }
 
-      // Process right subtree with updated min
       newHistory.push({
         step: stepCount++,
-        explanation: `Checking right subtree of ${
-          node.val
-        } with updated range [${node.val}, ${max === Infinity ? "∞" : max}]`,
+        explanation: `Checking right subtree of ${node.val} with updated range [${node.val}, ${max === Infinity ? "∞" : max}]`,
         tree: root,
         currentNode: node.val,
         processingNode: null,
         currentRange: { min: node.val, max },
-        line: 9,
+        line: 15,
         callStack: [...callStack],
         depth: depth + 1,
         side: "right",
@@ -562,7 +502,6 @@ const ValidateBST = () => {
         "right"
       );
 
-      // Final result for this subtree
       const finalValid = leftValid && rightValid;
 
       newHistory.push({
@@ -575,7 +514,7 @@ const ValidateBST = () => {
         processingNode: node.val,
         currentRange: { min, max },
         isValid: finalValid,
-        line: 10,
+        line: 15,
         callStack: [...callStack],
         depth,
         side,
@@ -595,52 +534,17 @@ const ValidateBST = () => {
       tree: root,
       isComplete: true,
       isValid: result,
-      line: 11,
+      line: 16,
       callStack: [],
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-    setIsLoaded(true);
-  }, [treeInput]);
-
-  const resetVisualization = () => {
-    setHistory([]);
-    setCurrentStep(-1);
-    setIsLoaded(false);
-    setIsPlaying(false);
-  };
-
-  const stepForward = useCallback(() => {
-    setCurrentStep((prev) => Math.min(prev + 1, history.length - 1));
-  }, [history.length]);
-
-  const stepBackward = useCallback(() => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
-  }, []);
-
-  const handleSpeedChange = (e) => {
-    setSpeed(Number(e.target.value));
-  };
-
-  const playAnimation = useCallback(() => {
-    if (currentStep >= history.length - 1) {
-      setCurrentStep(0);
-    }
-    setIsPlaying(true);
-  }, [currentStep, history.length]);
-
-  const pauseAnimation = useCallback(() => {
-    setIsPlaying(false);
-  }, []);
+    load(newHistory);
+  }, [treeInput, load]);
 
   const generateRandomTree = () => {
-    const size = Math.floor(Math.random() * 8) + 5; // 5-12 nodes
-
-    // Generate a valid BST (sorted array converted to BST)
+    const size = Math.floor(Math.random() * 8) + 5;
     const sortedValues = Array.from({ length: size }, (_, i) => i + 1);
 
-    // Build balanced BST from sorted array
     const buildBalancedBST = (arr, start, end) => {
       if (start > end) return null;
       const mid = Math.floor((start + end) / 2);
@@ -650,13 +554,8 @@ const ValidateBST = () => {
       return node;
     };
 
-    const balancedRoot = buildBalancedBST(
-      sortedValues,
-      0,
-      sortedValues.length - 1
-    );
+    const balancedRoot = buildBalancedBST(sortedValues, 0, sortedValues.length - 1);
 
-    // Convert to level order for input
     const levelOrder = [];
     const queue = [balancedRoot];
     while (queue.length > 0 && levelOrder.length < size) {
@@ -671,53 +570,9 @@ const ValidateBST = () => {
     }
 
     setTreeInput(levelOrder.filter((val) => val !== null).join(","));
-    resetVisualization();
+    visualizer.reset();
   };
 
-  // Auto-play
-  useEffect(() => {
-    let timer;
-    if (isPlaying && currentStep < history.length - 1) {
-      timer = setTimeout(() => {
-        stepForward();
-      }, speed);
-    } else if (currentStep >= history.length - 1) {
-      setIsPlaying(false);
-    }
-    return () => clearTimeout(timer);
-  }, [isPlaying, currentStep, history.length, stepForward, speed]);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          stepBackward();
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          stepForward();
-        } else if (e.key === " ") {
-          e.preventDefault();
-          if (isPlaying) {
-            pauseAnimation();
-          } else {
-            playAnimation();
-          }
-        }
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    isLoaded,
-    isPlaying,
-    stepBackward,
-    stepForward,
-    playAnimation,
-    pauseAnimation,
-  ]);
-
-  const state = history[currentStep] || {};
   const {
     tree = null,
     explanation = "",
@@ -731,28 +586,7 @@ const ValidateBST = () => {
     depth = 0,
     side = "root",
     isComplete = false,
-  } = state;
-
-  const CodeLine = ({ lineNum, content }) => (
-    <div
-      className={`block rounded-md transition-all duration-300 ${
-        line === lineNum
-          ? "bg-green-500/20 border-l-4 border-green-500 shadow-lg"
-          : "hover:bg-gray-700/30"
-      }`}
-    >
-      <span className="text-gray-500 select-none inline-block w-8 text-right mr-3">
-        {lineNum}
-      </span>
-      <span
-        className={
-          line === lineNum ? "text-green-300 font-semibold" : "text-gray-300"
-        }
-      >
-        {content}
-      </span>
-    </div>
-  );
+  } = currentState;
 
   const bstValidationCode = [
     { line: 1, content: "bool isValidBST(TreeNode* root) {" },
@@ -773,7 +607,11 @@ const ValidateBST = () => {
     { line: 16, content: "}" },
   ];
 
-  // Prepare node validity and range data for visualization
+  const codeContent = {};
+  bstValidationCode.forEach((item) => {
+    codeContent[item.line] = item.content;
+  });
+
   const nodeValidity = {};
   const nodeRanges = {};
   if (currentNode !== undefined && isValid !== undefined) {
@@ -783,362 +621,141 @@ const ValidateBST = () => {
     nodeRanges[currentNode] = currentRange;
   }
 
-  return (
-    <div
-      ref={visualizerRef}
-      tabIndex={0}
-      className="p-4 max-w-7xl mx-auto focus:outline-none"
-    >
-      <header className="text-center mb-6">
-        <h1 className="text-5xl font-bold text-green-400 flex items-center justify-center gap-3">
-          <CheckCircle size={28} />
-          Validate Binary Search Tree
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">
-          Determine if a binary tree is a valid binary search tree (LeetCode
-          #98)
-        </p>
-      </header>
-
-      {/* Enhanced Controls Section */}
-      <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl shadow-2xl border border-gray-700/50 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex flex-col md:flex-row gap-4 flex-grow">
-          <div className="flex items-center gap-4 flex-grow">
-            <label
-              htmlFor="tree-input"
-              className="font-medium text-gray-300 font-mono hidden md:block"
-            >
-              Tree (Level Order):
-            </label>
-            <input
-              id="tree-input"
-              type="text"
-              value={treeInput}
-              onChange={(e) => setTreeInput(e.target.value)}
-              disabled={isLoaded}
-              placeholder="e.g., 5,3,7,2,4,6,8"
-              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:opacity-50"
-            />
-          </div>
+  const inputSection = (
+    <>
+      <div className="flex items-center gap-2 flex-grow">
+        <label htmlFor="tree-input" className="font-medium text-gray-300 font-mono text-sm whitespace-nowrap">
+          Tree (Level Order):
+        </label>
+        <input
+          id="tree-input"
+          type="text"
+          value={treeInput}
+          onChange={(e) => setTreeInput(e.target.value)}
+          disabled={isLoaded}
+          placeholder="e.g., 5,3,7,2,4,6,8"
+          className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:opacity-50"
+        />
+      </div>
+      {!isLoaded && (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={generateHistory}
+            className="px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl shadow-lg transition duration-200 transform hover:scale-105 cursor-pointer"
+          >
+            Load & Visualize
+          </button>
+          <button
+            onClick={generateRandomTree}
+            className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow-lg transition duration-200 transform hover:scale-105 cursor-pointer"
+          >
+            Random BST
+          </button>
         </div>
+      )}
+    </>
+  );
 
-        <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
-          {!isLoaded ? (
-            <>
-              <button
-                onClick={generateHistory}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                Load & Visualize
-              </button>
-              <button
-                onClick={generateRandomTree}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                Random BST
-              </button>
-            </>
+  const statsSection = (
+    <>
+      <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/40 backdrop-blur-sm p-4 rounded-xl border border-blue-700/50 text-center">
+        <h3 className="font-semibold text-blue-300 mb-2 flex items-center justify-center gap-2 select-none text-sm">
+          <Target size={16} /> Current Node
+        </h3>
+        <div className="font-mono text-3xl font-bold text-blue-300">
+          {currentNode !== undefined && currentNode !== null ? currentNode : "null"}
+        </div>
+        <div className="text-[10px] text-gray-400 mt-1 capitalize">
+          {side} subtree
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-sm p-4 rounded-xl border border-purple-700/50 text-center">
+        <h3 className="font-semibold text-purple-300 mb-2 flex items-center justify-center gap-2 select-none text-sm">
+          <Gauge size={16} /> Validation
+        </h3>
+        <div className="text-center font-mono text-xl font-bold">
+          {isValid === true ? (
+            <span className="text-green-400">VALID</span>
+          ) : isValid === false ? (
+            <span className="text-red-400">INVALID</span>
           ) : (
-            <>
-              <div className="flex gap-2">
-                <button
-                  onClick={stepBackward}
-                  disabled={currentStep <= 0}
-                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                >
-                  <SkipBack size={20} />
-                </button>
-
-                {!isPlaying ? (
-                  <button
-                    onClick={playAnimation}
-                    disabled={currentStep >= history.length - 1}
-                    className="bg-green-500 hover:bg-green-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                  >
-                    <Play size={20} />
-                  </button>
-                ) : (
-                  <button
-                    onClick={pauseAnimation}
-                    className="bg-yellow-500 hover:bg-yellow-600 p-3 rounded-lg transition-all duration-300 cursor-pointer"
-                  >
-                    <Pause size={20} />
-                  </button>
-                )}
-
-                <button
-                  onClick={stepForward}
-                  disabled={currentStep >= history.length - 1}
-                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                >
-                  <SkipForward size={20} />
-                </button>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <label className="text-gray-400 text-sm">Speed:</label>
-                  <select
-                    value={speed}
-                    onChange={handleSpeedChange}
-                    className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm cursor-pointer"
-                  >
-                    <option value={1500}>Slow</option>
-                    <option value={1000}>Medium</option>
-                    <option value={500}>Fast</option>
-                    <option value={250}>Very Fast</option>
-                  </select>
-                </div>
-
-                <div className="font-mono px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-center min-w-20">
-                  {currentStep + 1}/{history.length}
-                </div>
-              </div>
-
-              <button
-                onClick={resetVisualization}
-                className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg cursor-pointer"
-              >
-                <RotateCcw size={16} />
-                Reset
-              </button>
-            </>
+            <span className="text-gray-400">Checking...</span>
           )}
         </div>
       </div>
 
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Pseudocode Panel */}
-          <div className="lg:col-span-1 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-green-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
-              <Code size={20} />
-              BST Validation Algorithm
-            </h3>
-            <div className="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-              <pre className="text-sm">
-                <code className="font-mono leading-relaxed block">
-                  {bstValidationCode.map((codeLine) => (
-                    <CodeLine
-                      key={codeLine.line}
-                      lineNum={codeLine.line}
-                      content={codeLine.content}
-                    />
-                  ))}
-                </code>
-              </pre>
-            </div>
-
-            {/* Call Stack Visualization */}
-            {callStack.length > 0 && (
-              <div className="mt-4 bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                <h4 className="text-sm text-gray-400 mb-2 flex items-center gap-2">
-                  <BarChart3 size={16} />
-                  Call Stack (Depth: {depth})
-                </h4>
-                <div className="space-y-1 max-h-24 overflow-y-auto">
-                  {callStack.map((call, idx) => (
-                    <div
-                      key={idx}
-                      className="text-xs font-mono bg-gray-800/50 p-1 rounded"
-                    >
-                      {call.side}: node={call.node}, range=[
-                      {call.min === -Infinity ? "-∞" : call.min},{" "}
-                      {call.max === Infinity ? "∞" : call.max}]
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Enhanced Visualization Panels */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Tree Visualization */}
-            <TreeVisualization
-              tree={tree}
-              traversalState={{
-                currentNode: processingNode,
-                processingNode,
-                nodeValidity,
-                nodeRanges,
-              }}
-            />
-
-            {/* Range Visualization */}
-            <RangeVisualization
-              currentNode={currentNode}
-              currentRange={currentRange}
-              comparison={comparison}
-            />
-
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-blue-700/50">
-                <h3 className="font-bold text-lg text-blue-300 mb-3 flex items-center gap-2">
-                  <Target size={20} />
-                  Current Node
-                </h3>
-                <div className="text-center">
-                  <span className="font-mono text-4xl font-bold text-blue-300">
-                    {currentNode || "null"}
-                  </span>
-                </div>
-                <div className="text-xs text-gray-400 text-center mt-2">
-                  {side} subtree
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-purple-700/50">
-                <h3 className="font-bold text-lg text-purple-300 mb-3 flex items-center gap-2">
-                  <Gauge size={20} />
-                  Validation
-                </h3>
-                <div className="text-center">
-                  {isValid === true ? (
-                    <div className="flex items-center justify-center gap-2 text-green-400">
-                      <Check size={24} />
-                      <span className="font-mono text-xl">VALID</span>
-                    </div>
-                  ) : isValid === false ? (
-                    <div className="flex items-center justify-center gap-2 text-red-400">
-                      <X size={24} />
-                      <span className="font-mono text-xl">INVALID</span>
-                    </div>
-                  ) : (
-                    <div className="text-gray-400 font-mono text-lg">
-                      Checking...
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-green-700/50">
-                <h3 className="font-bold text-lg text-green-300 mb-3 flex items-center gap-2">
-                  <CheckCircle size={20} />
-                  Final Result
-                </h3>
-                <div className="text-center">
-                  {isComplete ? (
-                    isValid ? (
-                      <div className="text-green-400 font-mono text-xl">
-                        VALID BST
-                      </div>
-                    ) : (
-                      <div className="text-red-400 font-mono text-xl">
-                        INVALID BST
-                      </div>
-                    )
-                  ) : (
-                    <div className="text-gray-400 font-mono text-lg">
-                      In Progress
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Status and Explanation Panel */}
-            <div className="bg-gradient-to-br from-amber-900/40 to-yellow-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-amber-700/50">
-              <h3 className="font-bold text-lg text-amber-300 mb-3 flex items-center gap-2">
-                <BarChart3 size={20} />
-                Step Explanation
-              </h3>
-              <div className="text-gray-300 text-sm h-20 overflow-y-auto scrollbar-thin">
-                {explanation || "Starting BST validation algorithm..."}
-              </div>
-            </div>
-          </div>
-
-          {/* Enhanced Complexity Analysis */}
-          <div className="lg:col-span-3 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-green-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
-              <Clock size={20} /> Complexity Analysis
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6 text-sm">
-              <div className="space-y-4">
-                <h4 className="font-semibold text-green-300 flex items-center gap-2">
-                  <Zap size={16} />
-                  Time Complexity
-                </h4>
-                <div className="space-y-3">
-                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">
-                      O(N)
-                    </strong>
-                    <p className="text-gray-400 text-sm">
-                      Each node is visited exactly once. The algorithm performs
-                      constant-time operations at each node during the DFS
-                      traversal.
-                    </p>
-                  </div>
-                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">
-                      Why O(N)?
-                    </strong>
-                    <p className="text-gray-400 text-sm">
-                      The recursive DFS visits all N nodes exactly once, making
-                      the time complexity linear with respect to the number of
-                      nodes.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <h4 className="font-semibold text-green-300 flex items-center gap-2">
-                  <Cpu size={16} />
-                  Space Complexity
-                </h4>
-                <div className="space-y-3">
-                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">
-                      O(H)
-                    </strong>
-                    <p className="text-gray-400 text-sm">
-                      The recursion stack uses O(H) space where H is the height
-                      of the tree. For balanced trees, H = O(log N).
-                    </p>
-                  </div>
-                  <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                    <strong className="text-teal-300 font-mono block mb-1">
-                      Worst Case
-                    </strong>
-                    <p className="text-gray-400 text-sm">
-                      For a skewed tree, the recursion depth is O(N), making
-                      space complexity O(N) in worst case.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-sm p-4 rounded-xl border border-green-700/50 text-center">
+        <h3 className="font-semibold text-green-300 mb-2 flex items-center justify-center gap-2 select-none text-sm">
+          <CheckCircle size={16} /> Final Result
+        </h3>
+        <div className="font-mono text-xl font-bold text-green-400">
+          {isComplete ? (isValid ? "Valid BST" : "Invalid BST") : "In Progress"}
         </div>
-      ) : (
-        <div className="text-center py-16 bg-gray-800/50 rounded-xl border border-gray-700/50">
-          <div className="text-gray-500 text-lg mb-4">
-            Enter tree values in level order to start the validation
-          </div>
-          <div className="text-gray-600 text-sm max-w-2xl mx-auto space-y-2">
-            <div className="flex items-center justify-center gap-4 text-xs mb-4">
-              <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full">
-                Level Order: root, left, right, ...
-              </span>
-              <span className="bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full">
-                Use 'null' for empty nodes
-              </span>
-            </div>
-            <p>
-              <strong>Example:</strong> "5,3,7,2,4,6,8" represents a valid BST
-            </p>
-            <p className="text-gray-500">
-              The algorithm uses DFS with range checking to validate the BST
-              property: left subtree values &lt; node value &lt; right subtree
-              values
-            </p>
+      </div>
+
+      {callStack.length > 0 && (
+        <div className="sm:col-span-3 bg-gray-900/50 p-4 rounded-xl border border-gray-700">
+          <h4 className="text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2 select-none">
+            <BarChart3 size={16} /> Recursion Call Stack (Depth: {depth})
+          </h4>
+          <div className="space-y-1 max-h-24 overflow-y-auto">
+            {callStack.map((call, idx) => (
+              <div key={idx} className="text-xs font-mono bg-gray-850 p-1.5 rounded text-gray-300">
+                validate(node: {call.node !== undefined ? call.node : "null"}, min: {call.min === -Infinity ? "-∞" : call.min}, max: {call.max === Infinity ? "∞" : call.max})
+              </div>
+            ))}
           </div>
         </div>
       )}
-    </div>
+
+      <div className="sm:col-span-3 bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl border border-gray-700/50">
+        <h4 className="font-semibold text-purple-300 mb-2 flex items-center gap-2 select-none">
+          <Clock size={16} /> Complexity Analysis
+        </h4>
+        <div className="grid md:grid-cols-2 gap-4 text-xs">
+          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800">
+            <span className="text-teal-300 font-mono font-bold block mb-1">Time Complexity: O(N)</span>
+            <p className="text-gray-400">The algorithm visits every node in the binary tree exactly once to validate it.</p>
+          </div>
+          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800">
+            <span className="text-teal-300 font-mono font-bold block mb-1">Space Complexity: O(H)</span>
+            <p className="text-gray-400">H is the tree height. Recursion stack takes O(log N) for balanced, O(N) for skewed tree.</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
+  return (
+    <VisualizerLayout
+      title="Validate Binary Search Tree"
+      description="Determine if a binary tree is a valid binary search tree (LeetCode #98)"
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={explanation || "Enter tree values to begin visualization"}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+    >
+      <div className="w-full space-y-6 flex flex-col items-center">
+        <TreeVisualization
+          tree={tree}
+          traversalState={{
+            currentNode: processingNode,
+            processingNode,
+            nodeValidity,
+            nodeRanges,
+          }}
+        />
+        <RangeVisualization
+          currentNode={currentNode}
+          currentRange={currentRange}
+          comparison={comparison}
+        />
+      </div>
+    </VisualizerLayout>
   );
 };
 

@@ -1,28 +1,14 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import {
-  Code,
-  CheckCircle,
-  BarChart3,
-  Clock,
-  Repeat,
-  GitCompareArrows,
-  List,
-  FlipVertical,
-} from "lucide-react";
-import VisualizerPointer from "../../components/VisualizerPointer";
+import React, { useState, useCallback } from "react";
+import { ArrowLeft, Clock } from "lucide-react";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 
-// Main Visualizer Component
-const PancakeSortVisualizer = () => {
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
+const PancakeSortVisualizer = ({ navigate }) => {
   const [arrayInput, setArrayInput] = useState("3,5,2,9,6,1,4");
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [active, setActive] = useState(false);
-  const visualizerRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1);
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
-  const generatePancakeSortHistory = useCallback((initialArray) => {
+  const generateHistory = useCallback((initialArray) => {
     const arr = JSON.parse(JSON.stringify(initialArray));
     let n = arr.length;
     const newHistory = [];
@@ -36,33 +22,32 @@ const PancakeSortVisualizer = () => {
         sortedIndices: Array.from({ length: arr.length - n }, (_, i) => n + i),
         explanation: "",
         totalFlips,
+        line: 10,
         ...props,
       });
 
-    addState({ line: 2, explanation: "Initialize Pancake Sort algorithm." });
+    addState({ line: 10, explanation: "Initialize Pancake Sort algorithm." });
 
     for (let curr_size = n; curr_size > 1; --curr_size) {
       addState({
-        line: 3,
+        line: 12,
         currentIndex: curr_size - 1,
-        explanation: `Start pass for size ${curr_size}. Goal is to move the largest element to index ${
-          curr_size - 1
-        }.`,
+        explanation: `Start pass for size ${curr_size}. Goal is to move the largest element to index ${curr_size - 1}.`,
       });
 
       let mi = 0;
       for (let i = 1; i < curr_size; i++) {
         addState({
-          line: 4,
+          line: 13,
           currentIndex: curr_size - 1,
           maxIndex: mi,
           i,
-          explanation: `Searching for max element. Current max is ${arr[mi].value} at index ${mi}. Comparing with ${arr[i].value}.`,
+          explanation: `Searching for max element in unsorted prefix. Current max is ${arr[mi].value} at index ${mi}.`,
         });
         if (arr[i].value > arr[mi].value) {
           mi = i;
           addState({
-            line: 5,
+            line: 13,
             currentIndex: curr_size - 1,
             maxIndex: mi,
             i,
@@ -75,7 +60,7 @@ const PancakeSortVisualizer = () => {
         if (mi !== 0) {
           totalFlips++;
           addState({
-            line: 7,
+            line: 15,
             currentIndex: curr_size - 1,
             maxIndex: mi,
             explanation: `Flip 1: Bring max element (${arr[mi].value}) to the front. Flipping subarray from index 0 to ${mi}.`,
@@ -83,7 +68,7 @@ const PancakeSortVisualizer = () => {
           let tempArr = arr.slice(0, mi + 1).reverse();
           for (let i = 0; i <= mi; i++) arr[i] = tempArr[i];
           addState({
-            line: 8,
+            line: 15,
             currentIndex: curr_size - 1,
             maxIndex: 0,
             explanation: "Subarray flipped. Max element is now at index 0.",
@@ -92,38 +77,33 @@ const PancakeSortVisualizer = () => {
 
         totalFlips++;
         addState({
-          line: 10,
+          line: 16,
           currentIndex: curr_size - 1,
           maxIndex: 0,
-          explanation: `Flip 2: Move max element to its correct position. Flipping subarray from index 0 to ${
-            curr_size - 1
-          }.`,
+          explanation: `Flip 2: Move max element to its correct position. Flipping subarray from index 0 to ${curr_size - 1}.`,
         });
         let tempArr = arr.slice(0, curr_size).reverse();
         for (let i = 0; i < curr_size; i++) arr[i] = tempArr[i];
         addState({
-          line: 11,
+          line: 16,
           currentIndex: curr_size - 1,
           maxIndex: curr_size - 1,
-          explanation: `Subarray flipped. Element ${
-            arr[curr_size - 1].value
-          } is now sorted.`,
+          explanation: `Subarray flipped. Element ${arr[curr_size - 1].value} is now sorted.`,
         });
       }
     }
 
     addState({
-      line: 14,
+      line: 18,
       finished: true,
       sortedIndices: Array.from({ length: arr.length }, (_, i) => i),
       explanation: "Algorithm finished. The array is fully sorted.",
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-  }, []);
+    load(newHistory);
+  }, [load]);
 
-  const loadArray = () => {
+  const loadProblem = () => {
     const localArray = arrayInput
       .split(",")
       .map((s) => s.trim())
@@ -136,401 +116,161 @@ const PancakeSortVisualizer = () => {
     }
 
     const initialObjects = localArray.map((value, id) => ({ value, id }));
-
-    setIsLoaded(true);
-    generatePancakeSortHistory(initialObjects);
+    generateHistory(initialObjects);
   };
 
-  const reset = () => {
-    setIsLoaded(false);
-    setHistory([]);
-    setCurrentStep(-1);
+  const generateRandomArray = () => {
+    const length = Math.floor(Math.random() * 4) + 6;
+    const array = Array.from({ length }, () => Math.floor(Math.random() * 15) + 1);
+    setArrayInput(array.join(","));
+    const initialObjects = array.map((value, id) => ({ value, id }));
+    generateHistory(initialObjects);
   };
 
-  const handleEnterKey = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      document.getElementById("load-button")?.click();
-    }
+  const {
+    array = [],
+    currentIndex = null,
+    maxIndex = null,
+    sortedIndices = [],
+    explanation = "",
+    totalFlips = 0,
+    line = 10
+  } = currentState;
+
+  const codeContent = {
+    1: "void flip(vector<int>& arr, int i) {",
+    2: "    int temp, start = 0;",
+    3: "    while (start < i) {",
+    4: "        temp = arr[start]; arr[start] = arr[i]; arr[i] = temp;",
+    5: "        start++; i--;",
+    6: "    }",
+    7: "}",
+    8: "void pancakeSort(vector<int>& arr) {",
+    9: "    int n = arr.size();",
+    10: "    for (int curr_size = n; curr_size > 1; --curr_size) {",
+    11: "        int mi = findMax(arr, curr_size);",
+    12: "        if (mi != curr_size - 1) {",
+    13: "            flip(arr, mi);",
+    14: "            flip(arr, curr_size - 1);",
+    15: "        }",
+    16: "    }",
+    17: "}"
   };
 
-  const handleSpeedChange = (e) => setSpeed(parseFloat(e.target.value));
-  const playhead = useCallback(() => setIsPlaying((prev) => !prev), []);
-  const stepForward = useCallback(
-    () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
-    [history.length]
-  );
-  const stepBackward = useCallback(
-    () => setCurrentStep((prev) => Math.max(prev - 1, 0)),
-    []
-  );
-
-  useEffect(() => {
-    if (!active || !isLoaded) return;
-    const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        stepBackward();
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        stepForward();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [active, isLoaded, stepForward, stepBackward]);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (visualizerRef.current && !visualizerRef.current.contains(e.target)) {
-        setActive(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    if (!isPlaying || history.length === 0) return;
-    const interval = setInterval(() => {
-      setCurrentStep((prev) => {
-        if (prev >= history.length - 1) {
-          clearInterval(interval);
-          setIsPlaying(false);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 1000 / speed);
-    return () => clearInterval(interval);
-  }, [isPlaying, speed, history.length]);
-
-  const state = history[currentStep] || {};
-  const { array = [] } = state;
-
-  const colorMapping = {
-    purple: "text-purple-400",
-    cyan: "text-cyan-400",
-    "": "text-gray-200",
-    "light-gray": "text-gray-400",
-  };
-
-  const CodeLine = ({ line, content }) => (
-    <div
-      className={`block rounded-md transition-colors ${
-        state.line === line ? "bg-blue-500/20" : ""
-      }`}
-    >
-      <span className="text-gray-600 w-8 inline-block text-right pr-4 select-none">
-        {line}
-      </span>
-      {content.map((token, index) => (
-        <span key={index} className={colorMapping[token.c]}>
-          {token.t}
-        </span>
-      ))}
-    </div>
+  const inputSection = (
+    <>
+      <input
+        id="array-input"
+        type="text"
+        value={arrayInput}
+        onChange={(e) => setArrayInput(e.target.value)}
+        disabled={isLoaded}
+        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        placeholder="e.g., 3,5,2,9,6,1,4"
+      />
+      {!isLoaded && (
+        <button
+          onClick={loadProblem}
+          className="px-5 py-3 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+        >
+          Load & Visualize
+        </button>
+      )}
+      <button
+        onClick={generateRandomArray}
+        className="px-4 py-3 bg-purple-500/20 hover:bg-purple-500/40 rounded-xl font-bold transition-all text-white shadow-lg cursor-pointer"
+      >
+        Random
+      </button>
+    </>
   );
 
-  const pancakeSortCode = [
-    { l: 2, c: [{ t: "function pancakeSort(arr) {", c: "" }] },
-    {
-      l: 3,
-      c: [
-        { t: "  for", c: "purple" },
-        { t: " (let n = arr.length; n > 1; n--) {", c: "" },
-      ],
-    },
-    {
-      l: 4,
-      c: [{ t: "    let maxIndex = findMaxIndex(arr, n);", c: "" }],
-    },
-    {
-      l: 5,
-      c: [
-        { t: "    if", c: "purple" },
-        { t: " (maxIndex !== n - 1) {", c: "" },
-      ],
-    },
-    {
-      l: 7,
-      c: [
-        { t: "      if", c: "purple" },
-        { t: " (maxIndex !== 0) {", c: "" },
-      ],
-    },
-    {
-      l: 8,
-      c: [{ t: "        flip(arr, maxIndex + 1);", c: "" }],
-    },
-    { l: 9, c: [{ t: "      }", c: "light-gray" }] },
-    { l: 10, c: [{ t: "      flip(arr, n);", c: "" }] },
-    { l: 11, c: [{ t: "    }", c: "light-gray" }] },
-    { l: 12, c: [{ t: "  }", c: "light-gray" }] },
-    { l: 14, c: [{ t: "}", c: "light-gray" }] },
-  ];
-
-  return (
-    <div
-      ref={visualizerRef}
-      tabIndex={0}
-      onClick={() => setActive(true)}
-      className="p-4 max-w-7xl mx-auto focus:outline-none"
-    >
-      <header className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-blue-400 flex items-center justify-center gap-3">
-          <FlipVertical /> Pancake Sort Visualizer
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">
-          Visualizing the pancake sorting algorithm by flipping prefixes.
-        </p>
-      </header>
-      <div className="w-full flex justify-center">
-        <div className="shadow-2xl border border-gray-700/50 bg-gray-800/50 p-4 rounded-lg  flex flex-col md:flex-row items-center justify-between gap-2 mb-6 w-full">
-          <div
-            className={`flex items-center gap-4 ${
-              isLoaded ? "w-full" : "w-full md:w-950"
-            }`}
-          >
-            <label
-              htmlFor="array-input"
-              className="font-medium text-gray-300 font-mono hidden md:block"
-            >
-              Array:
-            </label>
-            <input
-              id="array-input"
-              type="text"
-              value={arrayInput}
-              onChange={(e) => setArrayInput(e.target.value)}
-              onKeyDown={handleEnterKey}
-              disabled={isLoaded}
-              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-            />
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl col-span-3">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-cyan-300 select-none">
+          Total Flips
+        </h4>
+        <div className="text-3xl font-mono text-cyan-305 font-bold">
+          {totalFlips}
+        </div>
+      </div>
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-blue-350 font-semibold flex items-center gap-2 mb-2 select-none">
+          <Clock size={16} /> Complexity Details
+        </h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <div>
+            <strong>Worst/Average Case Time:</strong>{" "}
+            <span className="font-mono text-teal-350">O(n²)</span> - scanning prefix to find max and flipping.
           </div>
-          <div className="flex items-center flex-wrap gap-4 md:flex-nowrap w-full md:w-150">
-            {!isLoaded ? (
-              <button
-                id="load-button"
-                onClick={loadArray}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full"
-              >
-                Load & Visualize
-              </button>
-            ) : (
-              <>
-                <div className="flex gap-2 w-full md:w-40 justify-center">
-                  <button
-                    onClick={stepBackward}
-                    disabled={currentStep <= 0}
-                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={playhead}
-                    disabled={currentStep >= history.length - 1}
-                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
-                  >
-                    {isPlaying ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="white"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="white"
-                        viewBox="0 0 448 512"
-                      >
-                        <path d="M91.2 36.9c-12.4-6.8-27.4-6.5-39.6 .7S32 57.9 32 72v368c0 14.1 7.5 27.2 19.6 34.4s27.2 7.5 39.6 .7l336-184c12.8-7 20.8-20.5 20.8-35.1s-8-28.1-20.8-35.1L91.2 36.9z" />
-                      </svg>
-                    )}
-                  </button>
-                  <button
-                    onClick={stepForward}
-                    disabled={currentStep >= history.length - 1}
-                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="flex gap-2 w-full lg:w-72 justify-center gap-4">
-                  <div className="flex items-center gap-2 rounded-lg flex-shrink-0 lg:w-72 w-full">
-                    <span className="text-sm font-semibold">Speed</span>
-                    <input
-                      type="range"
-                      className="w-full h-1.5 bg-gray-600 rounded-lg outline-none cursor-pointer"
-                      min="0.25"
-                      max="2"
-                      step="0.25"
-                      value={speed}
-                      onChange={handleSpeedChange}
-                    />
-                    <span className="text-sm min-w-8 font-mono text-gray-300  text-right">
-                      {speed}x
-                    </span>
-                    <span className="font-mono w-18 px-4 py-2 flex items-center justify-center text-center bg-gray-900 border border-gray-600 rounded-md">
-                      {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
-                    </span>
-                  </div>
-                </div>
-              </>
-            )}
-            <div className="flex w-full md:w-20">
-              <button
-                onClick={reset}
-                className="bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg whitespace-nowrap text-sm sm:text-base flex-shrink-0 mx-auto w-full "
-              >
-                Reset
-              </button>
-            </div>
+          <div>
+            <strong>Best Case Time:</strong>{" "}
+            <span className="font-mono text-teal-300">O(n)</span> - when already sorted, but scan is still required.
+          </div>
+          <div>
+            <strong>Space Complexity:</strong>{" "}
+            <span className="font-mono text-teal-305">O(1)</span> - sorts in-place.
           </div>
         </div>
       </div>
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Code size={20} />
-              Pseudocode
-            </h3>
-            <pre className="text-sm overflow-auto">
-              <code className="font-mono leading-relaxed">
-                {pancakeSortCode.map((line) => (
-                  <CodeLine key={line.l} line={line.l} content={line.c} />
-                ))}
-              </code>
-            </pre>
-          </div>
+    </>
+  );
 
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-              <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
-                <BarChart3 size={20} />
-                Flipping Bars Visualization
-              </h3>
-              <div className="flex justify-center items-end min-h-[170px] py-4 overflow-x-auto">
-                {array.map((item, index) => {
-                  const isSorted = state.sortedIndices?.includes(index);
-                  const isMax = state.maxIndex === index;
-                  const isCurrent = state.i === index;
+  return (
+    <VisualizerLayout
+      title="Pancake Sort"
+      description="Visualizes the Pancake Sort algorithm, which sorts an array by reversing (flipping) prefixes to bring the maximum element to the end."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={explanation}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter array, then click Load & Visualize to begin."
+    >
+      <div className="w-full space-y-6">
+        {navigate && (
+          <button
+            onClick={() => navigate("home")}
+            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+            Back to Sorting Algorithms
+          </button>
+        )}
+        <div className="flex justify-center items-end gap-3 min-h-[220px]">
+          {array.map((item, index) => {
+            const isSorted = sortedIndices.includes(index);
+            const isMax = maxIndex === index;
+            const isCurrent = currentIndex === index;
 
-                  let barStyles = "bg-gray-600";
-                  if (state.finished || isSorted) {
-                    barStyles = "bg-green-600";
-                  } else if (isMax) {
-                    barStyles = "bg-red-500";
-                  } else if (isCurrent) {
-                    barStyles = "bg-yellow-500";
-                  }
-                  return (
-                    <div
-                      key={item.id}
-                      className={`flex flex-col items-center justify-end mx-1`}
-                      style={{ width: "2.5rem" }}
-                    >
-                      <div
-                        className={`w-full rounded-t-md transition-all duration-300 ${barStyles}`}
-                        style={{ height: `${item.value * 1.5}rem` }}
-                      ></div>
-                      <span className="text-sm font-bold mt-2">
-                        {item.value}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-cyan-800/30 p-4 rounded-xl border border-cyan-700/50">
-                <h3 className="text-cyan-300 text-sm flex items-center gap-2">
-                  <Repeat size={16} /> Total Flips
-                </h3>
-                <p className="font-mono text-4xl text-cyan-400 mt-2">
-                  {state.totalFlips ?? 0}
-                </p>
-              </div>
-               <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem]">
-                  <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
-                  <p className="text-gray-300">{state.explanation}</p>
-                  {state.finished && (
-                    <CheckCircle className="inline-block ml-2 text-green-400" />
-                  )}
+            return (
+              <div key={item.id} className="flex flex-col items-center gap-2">
+                <div
+                  className={`w-16 flex items-center justify-center rounded-lg border-2 font-bold text-lg transition-all duration-300 ${
+                    isSorted
+                      ? "bg-green-500/30 border-green-400 text-white"
+                      : isMax
+                      ? "bg-red-500/30 border-red-400 text-white scale-110"
+                      : isCurrent
+                      ? "bg-yellow-500/30 border-yellow-400 text-white scale-110"
+                      : "bg-gray-700 border-gray-600 text-gray-350"
+                  }`}
+                  style={{ height: `${item.value * 12 + 60}px` }}
+                >
+                  {item.value}
                 </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-3 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Clock size={20} /> Complexity Analysis
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6 text-sm">
-              <div className="space-y-4">
-                <h4 className="font-semibold text-blue-300">Time Complexity</h4>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">
-                    Worst Case: O(N²)
-                  </strong>
-                  <br />
-                  Occurs as in each iteration we scan the array to find the maximum element and then perform flips.
-                </p>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">
-                    Average Case: O(N²)
-                  </strong>
-                  <br />
-                  The number of comparisons is always O(N²).
-                </p>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">
-                    Best Case: O(N)
-                  </strong>
-                  <br />
-                  Occurs when the array is already sorted. No flips are needed, but we still need to scan the array.
-                </p>
+                <div className="text-xs font-mono text-gray-500">
+                  {maxIndex === index ? "max" : currentIndex === index ? "curr" : ""}
+                </div>
               </div>
-              <div className="space-y-4">
-                <h4 className="font-semibold text-blue-300">
-                  Space Complexity
-                </h4>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">O(1)</strong>
-                  <br />
-                  Pancake sort is an in-place sorting algorithm. It only requires a constant amount of extra memory.
-                </p>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
-      ) : (
-        <p className="text-center text-gray-500 py-10">
-          Load an array to begin visualization.
-        </p>
-      )}
-    </div>
+      </div>
+    </VisualizerLayout>
   );
 };
 

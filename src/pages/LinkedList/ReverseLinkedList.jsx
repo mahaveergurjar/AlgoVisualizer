@@ -1,14 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
-import {
-  ArrowUp,
-  Code,
-  CheckCircle,
-  Clock,
-  GitBranch,
-  Repeat,
-  Layers,
-} from "lucide-react";
+import { useVisualizer } from "../../hooks/useVisualizer";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { ArrowUp, Layers } from "lucide-react";
 
 // Pointer Component
 const VisualizerPointer = ({
@@ -64,52 +58,15 @@ const VisualizerPointer = ({
 // Main Visualizer Component
 const ReverseLinkedList = () => {
   const [mode, setMode] = useState("iterative");
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
   const [listInput, setListInput] = useState("1,2,3,4,5");
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  const buildAndGenerateHistory = () => {
-    const data = listInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map(Number);
-    if (data.some(isNaN) || data.length === 0) {
-      alert("Invalid list input. Please use comma-separated numbers.");
-      return;
-    }
-
-    if (mode === "iterative") {
-      generateIterativeHistory(data);
-    } else {
-      generateRecursiveHistory(data);
-    }
-    setIsLoaded(true);
-  };
-
-  const parseInput = useCallback(() => {
-    const data = listInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map(Number);
-    if (data.some(isNaN) || data.length === 0) throw new Error("Invalid list input");
-    return data;
-  }, [listInput]);
-
-  const handleModeChange = useModeHistorySwitch({
-    mode,
-    setMode,
+  const visualizerState = useVisualizer();
+  const {
+    currentState,
     isLoaded,
-    parseInput,
-    generators: {
-      iterative: (d) => generateIterativeHistory(d),
-      recursive: (d) => generateRecursiveHistory(d),
-    },
+    load,
     setCurrentStep,
-    onError: (m) => console.warn(m),
-  });
+  } = visualizerState;
 
   const generateIterativeHistory = useCallback((data) => {
     const newHistory = [];
@@ -207,8 +164,7 @@ const ReverseLinkedList = () => {
       explanation: `Return the new head of the list, which is 'prev' (${prev}).`,
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
+    return newHistory;
   }, []);
 
   const generateRecursiveHistory = useCallback((data) => {
@@ -293,395 +249,287 @@ const ReverseLinkedList = () => {
     reverse(0, []);
     addState({ finished: true, explanation: "Reversal complete." });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
+    return newHistory;
   }, []);
 
-  const reset = () => {
-    setIsLoaded(false);
-    setHistory([]);
-    setCurrentStep(-1);
+  const buildAndGenerateHistory = () => {
+    const data = listInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map(Number);
+    if (data.some(isNaN) || data.length === 0) {
+      alert("Invalid list input. Please use comma-separated numbers.");
+      return;
+    }
+
+    const newHistory = mode === "iterative"
+      ? generateIterativeHistory(data)
+      : generateRecursiveHistory(data);
+    
+    if (newHistory) {
+      load(newHistory);
+    }
   };
-  const stepForward = useCallback(
-    () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
-    [history.length]
-  );
-  const stepBackward = useCallback(
-    () => setCurrentStep((prev) => Math.max(prev - 1, 0)),
-    []
-  );
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") stepBackward();
-        if (e.key === "ArrowRight") stepForward();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, stepForward, stepBackward]);
+  const parseInput = useCallback(() => {
+    const data = listInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map(Number);
+    if (data.some(isNaN) || data.length === 0) throw new Error("Invalid list input");
+    return data;
+  }, [listInput]);
 
-  const state = history[currentStep] || {};
+  const handleModeChange = useModeHistorySwitch({
+    mode,
+    setMode,
+    isLoaded,
+    parseInput,
+    generators: {
+      iterative: (d) => load(generateIterativeHistory(d)),
+      recursive: (d) => load(generateRecursiveHistory(d)),
+    },
+    setCurrentStep,
+    onError: (m) => console.warn(m),
+  });
 
-  const colorMapping = {
-    purple: "text-purple-400",
-    cyan: "text-cyan-400",
-    "light-blue": "text-sky-300",
-    yellow: "text-yellow-300",
-    orange: "text-orange-400",
-    red: "text-red-400",
-    "light-gray": "text-gray-400",
-    green: "text-green-400",
-    "": "text-gray-200",
+  const iterativeCodeContent = {
+    4: "ListNode *prev = NULL, *curr = head;",
+    5: "while(curr != NULL) {",
+    6: "  ListNode* nextTemp = curr->next;",
+    7: "  curr->next = prev;",
+    9: "  prev = curr;",
+    10: "  curr = nextTemp;",
+    11: "}",
+    12: "return prev;"
   };
-  const CodeLine = ({ line, content }) => (
-    <div
-      className={`block rounded-md transition-colors px-2 py-1 ${
-        state.line === line ? "bg-sky-500/20 border-l-4 border-sky-400" : ""
-      }`}
-    >
-      <span className="text-gray-500 w-8 inline-block text-right pr-4 select-none">
-        {line}
-      </span>
-      {content.map((token, index) => (
-        <span key={index} className={colorMapping[token.c]}>
-          {token.t}
-        </span>
-      ))}
-    </div>
-  );
 
-  const iterativeCode = [
-    { l: 4, c: [{ t: "ListNode *prev = NULL, *curr = head;", c: "" }] },
-    { l: 5, c: [{ t: "while(curr != NULL) {", c: "purple" }] },
-    { l: 6, c: [{ t: "  ListNode* nextTemp = curr->next;", c: "" }] },
-    { l: 7, c: [{ t: "  curr->next = prev;", c: "" }] },
-    { l: 9, c: [{ t: "  prev = curr;", c: "" }] },
-    { l: 10, c: [{ t: "  curr = nextTemp;", c: "" }] },
-    { l: 11, c: [{ t: "}", c: "light-gray" }] },
-    { l: 12, c: [{ t: "return prev;", c: "purple" }] },
-  ];
+  const recursiveCodeContent = {
+    4: "if (head == NULL || head->next == NULL)",
+    5: "  return head;",
+    7: "ListNode* newHead = reverseList(head->next);",
+    8: "head->next->next = head;",
+    9: "head->next = NULL;",
+    10: "return newHead;"
+  };
 
-  const recursiveCode = [
-    { l: 4, c: [{ t: "if (head == NULL || head->next == NULL)", c: "" }] },
-    { l: 5, c: [{ t: "  return head;", c: "purple" }] },
-    { l: 7, c: [{ t: "ListNode* newHead = reverseList(head->next);", c: "" }] },
-    { l: 8, c: [{ t: "head->next->next = head;", c: "" }] },
-    { l: 9, c: [{ t: "head->next = NULL;", c: "" }] },
-    { l: 10, c: [{ t: "return newHead;", c: "purple" }] },
-  ];
+  const codeContent = mode === "iterative" ? iterativeCodeContent : recursiveCodeContent;
 
-  return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <header className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-sky-400">Reverse Linked List</h1>
-        <p className="text-lg text-gray-400 mt-2">Visualizing LeetCode 206</p>
-      </header>
-      <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2 w-full">
-          <label className="font-mono text-sm whitespace-nowrap">
-            List Values:
-          </label>
-          <input
-            type="text"
-            value={listInput}
-            onChange={(e) => setListInput(e.target.value)}
-            disabled={isLoaded}
-            className="font-mono flex-grow bg-gray-900 p-2 rounded-md border border-gray-600"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          {!isLoaded ? (
-            <button
-              onClick={buildAndGenerateHistory}
-              className="bg-sky-500 hover:bg-sky-600 text-white font-bold cursor-pointer py-2 px-4 rounded-lg"
-            >
-              Load & Visualize
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={stepBackward}
-                disabled={currentStep <= 0}
-                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                </svg>
-              </button>
-              <span className="font-mono w-24 text-center">
-                {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
-              </span>
-              <button
-                onClick={stepForward}
-                disabled={currentStep >= history.length - 1}
-                className="bg-gray-700 p-2 rounded-md disabled:opacity-50"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                </svg>
-              </button>
-            </>
-          )}
-          <button
-            onClick={reset}
-            className="ml-4 bg-red-600 hover:bg-red-700 cursor-pointer font-bold py-2 px-4 rounded-lg"
-          >
-            Reset
-          </button>
-        </div>
+  const inputSection = (
+    <div className="flex flex-wrap items-center gap-4 w-full">
+      <div className="flex items-center gap-2 flex-grow min-w-[200px]">
+        <label className="font-mono text-sm text-gray-300 whitespace-nowrap">
+          List Values:
+        </label>
+        <input
+          type="text"
+          value={listInput}
+          onChange={(e) => setListInput(e.target.value)}
+          disabled={isLoaded}
+          className="font-mono w-full bg-gray-955/50 p-2 rounded-xl border border-gray-800 focus:border-cyan-500 focus:outline-none text-white text-sm"
+          placeholder="e.g. 1,2,3,4,5"
+        />
       </div>
-      <div className="flex border-b-2 border-gray-700 mb-6">
-        <div
+      <div className="flex bg-gray-950/40 p-1 rounded-xl border border-gray-800">
+        <button
           onClick={() => handleModeChange("iterative")}
-          className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
+          className={`px-4 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all ${
             mode === "iterative"
-              ? "border-sky-400 text-sky-400"
-              : "border-transparent text-gray-400"
+              ? "bg-cyan-500 text-gray-955 shadow-md"
+              : "text-gray-400 hover:text-white"
           }`}
         >
           Iterative
-        </div>
-        <div
+        </button>
+        <button
           onClick={() => handleModeChange("recursive")}
-          className={`cursor-pointer p-3 px-6 border-b-4 transition-all ${
+          className={`px-4 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all ${
             mode === "recursive"
-              ? "border-sky-400 text-sky-400"
-              : "border-transparent text-gray-400"
+              ? "bg-cyan-500 text-gray-955 shadow-md"
+              : "text-gray-400 hover:text-white"
           }`}
         >
           Recursive
-        </div>
+        </button>
       </div>
-      {isLoaded && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-sky-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Code size={20} />
-              C++ Solution
-            </h3>
-            <pre className="text-sm overflow-auto">
-              <code className="font-mono leading-relaxed">
-                {mode === "iterative"
-                  ? iterativeCode.map((l) => (
-                      <CodeLine key={l.l} line={l.l} content={l.c} />
-                    ))
-                  : recursiveCode.map((l) => (
-                      <CodeLine key={l.l} line={l.l} content={l.c} />
-                    ))}
-              </code>
-            </pre>
-          </div>
-          <div className="lg:col-span-2 space-y-6">
-            <div className="relative bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl min-h-[300px] overflow-x-auto">
-              <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
-                <GitBranch size={20} />
-                Linked List
-              </h3>
-              <div
-                className="relative"
-                style={{
-                  height: "280px",
-                  width: `${state.nodes.length * 140 + 100}px`,
-                }}
-              >
-                <svg className="w-full h-full absolute top-0 left-0">
-                  {state.edges?.map((edge, i) => {
-                    const fromNode = state.nodes.find(
-                      (n) => n.id === edge.from
-                    );
-                    const toNode = state.nodes.find((n) => n.id === edge.to);
-                    if (!fromNode || !toNode) return null;
-                    const isReversed = toNode.id < fromNode.id;
-                    return (
-                      <line
-                        key={i}
-                        x1={isReversed ? fromNode.x : fromNode.x + 100}
-                        y1={fromNode.y}
-                        x2={isReversed ? toNode.x + 100 : toNode.x}
-                        y2={toNode.y}
-                        stroke="url(#arrow-gradient)"
-                        strokeWidth="3"
-                        markerEnd="url(#arrow)"
-                      />
-                    );
-                  })}
-                  <defs>
-                    <linearGradient
-                      id="arrow-gradient"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="0%"
-                    >
-                      <stop offset="0%" stopColor="#60a5fa" />
-                      <stop offset="100%" stopColor="#3b82f6" />
-                    </linearGradient>
-                    <marker
-                      id="arrow"
-                      viewBox="0 0 10 10"
-                      refX="9"
-                      refY="5"
-                      markerWidth="6"
-                      markerHeight="6"
-                      orient="auto-start-reverse"
-                    >
-                      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
-                    </marker>
-                  </defs>
-                </svg>
-                <div
-                  id="linked-list-container"
-                  className="absolute top-0 left-0 w-full h-full"
-                >
-                  {state.nodes?.map((node) => (
-                    <div
-                      key={node.id}
-                      id={`node-${node.id}`}
-                      className={`absolute w-24 h-14 flex items-center justify-center rounded-xl font-mono text-xl font-bold transition-all duration-300 shadow-xl border-2 ${
-                        state.curr === node.id
-                          ? "bg-sky-500/80 border-sky-300 scale-110"
-                          : "bg-gray-700/80 border-gray-500"
-                      }`}
-                      style={{ left: `${node.x}px`, top: `${node.y - 28}px` }}
-                    >
-                      {node.data}
-                    </div>
-                  ))}
-                  {mode === "iterative" && (
-                    <VisualizerPointer
-                      nodeId={state.prev}
-                      containerId="linked-list-container"
-                      color="green"
-                      label="prev"
-                      yOffset={-15}
-                    />
-                  )}
-                  {mode === "iterative" && (
-                    <VisualizerPointer
-                      nodeId={state.curr}
-                      containerId="linked-list-container"
-                      color="amber"
-                      label="curr"
-                      yOffset={0}
-                    />
-                  )}
-                  {mode === "iterative" && (
-                    <VisualizerPointer
-                      nodeId={state.nextTemp}
-                      containerId="linked-list-container"
-                      color="red"
-                      label="next"
-                      yOffset={15}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-            {mode === "recursive" && (
-              <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
-                <h3 className="text-gray-400 text-sm mb-2 flex items-center gap-2">
-                  <Layers size={16} />
-                  Call Stack
-                </h3>
-                <div className="flex flex-col-reverse gap-2">
-                  {state.callStack?.map((call, index) => (
-                    <div
-                      key={index}
-                      className={`p-2 rounded-md border text-xs transition-all ${
-                        index === state.callStack.length - 1
-                          ? "bg-sky-500/20 border-sky-400"
-                          : "bg-gray-700/50 border-gray-600"
-                      }`}
-                    >
-                      <p className="font-bold">
-                        reverse(head={call.id ?? call})
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem]">
-              <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
-              <p className="text-gray-300">{state.explanation}</p>
-            </div>
-          </div>
-          <div className="lg:col-span-3 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50 mt-6">
-            <h3 className="font-bold text-xl text-sky-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Clock size={20} />
-              Complexity Analysis
-            </h3>
-            {mode === "iterative" ? (
-              <div className="space-y-4 text-sm">
-                <div>
-                  <h4 className="font-semibold text-sky-300">
-                    Time Complexity:{" "}
-                    <span className="font-mono text-teal-300">O(N)</span>
-                  </h4>
-                  <p className="text-gray-400 mt-1">
-                    We traverse the list once, visiting each node exactly one
-                    time to reverse its pointer. This results in a linear time
-                    complexity.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-sky-300">
-                    Space Complexity:{" "}
-                    <span className="font-mono text-teal-300">O(1)</span>
-                  </h4>
-                  <p className="text-gray-400 mt-1">
-                    The iterative approach only uses a few pointers (`prev`,
-                    `curr`, `nextTemp`) to keep track of nodes. The space
-                    required is constant and does not depend on the size of the
-                    list.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4 text-sm">
-                <div>
-                  <h4 className="font-semibold text-sky-300">
-                    Time Complexity:{" "}
-                    <span className="font-mono text-teal-300">O(N)</span>
-                  </h4>
-                  <p className="text-gray-400 mt-1">
-                    Each node is visited once as the recursion goes down to the
-                    end of the list, and then once again as the stack unwinds to
-                    reverse the pointers.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-sky-300">
-                    Space Complexity:{" "}
-                    <span className="font-mono text-teal-300">O(N)</span>
-                  </h4>
-                  <p className="text-gray-400 mt-1">
-                    The space complexity is determined by the recursion depth.
-                    In the worst case, the recursion will go N levels deep (for
-                    a list of N nodes), so the call stack will require O(N)
-                    space.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+      {!isLoaded && (
+        <button
+          onClick={buildAndGenerateHistory}
+          className="bg-cyan-500 hover:bg-cyan-400 text-gray-955 font-bold py-2 px-5 rounded-xl transition-all shadow-lg text-sm"
+        >
+          Load & Visualize
+        </button>
       )}
     </div>
   );
+
+  const statsSection = (
+    <>
+      <div className="p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">Time Complexity</h4>
+        <p className="text-xl font-bold text-cyan-300 font-mono">O(N)</p>
+        <p className="text-xs text-gray-400 mt-1">
+          {mode === "iterative"
+            ? "We traverse the list once, visiting each node exactly one time."
+            : "Each node is visited once as recursion goes down, and once as stack unwinds."}
+        </p>
+      </div>
+      <div className="p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">Space Complexity</h4>
+        <p className="text-xl font-bold text-teal-300 font-mono">
+          {mode === "iterative" ? "O(1)" : "O(N)"}
+        </p>
+        <p className="text-xs text-gray-400 mt-1">
+          {mode === "iterative"
+            ? "Only a constant number of pointers are used."
+            : "Determined by the recursion depth, which is O(N) in the worst case."}
+        </p>
+      </div>
+      {mode === "recursive" && currentState.callStack && (
+        <div className="p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl col-span-1 sm:col-span-3">
+          <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2 flex items-center gap-2">
+            <Layers size={14} /> Call Stack
+          </h4>
+          <div className="flex flex-col-reverse gap-1.5 max-h-[150px] overflow-y-auto custom-scrollbar pr-1">
+            {currentState.callStack.map((call, index) => (
+              <div
+                key={index}
+                className={`p-2 rounded-xl border text-xs transition-all ${
+                  index === currentState.callStack.length - 1
+                    ? "bg-cyan-500/10 border-cyan-400/50 text-cyan-300"
+                    : "bg-gray-800/40 border-gray-800 text-gray-400"
+                }`}
+              >
+                <span className="font-mono font-bold">
+                  reverse(head = {call.id ?? call})
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <VisualizerLayout
+      title="Reverse Linked List"
+      description="Visualizing LeetCode 206"
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={currentState.line}
+      message={currentState.explanation}
+      visualizerState={visualizerState}
+      statsSection={statsSection}
+    >
+      {isLoaded && currentState.nodes && (
+        <div className="w-full overflow-x-auto py-4 flex justify-center">
+          <div
+            className="relative"
+            style={{
+              height: "280px",
+              width: `${currentState.nodes.length * 140 + 100}px`,
+            }}
+          >
+            <svg className="w-full h-full absolute top-0 left-0">
+              {currentState.edges?.map((edge, i) => {
+                const fromNode = currentState.nodes.find(
+                  (n) => n.id === edge.from
+                );
+                const toNode = currentState.nodes.find((n) => n.id === edge.to);
+                if (!fromNode || !toNode) return null;
+                const isReversed = toNode.id < fromNode.id;
+                return (
+                  <line
+                    key={i}
+                    x1={isReversed ? fromNode.x : fromNode.x + 100}
+                    y1={fromNode.y}
+                    x2={isReversed ? toNode.x + 100 : toNode.x}
+                    y2={toNode.y}
+                    stroke="url(#arrow-gradient)"
+                    strokeWidth="3"
+                    markerEnd="url(#arrow)"
+                  />
+                );
+              })}
+              <defs>
+                <linearGradient
+                  id="arrow-gradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop offset="0%" stopColor="#60a5fa" />
+                  <stop offset="100%" stopColor="#3b82f6" />
+                </linearGradient>
+                <marker
+                  id="arrow"
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto-start-reverse"
+                >
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+                </marker>
+              </defs>
+            </svg>
+            <div
+              id="linked-list-container"
+              className="absolute top-0 left-0 w-full h-full"
+            >
+              {currentState.nodes.map((node) => (
+                <div
+                  key={node.id}
+                  id={`node-${node.id}`}
+                  className={`absolute w-24 h-14 flex items-center justify-center rounded-xl font-mono text-xl font-bold transition-all duration-300 shadow-xl border-2 ${
+                    currentState.curr === node.id
+                      ? "bg-sky-500/80 border-sky-300 scale-110"
+                      : "bg-gray-700/80 border-gray-500"
+                  }`}
+                  style={{ left: `${node.x}px`, top: `${node.y - 28}px` }}
+                >
+                  {node.data}
+                </div>
+              ))}
+              {mode === "iterative" && (
+                <VisualizerPointer
+                  nodeId={currentState.prev}
+                  containerId="linked-list-container"
+                  color="green"
+                  label="prev"
+                  yOffset={-15}
+                />
+              )}
+              {mode === "iterative" && (
+                <VisualizerPointer
+                  nodeId={currentState.curr}
+                  containerId="linked-list-container"
+                  color="amber"
+                  label="curr"
+                  yOffset={0}
+                />
+              )}
+              {mode === "iterative" && (
+                <VisualizerPointer
+                  nodeId={currentState.nextTemp}
+                  containerId="linked-list-container"
+                  color="red"
+                  label="next"
+                  yOffset={15}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </VisualizerLayout>
+  );
 };
+
 export default ReverseLinkedList;

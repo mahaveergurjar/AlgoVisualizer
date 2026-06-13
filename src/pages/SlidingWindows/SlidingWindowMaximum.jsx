@@ -1,24 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import {
-  Code,
-  CheckCircle,
-  BarChart3,
-  Clock,
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  RotateCcw,
-  Zap,
-  Cpu,
-  Calculator,
-  Grid,
-  Layers,
-  TrendingUp,
-  Maximize2,
-  Target,
-  Gauge,
-} from "lucide-react";
+import React, { useState, useEffect, useCallback } from "react";
+import { ArrowLeft, Clock, Layers } from "lucide-react";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 import { useModeHistorySwitch } from "../../hooks/useModeHistorySwitch";
 
 // Pointer Component
@@ -42,9 +25,9 @@ const Pointer = ({ index, containerId, color, label }) => {
     };
 
     updatePosition();
-    window.addEventListener('resize', updatePosition);
+    window.addEventListener("resize", updatePosition);
     
-    return () => window.removeEventListener('resize', updatePosition);
+    return () => window.removeEventListener("resize", updatePosition);
   }, [index, containerId]);
 
   const colors = {
@@ -78,17 +61,14 @@ const Pointer = ({ index, containerId, color, label }) => {
   );
 };
 
-const SlidingWindowMaximum = () => {
+const SlidingWindowMaximum = ({ navigate }) => {
   const [mode, setMode] = useState("optimal");
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
   const [numsInput, setNumsInput] = useState("1,3,-1,-3,5,3,6,7");
   const [kInput, setKInput] = useState("3");
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1000);
   const [windowStyle, setWindowStyle] = useState({});
-  const visualizerRef = useRef(null);
+
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState, setCurrentStep } = visualizer;
 
   const generateBruteForceHistory = useCallback((nums, k) => {
     const newHistory = [];
@@ -106,6 +86,7 @@ const SlidingWindowMaximum = () => {
         comparingIndex: null,
         explanation: "",
         step: stepCount++,
+        line: 3,
         ...props,
       });
     };
@@ -132,7 +113,7 @@ const SlidingWindowMaximum = () => {
         currentMax: null,
         currentIndex: i,
         comparingIndex: i,
-        explanation: `Initialize max for this window.`,
+        explanation: "Initialize max for this window.",
       });
 
       for (let j = i; j < i + k; j++) {
@@ -180,10 +161,8 @@ const SlidingWindowMaximum = () => {
       explanation: `Completed! Result: [${result.join(", ")}]`,
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-    setIsLoaded(true);
-  }, []);
+    load(newHistory);
+  }, [load]);
 
   const generateOptimalHistory = useCallback((nums, k) => {
     const newHistory = [];
@@ -202,6 +181,7 @@ const SlidingWindowMaximum = () => {
         currentIndex: null,
         explanation: "",
         step: stepCount++,
+        line: 3,
         ...props,
       });
     };
@@ -225,9 +205,7 @@ const SlidingWindowMaximum = () => {
         currentIndex: i,
         windowStart: Math.max(0, i - k + 1),
         windowEnd: i,
-        explanation: `Check if deque front is outside window (i - k + 1 = ${
-          i - k + 1
-        })`,
+        explanation: `Check if deque front is outside window (i - k + 1 = ${i - k + 1})`,
       });
 
       while (deque.length > 0 && deque[0] < i - k + 1) {
@@ -269,9 +247,7 @@ const SlidingWindowMaximum = () => {
         windowStart: Math.max(0, i - k + 1),
         windowEnd: i,
         justAddedToDeque: i,
-        explanation: `Added index ${i} to deque back. Deque now: [${deque.join(
-          ", "
-        )}]`,
+        explanation: `Added index ${i} to deque back. Deque now: [${deque.join(", ")}]`,
       });
 
       if (i >= k - 1) {
@@ -283,9 +259,7 @@ const SlidingWindowMaximum = () => {
           windowStart: i - k + 1,
           windowEnd: i,
           justAddedToResult: true,
-          explanation: `Window [${
-            i - k + 1
-          }, ${i}] complete. Maximum = ${maxVal} at index ${deque[0]}`,
+          explanation: `Window [${i - k + 1}, ${i}] complete. Maximum = ${maxVal} at index ${deque[0]}`,
         });
       }
     }
@@ -296,40 +270,8 @@ const SlidingWindowMaximum = () => {
       explanation: `Completed! Result: [${result.join(", ")}]`,
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-    setIsLoaded(true);
-  }, []);
-
-  const resetVisualization = () => {
-    setHistory([]);
-    setCurrentStep(-1);
-    setIsLoaded(false);
-    setIsPlaying(false);
-  };
-
-  const stepForward = useCallback(() => {
-    setCurrentStep((prev) => Math.min(prev + 1, history.length - 1));
-  }, [history.length]);
-
-  const stepBackward = useCallback(() => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
-  }, []);
-
-  const handleSpeedChange = (e) => {
-    setSpeed(Number(e.target.value));
-  };
-
-  const playAnimation = useCallback(() => {
-    if (currentStep >= history.length - 1) {
-      setCurrentStep(0);
-    }
-    setIsPlaying(true);
-  }, [currentStep, history.length]);
-
-  const pauseAnimation = useCallback(() => {
-    setIsPlaying(false);
-  }, []);
+    load(newHistory);
+  }, [load]);
 
   const loadArray = () => {
     const nums = numsInput
@@ -349,7 +291,6 @@ const SlidingWindowMaximum = () => {
       return;
     }
 
-    setIsLoaded(true);
     if (mode === "brute-force") {
       generateBruteForceHistory(nums, k);
     } else {
@@ -358,14 +299,17 @@ const SlidingWindowMaximum = () => {
   };
 
   const generateRandomArray = () => {
-    const length = Math.floor(Math.random() * 5) + 8; // 8-15 elements
-    const array = Array(length)
-      .fill()
-      .map(() => Math.floor(Math.random() * 20) - 5); // Values between -5 and 15
+    const length = Math.floor(Math.random() * 5) + 8;
+    const array = Array.from({ length }, () => Math.floor(Math.random() * 20) - 5);
     
-    setNumsInput(array.join(','));
-    setKInput(Math.floor(Math.random() * 4) + 2); // k between 2-6
-    resetVisualization();
+    setNumsInput(array.join(","));
+    const randomK = Math.floor(Math.random() * 4) + 2;
+    setKInput(randomK.toString());
+    if (mode === "brute-force") {
+      generateBruteForceHistory(array, randomK);
+    } else {
+      generateOptimalHistory(array, randomK);
+    }
   };
 
   const parseInput = useCallback(() => {
@@ -389,56 +333,26 @@ const SlidingWindowMaximum = () => {
       optimal: ({ nums, k }) => generateOptimalHistory(nums, k),
     },
     setCurrentStep,
-    onError: () => {},
   });
 
-  // Auto-play
-  useEffect(() => {
-    let timer;
-    if (isPlaying && currentStep < history.length - 1) {
-      timer = setTimeout(() => {
-        stepForward();
-      }, speed);
-    } else if (currentStep >= history.length - 1) {
-      setIsPlaying(false);
-    }
-    return () => clearTimeout(timer);
-  }, [isPlaying, currentStep, history.length, stepForward, speed]);
+  const {
+    nums = [],
+    result = [],
+    deque = [],
+    windowStart = null,
+    windowEnd = null,
+    currentIndex = null,
+    comparingIndex = null,
+    currentMax = null,
+    explanation = "",
+    line = 3,
+  } = currentState;
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          stepBackward();
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          stepForward();
-        } else if (e.key === " ") {
-          e.preventDefault();
-          if (isPlaying) {
-            pauseAnimation();
-          } else {
-            playAnimation();
-          }
-        }
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, isPlaying, stepBackward, stepForward, playAnimation, pauseAnimation]);
-
-  const state = history[currentStep] || {};
-
-  useEffect(() => {
-    if (isLoaded && state.windowStart !== null && state.windowEnd !== null) {
+    if (isLoaded && windowStart !== null && windowEnd !== null) {
       const container = document.getElementById("array-container");
-      const startEl = document.getElementById(
-        `array-container-element-${state.windowStart}`
-      );
-      const endEl = document.getElementById(
-        `array-container-element-${state.windowEnd}`
-      );
+      const startEl = document.getElementById(`array-container-element-${windowStart}`);
+      const endEl = document.getElementById(`array-container-element-${windowEnd}`);
 
       if (container && startEl && endEl) {
         const containerRect = container.getBoundingClientRect();
@@ -461,553 +375,303 @@ const SlidingWindowMaximum = () => {
     } else {
       setWindowStyle({ opacity: 0 });
     }
-  }, [currentStep, isLoaded, state.windowStart, state.windowEnd]);
+  }, [visualizer.currentStep, isLoaded, windowStart, windowEnd]);
 
-  const CodeLine = ({ lineNum, content }) => (
-    <div
-      className={`block rounded-md transition-all duration-300 ${
-        state.line === lineNum
-          ? "bg-blue-500/20 border-l-4 border-blue-500 shadow-lg"
-          : "hover:bg-gray-700/30"
-      }`}
-    >
-      <span className="text-gray-500 select-none inline-block w-8 text-right mr-3">
-        {lineNum}
-      </span>
-      <span className={state.line === lineNum ? "text-blue-300 font-semibold" : "text-gray-300"}>
-        {content}
-      </span>
-    </div>
-  );
-
-  const bruteForceCode = [
-    { line: 1, content: "vector<int> maxSlidingWindow(vector<int>& nums, int k) {" },
-    { line: 2, content: "    vector<int> result;" },
-    { line: 3, content: "    int n = nums.size();" },
-    { line: 4, content: "    for (int i = 0; i <= n - k; i++) {" },
-    { line: 5, content: "        int maxVal = nums[i];" },
-    { line: 6, content: "        for (int j = i; j < i + k; j++) {" },
-    { line: 7, content: "            maxVal = max(maxVal, nums[j]);" },
-    { line: 8, content: "        }" },
-    { line: 9, content: "        result.push_back(maxVal);" },
-    { line: 10, content: "    }" },
-    { line: 11, content: "    return result;" },
-    { line: 12, content: "}" },
-  ];
-
-  const optimalCode = [
-    { line: 1, content: "vector<int> maxSlidingWindow(vector<int>& nums, int k) {" },
-    { line: 2, content: "    vector<int> result;" },
-    { line: 3, content: "    deque<int> dq;" },
-    { line: 4, content: "    int n = nums.size();" },
-    { line: 5, content: "    for (int i = 0; i < n; i++) {" },
-    { line: 6, content: "        // Remove out-of-window elements" },
-    { line: 7, content: "        while (!dq.empty() && dq.front() < i - k + 1) {" },
-    { line: 8, content: "            dq.pop_front();" },
-    { line: 9, content: "        }" },
-    { line: 10, content: "        // Remove smaller elements" },
-    { line: 11, content: "        while (!dq.empty() && nums[dq.back()] <= nums[i]) {" },
-    { line: 12, content: "            dq.pop_back();" },
-    { line: 13, content: "        }" },
-    { line: 14, content: "        // Add current index" },
-    { line: 15, content: "        dq.push_back(i);" },
-    { line: 16, content: "        // Add to result if window is complete" },
-    { line: 17, content: "        if (i >= k - 1) {" },
-    { line: 18, content: "            result.push_back(nums[dq.front()]);" },
-    { line: 19, content: "        }" },
-    { line: 20, content: "    }" },
-    { line: 21, content: "    return result;" },
-    { line: 22, content: "}" },
-  ];
-
-  const getCellColor = (index) => {
-    const num = state.nums?.[index];
-    const isComparing = state.comparingIndex === index;
-    const isCurrentMax = mode === "brute-force" && 
-                        num === state.currentMax && 
-                        index <= state.comparingIndex;
-    const isDequeIndex = mode === "optimal" && state.deque?.includes(index);
-    const isDequeFront = mode === "optimal" && state.deque?.[0] === index;
-    const isCurrentIndex = state.currentIndex === index;
-    const isInWindow = index >= state.windowStart && index <= state.windowEnd;
-
-    if (isCurrentIndex) {
-      return "bg-gradient-to-br from-yellow-400 to-amber-500 text-gray-900 border-yellow-400 shadow-lg shadow-yellow-500/50";
-    } else if (isDequeFront) {
-      return "bg-gradient-to-br from-green-400 to-emerald-500 text-white border-green-400 shadow-lg shadow-green-500/50";
-    } else if (isDequeIndex) {
-      return "bg-gradient-to-br from-cyan-400 to-blue-500 text-white border-cyan-400 shadow-lg shadow-cyan-500/50";
-    } else if (isCurrentMax || isComparing) {
-      return "bg-gradient-to-br from-pink-400 to-rose-500 text-white border-pink-400 shadow-lg shadow-pink-500/50";
-    } else if (isInWindow) {
-      return "bg-gray-600 border-blue-400 shadow-lg";
-    }
-    return "bg-gray-700/50 border-gray-600 hover:bg-gray-600/50";
+  const codeContent = mode === "brute-force" ? {
+    1: "vector<int> maxSlidingWindow(vector<int>& nums, int k) {",
+    2: "    vector<int> result;",
+    3: "    int n = nums.size();",
+    4: "    for (int i = 0; i <= n - k; i++) {",
+    5: "        int maxVal = nums[i];",
+    6: "        for (int j = i; j < i + k; j++) {",
+    7: "            maxVal = max(maxVal, nums[j]);",
+    8: "        }",
+    9: "        result.push_back(maxVal);",
+    10: "    }",
+    11: "    return result;",
+    12: "}"
+  } : {
+    1: "vector<int> maxSlidingWindow(vector<int>& nums, int k) {",
+    2: "    vector<int> result;",
+    3: "    deque<int> dq;",
+    4: "    int n = nums.size();",
+    5: "    for (int i = 0; i < n; i++) {",
+    6: "        // Remove out-of-window elements",
+    7: "        while (!dq.empty() && dq.front() < i - k + 1) {",
+    8: "            dq.pop_front();",
+    9: "        }",
+    10: "        // Remove smaller elements",
+    11: "        while (!dq.empty() && nums[dq.back()] <= nums[i]) {",
+    12: "            dq.pop_back();",
+    13: "        }",
+    14: "        // Add current index",
+    15: "        dq.push_back(i);",
+    16: "        // Add to result if window is complete",
+    17: "        if (i >= k - 1) {",
+    18: "            result.push_back(nums[dq.front()]);",
+    19: "        }",
+    20: "    }",
+    21: "    return result;",
+    22: "}"
   };
 
-  return (
-    <div
-      ref={visualizerRef}
-      tabIndex={0}
-      className="p-4 max-w-7xl mx-auto focus:outline-none"
-    >
-      <header className="text-center mb-6">
-        <h1 className="text-5xl font-bold text-blue-400 flex items-center justify-center gap-3">
-          <Maximize2 size={28} />
-          Sliding Window Maximum
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">
-          Find the maximum value in each sliding window of size k (LeetCode #239)
-        </p>
-      </header>
+  const getCellColor = (index) => {
+    const num = nums[index];
+    const isComp = comparingIndex === index;
+    const isCurMax = mode === "brute-force" && num === currentMax && index <= comparingIndex;
+    const isDeq = mode === "optimal" && deque.includes(index);
+    const isDeqFront = mode === "optimal" && deque[0] === index;
+    const isCurIdx = currentIndex === index;
+    const isInWindow = index >= windowStart && index <= windowEnd;
 
-      {/* Enhanced Controls Section */}
-      <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl shadow-2xl border border-gray-700/50 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex flex-col md:flex-row gap-4 flex-grow">
-          <div className="flex items-center gap-4 flex-grow">
-            <label htmlFor="array-input" className="font-medium text-gray-300 font-mono hidden md:block">
-              Array:
-            </label>
-            <input
-              id="array-input"
-              type="text"
-              value={numsInput}
-              onChange={(e) => setNumsInput(e.target.value)}
-              disabled={isLoaded}
-              placeholder="e.g., 1,3,-1,-3,5,3,6,7"
-              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
-            />
+    if (isCurIdx) {
+      return "bg-gradient-to-br from-yellow-400 to-amber-500 text-gray-900 border-yellow-400 shadow-lg shadow-yellow-500/50 scale-110 font-bold";
+    } else if (isDeqFront) {
+      return "bg-gradient-to-br from-green-400 to-emerald-500 text-white border-green-400 shadow-lg shadow-green-500/50 font-bold";
+    } else if (isDeq) {
+      return "bg-gradient-to-br from-cyan-400 to-blue-500 text-white border-cyan-400 shadow-lg shadow-cyan-500/50 font-bold";
+    } else if (isCurMax || isComp) {
+      return "bg-gradient-to-br from-pink-400 to-rose-500 text-white border-pink-400 shadow-lg shadow-pink-500/50 font-bold";
+    } else if (isInWindow) {
+      return "bg-gray-600 border-blue-400 shadow-lg text-white";
+    }
+    return "bg-gray-700/50 border-gray-600 hover:bg-gray-600/50 text-gray-300";
+  };
+
+  const inputSection = (
+    <>
+      <div className="flex bg-gray-950 p-1.5 rounded-xl border border-gray-800">
+        <button
+          onClick={() => handleModeChange("brute-force")}
+          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+            mode === "brute-force"
+              ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+              : "text-gray-400 hover:text-gray-200 border border-transparent"
+          }`}
+        >
+          Brute Force
+        </button>
+        <button
+          onClick={() => handleModeChange("optimal")}
+          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+            mode === "optimal"
+              ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+              : "text-gray-400 hover:text-gray-200 border border-transparent"
+          }`}
+        >
+          Optimal (O(n))
+        </button>
+      </div>
+      <input
+        id="array-input"
+        type="text"
+        value={numsInput}
+        onChange={(e) => setNumsInput(e.target.value)}
+        disabled={isLoaded}
+        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        placeholder="e.g., 1,3,-1,-3,5,3,6,7"
+      />
+      <div className="flex items-center gap-3">
+        <label htmlFor="k-input" className="text-gray-350 font-mono text-sm whitespace-nowrap">k:</label>
+        <input
+          id="k-input"
+          type="number"
+          value={kInput}
+          onChange={(e) => setKInput(e.target.value)}
+          disabled={isLoaded}
+          className="w-20 bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm text-center"
+        />
+      </div>
+      {!isLoaded && (
+        <button
+          onClick={loadArray}
+          className="px-5 py-3 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+        >
+          Load & Visualize
+        </button>
+      )}
+      <button
+        onClick={generateRandomArray}
+        className="px-4 py-3 bg-purple-500/20 hover:bg-purple-500/40 rounded-xl font-bold transition-all text-white shadow-lg cursor-pointer"
+      >
+        Random
+      </button>
+    </>
+  );
+
+  const currentWindowLength = windowEnd !== null && windowStart !== null ? windowEnd - windowStart + 1 : 0;
+
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-blue-300 select-none">
+          Current Max
+        </h4>
+        <div className="text-3xl font-mono text-blue-305 font-bold">
+          {mode === "brute-force" ? (currentMax !== null && currentMax !== undefined ? currentMax : "N/A") : (deque?.length > 0 ? nums[deque[0]] : "N/A")}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-purple-300 select-none">
+          Window Length
+        </h4>
+        <div className="text-3xl font-mono text-purple-305 font-bold">
+          {currentWindowLength}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl font-semibold">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-green-300 select-none">
+          Result Count
+        </h4>
+        <div className="text-3xl font-mono text-green-405 font-bold">
+          {result?.length || 0}
+        </div>
+      </div>
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-blue-300 font-semibold flex items-center gap-2 mb-2 select-none">
+          <Clock size={16} /> Complexity Details
+        </h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <div>
+            <strong>Time Complexity:</strong>{" "}
+            <span className="font-mono text-teal-35">
+              {mode === "brute-force" ? "O(n · k)" : "O(n)"}
+            </span>{" "}
+            - {mode === "brute-force" ? "Scanning all elements in each window of size k." : "Each index is pushed and popped from deque at most once."}
           </div>
-          <div className="flex items-center gap-4">
-            <label htmlFor="k-input" className="font-medium text-gray-300 font-mono">
-              k:
-            </label>
-            <input
-              id="k-input"
-              type="number"
-              value={kInput}
-              onChange={(e) => setKInput(e.target.value)}
-              disabled={isLoaded}
-              className="font-mono bg-gray-900 border border-gray-600 rounded-lg p-3 w-20 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
-            />
+          <div>
+            <strong>Space Complexity:</strong>{" "}
+            <span className="font-mono text-teal-35">O(k)</span> - Deque stores at most k elements at any time.
           </div>
         </div>
+      </div>
+    </>
+  );
+
+  return (
+    <VisualizerLayout
+      title="Sliding Window Maximum"
+      description="Find the maximum value in each sliding window of size k (LeetCode #239)."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={explanation}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter array and window size k, then click Load & Visualize."
+    >
+      <div className="w-full space-y-8">
+        {navigate && (
+          <button
+            onClick={() => navigate("home")}
+            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+            Back to Sliding Windows
+          </button>
+        )}
         
-        <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
-          {!isLoaded ? (
-            <>
-              <button
-                onClick={loadArray}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                Load & Visualize
-              </button>
-              <button
-                onClick={generateRandomArray}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                Random Array
-              </button>
-            </>
-          ) : (
-            <>
-              <div className="flex gap-2">
-                <button
-                  onClick={stepBackward}
-                  disabled={currentStep <= 0}
-                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                >
-                  <SkipBack size={20} />
-                </button>
-                
-                {!isPlaying ? (
-                  <button
-                    onClick={playAnimation}
-                    disabled={currentStep >= history.length - 1}
-                    className="bg-green-500 hover:bg-green-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                  >
-                    <Play size={20} />
-                  </button>
-                ) : (
-                  <button
-                    onClick={pauseAnimation}
-                    className="bg-yellow-500 hover:bg-yellow-600 p-3 rounded-lg transition-all duration-300 cursor-pointer"
-                  >
-                    <Pause size={20} />
-                  </button>
-                )}
-
-                <button
-                  onClick={stepForward}
-                  disabled={currentStep >= history.length - 1}
-                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                >
-                  <SkipForward size={20} />
-                </button>
+        {/* Array Visualization */}
+        <div className="relative py-4 w-full" id="array-container">
+          <div className="flex gap-2 mb-2 justify-center">
+            {nums.map((_, index) => (
+              <div key={index} className="w-14 text-center text-xs text-gray-500 font-mono">
+                {index}
               </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <label className="text-gray-400 text-sm">Speed:</label>
-                  <select
-                    value={speed}
-                    onChange={handleSpeedChange}
-                    className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm cursor-pointer"
-                  >
-                    <option value={1500}>Slow</option>
-                    <option value={1000}>Medium</option>
-                    <option value={500}>Fast</option>
-                    <option value={250}>Very Fast</option>
-                  </select>
-                </div>
-
-                <div className="font-mono px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-center min-w-20">
-                  {currentStep + 1}/{history.length}
-                </div>
-              </div>
-
-              <button
-                onClick={resetVisualization}
-                className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg cursor-pointer"
+            ))}
+          </div>
+          
+          <div className="flex gap-2 justify-center">
+            {nums.map((num, index) => (
+              <div
+                key={index}
+                id={`array-container-element-${index}`}
+                className={`w-14 h-14 rounded-lg border-2 flex items-center justify-center font-bold text-xl transition-all duration-500 transform ${getCellColor(index)} ${
+                  (index >= windowStart && index <= windowEnd) ? "scale-110" : "scale-100"
+                }`}
               >
-                <RotateCcw size={16} />
-                Reset
-              </button>
-            </>
+                {num}
+              </div>
+            ))}
+          </div>
+
+          <div style={windowStyle} />
+
+          {isLoaded && windowStart !== null && (
+            <Pointer
+              index={windowStart}
+              containerId="array-container"
+              color="red"
+              label="start"
+            />
+          )}
+          {isLoaded && currentIndex !== null && (
+            <Pointer
+              index={currentIndex}
+              containerId="array-container"
+              color="green"
+              label="current"
+            />
           )}
         </div>
-      </div>
 
-      {/* Mode Selection */}
-      <div className="flex border-b-2 border-gray-700 mb-6">
-        <div
-          onClick={() => handleModeChange("brute-force")}
-          className={`cursor-pointer p-4 px-8 border-b-4 transition-all font-semibold ${
-            mode === "brute-force"
-              ? "border-blue-400 text-blue-400 bg-blue-500/10"
-              : "border-transparent text-gray-400 hover:text-gray-300"
-          }`}
-        >
-          Brute Force O(n·k)
-        </div>
-        <div
-          onClick={() => handleModeChange("optimal")}
-          className={`cursor-pointer p-4 px-8 border-b-4 transition-all font-semibold ${
-            mode === "optimal"
-              ? "border-blue-400 text-blue-400 bg-blue-500/10"
-              : "border-transparent text-gray-400 hover:text-gray-300"
-          }`}
-        >
-          Optimal O(n) - Deque
-        </div>
-      </div>
-
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Pseudocode Panel */}
-          <div className="lg:col-span-1 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
-              <Code size={20} />
-              {mode === "brute-force" ? "Brute Force Code" : "Optimal Code"}
+        {/* Deque Visualization (Optimal Mode) */}
+        {mode === "optimal" && (
+          <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 backdrop-blur-sm p-6 rounded-xl border border-blue-700/50 shadow-xl w-full">
+            <h3 className="font-bold text-lg text-blue-300 mb-3 flex items-center gap-2">
+              <Layers size={20} />
+              Deque (Front → Back)
             </h3>
-            <div className="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-              <pre className="text-sm">
-                <code className="font-mono leading-relaxed block">
-                  {(mode === "brute-force" ? bruteForceCode : optimalCode).map((codeLine) => (
-                    <CodeLine 
-                      key={codeLine.line} 
-                      lineNum={codeLine.line} 
-                      content={codeLine.content}
-                    />
-                  ))}
-                </code>
-              </pre>
-            </div>
-          </div>
-
-          {/* Enhanced Visualization Panels */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Array Visualization */}
-            <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-              <h3 className="font-bold text-lg text-gray-300 mb-6 flex items-center gap-2">
-                <Grid size={20} />
-                Array Visualization
-                {state.nums?.length > 0 && (
-                  <span className="text-sm text-gray-400 ml-2">
-                    ({state.nums.length} elements, k = {state.k})
-                  </span>
-                )}
-              </h3>
-              
-              <div className="flex flex-col items-center space-y-6">
-                {/* Array with indices */}
-                <div className="relative" id="array-container">
-                  {/* Column headers */}
-                  <div className="flex gap-2 mb-2 justify-center">
-                    {state.nums?.map((_, index) => (
-                      <div key={index} className="w-14 text-center text-xs text-gray-500 font-mono">
-                        {index}
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Array elements */}
-                  <div className="flex gap-2 justify-center">
-                    {state.nums?.map((num, index) => (
-                      <div
-                        key={index}
-                        id={`array-container-element-${index}`}
-                        className={`w-14 h-14 rounded-lg border-2 flex items-center justify-center font-bold text-xl transition-all duration-500 transform ${getCellColor(index)} ${
-                          (index >= state.windowStart && index <= state.windowEnd) ? 'scale-110' : 'scale-100'
-                        }`}
-                      >
-                        {num}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Window overlay */}
-                  <div style={windowStyle} />
-
-                  {/* Pointers */}
-                  {state.windowStart !== null && (
-                    <Pointer
-                      index={state.windowStart}
-                      containerId="array-container"
-                      color="red"
-                      label="start"
-                    />
-                  )}
-                  {state.currentIndex !== null && (
-                    <Pointer
-                      index={state.currentIndex}
-                      containerId="array-container"
-                      color="green"
-                      label="current"
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Deque Visualization (Optimal Mode) */}
-            {mode === "optimal" && (
-              <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-blue-700/50">
-                <h3 className="font-bold text-lg text-blue-300 mb-3 flex items-center gap-2">
-                  <Layers size={20} />
-                  Deque (Front → Back)
-                </h3>
-                <div className="flex gap-3 min-h-[4rem] bg-gray-900/50 p-4 rounded-lg flex-wrap items-center justify-center">
-                  {state.deque?.length > 0 ? (
-                    state.deque.map((idx, pos) => (
-                      <div key={pos} className="flex flex-col items-center">
-                        <div
-                          className={`w-16 h-16 flex flex-col items-center justify-center font-mono font-bold rounded-lg shadow-lg border-2 transition-all ${
-                            pos === 0
-                              ? "bg-gradient-to-br from-green-400 to-emerald-500 border-green-400 scale-110 text-white"
-                              : "bg-gradient-to-br from-cyan-400 to-blue-500 border-cyan-400 text-white"
-                          }`}
-                        >
-                          <span className="text-xs opacity-80">idx</span>
-                          <span className="text-lg">{idx}</span>
-                        </div>
-                        <span className="text-xs text-gray-300 mt-1">
-                          val: {state.nums[idx]}
-                        </span>
-                        {pos === 0 && (
-                          <span className="text-xs text-green-400 font-bold mt-1">
-                            MAX
-                          </span>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <span className="text-gray-400 italic text-sm">
-                      Deque is empty
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Result Array */}
-            <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-purple-700/50">
-              <h3 className="font-bold text-lg text-purple-300 mb-3 flex items-center gap-2">
-                <TrendingUp size={20} />
-                Result Array
-              </h3>
-              <div className="flex gap-3 min-h-[4rem] bg-gray-900/50 p-4 rounded-lg flex-wrap items-center justify-center">
-                {state.result?.length > 0 ? (
-                  state.result.map((val, index) => (
+            <div className="flex gap-3 min-h-[4rem] bg-gray-900/50 p-4 rounded-lg flex-wrap items-center justify-center">
+              {deque.length > 0 ? (
+                deque.map((idx, index) => (
+                  <div key={idx} className="flex flex-col items-center">
                     <div
-                      key={index}
-                      className={`w-14 h-14 flex items-center justify-center font-mono text-lg font-bold rounded-lg shadow-lg border-2 transition-all ${
-                        state.justAddedToResult && index === state.result.length - 1
-                          ? "bg-gradient-to-br from-pink-400 to-rose-500 border-pink-400 scale-110 text-white animate-bounce"
-                          : "bg-gradient-to-br from-purple-400 to-indigo-500 border-purple-400 text-white"
+                      className={`w-16 h-16 flex flex-col items-center justify-center font-mono font-bold rounded-lg shadow-lg border-2 transition-all ${
+                        index === 0
+                          ? "bg-gradient-to-br from-green-400 to-emerald-500 border-green-400 text-white"
+                          : "bg-gradient-to-br from-cyan-400 to-blue-500 border-cyan-400 text-white"
                       }`}
                     >
-                      {val}
+                      <span className="text-xs opacity-80">idx: {idx}</span>
+                      <span className="text-lg">{nums[idx]}</span>
                     </div>
-                  ))
-                ) : (
-                  <span className="text-gray-400 italic text-sm">
-                    No results yet
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Status and Explanation Panel */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-blue-700/50">
-                <h3 className="font-bold text-lg text-blue-300 mb-3 flex items-center gap-2">
-                  <Calculator size={20} />
-                  Current State
-                </h3>
-                <div className="space-y-2 text-sm">
-                  <p>
-                    Window Start: <span className="font-mono font-bold text-amber-400">
-                      {state.windowStart ?? "N/A"}
-                    </span>
-                  </p>
-                  <p>
-                    Current Index: <span className="font-mono font-bold text-yellow-400">
-                      {state.currentIndex ?? "N/A"}
-                    </span>
-                  </p>
-                  {mode === "brute-force" && state.comparingIndex !== null && (
-                    <p>
-                      Comparing Index: <span className="font-mono font-bold text-cyan-400">
-                        {state.comparingIndex}
-                      </span>
-                    </p>
-                  )}
-                  {mode === "brute-force" && (
-                    <p>
-                      Current Max: <span className="font-mono font-bold text-pink-400">
-                        {state.currentMax ?? "N/A"}
-                      </span>
-                    </p>
-                  )}
-                  <p>
-                    Result Size: <span className="font-mono font-bold text-green-400">
-                      {state.result?.length ?? 0}
-                    </span>
-                  </p>
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-br from-gray-900/40 to-gray-800/40 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-gray-700/50">
-                <h3 className="font-bold text-lg text-gray-300 mb-3 flex items-center gap-2">
-                  <BarChart3 size={20} />
-                  Step Explanation
-                </h3>
-                <div className="text-gray-300 text-sm h-20 overflow-y-auto scrollbar-thin">
-                  {state.explanation || "Processing..."}
-                </div>
-              </div>
+                    {index === 0 && (
+                      <span className="text-xs text-green-400 mt-1 font-bold">Front (Max)</span>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <span className="text-gray-400 italic text-sm">Deque is empty</span>
+              )}
             </div>
           </div>
+        )}
 
-          {/* Enhanced Complexity Analysis */}
-          <div className="lg:col-span-3 bg-gray-800/50 backdrop-blur-sm p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
-              <Clock size={20} /> Complexity Analysis
-            </h3>
-            {mode === "brute-force" ? (
-              <div className="grid md:grid-cols-2 gap-6 text-sm">
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-blue-300 flex items-center gap-2">
-                    <Zap size={16} />
-                    Time Complexity
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                      <strong className="text-teal-300 font-mono block mb-1">O(n · k)</strong>
-                      <p className="text-gray-400 text-sm">
-                        For each of the (n - k + 1) windows, we iterate through k
-                        elements to find the maximum. This results in approximately
-                        n · k operations for large arrays.
-                      </p>
-                    </div>
-                  </div>
+        {/* Result Array Visualization */}
+        <div className="bg-gradient-to-br from-green-900/40 to-emerald-800/40 backdrop-blur-sm p-6 rounded-xl border border-green-700/50 shadow-xl w-full">
+          <h3 className="font-bold text-lg text-green-300 mb-3 flex items-center gap-2">
+            <CheckCircle size={20} />
+            Result Maximums Array
+          </h3>
+          <div className="flex gap-2 min-h-[3.5rem] bg-gray-900/50 p-4 rounded-lg flex-wrap items-center justify-center">
+            {result.length > 0 ? (
+              result.map((val, index) => (
+                <div
+                  key={index}
+                  className="w-12 h-12 flex items-center justify-center font-mono text-lg font-bold rounded-lg shadow-lg border-2 bg-gradient-to-br from-green-500 to-emerald-600 border-green-400 text-white"
+                >
+                  {val}
                 </div>
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-blue-300 flex items-center gap-2">
-                    <Cpu size={16} />
-                    Space Complexity
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                      <strong className="text-teal-300 font-mono block mb-1">O(1)</strong>
-                      <p className="text-gray-400 text-sm">
-                        We only use a constant amount of extra space (excluding the
-                        result array) - just variables for tracking the maximum
-                        value and loop indices.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))
             ) : (
-              <div className="grid md:grid-cols-2 gap-6 text-sm">
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-blue-300 flex items-center gap-2">
-                    <Zap size={16} />
-                    Time Complexity
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                      <strong className="text-teal-300 font-mono block mb-1">O(n)</strong>
-                      <p className="text-gray-400 text-sm">
-                        Each element is added to the deque exactly once and removed
-                        at most once. This gives us 2n operations in total, which
-                        simplifies to O(n) linear time complexity.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-blue-300 flex items-center gap-2">
-                    <Cpu size={16} />
-                    Space Complexity
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-700">
-                      <strong className="text-teal-300 font-mono block mb-1">O(k)</strong>
-                      <p className="text-gray-400 text-sm">
-                        The deque will store at most k elements at any time. The
-                        result array also stores n - k + 1 elements. Thus, the space
-                        complexity is O(k).
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <span className="text-gray-400 italic text-sm">Result is empty</span>
             )}
           </div>
         </div>
-      ) : (
-        <div className="text-center py-16 bg-gray-800/50 rounded-xl border border-gray-700/50">
-          <div className="text-gray-500 text-lg mb-4">
-            Enter an array and k value to start the visualization
-          </div>
-          <div className="text-gray-600 text-sm max-w-2xl mx-auto space-y-2">
-            <div className="flex items-center justify-center gap-4 text-xs mb-4">
-              <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full">Array Format: 1,3,-1,-3,5,3,6,7</span>
-              <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full">k: window size</span>
-            </div>
-            <p>
-              <strong>Example:</strong> Array: "1,3,-1,-3,5,3,6,7", k: 3 → Returns [3,3,5,5,6,7]
-            </p>
-            <p className="text-gray-500">
-              Find the maximum value in each sliding window of size k as it moves through the array.
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
+      </div>
+    </VisualizerLayout>
   );
 };
 

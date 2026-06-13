@@ -1,434 +1,333 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { ArrowLeft, Play, RotateCw, Pause, SkipBack, SkipForward, Search } from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { CheckCircle, XCircle, Terminal, Clock } from "lucide-react";
+
 import VisualizerPointer from "../../components/VisualizerPointer";
-import Tooltip from "../../components/Tooltip";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 
 const SearchInRotatedSortedArray = () => {
-  const initialArray = [4, 5, 6, 7, 0, 1, 2];
-  const defaultTarget = 0;
+  const [arrInput, setArrInput] = useState("4,5,6,7,0,1,2");
+  const [targetInput, setTargetInput] = useState("0");
 
-  const [array, setArray] = useState(initialArray);
-  const [target, setTarget] = useState(defaultTarget);
-  const [inputArray, setInputArray] = useState(initialArray.join(","));
-  const [inputTarget, setInputTarget] = useState(defaultTarget);
+  // Initialise our blueprint visualizer state manager
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
-  const [animSpeed, setAnimSpeed] = useState(1000);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const [mode, setMode] = useState("input");
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(0);
-
-  const goToPrevStep = useCallback(() => {
-    setCurrentStep((prev) => Math.max(0, prev - 1));
-  }, []);
-
-  const goToNextStep = useCallback(() => {
-    setCurrentStep((prev) => Math.min(history.length - 1, prev + 1));
-  }, [history.length]);
+  const [array, setArray] = useState([]);
+  const [target, setTarget] = useState(0);
 
   // Generate history for the algorithm
-  const generateSearchHistory = useCallback((arr, tgt) => {
-    const hist = [];
+  const generateSearchHistory = useCallback(() => {
+    const arr = arrInput.split(",").map((s) => parseInt(s.trim(), 10)).filter((s) => !isNaN(s));
+    const tgt = parseInt(targetInput, 10);
+    if (arr.length === 0 || isNaN(tgt)) {
+      alert("Invalid input");
+      return;
+    }
+    setArray(arr);
+    setTarget(tgt);
+
+    const newHistory = [];
+    const add = (s) => newHistory.push({ array: arr, target: tgt, ...s });
+
     let left = 0;
     let right = arr.length - 1;
 
-    hist.push({
-      array: [...arr],
-      target: tgt,
+    add({
       left,
       right,
       mid: null,
       found: false,
-      message: `Searching for ${tgt} in rotated sorted array`,
-      phase: "init"
+      message: `Searching for target ${tgt} in rotated sorted array.`,
+      line: 2
     });
 
     while (left <= right) {
       const mid = Math.floor((left + right) / 2);
       
-      hist.push({
-        array: [...arr],
-        target: tgt,
+      add({
         left,
         right,
         mid,
         found: false,
-        message: `Checking middle element at index ${mid}: ${arr[mid]}`,
-        phase: "checking"
+        message: `Checking middle element at index ${mid}: ${arr[mid]}.`,
+        line: 4
       });
 
       if (arr[mid] === tgt) {
-        hist.push({
-          array: [...arr],
-          target: tgt,
+        add({
           left,
           right,
           mid,
           found: true,
           foundIndex: mid,
           message: `Found target ${tgt} at index ${mid}!`,
-          phase: "found"
+          line: 5
         });
-        return hist;
+        load(newHistory);
+        return;
       }
 
       // Determine which half is sorted
       if (arr[left] <= arr[mid]) {
         // Left half is sorted
-        hist.push({
-          array: [...arr],
-          target: tgt,
+        add({
           left,
           right,
           mid,
           found: false,
-          message: `Left half [${left}..${mid}] is sorted`,
-          phase: "analysis"
+          message: `Left half [${left}..${mid}] is sorted (${arr[left]} <= ${arr[mid]}).`,
+          line: 6
         });
 
         if (tgt >= arr[left] && tgt < arr[mid]) {
-          hist.push({
-            array: [...arr],
-            target: tgt,
+          add({
             left,
             right: mid - 1,
             mid,
             found: false,
-            message: `Target ${tgt} is in left half, moving right pointer to ${mid - 1}`,
-            phase: "move"
+            message: `Target ${tgt} lies within the sorted left half range [${arr[left]}, ${arr[mid]}). Moving right pointer to ${mid - 1}.`,
+            line: 7
           });
           right = mid - 1;
         } else {
-          hist.push({
-            array: [...arr],
-            target: tgt,
+          add({
             left: mid + 1,
             right,
             mid,
             found: false,
-            message: `Target ${tgt} is in right half, moving left pointer to ${mid + 1}`,
-            phase: "move"
+            message: `Target ${tgt} does not lie in sorted left half. Search in the right half. Moving left pointer to ${mid + 1}.`,
+            line: 8
           });
           left = mid + 1;
         }
       } else {
         // Right half is sorted
-        hist.push({
-          array: [...arr],
-          target: tgt,
+        add({
           left,
           right,
           mid,
           found: false,
-          message: `Right half [${mid}..${right}] is sorted`,
-          phase: "analysis"
+          message: `Right half [${mid}..${right}] is sorted (${arr[mid]} < ${arr[left]}).`,
+          line: 9
         });
 
         if (tgt > arr[mid] && tgt <= arr[right]) {
-          hist.push({
-            array: [...arr],
-            target: tgt,
+          add({
             left: mid + 1,
             right,
             mid,
             found: false,
-            message: `Target ${tgt} is in right half, moving left pointer to ${mid + 1}`,
-            phase: "move"
+            message: `Target ${tgt} lies within the sorted right half range (${arr[mid]}, ${arr[right]}]. Moving left pointer to ${mid + 1}.`,
+            line: 10
           });
           left = mid + 1;
         } else {
-          hist.push({
-            array: [...arr],
-            target: tgt,
+          add({
             left,
             right: mid - 1,
             mid,
             found: false,
-            message: `Target ${tgt} is in left half, moving right pointer to ${mid - 1}`,
-            phase: "move"
+            message: `Target ${tgt} does not lie in sorted right half. Search in the left half. Moving right pointer to ${mid - 1}.`,
+            line: 11
           });
           right = mid - 1;
         }
       }
     }
 
-    hist.push({
-      array: [...arr],
-      target: tgt,
+    add({
       left,
       right,
       mid: null,
       found: false,
       foundIndex: -1,
-      message: `Target ${tgt} not found in array`,
-      phase: "not-found"
+      message: `Target ${tgt} not found in the array.`,
+      line: 14
     });
 
-    return hist;
-  }, []);
+    load(newHistory);
+  }, [arrInput, targetInput, load]);
 
-  const handleStart = () => {
-    setMode("visualizing");
-    const hist = generateSearchHistory(array, target);
-    setHistory(hist);
-    setCurrentStep(0);
+  const codeContent = {
+    1: `int search(vector<int>& nums, int target) {`,
+    2: `    int left = 0, right = nums.size() - 1;`,
+    3: `    while (left <= right) {`,
+    4: `        int mid = left + (right - left) / 2;`,
+    5: `        if (nums[mid] == target) return mid;`,
+    6: `        if (nums[left] <= nums[mid]) {`,
+    7: `            if (target >= nums[left] && target < nums[mid]) right = mid - 1;`,
+    8: `            else left = mid + 1;`,
+    9: `        } else {`,
+    10: `            if (target > nums[mid] && target <= nums[right]) left = mid + 1;`,
+    11: `            else right = mid - 1;`,
+    12: `        }`,
+    13: `    }`,
+    14: `    return -1;`,
+    15: `}`,
   };
 
-  const handleReset = () => {
-    setMode("input");
-    setHistory([]);
-    setCurrentStep(0);
-    setIsPlaying(false);
-  };
+  const arrayToDisplay = currentState.array || array;
+  const { line, left, right, mid, found, foundIndex, message } = currentState;
 
-  const handleArrayChange = (e) => {
-    setInputArray(e.target.value);
-  };
+  const inputSection = (
+    <>
+      <input
+        type="text"
+        value={arrInput}
+        onChange={(e) => setArrInput(e.target.value)}
+        disabled={isLoaded}
+        className="flex-1 min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
+        placeholder="Rotated Array"
+      />
+      <input
+        type="text"
+        value={targetInput}
+        onChange={(e) => setTargetInput(e.target.value)}
+        disabled={isLoaded}
+        className="w-full md:w-32 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
+        placeholder="Target"
+      />
+      {!isLoaded && (
+        <button
+          onClick={generateSearchHistory}
+          className="px-5 py-3 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+        >
+          Load & Visualize
+        </button>
+      )}
+    </>
+  );
 
-  const handleTargetChange = (e) => {
-    setInputTarget(e.target.value);
-  };
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-red-300 select-none">
+          <Terminal size={16} /> Pointers
+        </h4>
+        <div className="text-3xl font-mono text-red-300">
+          L={left ?? "-"} | R={right ?? "-"}
+        </div>
+      </div>
+      
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-purple-300 select-none">
+          <Code size={16} /> Mid Value
+        </h4>
+        <div className="text-3xl font-mono text-purple-300">
+          {mid !== null && mid !== undefined ? arrayToDisplay[mid] : "-"}
+        </div>
+      </div>
 
-  const handleApply = () => {
-    const newArray = inputArray.split(",").map((n) => parseInt(n.trim(), 10)).filter((n) => !isNaN(n));
-    const newTarget = parseInt(inputTarget, 10);
-    if (newArray.length > 0 && !isNaN(newTarget)) {
-      setArray(newArray);
-      setTarget(newTarget);
-    }
-  };
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className={`font-semibold flex items-center justify-center gap-2 mb-2 select-none ${
+          foundIndex != null && foundIndex !== -1 ? "text-green-300" : "text-red-300"
+        }`}>
+          {foundIndex != null && foundIndex !== -1 ? (
+            <CheckCircle size={16} />
+          ) : (
+            <XCircle size={16} />
+          )}
+          Result
+        </h4>
+        <div className={`text-3xl font-bold ${
+          foundIndex != null && foundIndex !== -1 ? "text-green-400" : "text-red-400"
+        }`}>
+          {foundIndex != null
+            ? foundIndex !== -1
+              ? `Index: ${foundIndex}`
+              : "Not Found"
+            : "-"}
+        </div>
+      </div>
 
-  useEffect(() => {
-    let interval;
-    if (isPlaying && mode === "visualizing") {
-      interval = setInterval(() => {
-        if (currentStep < history.length - 1) {
-          goToNextStep();
-        } else {
-          setIsPlaying(false);
-        }
-      }, animSpeed);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, currentStep, history.length, animSpeed, mode, goToNextStep]);
-
-  const step = history[currentStep] || {};
-  const { left = null, right = null, mid = null, found = false, foundIndex = null, message = "", phase = "init" } = step;
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white p-8">
-      {/* Header */}
-      <header className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
-            <Search className="h-8 w-8 text-white" />
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-cyan-300 font-semibold flex items-center gap-2 mb-2 select-none">
+          <Clock size={16} /> Complexity
+        </h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <div>
+            <strong>Time:</strong>{" "}
+            <span className="font-mono text-cyan-300">O(log n)</span> - Performs a single pass binary search.
           </div>
           <div>
-            <h1 className="text-4xl font-black tracking-tight">Search in Rotated Sorted Array</h1>
-            <p className="text-blue-200 mt-1">LeetCode #33 - Medium</p>
+            <strong>Space:</strong>{" "}
+            <span className="font-mono text-cyan-300">O(1)</span> - Constant auxiliary space.
           </div>
         </div>
-        <p className="text-gray-300 text-lg leading-relaxed max-w-4xl">
-          There is an integer array <code className="px-2 py-1 bg-gray-800 rounded">nums</code> sorted in ascending order (with <strong>distinct</strong> values). 
-          Prior to being passed to your function, <code className="px-2 py-1 bg-gray-800 rounded">nums</code> is <strong>rotated</strong> at an unknown pivot index. 
-          Find the index of a target value using <strong>O(log n)</strong> runtime complexity.
-        </p>
-      </header>
+      </div>
+    </>
+  );
 
-      {/* Input Controls */}
-      {mode === "input" && (
-        <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 mb-8 shadow-xl">
-          <h2 className="text-2xl font-bold mb-4 text-blue-300">Input Configuration</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Rotated Array (comma-separated):
-              </label>
-              <input
-                type="text"
-                value={inputArray}
-                onChange={handleArrayChange}
-                className="w-full px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., 4,5,6,7,0,1,2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Target Value:
-              </label>
-              <input
-                type="number"
-                value={inputTarget}
-                onChange={handleTargetChange}
-                className="w-full px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., 0"
-              />
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={handleApply}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
-            >
-              Apply
-            </button>
-            <button
-              onClick={handleStart}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-lg font-semibold transition-all shadow-lg shadow-green-500/30"
-            >
-              <Play className="h-4 w-4" />
-              Start Visualization
-            </button>
-          </div>
-        </section>
-      )}
+  return (
+    <VisualizerLayout
+      title="Search in Rotated Array"
+      description="Finding a target value in a sorted array that has been rotated at an unknown pivot index in logarithmic time."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={message}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter a rotated array and target, then click Load & Visualize."
+    >
+      <div id="rotated-search-array" className="relative h-24 w-full">
+        {arrayToDisplay.map((value, index) => {
+          const isFound = found && index === foundIndex;
+          const isMid = index === mid;
+          const isLeft = index === left;
+          const isRight = index === right;
 
-      {/* Visualization Controls */}
-      {mode === "visualizing" && (
-        <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 mb-8 shadow-xl">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Tooltip content={isPlaying ? "Pause visualization" : "Play visualization"} position="top">
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all shadow-lg"
-                  aria-label={isPlaying ? "Pause visualization" : "Play visualization"}
-                >
-                  {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-                </button>
-              </Tooltip>
-              
-              <Tooltip content="Previous step" position="top">
-                <button
-                  onClick={goToPrevStep}
-                  disabled={currentStep === 0}
-                  className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Previous step"
-                >
-                  <SkipBack className="h-5 w-5" />
-                </button>
-              </Tooltip>
-              
-              <Tooltip content="Next step" position="top">
-                <button
-                  onClick={goToNextStep}
-                  disabled={currentStep >= history.length - 1}
-                  className="p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Next step"
-                >
-                  <SkipForward className="h-5 w-5" />
-                </button>
-              </Tooltip>
-              
-              <Tooltip content="Reset visualization" position="top">
-                <button
-                  onClick={handleReset}
-                  className="flex items-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
-                  aria-label="Reset visualization"
-                >
-                  <RotateCw className="h-5 w-5" />
-                  Reset
-                </button>
-              </Tooltip>
-            </div>
-            <div className="text-center">
-              <div className="text-sm text-gray-400">Step</div>
-              <div className="text-2xl font-bold text-blue-300">
-                {currentStep + 1} / {history.length}
+          let bgClass = "bg-gray-800 text-gray-500";
+          if (isFound) {
+            bgClass = "bg-green-500 text-white scale-110 ring-2 ring-green-300 font-black";
+          } else if (isMid) {
+            bgClass = "bg-purple-600 text-white scale-105";
+          } else if (left <= right && index >= left && index <= right) {
+            bgClass = "bg-gray-700 text-white";
+          }
+
+          return (
+            <div
+              key={index}
+              id={`rotated-search-array-element-${index}`}
+              className="absolute flex flex-col items-center"
+              style={{
+                left: `${((index + 0.5) / arrayToDisplay.length) * 100}%`,
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <div className={`w-12 h-12 flex items-center justify-center rounded-lg font-bold transition-all duration-300 ${bgClass}`}>
+                {value}
               </div>
+              <div className="text-xs text-gray-400 mt-1">[{index}]</div>
             </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-2">Animation Speed</label>
-              <select
-                value={animSpeed}
-                onChange={(e) => setAnimSpeed(Number(e.target.value))}
-                className="px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white"
-              >
-                <option value={2000}>Slow</option>
-                <option value={1000}>Normal</option>
-                <option value={500}>Fast</option>
-              </select>
-            </div>
-          </div>
-        </section>
-      )}
+          );
+        })}
 
-      {/* Message Display */}
-      {mode === "visualizing" && message && (
-        <div className={`mb-6 p-4 rounded-xl border ${
-          phase === "found" 
-            ? "bg-green-900/30 border-green-500 text-green-200"
-            : phase === "not-found"
-            ? "bg-red-900/30 border-red-500 text-red-200"
-            : "bg-blue-900/30 border-blue-500 text-blue-200"
-        }`}>
-          <p className="text-center font-medium">{message}</p>
-        </div>
-      )}
-
-      {/* Array Visualization */}
-      {mode === "visualizing" && history.length > 0 && (
-        <section className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-8 shadow-xl">
-          <div className="flex justify-center items-end gap-2 flex-wrap">
-            {array.map((value, index) => {
-              const isLeft = index === left;
-              const isRight = index === right;
-              const isMid = index === mid;
-              const isFound = found && index === foundIndex;
-              const inRange = left !== null && right !== null && index >= left && index <= right;
-
-              return (
-                <div key={index} className="flex flex-col items-center gap-2 relative">
-                  {isMid && <VisualizerPointer label="MID" color="bg-purple-500" />}
-                  {isLeft && <VisualizerPointer label="L" color="bg-blue-500" />}
-                  {isRight && <VisualizerPointer label="R" color="bg-orange-500" />}
-                  
-                  <div
-                    className={`w-16 h-16 flex items-center justify-center rounded-xl font-bold text-lg transition-all duration-300 ${
-                      isFound
-                        ? "bg-gradient-to-br from-green-500 to-green-700 text-white shadow-lg shadow-green-500/50 scale-110 ring-4 ring-green-400"
-                        : isMid
-                        ? "bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-lg shadow-purple-500/50 scale-105"
-                        : isLeft || isRight
-                        ? "bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg shadow-blue-500/50"
-                        : inRange
-                        ? "bg-gray-700 text-white border-2 border-blue-400"
-                        : "bg-gray-800 text-gray-400 border border-gray-600"
-                    }`}
-                  >
-                    {value}
-                  </div>
-                  <div className="text-xs text-gray-400 font-medium">
-                    [{index}]
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Legend */}
-          <div className="mt-8 flex flex-wrap justify-center gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gradient-to-br from-blue-500 to-blue-700"></div>
-              <span className="text-sm text-gray-300">Left/Right Pointer</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gradient-to-br from-purple-500 to-purple-700"></div>
-              <span className="text-sm text-gray-300">Middle</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gray-700 border-2 border-blue-400"></div>
-              <span className="text-sm text-gray-300">In Search Range</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-gradient-to-br from-green-500 to-green-700"></div>
-              <span className="text-sm text-gray-300">Target Found</span>
-            </div>
-          </div>
-        </section>
-      )}
-    </div>
+        <VisualizerPointer
+          index={left}
+          containerId="rotated-search-array"
+          color="red"
+          label="L"
+        />
+        <VisualizerPointer
+          index={right}
+          containerId="rotated-search-array"
+          color="red"
+          label="R"
+        />
+        <VisualizerPointer
+          index={mid}
+          containerId="rotated-search-array"
+          color="purple"
+          label="MID"
+          direction="up"
+        />
+      </div>
+    </VisualizerLayout>
   );
 };
 

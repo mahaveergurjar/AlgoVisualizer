@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Code, CheckCircle, BarChart3, Clock, Repeat, GitCompareArrows, Layers } from "lucide-react";
-import VisualizerPointer from "../../components/VisualizerPointer";
+import React, { useState, useCallback } from "react";
+import { ArrowLeft, Clock } from "lucide-react";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 
-const ShellSortVisualizer = () => {
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
+const ShellSortVisualizer = ({ navigate }) => {
   const [arrayInput, setArrayInput] = useState("12,34,54,2,3,9,23,18,7");
-  const [isLoaded, setIsLoaded] = useState(false);
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
-  const generateShellSortHistory = useCallback((initialArray) => {
+  const generateHistory = useCallback((initialArray) => {
     const arr = JSON.parse(JSON.stringify(initialArray));
     const n = arr.length;
     const newHistory = [];
@@ -26,21 +26,22 @@ const ShellSortVisualizer = () => {
         explanation: "",
         totalSwaps,
         totalComparisons,
+        line: 3,
         ...props,
       });
 
-    addState({ line: 1, explanation: "Initialize Shell Sort algorithm." });
+    addState({ line: 3, explanation: "Initialize Shell Sort algorithm." });
 
     for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
       addState({
-        line: 2,
+        line: 3,
         gap,
-        explanation: `Starting new pass with gap = ${gap}. Elements ${gap} positions apart will be compared.`,
+        explanation: `Starting new pass with gap = ${gap}. Comparing elements ${gap} positions apart.`,
       });
 
       for (let i = gap; i < n; i++) {
         addState({
-          line: 3,
+          line: 4,
           gap,
           i,
           explanation: `Select element at index ${i} (value: ${arr[i].value}) as the key element.`,
@@ -52,7 +53,7 @@ const ShellSortVisualizer = () => {
         while (j >= gap) {
           totalComparisons++;
           addState({
-            line: 4,
+            line: 7,
             gap,
             i,
             j,
@@ -62,7 +63,7 @@ const ShellSortVisualizer = () => {
           if (arr[j - gap].value > temp.value) {
             totalSwaps++;
             addState({
-              line: 5,
+              line: 8,
               gap,
               i,
               j,
@@ -73,7 +74,7 @@ const ShellSortVisualizer = () => {
             j -= gap;
 
             addState({
-              line: 6,
+              line: 9,
               gap,
               i,
               j,
@@ -86,262 +87,212 @@ const ShellSortVisualizer = () => {
 
         arr[j] = temp;
         addState({
-          line: 7,
+          line: 11,
           gap,
           i,
           j,
           explanation: `Place key element ${temp.value} at correct position ${j}.`,
         });
       }
-
-      addState({
-        line: 8,
-        gap,
-        explanation: `Completed pass with gap = ${gap}. Array is now ${gap}-sorted.`,
-      });
     }
 
     sortedIndices = Array.from({ length: n }, (_, k) => k);
     addState({
-      line: 10,
+      line: 14,
       sortedIndices,
       finished: true,
       explanation: "Shell Sort complete. Array is fully sorted.",
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-  }, []);
+    load(newHistory);
+  }, [load]);
 
-  const loadArray = () => {
-    const localArray = arrayInput.split(",").map((s) => s.trim()).filter(Boolean).map(Number);
+  const loadProblem = () => {
+    const localArray = arrayInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map(Number);
+
     if (localArray.some(isNaN) || localArray.length === 0) {
       alert("Invalid input. Please use comma-separated numbers.");
       return;
     }
+
     const initialObjects = localArray.map((value, id) => ({ value, id }));
-    setIsLoaded(true);
-    generateShellSortHistory(initialObjects);
+    generateHistory(initialObjects);
   };
 
-  const reset = () => {
-    setIsLoaded(false);
-    setHistory([]);
-    setCurrentStep(-1);
+  const generateRandomArray = () => {
+    const length = Math.floor(Math.random() * 4) + 6;
+    const array = Array.from({ length }, () => Math.floor(Math.random() * 15) + 1);
+    setArrayInput(array.join(","));
+    const initialObjects = array.map((value, id) => ({ value, id }));
+    generateHistory(initialObjects);
   };
 
-  const stepForward = useCallback(() => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)), [history.length]);
-  const stepBackward = useCallback(() => setCurrentStep((prev) => Math.max(prev - 1, 0)), []);
+  const {
+    array = [],
+    gap = null,
+    i = null,
+    j = null,
+    sortedIndices = [],
+    explanation = "",
+    totalComparisons = 0,
+    totalSwaps = 0,
+    line = 3
+  } = currentState;
 
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (!isLoaded) return;
-      if (e.key === "ArrowRight") stepForward();
-      else if (e.key === "ArrowLeft") stepBackward();
-    };
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [isLoaded, stepForward, stepBackward]);
-
-  const state = history[currentStep] || {};
-  const { array = [], gap = null, i = null, j = null, sortedIndices = [], explanation = "", totalSwaps = 0, totalComparisons = 0, finished = false } = state;
-
-  const colorMapping = {
-    purple: "text-purple-400",
-    cyan: "text-cyan-400",
-    yellow: "text-yellow-300",
-    orange: "text-orange-400",
-    "light-gray": "text-gray-400",
-    "": "text-gray-200",
+  const codeContent = {
+    1: "void shellSort(vector<int>& arr) {",
+    2: "    int n = arr.size();",
+    3: "    for (int gap = n / 2; gap > 0; gap /= 2) {",
+    4: "        for (int i = gap; i < n; i++) {",
+    5: "            int temp = arr[i];",
+    6: "            int j = i;",
+    7: "            while (j >= gap && arr[j - gap] > temp) {",
+    8: "                arr[j] = arr[j - gap];",
+    9: "                j -= gap;",
+    10: "            }",
+    11: "            arr[j] = temp;",
+    12: "        }",
+    13: "    }",
+    14: "}"
   };
 
-  const CodeLine = ({ line, content }) => (
-    <div className={`block rounded-md transition-colors ${state.line === line ? "bg-blue-500/20" : ""}`}>
-      <span className="text-gray-600 w-8 inline-block text-right pr-4 select-none">{line}</span>
-      {content.map((token, index) => (
-        <span key={index} className={colorMapping[token.c]}>{token.t}</span>
-      ))}
-    </div>
+  const inputSection = (
+    <>
+      <input
+        id="array-input"
+        type="text"
+        value={arrayInput}
+        onChange={(e) => setArrayInput(e.target.value)}
+        disabled={isLoaded}
+        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        placeholder="e.g., 12,34,54,2,3,9,23,18,7"
+      />
+      {!isLoaded && (
+        <button
+          onClick={loadProblem}
+          className="px-5 py-3 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+        >
+          Load & Visualize
+        </button>
+      )}
+      <button
+        onClick={generateRandomArray}
+        className="px-4 py-3 bg-purple-500/20 hover:bg-purple-500/40 rounded-xl font-bold transition-all text-white shadow-lg cursor-pointer"
+      >
+        Random
+      </button>
+    </>
   );
 
-  const shellSortCode = [
-    { l: 1, c: [{ t: "function shellSort(arr) {", c: "" }] },
-    { l: 2, c: [{ t: "  for", c: "purple" }, { t: " (let gap = n/2; gap > 0; gap /= 2) {", c: "" }] },
-    { l: 3, c: [{ t: "    for", c: "purple" }, { t: " (let i = gap; i < n; i++) {", c: "" }] },
-    { l: 4, c: [{ t: "      while", c: "purple" }, { t: " (j >= gap && arr[j-gap] > temp) {", c: "" }] },
-    { l: 5, c: [{ t: "        arr[j] = arr[j-gap];", c: "" }] },
-    { l: 6, c: [{ t: "        j -= gap;", c: "" }] },
-    { l: 7, c: [{ t: "      }", c: "light-gray" }] },
-    { l: 8, c: [{ t: "      arr[j] = temp;", c: "" }] },
-    { l: 10, c: [{ t: "    }", c: "light-gray" }] },
-    { l: 11, c: [{ t: "  }", c: "light-gray" }] },
-    { l: 12, c: [{ t: "  return", c: "purple" }, { t: " arr;", c: "" }] },
-  ];
-
-  return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <header className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-blue-400 flex items-center justify-center gap-3">
-          <Layers /> Shell Sort Visualizer
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">
-          Visualizing an optimized insertion sort with gap sequences
-        </p>
-      </header>
-
-      <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-4 flex-grow w-full">
-          <label htmlFor="array-input" className="font-medium text-gray-300 font-mono">Array:</label>
-          <input id="array-input" type="text" value={arrayInput} onChange={(e) => setArrayInput(e.target.value)} disabled={isLoaded} className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500" />
-        </div>
-        <div className="flex items-center gap-2">
-          {!isLoaded ? (
-            <button onClick={loadArray} className="bg-blue-500 hover:bg-blue-600 cursor-pointer text-white font-bold py-2 px-4 rounded-lg">Load & Visualize</button>
-          ) : (
-            <>
-              <button onClick={stepBackward} disabled={currentStep <= 0} className="bg-gray-700 p-2 rounded-md disabled:opacity-50">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" /></svg>
-              </button>
-              <span className="font-mono w-24 text-center">{currentStep >= 0 ? currentStep + 1 : 0}/{history.length}</span>
-              <button onClick={stepForward} disabled={currentStep >= history.length - 1} className="bg-gray-700 p-2 rounded-md disabled:opacity-50">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
-              </button>
-            </>
-          )}
-          <button onClick={reset} className="ml-4 bg-red-600 hover:bg-red-700 cursor-pointer font-bold py-2 px-4 rounded-lg">Reset</button>
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl font-semibold">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-blue-300 select-none">
+          Comparisons
+        </h4>
+        <div className="text-3xl font-mono text-blue-305 font-bold">
+          {totalComparisons}
         </div>
       </div>
-
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Code size={20} />
-              Pseudocode
-            </h3>
-            <pre className="text-sm overflow-auto">
-              <code className="font-mono leading-relaxed">
-                {shellSortCode.map((line) => (
-                  <CodeLine key={line.l} line={line.l} content={line.c} />
-                ))}
-              </code>
-            </pre>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl font-semibold">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-purple-300 select-none">
+          Shifts
+        </h4>
+        <div className="text-3xl font-mono text-purple-355 font-bold">
+          {totalSwaps}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl font-semibold">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-cyan-300 select-none">
+          Current Gap
+        </h4>
+        <div className="text-3xl font-mono text-cyan-305 font-bold">
+          {gap !== null ? gap : "-"}
+        </div>
+      </div>
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-blue-305 font-semibold flex items-center gap-2 mb-2 select-none">
+          <Clock size={16} /> Complexity Details
+        </h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <div>
+            <strong>Worst Case Time:</strong>{" "}
+            <span className="font-mono text-teal-300">O(n²)</span> - depending on gap sequence.
           </div>
-
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-              <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
-                <BarChart3 size={20} />
-                Array Visualization
-              </h3>
-              <div className="flex justify-center items-center min-h-[150px] py-4">
-                <div id="array-container" className="relative transition-all" style={{ width: `${array.length * 4.5}rem`, height: "4rem" }}>
-                  {array.map((item, index) => {
-                    const isComparing = j !== null && index === j - gap;
-                    const isCurrent = i === index;
-                    const isInsertion = j === index;
-                    const isSorted = sortedIndices?.includes(index);
-
-                    let boxStyles = "bg-gray-700 border-gray-600";
-                    if (finished || isSorted) {
-                      boxStyles = "bg-green-700 border-green-500 text-white";
-                    } else if (isComparing) {
-                      boxStyles = "bg-amber-600 border-amber-400 text-white";
-                    } else if (isInsertion) {
-                      boxStyles = "bg-cyan-600 border-cyan-400 text-white";
-                    } else if (isCurrent) {
-                      boxStyles = "bg-purple-600 border-purple-400 text-white";
-                    }
-
-                    return (
-                      <div key={item.id} id={`array-container-element-${index}`} className={`absolute w-16 h-16 flex items-center justify-center rounded-lg shadow-md border-2 font-bold text-2xl transition-all duration-500 ease-in-out ${boxStyles}`} style={{ left: `${index * 4.5}rem` }}>
-                        {item.value}
-                      </div>
-                    );
-                  })}
-                  {isLoaded && (
-                    <>
-                      <VisualizerPointer index={i} containerId="array-container" color="purple" label="i" />
-                      <VisualizerPointer index={j} containerId="array-container" color="cyan" label="j" />
-                      {gap !== null && j !== null && j - gap >= 0 && (
-                        <VisualizerPointer index={j - gap} containerId="array-container" color="amber" label="j-gap" />
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-cyan-800/30 p-4 rounded-xl border border-cyan-700/50">
-                <h3 className="text-cyan-300 text-sm flex items-center gap-2">
-                  <GitCompareArrows size={16} /> Comparisons
-                </h3>
-                <p className="font-mono text-4xl text-cyan-400 mt-2">{totalComparisons}</p>
-              </div>
-              <div className="bg-purple-800/30 p-4 rounded-xl border border-purple-700/50">
-                <h3 className="text-purple-300 text-sm flex items-center gap-2">
-                  <Repeat size={16} /> Shifts
-                </h3>
-                <p className="font-mono text-4xl text-purple-400 mt-2">{totalSwaps}</p>
-              </div>
-              <div className="bg-blue-800/30 p-4 rounded-xl border border-blue-700/50">
-                <h3 className="text-blue-300 text-sm flex items-center gap-2">
-                  <Layers size={16} /> Gap
-                </h3>
-                <p className="font-mono text-4xl text-blue-400 mt-2">{gap ?? "-"}</p>
-              </div>
-            </div>
-
-            <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem]">
-              <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
-              <p className="text-gray-300">{explanation}</p>
-              {finished && <CheckCircle className="inline-block ml-2 text-green-400" />}
-            </div>
+          <div>
+            <strong>Average Case Time:</strong>{" "}
+            <span className="font-mono text-teal-300">O(n^(3/2))</span> - standard Shell sequence performance.
           </div>
-
-          <div className="lg:col-span-3 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Clock size={20} /> Complexity Analysis
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6 text-sm">
-              <div className="space-y-4">
-                <h4 className="font-semibold text-blue-300">Time Complexity</h4>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">Worst Case: O(n²)</strong>
-                  <br />
-                  Occurs with certain gap sequences. The worst-case depends on the gap sequence used.
-                </p>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">Average Case: O(n^3/2)</strong>
-                  <br />
-                  For most practical cases, Shell Sort performs better than O(n²), typically around O(n^3/2) with standard gap sequences.
-                </p>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">Best Case: O(n log n)</strong>
-                  <br />
-                  Occurs when the array is already sorted or nearly sorted. The algorithm makes fewer comparisons and shifts.
-                </p>
-              </div>
-              <div className="space-y-4">
-                <h4 className="font-semibold text-blue-300">Space Complexity</h4>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">O(1)</strong>
-                  <br />
-                  Shell Sort is an in-place sorting algorithm. It only requires a constant amount of extra memory for variables like gap, temp, and loop counters, regardless of input size.
-                </p>
-                <h4 className="font-semibold text-blue-300 mt-4">Gap Sequence</h4>
-                <p className="text-gray-400">
-                  This visualization uses the original Shell sequence: n/2, n/4, n/8, ..., 1. Other sequences like Knuth's (3^k-1)/2 can provide better performance.
-                </p>
-              </div>
-            </div>
+          <div>
+            <strong>Space Complexity:</strong>{" "}
+            <span className="font-mono text-teal-305">O(1)</span> - sorts in-place.
           </div>
         </div>
-      ) : (
-        <p className="text-center text-gray-500 py-10">Load an array to begin visualization.</p>
-      )}
-    </div>
+      </div>
+    </>
+  );
+
+  return (
+    <VisualizerLayout
+      title="Shell Sort"
+      description="Visualizes the Shell Sort algorithm, which is an optimized version of insertion sort that compares elements at varying gaps."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={explanation}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter array, then click Load & Visualize to begin."
+    >
+      <div className="w-full space-y-6">
+        {navigate && (
+          <button
+            onClick={() => navigate("home")}
+            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+            Back to Sorting Algorithms
+          </button>
+        )}
+        <div className="flex justify-center items-end gap-3 min-h-[220px]">
+          {array.map((item, index) => {
+            const isComparing = j !== null && index === j - gap;
+            const isCurrent = i === index;
+            const isInsertion = j === index;
+            const isSorted = sortedIndices.includes(index);
+
+            return (
+              <div key={item.id} className="flex flex-col items-center gap-2">
+                <div
+                  className={`w-16 flex items-center justify-center rounded-lg border-2 font-bold text-lg transition-all duration-300 ${
+                    isSorted
+                      ? "bg-green-500/30 border-green-400 text-white"
+                      : isComparing
+                      ? "bg-amber-500/30 border-amber-400 text-white scale-110"
+                      : isInsertion
+                      ? "bg-cyan-500/30 border-cyan-400 text-white scale-110"
+                      : isCurrent
+                      ? "bg-purple-500/30 border-purple-400 text-white scale-110"
+                      : "bg-gray-700 border-gray-600 text-gray-350"
+                  }`}
+                  style={{ height: `${item.value * 3 + 60}px` }}
+                >
+                  {item.value}
+                </div>
+                <div className="text-xs font-mono text-gray-500">
+                  {i === index ? "i" : j === index ? "j" : j !== null && index === j - gap ? "j-gap" : ""}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </VisualizerLayout>
   );
 };
 

@@ -1,306 +1,311 @@
- import React, { useState, useEffect } from "react";
-import { ArrowLeft, Target, Play, RotateCcw, Code, Zap, Clock, Cpu, Search } from "lucide-react";
+import React, { useState, useCallback } from "react";
+import { ArrowLeft, Target, Clock, Cpu } from "lucide-react";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 
 const TwoSum = ({ navigate }) => {
-  const [array, setArray] = useState([2, 7, 11, 15, 3, 6, 8, 4]);
-  const [target, setTarget] = useState(9);
-  const [map, setMap] = useState(new Map());
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1000);
-  const [isComplete, setIsComplete] = useState(false);
-  const [found, setFound] = useState(false);
-  const [pair, setPair] = useState([]);
-  const [searchHistory, setSearchHistory] = useState([]);
+  const [arrayInput, setArrayInput] = useState("2,7,11,15,3,6,8,4");
+  const [targetInput, setTargetInput] = useState("9");
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
-  const resetAnimation = () => {
-    setMap(new Map());
-    setCurrentIndex(0);
-    setIsPlaying(false);
-    setIsComplete(false);
-    setFound(false);
-    setPair([]);
-    setSearchHistory([]);
-  };
+  const generateHistory = useCallback((arr, tgt) => {
+    const newHistory = [];
+    const map = new Map();
 
-  const startAnimation = () => {
-    resetAnimation();
-    setIsPlaying(true);
-  };
+    const addState = (props) => {
+      newHistory.push({
+        array: [...arr],
+        target: tgt,
+        map: new Map(map),
+        currentIndex: props.currentIndex ?? 0,
+        explanation: props.explanation || "",
+        line: props.line || 3,
+        found: props.found || false,
+        pair: props.pair || [],
+        finished: props.finished || false,
+      });
+    };
 
-  const generateNewArray = () => {
-    const newArray = Array.from({ length: 8 }, () => Math.floor(Math.random() * 20) + 1);
-    setArray(newArray);
-    setTarget(Math.floor(Math.random() * 30) + 5);
-    resetAnimation();
-  };
+    addState({
+      line: 2,
+      currentIndex: 0,
+      explanation: `Initialize empty hash map to store value-to-index mappings.`,
+    });
 
-  const loadDefaultArray = () => {
-    setArray([2, 7, 11, 15, 3, 6, 8, 4]);
-    setTarget(9);
-    resetAnimation();
-  };
+    for (let i = 0; i < arr.length; i++) {
+      addState({
+        line: 3,
+        currentIndex: i,
+        explanation: `Iteration i = ${i}. Checking element array[${i}] = ${arr[i]}.`,
+      });
 
-  useEffect(() => {
-    let interval;
-    if (isPlaying && currentIndex < array.length && !found) {
-      interval = setInterval(() => {
-        setCurrentIndex(prev => {
-          const complement = target - array[prev];
-          
-          setSearchHistory(sh => [...sh, {
-            index: prev,
-            value: array[prev],
-            complement: complement,
-            inMap: map.has(complement)
-          }]);
+      const complement = tgt - arr[i];
+      addState({
+        line: 4,
+        currentIndex: i,
+        explanation: `Calculate complement: target (${tgt}) - current element (${arr[i]}) = ${complement}.`,
+      });
 
-          if (map.has(complement)) {
-            setFound(true);
-            setPair([map.get(complement), prev]);
-            setIsPlaying(false);
-            setIsComplete(true);
-            return prev;
-          }
+      addState({
+        line: 5,
+        currentIndex: i,
+        explanation: `Check if complement ${complement} exists in hash map.`,
+      });
 
-          const newMap = new Map(map);
-          newMap.set(array[prev], prev);
-          setMap(newMap);
-
-          const nextIndex = prev + 1;
-          if (nextIndex >= array.length) {
-            setIsPlaying(false);
-            setIsComplete(true);
-            return prev;
-          }
-
-          return nextIndex;
+      if (map.has(complement)) {
+        const complIdx = map.get(complement);
+        addState({
+          line: 6,
+          currentIndex: i,
+          found: true,
+          pair: [complIdx, i],
+          explanation: `Complement ${complement} found at index ${complIdx}! We found our pair!`,
         });
-      }, speed);
+
+        addState({
+          line: 6,
+          currentIndex: i,
+          found: true,
+          pair: [complIdx, i],
+          finished: true,
+          explanation: `Return indices: [${complIdx}, ${i}]. Solution found.`,
+        });
+        load(newHistory);
+        return;
+      }
+
+      map.set(arr[i], i);
+      addState({
+        line: 8,
+        currentIndex: i,
+        explanation: `Complement not found. Insert value ${arr[i]} at index ${i} into hash map.`,
+      });
     }
 
-    return () => clearInterval(interval);
-  }, [isPlaying, currentIndex, array, target, map, found, speed]);
+    addState({
+      line: 10,
+      finished: true,
+      explanation: `No two numbers sum to ${tgt} in the array.`,
+    });
 
-  return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
-      <div className="max-w-6xl mx-auto mb-8">
-        <button
-          onClick={() => navigate("home")}
-          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group cursor-pointer"
+    load(newHistory);
+  }, [load]);
+
+  const loadProblem = () => {
+    const arr = arrayInput
+      .split(",")
+      .map((x) => parseInt(x.trim(), 10))
+      .filter((x) => !isNaN(x));
+    const tgt = parseInt(targetInput, 10);
+    if (arr.length === 0) {
+      alert("Please enter a valid array.");
+      return;
+    }
+    if (isNaN(tgt)) {
+      alert("Please enter a valid target.");
+      return;
+    }
+    generateHistory(arr, tgt);
+  };
+
+  const generateRandomArray = () => {
+    const newArray = Array.from({ length: 8 }, () => Math.floor(Math.random() * 20) + 1);
+    const tgt = Math.floor(Math.random() * 30) + 5;
+    setArrayInput(newArray.join(","));
+    setTargetInput(tgt.toString());
+    generateHistory(newArray, tgt);
+  };
+
+  const {
+    array = [],
+    target = 9,
+    map = new Map(),
+    currentIndex = 0,
+    explanation = "",
+    found = false,
+    pair = [],
+    finished = false,
+    line = 3
+  } = currentState;
+
+  const codeContent = {
+    1: `vector<int> twoSum(vector<int>& nums, int target) {`,
+    2: `    unordered_map<int, int> map;`,
+    3: `    for (int i = 0; i < nums.size(); i++) {`,
+    4: `        int complement = target - nums[i];`,
+    5: `        if (map.find(complement) != map.end()) {`,
+    6: `            return {map[complement], i};`,
+    7: `        }`,
+    8: `        map[nums[i]] = i;`,
+    9: `    }`,
+    10: `    return {-1, -1};`,
+    11: `}`
+  };
+
+  const inputSection = (
+    <>
+      <input 
+        id="array-input" 
+        type="text" 
+        value={arrayInput} 
+        onChange={(e) => setArrayInput(e.target.value)} 
+        disabled={isLoaded} 
+        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        placeholder="e.g., 2,7,11,15,3,6,8,4"
+      />
+      <input 
+        id="target-input" 
+        type="number" 
+        value={targetInput} 
+        onChange={(e) => setTargetInput(e.target.value)} 
+        disabled={isLoaded} 
+        className="w-full md:w-24 p-3 bg-gray-900 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        placeholder="Target"
+      />
+      {!isLoaded && (
+        <button 
+          onClick={loadProblem} 
+          className="px-5 py-3 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 transition text-white font-bold shadow-lg cursor-pointer"
         >
-          <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
-          Back to Array Problems
+          Load & Visualize
         </button>
+      )}
+      <button
+        onClick={generateRandomArray}
+        className="px-4 py-3 bg-purple-500/20 hover:bg-purple-500/40 rounded-xl font-bold transition-all text-white shadow-lg cursor-pointer"
+      >
+        Random
+      </button>
+    </>
+  );
 
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <Target className="h-12 w-12 text-orange-400" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-amber-400">
-              Two Sum
-            </h1>
-          </div>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Find two numbers that add up to the target value using hash map
-          </p>
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-orange-400 select-none">
+          Target Sum
+        </h4>
+        <div className="text-3xl font-mono text-orange-400 font-bold">
+          {target}
         </div>
       </div>
-
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={loadDefaultArray}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl font-medium transition-all cursor-pointer"
-                >
-                  Load & Visualize
-                </button>
-                <button
-                  onClick={startAnimation}
-                  disabled={isPlaying}
-                  className="flex items-center gap-2 px-6 py-3 cursor-pointer bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 rounded-xl font-medium transition-all disabled:cursor-not-allowed"
-                >
-                  <Play className="h-4 w-4" />
-                  {isPlaying ? "Running..." : "Start Animation"}
-                </button>
-                <button
-                  onClick={resetAnimation}
-                  className="flex items-center gap-2 cursor-pointer px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-all"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                  Reset
-                </button>
-              </div>
-              <button
-                onClick={generateNewArray}
-                className="px-4 py-2 bg-purple-500 hover:bg-purple-600 cursor-pointer rounded-xl font-medium transition-all"
-              >
-                New Array
-              </button>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <label className="text-gray-400 text-sm">Speed:</label>
-              <select 
-                value={speed} 
-                onChange={(e) => setSpeed(Number(e.target.value))}
-                className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white cursor-pointer"
-              >
-                <option value={1500}>Slow</option>
-                <option value={1000}>Medium</option>
-                <option value={500}>Fast</option>
-                <option value={250}>Very Fast</option>
-              </select>
-              <div className="flex items-center gap-2 ml-4">
-                <span className="text-sm text-gray-300">Target: </span>
-                <span className="text-lg font-bold text-orange-400">{target}</span>
-              </div>
-            </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-yellow-300 select-none">
+          Current Element
+        </h4>
+        <div className="text-3xl font-mono text-yellow-300">
+          {currentIndex < array.length ? array[currentIndex] : "-"}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-cyan-300 select-none">
+          Complement
+        </h4>
+        <div className="text-3xl font-mono text-cyan-400">
+          {currentIndex < array.length ? (target - array[currentIndex]) : "-"}
+        </div>
+      </div>
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-blue-300 font-semibold flex items-center gap-2 mb-2 select-none">
+          <Clock size={16} /> Complexity
+        </h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <div>
+            <strong>Time:</strong>{" "}
+            <span className="font-mono text-teal-300">O(n)</span> - Single pass hash map lookup.
           </div>
+          <div>
+            <strong>Space:</strong>{" "}
+            <span className="font-mono text-teal-300">O(n)</span> - Hash map storage for up to n elements.
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
-          <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-6 text-center">Hash Map Visualization</h3>
-            
-            {/* Array Visualization */}
-            <div className="flex justify-center items-end gap-4 mb-8 min-h-[200px]">
-              {array.map((value, index) => (
-                <div key={index} className="flex flex-col items-center gap-3">
-                  <div className="text-gray-400 text-sm font-mono">[{index}]</div>
-                  <div
-                    className={`w-16 flex flex-col items-center justify-end rounded-lg border-2 transition-all duration-300 ${
-                      index === currentIndex && !isComplete
-                        ? "bg-yellow-500/30 border-yellow-400 scale-110 shadow-lg shadow-yellow-500/25"
-                        : found && pair.includes(index)
-                        ? "bg-green-500/30 border-green-400 scale-105 shadow-lg shadow-green-500/25"
-                        : index < currentIndex
-                        ? "bg-blue-500/20 border-blue-400"
-                        : "bg-gray-700 border-gray-600"
-                    }`}
-                    style={{ height: `${value * 10 + 60}px` }}
-                  >
-                    <div className="flex-1 flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">{value}</span>
-                    </div>
-                    <div className={`w-full text-center py-1 text-xs font-bold ${
-                      index === currentIndex ? "bg-yellow-500 text-white" :
-                      found && pair.includes(index) ? "bg-green-500 text-white" :
-                      "bg-gray-600 text-gray-300"
-                    }`}>
-                      {index === currentIndex ? "CURRENT" : 
-                       found && pair.includes(index) ? "FOUND" : ""}
-                    </div>
-                  </div>
+  return (
+    <VisualizerLayout
+      title="Two Sum"
+      description="LeetCode #1 - Find two numbers in an array that add up to a target using a Hash Map."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={explanation}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter array and target to begin visualization."
+    >
+      <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl space-y-8">
+        {navigate && (
+          <button
+            onClick={() => navigate("home")}
+            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+            Back to Array Problems
+          </button>
+        )}
+        <h3 className="text-xl font-bold text-white mb-6 text-center">Hash Map Visualization</h3>
+        
+        {/* Array Visualization */}
+        <div className="flex justify-center items-end gap-4 mb-8 min-h-[220px]">
+          {array.map((value, index) => (
+            <div key={index} className="flex flex-col items-center gap-3">
+              <div className="flex gap-1 justify-center min-h-[30px]">
+                {index === currentIndex && !finished && (
+                  <span className="bg-yellow-500 text-gray-900 px-1 text-[10px] font-bold rounded animate-bounce">CURR</span>
+                )}
+                {found && pair.includes(index) && (
+                  <span className="bg-green-500 text-gray-900 px-1 text-[10px] font-bold rounded animate-pulse">FOUND</span>
+                )}
+              </div>
+              <div
+                className={`w-16 flex flex-col items-center justify-end rounded-lg border-2 transition-all duration-300 ${
+                  index === currentIndex && !finished
+                    ? "bg-yellow-500/30 border-yellow-400 scale-110 shadow-lg shadow-yellow-500/25"
+                    : found && pair.includes(index)
+                    ? "bg-green-500/30 border-green-400 scale-105 shadow-lg shadow-green-500/25 animate-pulse"
+                    : index < currentIndex
+                    ? "bg-blue-500/20 border-blue-400 text-gray-300"
+                    : "bg-gray-700 border-gray-600 text-gray-400"
+                }`}
+                style={{ height: `${value * 10 + 60}px` }}
+              >
+                <div className="flex-1 flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">{value}</span>
+                </div>
+                <div className={`w-full text-center py-1 text-xs font-bold ${
+                  index === currentIndex ? "bg-yellow-500 text-white" :
+                  found && pair.includes(index) ? "bg-green-500 text-white" :
+                  "bg-gray-600 text-gray-300"
+                }`}>
+                  {index === currentIndex ? "CURR" : 
+                   found && pair.includes(index) ? "FOUND" : ""}
+                </div>
+              </div>
+              <div className="text-gray-400 text-sm font-mono">[{index}]</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Hash Map Display */}
+        {map && map.size > 0 && (
+          <div className="bg-gray-900/40 rounded-xl p-4 border border-gray-750">
+            <h4 className="text-lg font-bold text-gray-300 mb-3 font-mono">Hash Map Contents (value → index)</h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+              {Array.from(map.entries()).map(([key, val]) => (
+                <div key={key} className="bg-gray-800 rounded-lg p-2 text-center border border-gray-700">
+                  <div className="text-orange-400 font-mono font-bold text-lg">{key}</div>
+                  <div className="text-gray-400 text-sm">→ index [{val}]</div>
                 </div>
               ))}
             </div>
-
-            {/* Hash Map Display */}
-            <div className="bg-gray-800 rounded-lg p-4 mb-6">
-              <h4 className="text-lg font-bold text-white mb-3">Hash Map Contents</h4>
-              <div className="grid grid-cols-4 gap-2">
-                {Array.from(map.entries()).map(([key, value]) => (
-                  <div key={key} className="bg-gray-700 rounded p-2 text-center">
-                    <div className="text-blue-400 font-mono">{key}</div>
-                    <div className="text-gray-400 text-sm">→ [{value}]</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="text-center">
-              {found ? (
-                <div className="flex items-center justify-center gap-3 text-2xl font-bold text-green-400 animate-pulse">
-                  <Target className="h-8 w-8" />
-                  Found: array[{pair[0]}] + array[{pair[1]}] = {array[pair[0]]} + {array[pair[1]]} = {target}
-                </div>
-              ) : isComplete && !found ? (
-                <div className="text-2xl font-bold text-red-400">
-                  No two sum solution found
-                </div>
-              ) : isPlaying ? (
-                <div className="flex items-center justify-center gap-3 text-lg text-yellow-400">
-                  <Search className="h-5 w-5" />
-                  Checking complement {target - array[currentIndex]} for array[{currentIndex}] = {array[currentIndex]}
-                </div>
-              ) : (
-                <div className="text-gray-400">
-                  Click "Start Animation" to begin visualization
-                </div>
-              )}
-            </div>
           </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">Platform</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-                <Code className="h-5 w-5 text-orange-400" />
-                <div>
-                  <div className="font-bold text-white">LeetCode #1</div>
-                  <div className="text-sm text-gray-400">Two Sum</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">C++ Solution</h3>
-            <div className="bg-gray-950 rounded-lg p-4 font-mono text-sm">
-              <div className="text-blue-400">vector<span className="text-pink-400">{'<'}</span>int<span className="text-pink-400">{'>'}</span> twoSum(vector<span className="text-pink-400">{'<'}</span>int<span className="text-pink-400">{'>'}</span>& nums, int target) {'{'}</div>
-              <div className="text-green-400 ml-4">unordered_map<span className="text-pink-400">{'<'}</span>int, int<span className="text-pink-400">{'>'}</span> map;</div>
-              <div className="text-green-400 ml-4">for (int i = 0; i {'<'} nums.size(); i++) {'{'}</div>
-              <div className={`text-yellow-400 ml-8 ${currentIndex > 0 ? "bg-yellow-500/20 px-2 rounded" : ""}`}>
-                int complement = target - nums[i];
-              </div>
-              <div className={`text-yellow-400 ml-8 ${currentIndex > 0 ? "bg-yellow-500/20 px-2 rounded" : ""}`}>
-                if (map.find(complement) != map.end()) {'{'}
-              </div>
-              <div className={`text-red-400 ml-12 ${found ? "bg-red-500/20 px-2 rounded" : ""}`}>
-                return {'{'}map[complement], i{'}'};
-              </div>
-              <div className="text-yellow-400 ml-8">{'}'}</div>
-              <div className={`text-green-400 ml-8 ${currentIndex > 0 ? "bg-green-500/20 px-2 rounded" : ""}`}>
-                map[nums[i]] = i;
-              </div>
-              <div className="text-green-400 ml-4">{'}'}</div>
-              <div className="text-green-400 ml-4">return {'{'}-1, -1{'}'};</div>
-              <div className="text-blue-400">{'}'}</div>
-            </div>
-          </div>
-
-          <div className="bg-gray-900/50 rounded-2xl p-6 border border-gray-800">
-            <h3 className="text-xl font-bold text-white mb-4">Algorithm Details</h3>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <Zap className="h-5 w-5 text-green-400 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">Time Complexity</div>
-                  <div className="text-sm text-gray-400">O(n) - Single pass through array</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Cpu className="h-5 w-5 text-blue-400 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">Space Complexity</div>
-                  <div className="text-sm text-gray-400">O(n) - Hash map storage</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-purple-400 mt-0.5" />
-                <div>
-                  <div className="font-bold text-white">Approach</div>
-                  <div className="text-sm text-gray-400">Hash Map - Store visited numbers and check complements</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
-    </div>
+    </VisualizerLayout>
   );
 };
 

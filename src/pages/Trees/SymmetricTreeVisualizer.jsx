@@ -1,29 +1,20 @@
-// SymmetricTreeVisualizer.jsx
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
-  Code,
   CheckCircle,
-  BarChart3,
   Clock,
-  SkipBack,
-  SkipForward,
-  RotateCcw,
   Zap,
   Cpu,
-  TreePine,
+  GitBranch,
   Target,
   Gauge,
-  AlertTriangle,
   Check,
   X,
-  ArrowLeft,
-  ArrowRight,
   FlipHorizontal,
-  ArrowDown,
-  Minus,
 } from "lucide-react";
+import { useVisualizer } from "../../hooks/useVisualizer";
+import VisualizerLayout from "../../components/VisualizerLayout";
 
-// BinaryTreeNode class for building the tree (re-used from ValidBST)
+// BinaryTreeNode class for building the tree
 class BinaryTreeNode {
   constructor(val, left = null, right = null) {
     this.val = val;
@@ -32,7 +23,7 @@ class BinaryTreeNode {
   }
 }
 
-// TreeNode Component (No changes needed here)
+// TreeNode Component
 const TreeNode = ({
   node,
   x,
@@ -152,7 +143,6 @@ const TreeVisualization = ({ tree, traversalState }) => {
 
     const nodeKey = `${node.val}-${level}-${position}`;
 
-    const isCurrent = traversalState?.nodeA?.key === nodeKey || traversalState?.nodeB?.key === nodeKey;
     const isHighlighted = traversalState?.nodeA?.key === nodeKey || traversalState?.nodeB?.key === nodeKey;
     const side = (traversalState?.nodeA?.key === nodeKey) ? 'left' : (traversalState?.nodeB?.key === nodeKey) ? 'right' : 'root';
     const isValid = traversalState?.nodeValidity?.[nodeKey];
@@ -210,7 +200,7 @@ const TreeVisualization = ({ tree, traversalState }) => {
           y1={parentY}
           x2={x}
           y2={y}
-          stroke="#6b7280"
+          stroke="#4b5563"
           strokeWidth={2}
           className="transition-all duration-500"
         />
@@ -228,142 +218,30 @@ const TreeVisualization = ({ tree, traversalState }) => {
   };
 
   return (
-    // MODIFIED: bg-gray-800/50 changed to bg-gray-900/30
-    <div className="bg-gray-900/30 backdrop-blur-md p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-      <h3 className="font-bold text-lg text-purple-300 mb-4 flex items-center gap-2">
-        <FlipHorizontal size={20} />
-        Symmetry Check Visualization
-        {tree && (
-          <span className="text-sm text-gray-400 ml-2">
-            (Root: {tree.val}, Depth: {calculateTreeDepth(tree)})
-          </span>
-        )}
-      </h3>
+    <div className="w-full flex flex-col items-center">
+      <svg
+        ref={svgRef}
+        width={dimensions.width}
+        height={dimensions.height}
+        className="border border-gray-800 rounded-xl bg-gray-950/40 backdrop-blur-sm"
+      >
+        {/* Render edges first */}
+        {tree && renderEdges(tree)}
 
-      <div className="flex justify-center">
-        {/* MODIFIED: bg-gray-900/50 changed to bg-transparent */}
-        <svg
-          ref={svgRef}
-          width={dimensions.width}
-          height={dimensions.height}
-          className="border border-gray-600 rounded-lg bg-transparent"
-        >
-          {/* Render edges first */}
-          {tree && renderEdges(tree)}
-
-          {/* Render nodes on top */}
-          {nodes.map((nodeData) => (
-            <TreeNode
-              key={`node-${nodeData.key}`}
-              {...nodeData}
-            />
-          ))}
-        </svg>
-      </div>
-
-      {/* Validation Legend */}
-      <div className="mt-4 flex flex-wrap gap-4 justify-center text-xs">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-          <span className="text-gray-300">Node A (Left Side)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-          <span className="text-gray-300">Node B (Right Side)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-amber-500 rounded-full"></div>
-          <span className="text-gray-300">Current Comparison</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-          <span className="text-gray-300">Valid Subtree</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Comparison Visualization Component
-const ComparisonVisualization = ({ nodeA, nodeB, comparison }) => {
-  return (
-    // MODIFIED: bg-gray-800/50 changed to bg-gray-900/30
-    <div className="bg-gray-900/30 backdrop-blur-md p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-      <h3 className="font-bold text-lg text-amber-300 mb-4 flex items-center gap-2">
-        <Target size={20} />
-        Symmetry Comparison
-      </h3>
-
-      <div className="space-y-4">
-        <div className="grid grid-cols-5 gap-4 text-center items-center">
-          {/* Node A (Left) */}
-          {/* MODIFIED: bg-gray-700/50 changed to bg-gray-800/50 */}
-          <div className="bg-gray-800/50 p-3 rounded-lg border-2 border-blue-400 col-span-2">
-            <div className="text-gray-400 text-sm">Node A (Left Side)</div>
-            <div className="font-mono text-lg text-blue-400">
-              {nodeA?.val ?? "null"}
-            </div>
-          </div>
-
-          <div className="text-4xl text-gray-400 font-bold">=?</div>
-
-          {/* Node B (Right) */}
-          {/* MODIFIED: bg-gray-700/50 changed to bg-gray-800/50 */}
-          <div className="bg-gray-800/50 p-3 rounded-lg border-2 border-red-400 col-span-2">
-            <div className="text-gray-400 text-sm">Node B (Right Side)</div>
-            <div className="font-mono text-lg text-red-400">
-              {nodeB?.val ?? "null"}
-            </div>
-          </div>
-        </div>
-
-        {comparison && (
-          // MODIFIED: from-amber-900/40 to-amber-800/40 changed to reduced opacity
-          <div className="bg-gradient-to-br from-amber-900/20 to-amber-800/20 p-4 rounded-lg border border-amber-700/50">
-            <div className="flex flex-col items-center justify-center gap-2">
-              <div className="text-sm text-gray-400">Comparison Result:</div>
-              <div
-                className={`flex items-center gap-2 ${
-                  comparison.result ? "text-green-400" : "text-red-400"
-                }`}
-              >
-                {comparison.result ? <Check size={20} /> : <X size={20} />}
-                <span className="font-mono text-lg">
-                  {comparison.type === "value" && (
-                    `${nodeA?.val} ${comparison.result ? "==" : "!="} ${nodeB?.val}`
-                  )}
-                  {comparison.type === "null" && (
-                    `${nodeA?.val ?? "null"} ${comparison.result ? "==" : "!="} ${nodeB?.val ?? "null"}`
-                  )}
-                  {comparison.type === "recursive" && (
-                    comparison.result ? "Subtrees Are Symmetric" : "Subtrees Are Asymmetric"
-                  )}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between text-sm">
-          <div className="text-gray-400">Symmetry Rule:</div>
-          <div className="font-mono text-amber-400">
-            Node A.val == Node B.val AND (A.left, B.right) symmetric AND (A.right, B.left) symmetric
-          </div>
-        </div>
-      </div>
+        {/* Render nodes on top */}
+        {nodes.map((nodeData, index) => (
+          <TreeNode key={`node-${index}`} {...nodeData} />
+        ))}
+      </svg>
     </div>
   );
 };
 
 // Main Component
 const SymmetricTreeVisualizer = () => {
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
   const [treeInput, setTreeInput] = useState("1,2,2,3,4,4,3");
-  const [isLoaded, setIsLoaded] = useState(false);
-  const visualizerRef = useRef(null);
-  
-  // NOTE: isPlaying and speed states are removed for manual control
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState, currentStep } = visualizer;
 
   const buildTreeFromLevelOrder = (values) => {
     if (values.length === 0 || values[0] === null) return null;
@@ -397,16 +275,14 @@ const SymmetricTreeVisualizer = () => {
     const root = buildTreeFromLevelOrder(values);
 
     if (!root) {
-      alert(
-        "Invalid tree input. Please provide comma-separated values in level order."
-      );
+      alert("Invalid tree input. Please provide comma-separated values in level order.");
       return;
     }
 
     const newHistory = [];
     let stepCount = 0;
     let callStack = [];
-    const nodeMap = new Map(); // To track keys for visualization
+    const nodeMap = new Map();
 
     const traverseAndMap = (node, depth, position) => {
         if (!node) return;
@@ -416,7 +292,7 @@ const SymmetricTreeVisualizer = () => {
         traverseAndMap(node.left, depth + 1, position * 2);
         traverseAndMap(node.right, depth + 1, position * 2 + 1);
     };
-    traverseAndMap(root, 0, 0); // Resetting the mapping with depth/position
+    traverseAndMap(root, 0, 0);
 
     const checkSymmetry = (nodeA, nodeB, depth = 0, sideA = "left", sideB = "right") => {
       const keyA = nodeMap.get(nodeA);
@@ -436,8 +312,6 @@ const SymmetricTreeVisualizer = () => {
       };
       newHistory.push(currentCall);
 
-
-      // Case 1: Both null (Base Case) - corresponds to line 10
       if (!nodeA && !nodeB) {
         newHistory.push({
           ...currentCall,
@@ -451,7 +325,6 @@ const SymmetricTreeVisualizer = () => {
         return true;
       }
 
-      // Case 2: One is null, or values differ - corresponds to line 13
       const areValuesEqual = nodeA?.val === nodeB?.val;
       if (!nodeA || !nodeB || !areValuesEqual) {
         newHistory.push({
@@ -468,8 +341,6 @@ const SymmetricTreeVisualizer = () => {
         callStack.pop();
         return false;
       }
-
-      // Case 3: Recursive checks - corresponds to line 18/19
       
       // Left-to-Right comparison (A.left, B.right)
       newHistory.push({
@@ -504,7 +375,6 @@ const SymmetricTreeVisualizer = () => {
           line: 19,
       });
       
-
       const rightMirrorLeft = checkSymmetry(
         nodeA.right,
         nodeB.left,
@@ -515,7 +385,6 @@ const SymmetricTreeVisualizer = () => {
 
       const finalValid = leftMirrorRight && rightMirrorLeft;
       
-      // Final result for this pair
       newHistory.push({
         ...currentCall,
         step: stepCount++,
@@ -533,9 +402,7 @@ const SymmetricTreeVisualizer = () => {
       return finalValid;
     };
 
-    // The initial call is to compare root.left and root.right (corresponds to line 4)
     const result = root ? checkSymmetry(root.left, root.right, 0, "left", "right") : true;
-
 
     newHistory.push({
       step: stepCount++,
@@ -545,33 +412,16 @@ const SymmetricTreeVisualizer = () => {
       tree: root,
       isComplete: true,
       isValid: result,
-      line: 4, // Final check line in isSymmetric function
+      line: 4,
       callStack: [],
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-    setIsLoaded(true);
-  }, [treeInput]);
+    load(newHistory);
+  }, [treeInput, load]);
 
-  const resetVisualization = () => {
-    setHistory([]);
-    setCurrentStep(-1);
-    setIsLoaded(false);
-  };
-
-  const stepForward = useCallback(() => {
-    setCurrentStep((prev) => Math.min(prev + 1, history.length - 1));
-  }, [history.length]);
-
-  const stepBackward = useCallback(() => {
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
-  }, []);
-  
   const generateRandomTree = (isSymmetric = true) => {
     const getRandomVal = () => Math.floor(Math.random() * 10) + 1;
 
-    // Helper for recursive build (ensures symmetry)
     const buildNodes = (depth) => {
       if (depth > 2) return null; 
 
@@ -580,11 +430,9 @@ const SymmetricTreeVisualizer = () => {
 
       if (isSymmetric) {
           node.left = buildNodes(depth + 1);
-          
           if (node.left === null) {
               node.right = null;
           } else {
-              // Create a mirror of the left subtree
               const mirrorNode = (sourceNode) => {
                   if (!sourceNode) return null;
                   const mirrored = new BinaryTreeNode(sourceNode.val);
@@ -595,7 +443,6 @@ const SymmetricTreeVisualizer = () => {
               node.right = mirrorNode(node.left);
           }
       } else {
-          // Asymmetric: generate one subtree and break the mirror
           node.left = buildNodes(depth + 1);
           if (node.left) {
              const mirrorNode = (sourceNode) => {
@@ -605,27 +452,18 @@ const SymmetricTreeVisualizer = () => {
                 mirrored.right = mirrorNode(sourceNode.left); 
                 return mirrored;
             };
-            // Start with a mirror
             node.right = mirrorNode(node.left);
-            
-            // Introduce asymmetry by changing a value or structure
             if (node.right && node.right.left) {
-                node.right.left.val = getRandomVal() * 100; // Break it clearly
-            } else if (node.left && !node.right) {
-                // Ensure asymmetry if a complex left exists but right is null
+                node.right.left.val = getRandomVal() * 100;
             }
-            
           } else {
-              // Simple asymmetry: left null, right non-null
               node.right = new BinaryTreeNode(getRandomVal());
           }
       }
       return node;
     };
     
-    // Build the tree (starting with the root's children for primary symmetry check)
     const root = new BinaryTreeNode(getRandomVal());
-    
     if (isSymmetric) {
         root.left = buildNodes(1);
         if (root.left) {
@@ -642,25 +480,15 @@ const SymmetricTreeVisualizer = () => {
         }
     } else {
         root.left = buildNodes(1);
-        
-        // Start with asymmetry (e.g., asymmetric root children)
         const valRight = getRandomVal();
         root.right = new BinaryTreeNode(valRight);
         root.right.left = buildNodes(2);
         
-        // Ensure asymmetry if values are the same
         if (root.left && root.right && root.left.val === root.right.val) {
              root.right.val += 1;
         }
-        
-        // Introduce a clear structural break if both exist
-        if (root.left && root.right && root.left.left && !root.right.right) {
-            // Left has a left child, but right doesn't have a right child
-        }
     }
 
-
-    // Convert to level order for input
     const levelOrder = [];
     const queue = [root];
     let count = 0;
@@ -676,39 +504,14 @@ const SymmetricTreeVisualizer = () => {
       }
     }
     
-    // Trim trailing nulls
     while (levelOrder.length > 0 && levelOrder[levelOrder.length - 1] === null) {
         levelOrder.pop();
     }
 
-
     setTreeInput(levelOrder.map(val => val === null ? "null" : val).join(","));
-    resetVisualization();
+    visualizer.reset();
   };
 
-
-  // Keyboard controls
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          stepBackward();
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          stepForward();
-        } 
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    isLoaded,
-    stepBackward,
-    stepForward,
-  ]); 
-
-  const state = history[currentStep] || {};
   const {
     tree = null,
     explanation = "",
@@ -719,54 +522,32 @@ const SymmetricTreeVisualizer = () => {
     comparison,
     callStack = [],
     depth = 0,
-    isComplete = false,
-  } = state;
+    isComplete = false
+  } = currentState;
 
-  const CodeLine = ({ lineNum, content }) => (
-    <div
-      className={`block rounded-md transition-all duration-300 ${
-        line === lineNum
-          ? "bg-purple-500/20 border-l-4 border-purple-500 shadow-lg"
-          : "hover:bg-gray-700/30"
-      }`}
-    >
-      <span className="text-gray-500 select-none inline-block w-8 text-right mr-3">
-        {lineNum}
-      </span>
-      <span
-        className={
-          line === lineNum ? "text-purple-300 font-semibold" : "text-gray-300"
-        }
-      >
-        {content}
-      </span>
-    </div>
-  );
+  const codeContent = {
+    1: "// Function to check if the tree is symmetric",
+    2: "bool isSymmetric(TreeNode* root) {",
+    3: "    if (!root) return true;",
+    4: "    return isMirror(root->left, root->right);",
+    5: "}",
+    6: "",
+    7: "// Helper function to check if two subtrees are mirrors",
+    8: "bool isMirror(TreeNode* A, TreeNode* B) {",
+    9: "    // 1. Base Case: Both nodes are null",
+    10: "    if (!A && !B) return true;",
+    11: "    ",
+    12: "    // 2. Base Case: One node is null, or values differ",
+    13: "    if (!A || !B || A->val != B->val) {",
+    14: "        return false;",
+    15: "    }",
+    16: "    ",
+    17: "    // 3. Recursive Step: Cross-compare children",
+    18: "    return isMirror(A->left, B->right) &&",
+    19: "           isMirror(A->right, B->left);",
+    20: "}"
+  };
 
-  const symmetricValidationCode = [
-    { line: 1, content: "// Function to check if the tree is symmetric" },
-    { line: 2, content: "bool isSymmetric(TreeNode* root) {" },
-    { line: 3, content: "    if (!root) return true;" },
-    { line: 4, content: "    return isMirror(root->left, root->right);" },
-    { line: 5, content: "}" },
-    { line: 6, content: "" },
-    { line: 7, content: "// Helper function to check if two subtrees are mirrors" },
-    { line: 8, content: "bool isMirror(TreeNode* A, TreeNode* B) {" },
-    { line: 9, content: "    // 1. Base Case: Both nodes are null" },
-    { line: 10, content: "    if (!A && !B) return true;" },
-    { line: 11, content: "    " },
-    { line: 12, content: "    // 2. Base Case: One node is null, or values differ" },
-    { line: 13, content: "    if (!A || !B || A->val != B->val) {" },
-    { line: 14, content: "        return false;" },
-    { line: 15, content: "    }" },
-    { line: 16, content: "    " },
-    { line: 17, content: "    // 3. Recursive Step: Cross-compare children" },
-    { line: 18, content: "    return isMirror(A->left, B->right) &&" },
-    { line: 19, content: "           isMirror(A->right, B->left);" },
-    { line: 20, content: "}" },
-  ];
-
-  // Prepare node validity data for visualization
   const nodeValidity = {};
   if (nodeA?.key && isValid !== undefined) {
     nodeValidity[nodeA.key] = isValid;
@@ -774,213 +555,143 @@ const SymmetricTreeVisualizer = () => {
   if (nodeB?.key && isValid !== undefined) {
     nodeValidity[nodeB.key] = isValid;
   }
-  
-  // Root node is always 'valid' for symmetry as it's the center
   if (tree && currentStep > 0) {
-      // Find the root key (since mapping logic ensures it's the first node at level 0, pos 0)
       const rootKey = `${tree.val}-0-0`; 
       nodeValidity[rootKey] = true; 
   }
 
-
-  return (
-    // MODIFIED: bg-gray-900 removed for transparency
-    <div
-      ref={visualizerRef}
-      tabIndex={0}
-      className="p-4 max-w-7xl mx-auto focus:outline-none text-white min-h-screen"
-      style={{ 
-        // NOTE: You would typically set the background on the page/body, 
-        // but for this component, we'll keep the background absent here 
-        // to let the surrounding content show through.
-      }}
-    >
-      <header className="text-center mb-6">
-        <h1 className="text-5xl font-bold text-purple-400 flex items-center justify-center gap-3">
-          <FlipHorizontal size={28} />
-          Symmetric Tree Validation
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">
-          Determine if a binary tree is a mirror image of itself (LeetCode #101)
-        </p>
-      </header>
-
-      {/* Controls Section */}
-      {/* MODIFIED: bg-gray-800/50 changed to bg-gray-900/30 */}
-      <div className="bg-gray-900/30 backdrop-blur-md p-4 rounded-xl shadow-2xl border border-gray-700/50 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-        <div className="flex flex-col md:flex-row gap-4 flex-grow">
-          <div className="flex items-center gap-4 flex-grow">
-            <label
-              htmlFor="tree-input"
-              className="font-medium text-gray-300 font-mono hidden md:block"
-            >
-              Tree (Level Order):
-            </label>
-            {/* MODIFIED: bg-gray-900 changed to bg-gray-800/50 */}
-            <input
-              id="tree-input"
-              type="text"
-              value={treeInput}
-              onChange={(e) => setTreeInput(e.target.value)}
-              disabled={isLoaded}
-              placeholder="e.g., 1,2,2,3,null,null,3"
-              className="font-mono flex-grow bg-gray-800/50 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
-            />
-          </div>
+  const inputSection = (
+    <>
+      <div className="flex items-center gap-2 flex-grow">
+        <label htmlFor="tree-input" className="font-medium text-gray-300 font-mono text-sm whitespace-nowrap">
+          Tree (Level Order):
+        </label>
+        <input
+          id="tree-input"
+          type="text"
+          value={treeInput}
+          onChange={(e) => setTreeInput(e.target.value)}
+          disabled={isLoaded}
+          placeholder="e.g., 1,2,2,3,4,4,3"
+          className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+        />
+      </div>
+      {!isLoaded && (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={generateHistory}
+            className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+          >
+            Load & Visualize
+          </button>
+          <button
+            onClick={() => generateRandomTree(true)}
+            className="px-3 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition text-xs cursor-pointer"
+          >
+            Sym Tree
+          </button>
+          <button
+            onClick={() => generateRandomTree(false)}
+            className="px-3 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold transition text-xs cursor-pointer"
+          >
+            Asym Tree
+          </button>
         </div>
+      )}
+    </>
+  );
 
-        <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
-          {!isLoaded ? (
-            <>
-              <button
-                onClick={generateHistory}
-                className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                Load & Visualize
-              </button>
-              <button
-                onClick={() => generateRandomTree(true)}
-                className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                Random Symmetric
-              </button>
-               <button
-                onClick={() => generateRandomTree(false)}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                Random Asymmetric
-              </button>
-            </>
-          ) : (
-            <>
-              <div className="flex gap-2">
-                <button
-                  onClick={stepBackward}
-                  disabled={currentStep <= 0}
-                  className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                >
-                  <SkipBack size={20} />
-                </button>
-                
-                <button
-                  onClick={stepForward}
-                  disabled={currentStep >= history.length - 1}
-                  className="bg-purple-500 hover:bg-purple-600 p-3 rounded-lg disabled:opacity-50 transition-all duration-300 cursor-pointer"
-                >
-                  <SkipForward size={20} />
-                </button>
-              </div>
-
-              <div className="font-mono px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-center min-w-20">
-                Step {currentStep + 1}/{history.length}
-              </div>
-
-              <button
-                onClick={resetVisualization}
-                className="bg-red-600 hover:bg-red-700 font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg cursor-pointer"
-              >
-                <RotateCcw size={16} />
-                Reset
-              </button>
-            </>
-          )}
+  const statsSection = (
+    <>
+      <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/40 backdrop-blur-sm p-4 rounded-xl border border-blue-700/50 text-center">
+        <h4 className="font-semibold text-blue-300 mb-2 flex items-center justify-center gap-2 select-none">
+          <Target size={20} /> Comparing Nodes
+        </h4>
+        <div className="font-mono text-xl font-bold text-blue-300">
+          A: {nodeA?.val !== undefined ? nodeA.val : "null"} | B: {nodeB?.val !== undefined ? nodeB.val : "null"}
+        </div>
+        <div className="text-xs text-gray-400 mt-1">
+          Depth: {depth}
         </div>
       </div>
 
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Pseudocode Panel */}
-          {/* MODIFIED: bg-gray-800/50 changed to bg-gray-900/30 */}
-          <div className="lg:col-span-1 bg-gray-900/30 backdrop-blur-md p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-purple-400 mb-4 border-b border-gray-600/50 pb-3 flex items-center gap-2">
-              <Code size={20} />
-              Symmetry Algorithm (isMirror)
-            </h3>
-            <div className="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-              <pre className="text-sm">
-                <code className="font-mono leading-relaxed block">
-                  {symmetricValidationCode.map((codeLine) => (
-                    <CodeLine
-                      key={codeLine.line}
-                      lineNum={codeLine.line}
-                      content={codeLine.content}
-                    />
-                  ))}
-                </code>
-              </pre>
-            </div>
-
-            {/* Call Stack Visualization */}
-            {/* MODIFIED: bg-gray-900/50 changed to bg-gray-800/50 */}
-            {callStack.length > 0 && (
-              <div className="mt-4 bg-gray-800/50 p-3 rounded-lg border border-gray-700">
-                <h4 className="text-sm text-gray-400 mb-2 flex items-center gap-2">
-                  <BarChart3 size={16} />
-                  Call Stack (Depth: {callStack.length})
-                </h4>
-                <div className="space-y-1 max-h-24 overflow-y-auto">
-                  {/* MODIFIED: bg-gray-800/50 changed to bg-gray-900/50 */}
-                  {callStack.map((call, idx) => (
-                    <div
-                      key={idx}
-                      className="text-xs font-mono bg-gray-900/50 p-1 rounded"
-                    >
-                      (D{call.depth}) {call.sideA}:{call.nodeA} vs {call.sideB}:{call.nodeB}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Enhanced Visualization Panels */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Tree Visualization (bg updated inside component) */}
-            <TreeVisualization
-              tree={tree}
-              traversalState={{
-                nodeA,
-                nodeB,
-                nodeValidity,
-              }}
-            />
-
-            {/* Comparison Visualization (bg updated inside component) */}
-            <ComparisonVisualization
-              nodeA={nodeA}
-              nodeB={nodeB}
-              comparison={comparison}
-            />
-
-            {/* Step Explanation Card */}
-            {/* MODIFIED: from-gray-700/40 to-gray-800/40 changed to from-gray-900/20 to-gray-800/20 */}
-             <div className="bg-gradient-to-br from-gray-900/20 to-gray-800/20 backdrop-blur-md p-6 rounded-xl shadow-xl border border-gray-700/50">
-              <h3 className="font-bold text-lg text-amber-300 mb-3 flex items-center gap-2">
-                <Clock size={20} />
-                Step-by-Step Explanation
-              </h3>
-              <p className={`text-lg font-medium ${isComplete ? (isValid ? 'text-green-300' : 'text-red-300') : 'text-gray-300'}`}>
-                {explanation || "Press 'Load & Visualize' to start."}
-              </p>
-              <div className="mt-4 flex items-center justify-between text-sm">
-                 <div className="text-gray-400">Status:</div>
-                 <div className={`font-mono font-bold ${isComplete ? (isValid ? 'text-green-400' : 'text-red-400') : 'text-yellow-400'}`}>
-                    {isComplete ? (isValid ? 'COMPLETED (SYMMETRIC)' : 'COMPLETED (ASYMMETRIC)') : 'IN PROGRESS'}
-                 </div>
-              </div>
-            </div>
-          </div>
+      <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 backdrop-blur-sm p-4 rounded-xl border border-purple-700/50 text-center">
+        <h4 className="font-semibold text-purple-300 mb-2 flex items-center justify-center gap-2 select-none">
+          <Gauge size={20} /> Match Type
+        </h4>
+        <div className="font-mono text-2xl font-bold text-purple-400 capitalize">
+          {comparison?.type || "None"}
         </div>
-      ) : (
-        // MODIFIED: bg-gray-800/50 changed to bg-gray-900/30
-        <div className="text-center p-20 bg-gray-900/30 backdrop-blur-md rounded-xl border border-gray-700/50">
-          <FlipHorizontal size={48} className="text-purple-400 mx-auto mb-4" />
-          <p className="text-gray-400 text-lg">
-            Enter a tree structure (e.g., <span className="font-mono text-white">1,2,2,3,4,4,3</span> for a symmetric tree) or load a random example to begin the symmetry visualization.
-          </p>
+        {comparison?.result !== undefined && (
+          <div className="text-xs text-gray-400 mt-1">
+            Result: {comparison.result ? "Symmetric" : "Asymmetric"}
+          </div>
+        )}
+      </div>
+
+      <div className="bg-gradient-to-br from-green-900/40 to-green-800/40 backdrop-blur-sm p-4 rounded-xl border border-green-700/50 text-center">
+        <h4 className="font-semibold text-green-300 mb-2 flex items-center justify-center gap-2 select-none">
+          <CheckCircle size={20} /> Symmetry Status
+        </h4>
+        <div className="font-mono text-2xl font-bold text-green-400">
+          {isComplete ? (isValid ? "Symmetric" : "Asymmetric") : "Checking..."}
+        </div>
+      </div>
+
+      {callStack.length > 0 && (
+        <div className="sm:col-span-3 bg-gray-900/50 p-4 rounded-xl border border-gray-700">
+          <h4 className="text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2 select-none">
+            <GitBranch size={16} /> Call Stack (Depth: {depth})
+          </h4>
+          <div className="space-y-1 max-h-24 overflow-y-auto">
+            {callStack.map((call, idx) => (
+              <div key={idx} className="text-xs font-mono bg-gray-850 p-1.5 rounded text-gray-300">
+                isMirror(A={call.nodeA !== undefined ? call.nodeA : "null"}, B={call.nodeB !== undefined ? call.nodeB : "null"})
+              </div>
+            ))}
+          </div>
         </div>
       )}
-    </div>
+
+      <div className="sm:col-span-3 bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl border border-gray-700/50">
+        <h4 className="font-semibold text-purple-300 mb-2 flex items-center gap-2 select-none">
+          <Clock size={16} /> Complexity Analysis
+        </h4>
+        <div className="grid md:grid-cols-2 gap-4 text-xs">
+          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800">
+            <span className="text-teal-300 font-mono font-bold block mb-1">Time Complexity: O(N)</span>
+            <p className="text-gray-400">We traverse the entire tree once, comparing mirror nodes at each step.</p>
+          </div>
+          <div className="bg-gray-900/50 p-3 rounded-lg border border-gray-800">
+            <span className="text-teal-300 font-mono font-bold block mb-1">Space Complexity: O(H)</span>
+            <p className="text-gray-400">H is the height of the tree. Recursion stack size is bounded by tree height.</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
+  return (
+    <VisualizerLayout
+      title="Symmetric Tree Visualizer"
+      description="Check if a binary tree is a mirror of itself (LeetCode #101)"
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={explanation}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+    >
+      <TreeVisualization 
+        tree={tree}
+        traversalState={{
+          nodeA,
+          nodeB,
+          nodeValidity
+        }}
+      />
+    </VisualizerLayout>
   );
 };
 

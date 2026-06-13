@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { ArrowUp, Code, CheckCircle, Clock, Hash } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useVisualizer } from "../../hooks/useVisualizer";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { ArrowUp } from "lucide-react";
 
 // Pointer Component
 const VisualizerPointer = ({ nodeId, containerId, color, label, yOffset = 0 }) => {
   const [position, setPosition] = useState({ opacity: 0, left: 0, top: 0 });
 
   useEffect(() => {
-    if (nodeId === null) {
+    if (nodeId === null || nodeId === undefined) {
       setPosition((p) => ({ ...p, opacity: 0 }));
       return;
     }
@@ -54,145 +56,6 @@ const VisualizerPointer = ({ nodeId, containerId, color, label, yOffset = 0 }) =
   );
 };
 
-// Token-based code block renderer
-const CodeBlock = ({ codeLines, highlightLines = [] }) => {
-  const colorClass = (c) => {
-    switch (c) {
-      case "cyan":
-        return "text-cyan-300";
-      case "purple":
-        return "text-purple-300";
-      case "light-blue":
-        return "text-sky-300";
-      case "light-gray":
-        return "text-gray-400";
-      case "amber":
-        return "text-amber-300";
-      case "green":
-        return "text-green-300";
-      default:
-        return "text-gray-200";
-    }
-  };
-
-  return (
-    <div className="font-mono text-sm bg-gray-900 rounded-lg border border-gray-700 overflow-auto max-h-[40rem]">
-      <div className="min-w-max p-4">
-        {codeLines.map((line) => (
-          <div
-            key={line.l}
-            className={`flex items-start gap-3 leading-6 ${
-              highlightLines.includes(line.l) ? "bg-gray-800" : ""
-            }`}
-          >
-            <span className="w-10 pr-2 text-right select-none text-gray-500">
-              {line.l}
-            </span>
-            <div className="whitespace-pre">
-              {line.c.map((tok, idx) => (
-                <span key={idx} className={colorClass(tok.c)}>
-                  {tok.t}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// C++ mergeTwoLists, tokenized for styled display
-const mergeCppCode = [
-  { l: 1, c: [{ t: "public", c: "purple" }, { t: ":\n", c: "light-gray" }] },
-  {
-    l: 2,
-    c: [
-      { t: "ListNode", c: "cyan" },
-      { t: "* mergeTwoLists(", c: "" },
-      { t: "ListNode", c: "cyan" },
-      { t: "* list1, ", c: "" },
-      { t: "ListNode", c: "cyan" },
-      { t: "* list2) {\n", c: "" },
-    ],
-  },
-  {
-    l: 3,
-    c: [
-      { t: "  ", c: "" },
-      { t: "if", c: "purple" },
-      { t: "(list1 == nullptr && list2 == nullptr) ", c: "" },
-      { t: "return", c: "purple" },
-      { t: " nullptr;\n", c: "light-blue" },
-    ],
-  },
-  {
-    l: 5,
-    c: [
-      { t: "  ", c: "" },
-      { t: "ListNode", c: "cyan" },
-      { t: "* dummy = ", c: "" },
-      { t: "new", c: "purple" },
-      { t: " ListNode(0);\n", c: "" },
-    ],
-  },
-  {
-    l: 6,
-    c: [
-      { t: "  ", c: "" },
-      { t: "ListNode", c: "cyan" },
-      { t: "* curr = dummy;\n", c: "" },
-    ],
-  },
-  {
-    l: 8,
-    c: [
-      { t: "  ", c: "" },
-      { t: "while", c: "purple" },
-      { t: "(list1 != nullptr && list2 != nullptr) {\n", c: "" },
-    ],
-  },
-  {
-    l: 9,
-    c: [
-      { t: "    ", c: "" },
-      { t: "if", c: "purple" },
-      { t: "(list1->val < list2->val) {\n", c: "" },
-    ],
-  },
-  {
-    l: 10,
-    c: [{ t: "      curr->next = list1;\n", c: "" }],
-  },
-  { l: 11, c: [{ t: "      list1 = list1->next;\n", c: "" }] },
-  { l: 12, c: [{ t: "    } ", c: "light-gray" }, { t: "else", c: "purple" }, { t: " {\n", c: "" }] },
-  { l: 13, c: [{ t: "      curr->next = list2;\n", c: "" }] },
-  { l: 14, c: [{ t: "      list2 = list2->next;\n", c: "" }] },
-  { l: 15, c: [{ t: "    }\n", c: "light-gray" }] },
-  { l: 17, c: [{ t: "    curr = curr->next;\n", c: "" }] },
-  { l: 18, c: [{ t: "  }\n", c: "light-gray" }] },
-  {
-    l: 20,
-    c: [
-      { t: "  ", c: "" },
-      { t: "if", c: "purple" },
-      { t: " (list1 != nullptr) curr->next = list1;\n", c: "" },
-    ],
-  },
-  { l: 21, c: [{ t: "  else curr->next = list2;\n", c: "" }] },
-  { l: 23, c: [{ t: "  ListNode* mergedHead = dummy->next;\n", c: "" }] },
-  { l: 24, c: [{ t: "  delete dummy;\n", c: "" }] },
-  {
-    l: 25,
-    c: [
-      { t: "  ", c: "" },
-      { t: "return", c: "purple" },
-      { t: " mergedHead;\n", c: "" },
-    ],
-  },
-  { l: 26, c: [{ t: "}\n", c: "light-gray" }] },
-];
-
 // Lane row for rendering nodes with connectors
 const LaneRow = ({
   idPrefix,
@@ -211,7 +74,7 @@ const LaneRow = ({
 
   return (
     <div className="w-full flex items-center gap-4">
-      <div className="w-24 text-right pr-2 text-sm text-gray-400 select-none">{label}</div>
+      <div className="w-20 text-right pr-2 text-sm text-gray-400 select-none">{label}</div>
       <div className="flex-1 overflow-x-auto">
         <div className="flex items-center gap-3 py-2">
           {nodes.map((node, idx) => (
@@ -250,9 +113,146 @@ const MergeTwoListsVisualizer = () => {
   const [list2Input, setList2Input] = useState("1,3,4");
   const [nodes1, setNodes1] = useState([]);
   const [nodes2, setNodes2] = useState([]);
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
-  const [isLoaded, setIsLoaded] = useState(false);
+
+  const visualizerState = useVisualizer();
+  const {
+    currentStep,
+    currentState,
+    isLoaded,
+    load,
+    reset: hookReset,
+  } = visualizerState;
+
+  const reset = () => {
+    hookReset();
+    setNodes1([]);
+    setNodes2([]);
+  };
+
+  const generateMergeHistory = (list1Nodes, list2Nodes) => {
+    const newHistory = [];
+    let i = 0,
+      j = 0;
+    const merged = [];
+
+    const addState = (line, pickedFrom, message, extraProps = {}) => {
+      newHistory.push({
+        line,
+        curr1: i < list1Nodes.length ? i : null,
+        curr2: j < list2Nodes.length ? j : null,
+        l1Id: i < list1Nodes.length ? list1Nodes[i]?.domId : null,
+        l2Id: j < list2Nodes.length ? list2Nodes[j]?.domId : null,
+        pickedFrom,
+        pickedDomId:
+          pickedFrom === "l1"
+            ? merged[merged.length - 1]?.domId || null
+            : pickedFrom === "l2"
+            ? merged[merged.length - 1]?.domId || null
+            : null,
+        merged: [...merged],
+        explanation: message,
+        ...extraProps
+      });
+    };
+
+    // Initial state
+    addState(
+      5,
+      null,
+      "Initialize dummy node to start the merged list."
+    );
+
+    while (i < list1Nodes.length && j < list2Nodes.length) {
+      addState(
+        8,
+        null,
+        `Compare elements from both lists: list1[${i}] (${list1Nodes[i].val}) and list2[${j}] (${list2Nodes[j].val}).`
+      );
+
+      if (list1Nodes[i].val < list2Nodes[j].val) {
+        const picked = list1Nodes[i];
+        const other = list2Nodes[j];
+        addState(
+          9,
+          null,
+          `Since list1[${i}] (${picked.val}) < list2[${j}] (${other.val}), we choose the node from list1.`
+        );
+        merged.push({ ...picked });
+        i++;
+        addState(
+          10,
+          "l1",
+          `Connect current node to list1's node (${picked.val}) and advance list1 pointer.`,
+          { finished: false }
+        );
+      } else {
+        const picked = list2Nodes[j];
+        const other = list1Nodes[i];
+        addState(
+          9,
+          null,
+          `Since list2[${j}] (${picked.val}) <= list1[${i}] (${other.val}), we choose the node from list2.`
+        );
+        merged.push({ ...picked });
+        j++;
+        addState(
+          13,
+          "l2",
+          `Connect current node to list2's node (${picked.val}) and advance list2 pointer.`,
+          { finished: false }
+        );
+      }
+      addState(
+        17,
+        null,
+        "Move the current pointer of the merged list forward."
+      );
+    }
+
+    // Append remaining
+    if (i < list1Nodes.length) {
+      addState(
+        20,
+        null,
+        "List 2 is empty. Append all remaining nodes of List 1."
+      );
+      while (i < list1Nodes.length) {
+        const picked = list1Nodes[i];
+        merged.push({ ...picked });
+        i++;
+        addState(
+          20,
+          "l1",
+          `Append remaining node list1[${i - 1}] (${picked.val}) to the merged list.`
+        );
+      }
+    } else if (j < list2Nodes.length) {
+      addState(
+        21,
+        null,
+        "List 1 is empty. Append all remaining nodes of List 2."
+      );
+      while (j < list2Nodes.length) {
+        const picked = list2Nodes[j];
+        merged.push({ ...picked });
+        j++;
+        addState(
+          21,
+          "l2",
+          `Append remaining node list2[${j - 1}] (${picked.val}) to the merged list.`
+        );
+      }
+    }
+
+    addState(
+      25,
+      null,
+      "Merging complete. Return the head of the merged list (dummy->next).",
+      { finished: true }
+    );
+
+    return newHistory;
+  };
 
   const buildAndGenerateHistory = () => {
     const parseList = (input, src) =>
@@ -278,424 +278,182 @@ const MergeTwoListsVisualizer = () => {
       return;
     }
 
-    generateMergeHistory(list1Nodes, list2Nodes);
+    const newHistory = generateMergeHistory(list1Nodes, list2Nodes);
     setNodes1(list1Nodes);
     setNodes2(list2Nodes);
-    setIsLoaded(true);
+    if (newHistory) {
+      load(newHistory);
+    }
   };
 
-  const generateMergeHistory = (list1Nodes, list2Nodes) => {
-    const newHistory = [];
-    let i = 0,
-      j = 0;
-    const merged = [];
-
-    const snapshot = (pickedFrom, message = "") => {
-      newHistory.push({
-        curr1: i < list1Nodes.length ? i : null,
-        curr2: j < list2Nodes.length ? j : null,
-        l1Id: i < list1Nodes.length ? list1Nodes[i]?.domId : null,
-        l2Id: j < list2Nodes.length ? list2Nodes[j]?.domId : null,
-        pickedFrom,
-        pickedDomId:
-          pickedFrom === "l1"
-            ? merged[merged.length - 1]?.domId || null
-            : pickedFrom === "l2"
-            ? merged[merged.length - 1]?.domId || null
-            : null,
-        merged: [...merged],
-        explanation: message ||
-          (pickedFrom === "l1"
-            ? `Pick list1[${i - 1}] → ${merged[merged.length - 1]?.val}`
-            : pickedFrom === "l2"
-            ? `Pick list2[${j - 1}] → ${merged[merged.length - 1]?.val}`
-            : ""),
-      });
-    };
-
-    while (i < list1Nodes.length && j < list2Nodes.length) {
-      if (list1Nodes[i].val < list2Nodes[j].val) {
-        const picked = list1Nodes[i];
-        const other = list2Nodes[j];
-        merged.push({ ...picked });
-        i++;
-        snapshot(
-          "l1",
-          `list1[${i - 1}](${picked.val}) < list2[${j}](${other.val}) → take list1`
-        );
-      } else {
-        const picked = list2Nodes[j];
-        const other = list1Nodes[i];
-        merged.push({ ...picked });
-        j++;
-        snapshot(
-          "l2",
-          `list2[${j - 1}](${picked.val}) <= list1[${i}](${other.val}) → take list2`
-        );
-      }
-    }
-
-    while (i < list1Nodes.length) {
-      const picked = list1Nodes[i];
-      merged.push({ ...picked });
-      i++;
-      snapshot("l1", `append remaining list1[${i - 1}](${picked.val})`);
-    }
-
-    while (j < list2Nodes.length) {
-      const picked = list2Nodes[j];
-      merged.push({ ...picked });
-      j++;
-      snapshot("l2", `append remaining list2[${j - 1}](${picked.val})`);
-    }
-
-    setHistory(newHistory);
-    setCurrentStep(0);
+  const codeContent = {
+    1: "public:",
+    2: "ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {",
+    3: "  if (list1 == nullptr && list2 == nullptr) return nullptr;",
+    5: "  ListNode* dummy = new ListNode(0);",
+    6: "  ListNode* curr = dummy;",
+    8: "  while (list1 != nullptr && list2 != nullptr) {",
+    9: "    if (list1->val < list2->val) {",
+    10: "      curr->next = list1;",
+    11: "      list1 = list1->next;",
+    12: "    } else {",
+    13: "      curr->next = list2;",
+    14: "      list2 = list2->next;",
+    15: "    }",
+    17: "    curr = curr->next;",
+    18: "  }",
+    20: "  if (list1 != nullptr) curr->next = list1;",
+    21: "  else curr->next = list2;",
+    23: "  ListNode* mergedHead = dummy->next;",
+    24: "  delete dummy;",
+    25: "  return mergedHead;",
+    26: "}"
   };
 
-  const stepForward = useCallback(
-    () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
-    [history.length]
-  );
-  const stepBackward = useCallback(
-    () => setCurrentStep((prev) => Math.max(prev - 1, 0)),
-    []
+  const inputSection = (
+    <div className="flex flex-wrap items-center gap-4 w-full">
+      <div className="flex items-center gap-2 flex-grow min-w-[150px]">
+        <label className="font-mono text-sm text-gray-300 whitespace-nowrap">
+          List 1:
+        </label>
+        <input
+          type="text"
+          value={list1Input}
+          onChange={(e) => setList1Input(e.target.value)}
+          disabled={isLoaded}
+          className="font-mono w-full bg-gray-955/50 p-2 rounded-xl border border-gray-800 focus:border-cyan-500 focus:outline-none text-white text-sm"
+          placeholder="e.g. 1,2,4"
+        />
+      </div>
+      <div className="flex items-center gap-2 flex-grow min-w-[150px]">
+        <label className="font-mono text-sm text-gray-300 whitespace-nowrap">
+          List 2:
+        </label>
+        <input
+          type="text"
+          value={list2Input}
+          onChange={(e) => setList2Input(e.target.value)}
+          disabled={isLoaded}
+          className="font-mono w-full bg-gray-955/50 p-2 rounded-xl border border-gray-800 focus:border-cyan-500 focus:outline-none text-white text-sm"
+          placeholder="e.g. 1,3,4"
+        />
+      </div>
+      {!isLoaded && (
+        <button
+          onClick={buildAndGenerateHistory}
+          className="bg-cyan-500 hover:bg-cyan-400 text-gray-955 font-bold py-2 px-5 rounded-xl transition-all shadow-lg text-sm"
+        >
+          Load & Visualize
+        </button>
+      )}
+    </div>
   );
 
-  const reset = () => {
-    setIsLoaded(false);
-    setHistory([]);
-    setCurrentStep(-1);
-    setNodes1([]);
-    setNodes2([]);
+  const statsSection = (
+    <>
+      <div className="p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">Time Complexity</h4>
+        <p className="text-xl font-bold text-cyan-300 font-mono">O(N + M)</p>
+        <p className="text-xs text-gray-400 mt-1">
+          We traverse both lists at most once. Linear scan takes time proportional to the sum of lengths.
+        </p>
+      </div>
+      <div className="p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">Space Complexity</h4>
+        <p className="text-xl font-bold text-teal-300 font-mono">O(1)</p>
+        <p className="text-xs text-gray-400 mt-1">
+          No extra nodes are created. We only adjust pointers to link existing nodes.
+        </p>
+      </div>
+      <div className="p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">Merge Stats</h4>
+        <p className="text-lg font-bold text-gray-200 font-mono">
+          N = {nodes1.length}, M = {nodes2.length}
+        </p>
+        <p className="text-xs text-gray-400 mt-1">
+          Merged so far: <span className="text-cyan-400 font-bold font-mono">{(currentState.merged || []).length}</span> nodes.
+        </p>
+      </div>
+    </>
+  );
+
+  const overriddenVisualizerState = {
+    ...visualizerState,
+    reset,
   };
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isLoaded) {
-        if (e.key === "ArrowLeft") stepBackward();
-        if (e.key === "ArrowRight") stepForward();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoaded, stepForward, stepBackward]);
-
-  const state = history[currentStep] || {};
-  const l1Consumed = (state.merged || []).filter((n) => n.src === "l1").length;
-  const l2Consumed = (state.merged || []).filter((n) => n.src === "l2").length;
-  const mergedSoFar = state.merged || [];
-  const n = nodes1.length;
-  const m = nodes2.length;
-  const visited = mergedSoFar.length;
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <header className="text-center mb-8">
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">
-          Merge Two Sorted Lists
-        </h1>
-        <p className="text-xl text-gray-400 mt-3">Step-by-Step Visualization</p>
-      </header>
+    <VisualizerLayout
+      title="Merge Two Sorted Lists"
+      description="Visualizing LeetCode 21"
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={currentState.line}
+      message={currentState.explanation}
+      visualizerState={overriddenVisualizerState}
+      statsSection={statsSection}
+    >
+      {isLoaded && (
+        <div
+          id="visualizer-container"
+          className="relative w-full h-[32rem] rounded-lg overflow-visible flex flex-col justify-between p-4"
+        >
+          <LaneRow
+            idPrefix="l1"
+            label="List 1"
+            color="green"
+            nodes={nodes1}
+            consumedCount={(currentState.merged || []).filter((n) => n.src === "l1").length}
+            pickedDomId={currentState.pickedFrom === "l1" ? currentState.pickedDomId : null}
+          />
+          <LaneRow
+            idPrefix="l2"
+            label="List 2"
+            color="blue"
+            nodes={nodes2}
+            consumedCount={(currentState.merged || []).filter((n) => n.src === "l2").length}
+            pickedDomId={currentState.pickedFrom === "l2" ? currentState.pickedDomId : null}
+          />
+          <LaneRow
+            idPrefix="m"
+            label="Merged"
+            color="amber"
+            nodes={currentState.merged || []}
+            consumedCount={0}
+            pickedDomId={(currentState.merged || [])[(currentState.merged || []).length - 1]?.domId || null}
+          />
 
-      {/* Input Controls */}
-      <div className="bg-gray-800 p-5 rounded-xl shadow-2xl border border-gray-700 mb-6 flex flex-col md:flex-row items-center gap-4">
-        <div className="flex flex-col sm:flex-row items-center gap-4 flex-grow w-full">
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <label className="font-mono text-sm text-gray-300 whitespace-nowrap">
-              List 1:
-            </label>
-            <input
-              type="text"
-              value={list1Input}
-              onChange={(e) => setList1Input(e.target.value)}
-              disabled={isLoaded}
-              className="font-mono flex-grow sm:w-48 bg-gray-900 p-2 rounded-lg border-2 border-gray-600 focus:border-sky-500 focus:outline-none transition-colors"
-              placeholder="e.g., 1,2,4"
+          {currentStep >= 0 && (
+            <VisualizerPointer
+              nodeId={nodes1[currentState.curr1]?.domId ?? null}
+              containerId="visualizer-container"
+              color="green"
+              label="List 1"
+              yOffset={-16}
             />
-          </div>
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <label className="font-mono text-sm text-gray-300 whitespace-nowrap">
-              List 2:
-            </label>
-            <input
-              type="text"
-              value={list2Input}
-              onChange={(e) => setList2Input(e.target.value)}
-              disabled={isLoaded}
-              className="font-mono w-48 bg-gray-900 p-2 rounded-lg border-2 border-gray-600 focus:border-sky-500 focus:outline-none transition-colors"
-              placeholder="e.g., 1,3,4"
+          )}
+          {currentStep >= 0 && (
+            <VisualizerPointer
+              nodeId={nodes2[currentState.curr2]?.domId ?? null}
+              containerId="visualizer-container"
+              color="blue"
+              label="List 2"
+              yOffset={-16}
             />
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          {!isLoaded ? (
-            <button
-              onClick={buildAndGenerateHistory}
-              className="bg-gradient-to-r from-sky-500 to-blue-600 cursor-pointer hover:from-sky-600 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all transform hover:scale-105"
-            >
-              Load & Visualize
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={stepBackward}
-                disabled={currentStep <= 0}
-                className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-              >
-                ◀
-              </button>
-              <span className="font-mono text-lg w-28 text-center bg-gray-700 px-3 py-2 rounded-lg">
-                {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
-              </span>
-              <button
-                onClick={stepForward}
-                disabled={currentStep >= history.length - 1}
-                className="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-              >
-                ▶
-              </button>
-              <button
-                onClick={reset}
-                className="bg-red-600 hover:bg-red-700 font-bold py-3 cursor-pointer px-6 rounded-xl shadow-lg transition-all transform hover:scale-105 ml-4"
-              >
-                Reset
-              </button>
-            </>
+          )}
+          {currentStep >= 0 && (currentState.merged || []).length > 0 && (
+            <VisualizerPointer
+              nodeId={(currentState.merged || [])[(currentState.merged || []).length - 1]?.domId}
+              containerId="visualizer-container"
+              color="amber"
+              label="Tail"
+              yOffset={-16}
+            />
           )}
         </div>
-      </div>
-
-      {isLoaded && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Code / Explanation */}
-          <div className="lg:col-span-1 bg-gradient-to-br from-gray-800 to-gray-850 p-5 rounded-2xl shadow-2xl border border-gray-700">
-            <h3 className="font-bold text-2xl text-sky-400 mb-4 pb-3 border-b border-gray-600 flex items-center gap-2">
-              <Code size={22} />
-              C++ Merge Logic
-            </h3>
-            <CodeBlock codeLines={mergeCppCode} />
-          </div>
-
-          {/* Visualizer */}
-          <div className="lg:col-span-2 bg-gray-900 p-5 rounded-2xl shadow-2xl border border-gray-700">
-            <h3 className="font-bold text-2xl text-sky-400 mb-4">
-              Visualization
-            </h3>
-            <div
-              id="visualizer-container"
-              className="relative w-full h-[32rem] border-2 border-gray-700 rounded-lg overflow-visible"
-            >
-              <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                <LaneRow
-                  idPrefix="l1"
-                  label="List 1"
-                  color="green"
-                  nodes={nodes1}
-                  consumedCount={l1Consumed}
-                  pickedDomId={state.pickedFrom === "l1" ? state.pickedDomId : null}
-                />
-                <LaneRow
-                  idPrefix="l2"
-                  label="List 2"
-                  color="blue"
-                  nodes={nodes2}
-                  consumedCount={l2Consumed}
-                  pickedDomId={state.pickedFrom === "l2" ? state.pickedDomId : null}
-                />
-                <LaneRow
-                  idPrefix="m"
-                  label="Merged"
-                  color="amber"
-                  nodes={mergedSoFar}
-                  consumedCount={0}
-                  pickedDomId={mergedSoFar[mergedSoFar.length - 1]?.domId || null}
-                />
-              </div>
-
-              {currentStep >= 0 && (
-                <VisualizerPointer
-                  nodeId={nodes1[state.curr1]?.domId ?? null}
-                  containerId="visualizer-container"
-                  color="green"
-                  label="List 1"
-                  yOffset={-16}
-                />
-              )}
-              {currentStep >= 0 && (
-                <VisualizerPointer
-                  nodeId={nodes2[state.curr2]?.domId ?? null}
-                  containerId="visualizer-container"
-                  color="blue"
-                  label="List 2"
-                  yOffset={-16}
-                />
-              )}
-              {currentStep >= 0 && mergedSoFar.length > 0 && (
-                <VisualizerPointer
-                  nodeId={mergedSoFar[mergedSoFar.length - 1]?.domId}
-                  containerId="visualizer-container"
-                  color="amber"
-                  label="Tail"
-                  yOffset={-16}
-                />
-              )}
-            </div>
-            <div className="mt-4 text-center">
-              <p className="text-sm text-gray-400 mb-2">
-                {currentStep >= 0 && state.explanation}
-              </p>
-              <button
-                onClick={() => {
-                  const explanationBox = document.getElementById(
-                    "explanation-box"
-                  );
-                  if (explanationBox) {
-                    explanationBox.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
-                className="text-xs text-sky-400 hover:underline"
-              >
-                Scroll to Explanation
-              </button>
-            </div>
-          </div>
-
-          {/* Explanation / Steps */}
-          <div className="lg:col-span-1 bg-gradient-to-br from-gray-800 to-gray-850 p-5 rounded-2xl shadow-2xl border border-gray-700">
-            <h3 className="font-bold text-2xl text-sky-400 mb-4">
-              Step-by-Step Explanation
-            </h3>
-            <div
-              id="explanation-box"
-              className="max-h-[32rem] overflow-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
-            >
-              {history.length === 0 && (
-                <p className="text-gray-400 text-sm text-center py-4">
-                  No steps to display. Load lists to visualize the merging steps.
-                </p>
-              )}
-              {history.map((step, index) => (
-                <div
-                  key={index}
-                  className={`p-4 rounded-lg mb-2 transition-all ${
-                    currentStep === index
-                      ? "bg-gray-700 shadow-lg"
-                      : "bg-gray-800"
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`w-3 h-3 rounded-full ${
-                          currentStep === index
-                            ? "bg-sky-400"
-                            : "bg-gray-600"
-                        }`}
-                      ></div>
-                      <span className="font-mono text-xs text-gray-400">
-                        Step {index + 1}
-                      </span>
-                    </div>
-                    {currentStep === index && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-300">
-                          Current Step
-                        </span>
-                        <CheckCircle className="w-4 h-4 text-green-400" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-sm text-gray-300 mb-2">
-                    {step.explanation}
-                  </div>
-                  <div className="flex gap-2 flex-wrap">
-                    {step.merged.map((node) => (
-                      <div
-                        key={node.domId}
-                        className="flex items-center gap-1"
-                      >
-                        <div
-                          className="w-6 h-6 rounded-full flex items-center justify-center"
-                          style={{
-                            backgroundColor:
-                              node.src === "l1"
-                                ? "rgb(34 197 94)"
-                                : "rgb(59 130 246)",
-                            color: "white",
-                            fontWeight: "bold",
-                            fontSize: "0.875rem",
-                          }}
-                        >
-                          {node.val}
-                        </div>
-                        <span className="text-xs text-gray-400">
-                          {node.src === "l1" ? "List 1" : "List 2"}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Complexity Card */}
-          <div className="lg:col-span-1 bg-gradient-to-br from-gray-800 to-gray-850 p-5 rounded-2xl shadow-2xl border border-gray-700">
-            <h3 className="font-bold text-2xl text-sky-400 mb-4 pb-3 border-b border-gray-600 flex items-center gap-2">
-              <Clock size={22} />
-              Time & Space Complexity
-            </h3>
-            <div className="space-y-4 text-gray-300">
-              <div className="flex items-center gap-3">
-                <Hash className="text-sky-400" size={18} />
-                <div>
-                  <div className="text-sm">Input sizes</div>
-                  <div className="text-xs text-gray-400">n = |list1|, m = |list2|</div>
-                </div>
-                <div className="ml-auto font-mono text-sm bg-gray-900 px-3 py-1 rounded border border-gray-700">n = {n}</div>
-                <div className="font-mono text-sm bg-gray-900 px-3 py-1 rounded border border-gray-700">m = {m}</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Clock className="text-amber-400" size={18} />
-                <div>
-                  <div className="text-sm">Time complexity</div>
-                  <div className="text-xs text-gray-400">O(n + m)</div>
-                </div>
-                <div className="ml-auto font-mono text-sm bg-gray-900 px-3 py-1 rounded border border-gray-700">visited = {visited}</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-4 rounded bg-emerald-500/60 border border-emerald-400"></div>
-                <div>
-                  <div className="text-sm">Space complexity</div>
-                  <div className="text-xs text-gray-400">O(1) extra (ignoring output list nodes)</div>
-                </div>
-              </div>
-              <div className="text-xs text-gray-500 leading-relaxed">
-                We create a dummy node and move pointers; no additional data structures proportional to n or m are used.
-              </div>
-            </div>
-          </div>
-        </div>
       )}
-
-      {/* Footer / Notes */}
-      <div className="mt-8 text-center text-gray-400 text-sm">
-        <p>
-          Visualization of the merging process of two sorted linked lists.
-        </p>
-        <p>
-          <a
-            href="https://github.com/yourusername/merge-visualizer"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sky-400 hover:underline"
-          >
-            View Source Code
-          </a>
-        </p>
-      </div>
-    </div>
+    </VisualizerLayout>
   );
 };
 

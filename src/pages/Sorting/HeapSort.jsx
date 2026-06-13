@@ -1,27 +1,14 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import {
-  Code,
-  CheckCircle,
-  BarChart3,
-  Clock,
-  Repeat,
-  GitCompareArrows,
-  Shuffle,
-} from "lucide-react";
-import VisualizerPointer from "../../components/VisualizerPointer"; // Make sure this path is correct
+import React, { useState, useCallback } from "react";
+import { ArrowLeft, Clock } from "lucide-react";
+import VisualizerLayout from "../../components/VisualizerLayout";
+import { useVisualizer } from "../../hooks/useVisualizer";
 
-// Main Visualizer Component
-const HeapSortVisualizer = () => {
-  const [history, setHistory] = useState([]);
-  const [currentStep, setCurrentStep] = useState(-1);
+const HeapSortVisualizer = ({ navigate }) => {
   const [arrayInput, setArrayInput] = useState("12,11,13,5,6,7");
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [active, setActive] = useState(false);
-  const visualizerRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1);
+  const visualizer = useVisualizer();
+  const { isLoaded, load, currentState } = visualizer;
 
-  const generateHeapSortHistory = useCallback((initialArray) => {
+  const generateHistory = useCallback((initialArray) => {
     let arr = JSON.parse(JSON.stringify(initialArray));
     let n = arr.length;
     const newHistory = [];
@@ -38,64 +25,61 @@ const HeapSortVisualizer = () => {
         totalSwaps,
         heapSize: n,
         rootIndex: null,
-        leftIndex: null, // Still track for coloring, but no pointer
-        rightIndex: null, // Still track for coloring, but no pointer
+        leftIndex: null,
+        rightIndex: null,
         largestIndex: null,
+        line: 12,
         ...props,
       });
 
-    addState({ line: 2, explanation: "Initialize Heap Sort algorithm." });
+    addState({ line: 12, explanation: "Initialize Heap Sort algorithm." });
 
-    // Heapify subtree rooted at index i
     const heapify = (heapSize, i) => {
       addState({
-        line: 10,
+        line: 1,
         heapSize,
         rootIndex: i,
-        explanation: `Heapifying subtree with root at index ${i}.`,
+        explanation: `Heapifying subtree rooted at index ${i}.`,
       });
 
       let largest = i;
       let left = 2 * i + 1;
       let right = 2 * i + 2;
 
-      // See if left child exists and is greater than root
       if (left < heapSize) {
         totalComparisons++;
         addState({
-          line: 11,
+          line: 5,
           heapSize,
           rootIndex: i,
           leftIndex: left,
           rightIndex: right,
           largestIndex: largest,
-          explanation: `Comparing root (${arr[i].value}) with left child (${arr[left].value}).`,
+          explanation: `Comparing root/largest (${arr[largest].value}) with left child (${arr[left].value}).`,
         });
         if (arr[left].value > arr[largest].value) {
           largest = left;
         }
       }
 
-      // See if right child exists and is greater than largest so far
       if (right < heapSize) {
         totalComparisons++;
         addState({
-          line: 12,
+          line: 6,
           heapSize,
           rootIndex: i,
           leftIndex: left,
           rightIndex: right,
           largestIndex: largest,
-          explanation: `Comparing largest so far (${arr[largest].value}) with right child (${arr[right].value}).`,
+          explanation: `Comparing current largest (${arr[largest].value}) with right child (${arr[right].value}).`,
         });
         if (arr[right].value > arr[largest].value) {
           largest = right;
         }
       }
 
-      // If largest is not root
       addState({
-        line: 13,
+        line: 7,
         heapSize,
         rootIndex: i,
         leftIndex: left,
@@ -103,54 +87,46 @@ const HeapSortVisualizer = () => {
         largestIndex: largest,
         explanation: `Checking if the largest element (${arr[largest].value}) is not the root (${arr[i].value}).`,
       });
+
       if (largest !== i) {
         addState({
-          line: 14,
+          line: 8,
           heapSize,
           rootIndex: i,
           largestIndex: largest,
           explanation: `Swapping root ${arr[i].value} with largest child ${arr[largest].value}.`,
         });
-        [arr[i], arr[largest]] = [arr[largest], arr[i]]; // Swap
+        [arr[i], arr[largest]] = [arr[largest], arr[i]];
         totalSwaps++;
+
         addState({
-          line: 14,
+          line: 9,
           heapSize,
           rootIndex: i,
           largestIndex: largest,
-          array: [...arr],
-          explanation: `Swap complete.`,
+          explanation: `Swap complete. Recursively heapifying the affected sub-tree rooted at index ${largest}.`,
         });
 
-        // Recursively heapify the affected sub-tree
         heapify(heapSize, largest);
       }
     };
 
-    // Build a maxheap
     addState({
-      line: 3,
-      explanation: "Building the max heap from the unsorted array.",
+      line: 14,
+      explanation: "Building max heap from unsorted array.",
     });
     for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
       heapify(n, i);
     }
+
     addState({
-      line: 4,
-      explanation:
-        "Max heap has been built. The largest element is at the root.",
+      line: 15,
+      explanation: "Max heap built. Starting extraction phase.",
     });
 
-    // One by one extract an element from heap
-    addState({
-      line: 5,
-      explanation:
-        "Starting extraction phase. Swap root with last element and reduce heap size.",
-    });
     for (let i = n - 1; i > 0; i--) {
-      // Move current root to end
       addState({
-        line: 6,
+        line: 16,
         heapSize: i + 1,
         rootIndex: 0,
         largestIndex: i,
@@ -159,32 +135,30 @@ const HeapSortVisualizer = () => {
       [arr[0], arr[i]] = [arr[i], arr[0]];
       totalSwaps++;
       sortedIndices.unshift(i);
+
       addState({
-        line: 6,
-        array: [...arr],
+        line: 17,
         heapSize: i,
         rootIndex: 0,
         largestIndex: i,
-        explanation: `Element ${arr[i].value} is now sorted.`,
+        explanation: `Element ${arr[i].value} is now sorted. Heapifying remaining elements.`,
       });
 
-      // call max heapify on the reduced heap
       heapify(i, 0);
     }
 
     sortedIndices.unshift(0);
     addState({
-      line: 8,
+      line: 18,
       finished: true,
       sortedIndices,
       explanation: "Heap Sort completed. Array is fully sorted.",
     });
 
-    setHistory(newHistory);
-    setCurrentStep(0);
-  }, []);
+    load(newHistory);
+  }, [load]);
 
-  const loadArray = () => {
+  const loadProblem = () => {
     const localArray = arrayInput
       .split(",")
       .map((s) => s.trim())
@@ -197,469 +171,185 @@ const HeapSortVisualizer = () => {
     }
 
     const initialObjects = localArray.map((value, id) => ({ value, id }));
-    setIsLoaded(true);
-    generateHeapSortHistory(initialObjects);
+    generateHistory(initialObjects);
   };
 
-  const reset = () => {
-    setIsLoaded(false);
-    setHistory([]);
-    setCurrentStep(-1);
+  const generateRandomArray = () => {
+    const length = Math.floor(Math.random() * 4) + 6;
+    const array = Array.from({ length }, () => Math.floor(Math.random() * 15) + 1);
+    setArrayInput(array.join(","));
+    const initialObjects = array.map((value, id) => ({ value, id }));
+    generateHistory(initialObjects);
   };
 
-  const handleEnterKey = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      const btn = document.getElementById("load-button"); // the Load & Visualize button
-      if (btn) btn.click();
-    }
+  const {
+    array = [],
+    sortedIndices = [],
+    explanation = "",
+    totalComparisons = 0,
+    totalSwaps = 0,
+    rootIndex = null,
+    largestIndex = null,
+    leftIndex = null,
+    rightIndex = null,
+    heapSize = 0,
+    line = 12
+  } = currentState;
+
+  const codeContent = {
+    1: "void heapify(vector<int>& arr, int n, int i) {",
+    2: "    int largest = i;",
+    3: "    int l = 2 * i + 1;",
+    4: "    int r = 2 * i + 2;",
+    5: "    if (l < n && arr[l] > arr[largest]) largest = l;",
+    6: "    if (r < n && arr[r] > arr[largest]) largest = r;",
+    7: "    if (largest != i) {",
+    8: "        swap(arr[i], arr[largest]);",
+    9: "        heapify(arr, n, largest);",
+    10: "    }",
+    11: "}",
+    12: "void heapSort(vector<int>& arr) {",
+    13: "    int n = arr.size();",
+    14: "    for (int i = n / 2 - 1; i >= 0; i--) heapify(arr, n, i);",
+    15: "    for (int i = n - 1; i > 0; i--) {",
+    16: "        swap(arr[0], arr[i]);",
+    17: "        heapify(arr, i, 0);",
+    18: "    }",
+    19: "}"
   };
 
-  const handleSpeedChange = (e) => {
-    setSpeed(parseFloat(e.target.value));
-  };
-
-  const playhead = useCallback(() => {
-    setIsPlaying((prev) => !prev); // toggle between play/pause
-  }, []);
-
-  const stepForward = useCallback(
-    () => setCurrentStep((prev) => Math.min(prev + 1, history.length - 1)),
-    [history.length]
+  const inputSection = (
+    <>
+      <input
+        id="array-input"
+        type="text"
+        value={arrayInput}
+        onChange={(e) => setArrayInput(e.target.value)}
+        disabled={isLoaded}
+        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        placeholder="e.g., 12,11,13,5,6,7"
+      />
+      {!isLoaded && (
+        <button
+          onClick={loadProblem}
+          className="px-5 py-3 rounded-xl bg-blue-500/20 hover:bg-blue-500/40 transition text-white font-bold shadow-lg cursor-pointer"
+        >
+          Load & Visualize
+        </button>
+      )}
+      <button
+        onClick={generateRandomArray}
+        className="px-4 py-3 bg-purple-500/20 hover:bg-purple-500/40 rounded-xl font-bold transition-all text-white shadow-lg cursor-pointer"
+      >
+        Random
+      </button>
+    </>
   );
 
-  const stepBackward = useCallback(
-    () => setCurrentStep((prev) => Math.max(prev - 1, 0)),
-    []
-  );
-
-  // --- Keyboard control only when active ---
-  useEffect(() => {
-    if (!active || !isLoaded) return;
-
-    const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        stepBackward();
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        stepForward();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [active, isLoaded, stepForward, stepBackward]);
-
-  // --- Click outside to deactivate ---
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (visualizerRef.current && !visualizerRef.current.contains(e.target)) {
-        setActive(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    if (!isPlaying || history.length === 0) return;
-
-    const interval = setInterval(() => {
-      setCurrentStep((prev) => {
-        if (prev >= history.length - 1) {
-          clearInterval(interval);
-          setIsPlaying(false);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 1000 / speed); // faster speed = shorter delay
-
-    return () => clearInterval(interval); // cleanup
-  }, [isPlaying, speed, history.length]);
-
-  const state = history[currentStep] || {};
-  const { array = [] } = state;
-
-  const colorMapping = {
-    purple: "text-purple-400",
-    cyan: "text-cyan-400",
-    yellow: "text-yellow-300",
-    orange: "text-orange-400",
-    "light-gray": "text-gray-400",
-    "": "text-gray-200",
-  };
-
-  const CodeLine = ({ line, content }) => (
-    <div
-      className={`block rounded-md transition-colors ${
-        state.line === line ? "bg-blue-500/20" : ""
-      }`}
-    >
-      <span className="text-gray-600 w-8 inline-block text-right pr-4 select-none">
-        {line}
-      </span>
-      {content.map((token, index) => (
-        <span key={index} className={colorMapping[token.c]}>
-          {token.t}
-        </span>
-      ))}
-    </div>
-  );
-
-  const heapSortCode = [
-    { l: 2, c: [{ t: "function heapSort(arr) {", c: "" }] },
-    { l: 3, c: [{ t: "  buildMaxHeap(arr)", c: "yellow" }] },
-    { l: 4, c: [{ t: "  // Heap is built", c: "light-gray" }] },
-    { l: 5, c: [{ t: "  for i from n-1 down to 1:", c: "purple" }] },
-    { l: 6, c: [{ t: "    swap(arr[0], arr[i])", c: "" }] },
-    { l: 7, c: [{ t: "    heapify(arr, i, 0)", c: "yellow" }] },
-    { l: 8, c: [{ t: "}", c: "" }] },
-    { l: 9, c: [{ t: "", c: "" }] },
-    { l: 10, c: [{ t: "function heapify(arr, heapSize, i) {", c: "" }] },
-    {
-      l: 11,
-      c: [{ t: "  if leftChild < heapSize and arr[l] > arr[largest]", c: "" }],
-    },
-    {
-      l: 12,
-      c: [{ t: "  if rightChild < heapSize and arr[r] > arr[largest]", c: "" }],
-    },
-    { l: 13, c: [{ t: "  if largest != i:", c: "purple" }] },
-    { l: 14, c: [{ t: "    swap(arr[i], arr[largest])", c: "" }] },
-    { l: 15, c: [{ t: "    heapify(arr, heapSize, largest)", c: "yellow" }] },
-    { l: 16, c: [{ t: "}", c: "" }] },
-  ];
-
-  return (
-    <div
-      ref={visualizerRef}
-      tabIndex={0}
-      onClick={() => setActive(true)}
-      className="p-4 max-w-7xl mx-auto focus:outline-none"
-    >
-      <header className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-blue-400 flex items-center justify-center gap-3">
-          <Shuffle /> Heap Sort Visualizer
-        </h1>
-        <p className="text-lg text-gray-400 mt-2">
-          Visualizing the comparison-based sorting algorithm using a binary heap
-        </p>
-      </header>
-      <div className="w-full flex justify-center">
-        <div className="shadow-2xl border border-gray-700/50 bg-gray-800/50 p-4 rounded-lg  flex flex-col md:flex-row items-center justify-between gap-2 mb-6 w-full">
-          <div
-            className={`flex items-center gap-4 ${
-              isLoaded ? "w-full" : "w-full md:w-950"
-            }`}
-          >
-            <label
-              htmlFor="array-input"
-              className="font-medium text-gray-300 font-mono hidden md:block"
-            >
-              Array:
-            </label>
-            <input
-              id="array-input"
-              type="text"
-              value={arrayInput}
-              onChange={(e) => setArrayInput(e.target.value)}
-              onKeyDown={handleEnterKey}
-              disabled={isLoaded}
-              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-            />
+  const statsSection = (
+    <>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl font-semibold">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-blue-300 select-none">
+          Comparisons
+        </h4>
+        <div className="text-3xl font-mono text-blue-305 font-bold">
+          {totalComparisons}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl font-semibold">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-purple-300 select-none">
+          Swaps
+        </h4>
+        <div className="text-3xl font-mono text-purple-355 font-bold">
+          {totalSwaps}
+        </div>
+      </div>
+      <div className="p-4 text-center bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl font-semibold">
+        <h4 className="font-semibold flex items-center justify-center gap-2 mb-2 text-cyan-300 select-none">
+          Heap Size
+        </h4>
+        <div className="text-3xl font-mono text-cyan-305 font-bold">
+          {heapSize}
+        </div>
+      </div>
+      <div className="sm:col-span-3 p-4 bg-gray-900/50 backdrop-blur-md rounded-2xl border border-gray-700/60 shadow-2xl">
+        <h4 className="text-blue-300 font-semibold flex items-center gap-2 mb-2 select-none">
+          <Clock size={16} /> Complexity Details
+        </h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <div>
+            <strong>Worst/Average/Best Case Time:</strong>{" "}
+            <span className="font-mono text-teal-300">O(n log n)</span> - heap construction + extraction.
           </div>
-          <div className="flex items-center flex-wrap gap-4 md:flex-nowrap w-full md:w-150">
-            {!isLoaded ? (
-              <button
-                id="load-button"
-                onClick={loadArray}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full"
-              >
-                Load & Visualize
-              </button>
-            ) : (
-              <>
-                <div className="flex gap-2 w-full md:w-40 justify-center">
-                  <button
-                    onClick={stepBackward}
-                    disabled={currentStep <= 0}
-                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  {/* on click change state form play to pause */}
-                  <button
-                    onClick={playhead}
-                    disabled={currentStep >= history.length - 1}
-                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
-                  >
-                    {isPlaying ? (
-                      // Pause icon
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="white"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
-                      </svg>
-                    ) : (
-                      // Play icon
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="white"
-                        viewBox="0 0 448 512"
-                      >
-                        <path d="M91.2 36.9c-12.4-6.8-27.4-6.5-39.6 .7S32 57.9 32 72v368c0 14.1 7.5 27.2 19.6 34.4s27.2 7.5 39.6 .7l336-184c12.8-7 20.8-20.5 20.8-35.1s-8-28.1-20.8-35.1L91.2 36.9z" />
-                      </svg>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={stepForward}
-                    disabled={currentStep >= history.length - 1}
-                    className="bg-gray-700 p-2 rounded-md disabled:opacity-50 w-full md:w-10 flex justify-center"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="flex gap-2 w-full lg:w-72 justify-center gap-4">
-                  <div className="flex items-center gap-2 rounded-lg flex-shrink-0 lg:w-72 w-full">
-                    <span className="text-sm font-semibold">Speed</span>
-                    <input
-                      type="range"
-                      className="w-full h-1.5 bg-gray-600 rounded-lg outline-none cursor-pointer"
-                      min="0.25"
-                      max="2"
-                      step="0.25"
-                      value={speed}
-                      onChange={handleSpeedChange}
-                    />
-                    <span className="text-sm min-w-8 font-mono text-gray-300  text-right">
-                      {speed}x
-                    </span>
-                    <span className="font-mono w-18 px-4 py-2 flex items-center justify-center text-center bg-gray-900 border border-gray-600 rounded-md">
-                      {currentStep >= 0 ? currentStep + 1 : 0}/{history.length}
-                    </span>
-                    {/* Array size display - showing current number of elements */}
-                    {isLoaded && arrayInput && (
-                      <span className="text-sm text-gray-400 font-medium ml-4">
-                        Array Size: {arrayInput.split(',').filter(item => item.trim() !== '').length}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex w-full md:w-20">
-                  <button
-                    onClick={reset}
-                    className="bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg whitespace-nowrap text-sm sm:text-base flex-shrink-0 mx-auto w-full "
-                  >
-                    Reset
-                  </button>
-                </div>
-              </>
-            )}
+          <div>
+            <strong>Space Complexity:</strong>{" "}
+            <span className="font-mono text-teal-305">O(1)</span> - in-place sorting.
           </div>
         </div>
       </div>
+    </>
+  );
 
-      {isLoaded ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Code size={20} /> Pseudocode
-            </h3>
-            <pre className="text-sm overflow-auto">
-              <code className="font-mono leading-relaxed">
-                {heapSortCode.map((line) => (
-                  <CodeLine key={line.l} line={line.l} content={line.c} />
-                ))}
-              </code>
-            </pre>
-          </div>
+  return (
+    <VisualizerLayout
+      title="Heap Sort"
+      description="Visualizes the Heap Sort algorithm, which builds a binary max heap from the array, then repeatedly extracts the maximum element and restores the heap."
+      isLoaded={isLoaded}
+      inputSection={inputSection}
+      codeContent={codeContent}
+      activeLine={line}
+      message={explanation}
+      visualizerState={visualizer}
+      statsSection={statsSection}
+      placeholderText="Enter array, then click Load & Visualize to begin."
+    >
+      <div className="w-full space-y-6">
+        {navigate && (
+          <button
+            onClick={() => navigate("home")}
+            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-6 group cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+            Back to Sorting Algorithms
+          </button>
+        )}
+        <div className="flex justify-center items-end gap-3 min-h-[220px]">
+          {array.map((item, index) => {
+            const isSorted = sortedIndices.includes(index);
+            const isRoot = rootIndex === index;
+            const isLargest = largestIndex === index;
+            const isComparing = leftIndex === index || rightIndex === index;
+            const isInHeap = index < heapSize;
 
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-2xl">
-              <h3 className="font-bold text-lg text-gray-300 mb-4 flex items-center gap-2">
-                <BarChart3 size={20} />
-                Array Visualization
-              </h3>
-              <div
-                id="array-container"
-                className="flex justify-center items-center flex-wrap gap-2 min-h-[80px] relative"
-              >
-                {array.map((item, index) => {
-                  const isSorted = state.sortedIndices?.includes(index);
-                  const isRoot = state.rootIndex === index;
-                  const isLargest = state.largestIndex === index;
-                  const isLeftChild = state.leftIndex === index;
-                  const isRightChild = state.rightIndex === index;
-                  const isComparing = isLeftChild || isRightChild; // Keep for coloring
-                  const isInHeap = index < state.heapSize;
-
-                  let boxStyles = "bg-gray-700 border-gray-600";
-                  if (state.finished || isSorted) {
-                    boxStyles = "bg-green-700 border-green-500 text-white";
-                  } else if (isRoot) {
-                    boxStyles = "bg-red-600 border-red-400 text-white";
-                  } else if (isLargest) {
-                    boxStyles = "bg-blue-600 border-blue-400 text-white";
-                  } else if (isComparing) {
-                    boxStyles = "bg-amber-600 border-amber-400 text-white";
-                  } else if (!isInHeap) {
-                    boxStyles = "bg-gray-800 border-gray-700 opacity-50";
-                  }
-
-                  return (
-                    <div
-                      key={item.id}
-                      id={`array-container-element-${index}`}
-                      className="text-center relative"
-                    >
-                      <div
-                        className={`w-14 h-14 flex items-center justify-center rounded-lg shadow-md border-2 font-bold text-xl transition-all duration-300 ${boxStyles}`}
-                      >
-                        {item.value}
-                      </div>
-                      <span className="text-xs text-gray-400 mt-1">
-                        {index}
-                      </span>
-                    </div>
-                  );
-                })}
-                {state.heapSize > 0 && state.heapSize < array.length && (
-                  <div
-                    className="absolute top-0 bottom-0 border-r-2 border-dashed border-purple-400 transition-all duration-300"
-                    style={{ left: `${state.heapSize * 3.75 - 0.25}rem` }} // Adjust position based on element width + gap
-                    title={`Heap size: ${state.heapSize}`}
-                  ></div>
-                )}
-
-                {isLoaded && state.rootIndex !== null && (
-                  <VisualizerPointer
-                    index={state.rootIndex}
-                    containerId="array-container"
-                    color="red"
-                    label="R" // Root
-                  />
-                )}
-                {isLoaded &&
-                  state.largestIndex !== null &&
-                  state.largestIndex !== state.rootIndex && (
-                    <VisualizerPointer
-                      index={state.largestIndex}
-                      containerId="array-container"
-                      color="blue"
-                      label="Lg" // Largest
-                    />
-                  )}
+            return (
+              <div key={item.id} className="flex flex-col items-center gap-2">
+                <div
+                  className={`w-16 flex items-center justify-center rounded-lg border-2 font-bold text-lg transition-all duration-300 ${
+                    isSorted
+                      ? "bg-green-500/30 border-green-400 text-white"
+                      : isRoot
+                      ? "bg-red-500/30 border-red-400 text-white scale-110"
+                      : isLargest
+                      ? "bg-blue-500/30 border-blue-400 text-white scale-110"
+                      : isComparing
+                      ? "bg-amber-500/30 border-amber-400 text-white scale-110"
+                      : !isInHeap
+                      ? "bg-gray-800 border-gray-700 opacity-40 text-gray-500"
+                      : "bg-gray-700 border-gray-600 text-gray-350"
+                  }`}
+                  style={{ height: `${item.value * 12 + 60}px` }}
+                >
+                  {item.value}
+                </div>
+                <div className="text-xs font-mono text-gray-500">
+                  {rootIndex === index ? "root" : largestIndex === index ? "largest" : ""}
+                </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-cyan-800/30 p-4 rounded-xl border border-cyan-700/50">
-                <h3 className="text-cyan-300 text-sm flex items-center gap-2">
-                  <GitCompareArrows size={16} /> Total Comparisons
-                </h3>
-                <p className="font-mono text-4xl text-cyan-400 mt-2">
-                  {state.totalComparisons ?? 0}
-                </p>
-              </div>
-              <div className="bg-purple-800/30 p-4 rounded-xl border border-purple-700/50">
-                <h3 className="text-purple-300 text-sm flex items-center gap-2">
-                  <Repeat size={16} /> Total Swaps
-                </h3>
-                <p className="font-mono text-4xl text-purple-400 mt-2">
-                  {state.totalSwaps ?? 0}
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700/50 min-h-[5rem]">
-              <h3 className="text-gray-400 text-sm mb-1">Explanation</h3>
-              <p className="text-gray-300">{state.explanation}</p>
-              {state.finished && (
-                <CheckCircle className="inline-block ml-2 text-green-400" />
-              )}
-            </div>
-          </div>
-
-          <div className="lg:col-span-3 bg-gray-800/50 p-5 rounded-xl shadow-2xl border border-gray-700/50">
-            <h3 className="font-bold text-xl text-blue-400 mb-4 pb-3 border-b border-gray-600/50 flex items-center gap-2">
-              <Clock size={20} /> Complexity Analysis
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6 text-sm">
-              <div className="space-y-4">
-                <h4 className="font-semibold text-blue-300">Time Complexity</h4>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">
-                    Worst Case: O(N log N)
-                  </strong>
-                  <br />
-                  Occurs for all inputs. The height of the heap is log N.
-                  Building the heap takes O(N), and each of the N extraction
-                  operations takes O(log N) for heapifying.
-                </p>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">
-                    Average Case: O(N log N)
-                  </strong>
-                  <br />
-                  The performance of Heap Sort is very consistent across
-                  different input distributions, making it reliable.
-                </p>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">
-                    Best Case: O(N log N)
-                  </strong>
-                  <br />
-                  Even if the array is already sorted, the algorithm must still
-                  build the heap and extract each element, resulting in the same
-                  complexity.
-                </p>
-              </div>
-              <div className="space-y-4">
-                <h4 className="font-semibold text-blue-300">
-                  Space Complexity
-                </h4>
-                <p className="text-gray-400">
-                  <strong className="text-teal-300 font-mono">O(1)</strong>
-                  <br />
-                  Heap sort is an in-place algorithm, meaning it requires a
-                  constant amount of extra memory regardless of the input size.
-                  If the recursive implementation of `heapify` is considered,
-                  the space for the recursion stack is O(log N) due to the
-                  height of the heap.
-                </p>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
-      ) : (
-        <p className="text-center text-gray-500 py-10">
-          Load an array to begin visualization.
-        </p>
-      )}
-    </div>
+      </div>
+    </VisualizerLayout>
   );
 };
 
