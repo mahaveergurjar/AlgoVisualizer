@@ -637,7 +637,7 @@ const RatInMaze = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gray-950 text-white">
       <div className="max-w-7xl mx-auto p-6">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-cyan-400 mb-2">
@@ -696,7 +696,7 @@ const RatInMaze = () => {
                     <textarea
                       value={maze || "1 0 0 0\n1 1 0 1\n0 1 0 0\n1 1 1 1"}
                       onChange={(e) => setMaze(e.target.value)}
-                      className="bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:outline-none focus:border-cyan-400 w-full font-mono text-sm resize-none"
+                      className="bg-gray-950 text-white px-3 py-2 rounded border border-gray-600 focus:outline-none focus:border-cyan-400 w-full font-mono text-sm resize-none"
                       placeholder="1 0 0 0&#10;1 1 0 1&#10;0 1 0 0&#10;1 1 1 1"
                       rows="5"
                     />
@@ -827,7 +827,7 @@ const RatInMaze = () => {
                   C++ {algorithm} Solution
                 </h3>
               </div>
-              <div className="bg-gray-900 rounded p-4 overflow-auto max-h-96 text-sm">
+              <div className="bg-gray-950 rounded p-4 overflow-auto max-h-96 text-sm">
                 {renderCodeWithHighlight(
                   algorithm === "DFS" ? dfsCode : bfsCode,
                   currentState.line
@@ -843,7 +843,7 @@ const RatInMaze = () => {
                 </h3>
               </div>
 
-              <div className="bg-gray-900 rounded p-4 mb-4">
+              <div className="bg-gray-950 rounded p-4 mb-4">
                 <div className="flex justify-center">{renderMaze()}</div>
               </div>
 

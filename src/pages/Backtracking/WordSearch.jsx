@@ -266,7 +266,7 @@ const WordSearch = () => {
         onChange={(e) => setBoardInput(e.target.value)}
         disabled={isLoaded}
         placeholder="e.g., ABCE,SFCS,ADEE"
-        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
+        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
       />
       <input
         type="text"
@@ -274,7 +274,7 @@ const WordSearch = () => {
         onChange={(e) => setWordInput(e.target.value)}
         disabled={isLoaded}
         placeholder="e.g., SEE"
-        className="w-24 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
+        className="w-24 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
       />
       {!isLoaded && (
         <>

@@ -633,7 +633,7 @@ const ConstructTree = () => {
             onChange={(e) => setPreorderInput(e.target.value)}
             disabled={isLoaded}
             placeholder="e.g., 3,9,20,15,7"
-            className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all disabled:opacity-50"
+            className="font-mono flex-grow bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all disabled:opacity-50"
           />
         </div>
         <div className="flex items-center gap-2 flex-grow">
@@ -647,7 +647,7 @@ const ConstructTree = () => {
             onChange={(e) => setInorderInput(e.target.value)}
             disabled={isLoaded}
             placeholder="e.g., 9,3,15,20,7"
-            className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all disabled:opacity-50"
+            className="font-mono flex-grow bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all disabled:opacity-50"
           />
         </div>
       </div>

@@ -393,7 +393,7 @@ const LFUCacheVisualizer = () => {
           disabled={isLoaded}
           rows={3}
           placeholder="LFUCache(2), put(1, 1), put(2, 2), get(1)"
-          className="font-mono bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-purple-550 focus:outline-none w-full text-sm"
+          className="font-mono bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-purple-550 focus:outline-none w-full text-sm"
         />
       </div>
       {!isLoaded && (
@@ -527,7 +527,7 @@ const LFUCacheVisualizer = () => {
                   Object.entries(cache).map(([key, data]) => (
                     <div
                       key={key}
-                      className={`p-2 rounded-lg bg-gray-900 border shadow-md transform transition-all duration-300 flex flex-col gap-1 ${
+                      className={`p-2 rounded-lg bg-gray-950 border shadow-md transform transition-all duration-300 flex flex-col gap-1 ${
                         newKey === key || updatedKey === key
                           ? "border-purple-400 scale-105"
                           : "border-gray-800"

@@ -330,7 +330,7 @@ const PeakIndexInMountainArray = () => {
                 value={arrInput}
                 onChange={(e) => setArrInput(e.target.value)}
                 disabled={isLoaded}
-                className="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 w-full focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 font-mono text-sm"
+                className="bg-gray-950 border border-gray-600 rounded-lg px-4 py-2.5 w-full focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 font-mono text-sm"
                 placeholder="e.g., 0,10,5,2"
               />
             </div>

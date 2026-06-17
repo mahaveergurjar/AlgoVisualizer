@@ -150,14 +150,14 @@ const AssignCookies = () => {
         value={greedsInput}
         onChange={(e) => setGreedsInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-yellow-450 shadow-sm"
+        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-yellow-450 shadow-sm"
         placeholder="Greeds (e.g. 1,2,3)"
       />
       <input
         value={cookiesInput}
         onChange={(e) => setCookiesInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-yellow-450 shadow-sm"
+        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-yellow-450 shadow-sm"
         placeholder="Cookies (e.g. 1,1)"
       />
       {!isLoaded && (

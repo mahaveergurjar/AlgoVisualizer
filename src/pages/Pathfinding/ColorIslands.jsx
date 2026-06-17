@@ -432,7 +432,7 @@ void floodFill(int[][] grid, int r, int c, int color) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gray-950 text-white">
       <div className="max-w-7xl mx-auto p-6">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-cyan-400 mb-2">
@@ -507,7 +507,7 @@ void floodFill(int[][] grid, int r, int c, int color) {
                   Java Color Islands (BFS) Solution
                 </h3>
               </div>
-              <div className="bg-gray-900 rounded p-4 overflow-auto max-h-[450px] text-sm">
+              <div className="bg-gray-950 rounded p-4 overflow-auto max-h-[450px] text-sm">
                 {renderCodeWithHighlight(colorIslandsCode, currentState.line)}
               </div>
             </div>
@@ -519,7 +519,7 @@ void floodFill(int[][] grid, int r, int c, int color) {
                 </h3>
               </div>
 
-              <div className="bg-gray-900 rounded p-4 mb-4">
+              <div className="bg-gray-950 rounded p-4 mb-4">
                 <div className="flex justify-center">{renderGrid()}</div>
               </div>
 

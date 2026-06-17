@@ -212,7 +212,7 @@ const FindFirstAndLastPosition = () => {
         value={arrInput}
         onChange={(e) => setArrInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-1 min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-teal-400 shadow-sm"
+        className="flex-1 min-w-[150px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-teal-400 shadow-sm"
         placeholder="Array (comma-separated)"
       />
       <input
@@ -220,7 +220,7 @@ const FindFirstAndLastPosition = () => {
         value={targetInput}
         onChange={(e) => setTargetInput(e.target.value)}
         disabled={isLoaded}
-        className="w-full md:w-32 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-teal-400 shadow-sm"
+        className="w-full md:w-32 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-teal-400 shadow-sm"
         placeholder="Target"
       />
       {!isLoaded && (

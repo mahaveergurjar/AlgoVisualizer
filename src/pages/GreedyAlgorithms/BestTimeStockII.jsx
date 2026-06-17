@@ -264,7 +264,7 @@ const BestTimeStockII = () => {
         value={pricesInput}
         onChange={(e) => setPricesInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm"
+        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm"
         placeholder="Prices (e.g. 7,1,5,3,6,4)"
       />
       <select
@@ -274,7 +274,7 @@ const BestTimeStockII = () => {
           visualizer.reset();
         }}
         disabled={isLoaded}
-        className="w-40 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm"
+        className="w-40 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm"
       >
         <option value="greedy">Greedy Approach</option>
         <option value="peak-valley">Peak-Valley</option>

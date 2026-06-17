@@ -519,7 +519,7 @@ const RemoveKDigitsVisualizer = () => {
             value={numsInput}
             onChange={(e) => setNumsInput(e.target.value)}
             disabled={isLoaded}
-            className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500"
+            className="font-mono flex-grow bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500"
           />
           <label
             htmlFor="k-input"
@@ -533,7 +533,7 @@ const RemoveKDigitsVisualizer = () => {
             value={kInput}
             onChange={(e) => setKInput(e.target.value)}
             disabled={isLoaded}
-            className="font-mono bg-gray-900 border border-gray-600 rounded-md p-2 w-20 focus:ring-2 focus:ring-violet-500"
+            className="font-mono bg-gray-950 border border-gray-600 rounded-md p-2 w-20 focus:ring-2 focus:ring-violet-500"
           />
         </div>
         <div className="flex items-center gap-2">

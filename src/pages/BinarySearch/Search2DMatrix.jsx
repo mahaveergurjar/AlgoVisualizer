@@ -392,7 +392,7 @@ const Search2DMatrix = () => {
   } = state;
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen">
+    <div className="bg-gray-950 text-white min-h-screen">
       <div className="px-6 py-8 max-w-7xl mx-auto relative">
         <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-sky-500/10 rounded-full blur-3xl -z-0" />
 
@@ -413,7 +413,7 @@ const Search2DMatrix = () => {
               value={matrixInput}
               onChange={(e) => setMatrixInput(e.target.value)}
               disabled={isLoaded}
-              className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 font-mono focus:ring-2 focus:ring-sky-400"
+              className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 font-mono focus:ring-2 focus:ring-sky-400"
               placeholder="Matrix, e.g., [[1,2],[3,4]]"
             />
             <input
@@ -421,7 +421,7 @@ const Search2DMatrix = () => {
               value={targetInput}
               onChange={(e) => setTargetInput(e.target.value)}
               disabled={isLoaded}
-              className="w-48 p-3 rounded-xl bg-gray-900 border border-gray-700 font-mono focus:ring-2 focus:ring-sky-400"
+              className="w-48 p-3 rounded-xl bg-gray-950 border border-gray-700 font-mono focus:ring-2 focus:ring-sky-400"
               placeholder="Target"
             />
 
@@ -456,7 +456,7 @@ const Search2DMatrix = () => {
                     <ArrowRight size={18} />
                   </button>
                 </div>
-                <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200">
+                <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200">
                   {currentStep + 1}/{history.length}
                 </div>
                 <div className="flex items-center gap-2">

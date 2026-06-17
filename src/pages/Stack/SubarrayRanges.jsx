@@ -630,7 +630,7 @@ const SubarrayRangesVisualizer = () => {
             value={numsInput}
             onChange={(e) => setNumsInput(e.target.value)}
             disabled={isLoaded}
-            className="mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 w-full sm:w-64 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            className="mono flex-grow bg-gray-950 border border-gray-600 rounded-md p-2 w-full sm:w-64 focus:ring-2 focus:ring-teal-500 focus:outline-none"
           />
         </div>
         <div className="flex items-center gap-2">

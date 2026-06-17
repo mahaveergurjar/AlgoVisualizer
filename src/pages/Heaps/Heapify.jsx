@@ -234,7 +234,7 @@ const HeapifyVisualizer = () => {
           value={numsInput}
           onChange={(e) => setNumsInput(e.target.value)}
           disabled={isLoaded}
-          className="font-mono flex-grow bg-gray-900 border border-gray-750 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+          className="font-mono flex-grow bg-gray-950 border border-gray-750 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 focus:outline-none"
         />
       </div>
       {!isLoaded && (

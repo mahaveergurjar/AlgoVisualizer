@@ -230,7 +230,7 @@ const ExpressionAddOperators = () => {
         value={num}
         onChange={(e) => setNum(e.target.value.replace(/[^\d]/g, ""))}
         disabled={isLoaded}
-        className="flex-1 min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-fuchsia-400 shadow-sm"
+        className="flex-1 min-w-[150px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-fuchsia-400 shadow-sm"
         placeholder="digits (e.g. 123)"
       />
       <input
@@ -238,7 +238,7 @@ const ExpressionAddOperators = () => {
         value={target}
         onChange={(e) => setTarget(Number(e.target.value))}
         disabled={isLoaded}
-        className="w-24 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-fuchsia-400 shadow-sm"
+        className="w-24 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-fuchsia-400 shadow-sm"
         placeholder="target"
       />
       {!isLoaded && (

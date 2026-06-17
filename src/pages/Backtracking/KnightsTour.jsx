@@ -157,7 +157,7 @@ const KnightsTour = () => {
         value={n}
         onChange={(e) => setN(Number(e.target.value))}
         disabled={isLoaded}
-        className="w-32 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
+        className="w-32 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
         placeholder="Board size"
       />
       {!isLoaded && (

@@ -429,7 +429,7 @@ const Kruskal = ({ navigate }) => {
                 type="text"
                 value={nodesStr}
                 onChange={(e) => setNodesStr(e.target.value)}
-                className="w-full font-mono bg-gray-900 p-3 rounded-lg border-2 border-gray-600 focus:border-green-500 focus:outline-none transition-colors text-white"
+                className="w-full font-mono bg-gray-950 p-3 rounded-lg border-2 border-gray-600 focus:border-green-500 focus:outline-none transition-colors text-white"
                 placeholder="0,1,2,3,4"
               />
             </div>
@@ -441,7 +441,7 @@ const Kruskal = ({ navigate }) => {
                 type="text"
                 value={edgesStr}
                 onChange={(e) => setEdgesStr(e.target.value)}
-                className="w-full font-mono bg-gray-900 p-3 rounded-lg border-2 border-gray-600 focus:border-green-500 focus:outline-none transition-colors text-white"
+                className="w-full font-mono bg-gray-950 p-3 rounded-lg border-2 border-gray-600 focus:border-green-500 focus:outline-none transition-colors text-white"
                 placeholder="0-1-4,0-2-1,1-3-1"
               />
             </div>

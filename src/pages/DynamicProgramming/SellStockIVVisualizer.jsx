@@ -439,7 +439,7 @@ const SellStockIVVisualizer = () => {
             value={pricesInput}
             onChange={(e) => setPricesInput(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
             placeholder="prices (comma-separated)"
           />
           <input
@@ -447,7 +447,7 @@ const SellStockIVVisualizer = () => {
             value={kInput}
             onChange={(e) => setKInput(e.target.value)}
             disabled={isLoaded}
-            className="w-48 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
+            className="w-48 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
             placeholder="k (transactions)"
           />
 
@@ -485,7 +485,7 @@ const SellStockIVVisualizer = () => {
                 </button>
               </div>
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow inner">
+              <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200 shadow inner">
                 {formattedStep()}
               </div>
 
@@ -586,7 +586,7 @@ const SellStockIVVisualizer = () => {
                 <h4 className="text-gray-300 text-sm mb-2 flex items-center gap-2">
                   <Terminal size={14} /> Data Structures (Transactions 0 to {k})
                 </h4>
-                <div className="bg-gray-900 p-3 rounded-lg border border-gray-700 space-y-4">
+                <div className="bg-gray-950 p-3 rounded-lg border border-gray-700 space-y-4">
                   {/* Buy Array */}
                   <div>
                     <div className="text-xs text-gray-400 mb-2">Buy Array (Max profit holding stock)</div>

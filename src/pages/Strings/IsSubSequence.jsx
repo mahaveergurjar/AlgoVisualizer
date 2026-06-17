@@ -163,7 +163,7 @@ const IsSubsequence = ({ navigate }) => {
             type="text"
             value={sInput}
             onChange={(e) => setSInput(e.target.value)}
-            className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-white font-mono text-xs focus:border-green-500 focus:outline-none w-32"
+            className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-white font-mono text-xs focus:border-green-500 focus:outline-none w-32"
             placeholder="Subsequence s..."
           />
         </div>
@@ -172,7 +172,7 @@ const IsSubsequence = ({ navigate }) => {
             type="text"
             value={tInput}
             onChange={(e) => setTInput(e.target.value)}
-            className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-white font-mono text-xs focus:border-green-500 focus:outline-none w-44"
+            className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-white font-mono text-xs focus:border-green-500 focus:outline-none w-44"
             placeholder="Source string t..."
           />
         </div>

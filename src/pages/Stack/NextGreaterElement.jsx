@@ -309,7 +309,7 @@ const NextGreaterElementVisualizer = () => {
       <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
          <div className="flex items-center gap-4 flex-grow w-full">
              <label htmlFor="array-input" className="font-medium text-gray-300 font-mono">Array:</label>
-             <input id="array-input" type="text" value={numsInput} onChange={(e) => setNumsInput(e.target.value)} disabled={isLoaded} className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-teal-500"/>
+             <input id="array-input" type="text" value={numsInput} onChange={(e) => setNumsInput(e.target.value)} disabled={isLoaded} className="font-mono flex-grow bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-teal-500"/>
          </div>
          <div className="flex items-center gap-2">
              {!isLoaded ? (

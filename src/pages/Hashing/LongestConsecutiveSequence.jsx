@@ -405,7 +405,7 @@ const LongestConsecutiveSequence = () => {
             value={numsInput}
             onChange={(e) => setNumsInput(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
             placeholder="Enter comma-separated numbers (e.g., 100,4,200,1,3,2)"
           />
 
@@ -443,7 +443,7 @@ const LongestConsecutiveSequence = () => {
                 </button>
               </div>
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow">
+              <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200 shadow">
                 {formattedStep()}
               </div>
 

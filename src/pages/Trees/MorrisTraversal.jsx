@@ -688,12 +688,12 @@ const MorrisTraversalVisualizer = () => {
           onChange={(e) => setTreeInput(e.target.value)}
           disabled={isLoaded}
           placeholder="e.g., 4,2,6,1,3,5,7"
-          className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
+          className="font-mono flex-grow bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
         />
         <select
           value={activeLang}
           onChange={(e) => setActiveLang(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white font-semibold cursor-pointer text-sm"
+          className="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-white font-semibold cursor-pointer text-sm"
         >
           {LANG_TABS.map((lang) => (
             <option key={lang} value={lang}>{lang}</option>

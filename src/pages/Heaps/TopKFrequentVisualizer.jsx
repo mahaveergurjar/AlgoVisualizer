@@ -383,7 +383,7 @@ const TopKFrequentVisualizer = () => {
           value={numsInput}
           onChange={(e) => setNumsInput(e.target.value)}
           disabled={isLoaded}
-          className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 focus:outline-none w-full sm:w-auto min-w-[150px] text-sm"
+          className="font-mono flex-grow bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 focus:outline-none w-full sm:w-auto min-w-[150px] text-sm"
         />
         <label htmlFor="k-input" className="font-medium text-gray-300 font-mono text-sm whitespace-nowrap">
           K:
@@ -394,7 +394,7 @@ const TopKFrequentVisualizer = () => {
           value={kInput}
           onChange={(e) => setKInput(e.target.value)}
           disabled={isLoaded}
-          className="font-mono bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 w-20 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+          className="font-mono bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 w-20 focus:ring-2 focus:ring-teal-500 focus:outline-none"
         />
       </div>
       {!isLoaded && (

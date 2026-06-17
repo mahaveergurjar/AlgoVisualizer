@@ -275,7 +275,7 @@ const MergeSortVisualizer = ({ navigate }) => {
         value={arrayInput}
         onChange={(e) => setArrayInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        className="flex-grow bg-gray-950 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
         placeholder="e.g., 8,5,2,9,5,6,3"
       />
       {!isLoaded && (

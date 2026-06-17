@@ -486,7 +486,7 @@ const LCAofDeepestLeaves = () => {
           onChange={(e) => setTreeInput(e.target.value)}
           disabled={isLoaded}
           placeholder="e.g., 3,5,1,6,2,0,8,null,null,7,4"
-          className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+          className="font-mono flex-grow bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
         />
       </div>
       {!isLoaded && (

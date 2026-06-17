@@ -415,7 +415,7 @@ const DesignLinkedList = () => {
           disabled={isLoaded}
           rows={3}
           placeholder="e.g., MyLinkedList(), addAtHead(1), addAtTail(3), get(1)"
-          className="font-mono bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-orange-505 focus:outline-none w-full text-sm"
+          className="font-mono bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-orange-505 focus:outline-none w-full text-sm"
         />
       </div>
       {!isLoaded && (

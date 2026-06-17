@@ -200,7 +200,7 @@ const Permutations = () => {
         onChange={(e) => setArrayInput(e.target.value)}
         disabled={isLoaded}
         placeholder="e.g., 1,2,3 (max 5 numbers)"
-        className="flex-grow min-w-[200px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400 shadow-sm"
+        className="flex-grow min-w-[200px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400 shadow-sm"
       />
       {!isLoaded && (
         <>

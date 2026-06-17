@@ -26,7 +26,7 @@ const Node = ({
     ? "bg-cyan-400"
     : isWall
     ? "bg-gray-700"
-    : "bg-gray-900";
+    : "bg-gray-950";
 
   return (
     <div

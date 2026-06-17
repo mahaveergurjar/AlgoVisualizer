@@ -468,7 +468,7 @@ const SlidingWindowMaximum = ({ navigate }) => {
         value={numsInput}
         onChange={(e) => setNumsInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        className="flex-grow bg-gray-950 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
         placeholder="e.g., 1,3,-1,-3,5,3,6,7"
       />
       <div className="flex items-center gap-3">
@@ -479,7 +479,7 @@ const SlidingWindowMaximum = ({ navigate }) => {
           value={kInput}
           onChange={(e) => setKInput(e.target.value)}
           disabled={isLoaded}
-          className="w-20 bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm text-center"
+          className="w-20 bg-gray-950 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm text-center"
         />
       </div>
       {!isLoaded && (

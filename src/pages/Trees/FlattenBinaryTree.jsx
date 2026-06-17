@@ -543,13 +543,13 @@ const FlattenBinaryTreeVisualizer = () => {
           value={treeInput}
           onChange={(e) => setTreeInput(e.target.value)}
           disabled={isLoaded}
-          className="flex-grow p-2.5 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm disabled:opacity-50"
+          className="flex-grow p-2.5 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm disabled:opacity-50"
           placeholder="e.g., [1,2,5,3,4,null,6]"
         />
         <select
           value={activeLang}
           onChange={(e) => setActiveLang(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white font-semibold cursor-pointer text-sm"
+          className="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-white font-semibold cursor-pointer text-sm"
         >
           <option value="C++">C++</option>
           <option value="Python">Python</option>

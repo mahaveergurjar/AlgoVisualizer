@@ -247,7 +247,7 @@ const SubsetSumVisualizer = () => {
                     value={arrayInput}
                     onChange={(e) => setArrayInput(e.target.value)}
                     disabled={isLoaded}
-                    className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400"
+                    className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400"
                     placeholder="Array (comma-separated)"
                 />
                 <input
@@ -255,7 +255,7 @@ const SubsetSumVisualizer = () => {
                     value={targetInput}
                     onChange={(e) => setTargetInput(e.target.value)}
                     disabled={isLoaded}
-                    className="w-36 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400"
+                    className="w-36 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400"
                     placeholder="Target"
                 />
                 {!isLoaded ? (

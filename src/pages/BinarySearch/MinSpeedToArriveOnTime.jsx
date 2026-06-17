@@ -226,13 +226,13 @@ const MinSpeedToArriveOnTime = () => {
                             <div className="flex items-center gap-3 w-full sm:w-auto">
                                 <label htmlFor="dist-input" className="font-semibold text-gray-300 text-sm whitespace-nowrap">Distances:</label>
                                 <input id="dist-input" type="text" value={distInput} onChange={(e) => setDistInput(e.target.value)} disabled={isLoaded}
-                                    className="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 w-full sm:w-72 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm"
+                                    className="bg-gray-950 border border-gray-600 rounded-lg px-4 py-2.5 w-full sm:w-72 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm"
                                     placeholder="e.g., 1,3,2"/>
                             </div>
                             <div className="flex items-center gap-3">
                                 <label htmlFor="hour-input" className="font-semibold text-gray-300 text-sm">Hour:</label>
                                 <input id="hour-input" type="number" value={hourInput} onChange={(e) => setHourInput(e.target.value)} disabled={isLoaded}
-                                    className="bg-gray-800 border border-gray-600 rounded-lg px-4 py-2.5 w-24 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm"/>
+                                    className="bg-gray-950 border border-gray-600 rounded-lg px-4 py-2.5 w-24 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm"/>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">

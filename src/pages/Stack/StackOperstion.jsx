@@ -148,7 +148,7 @@ const StackOperations = ({ navigate }) => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handlePush()}
-              className="font-mono w-28 bg-gray-900 p-3 rounded-lg border-2 border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
+              className="font-mono w-28 bg-gray-950 p-3 rounded-lg border-2 border-gray-600 focus:border-green-500 focus:outline-none transition-colors"
               placeholder="e.g., 42"
             />
             <button

@@ -553,7 +553,7 @@ const QueueUsingStacks = () => {
             value={commands}
             onChange={(e) => setCommands(e.target.value)}
             disabled={isLoaded}
-            className='font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500'
+            className='font-mono flex-grow bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500'
           />
           <label
             htmlFor='args-input'
@@ -567,7 +567,7 @@ const QueueUsingStacks = () => {
             value={argsInput}
             onChange={(e) => setArgsInput(e.target.value)}
             disabled={isLoaded}
-            className='font-mono bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500'
+            className='font-mono bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-violet-500'
           />
         </div>
         <div className='flex items-center gap-2'>

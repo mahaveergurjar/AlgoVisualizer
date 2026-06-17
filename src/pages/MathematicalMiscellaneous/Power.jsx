@@ -495,7 +495,7 @@ const PowerPage = () => {
               onChange={(e) => setXInput(e.target.value)}
               disabled={isLoaded}
               placeholder="e.g., 2"
-              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
+              className="font-mono flex-grow bg-gray-950 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
             />
           </div>
           <div className="flex items-center gap-4">
@@ -509,7 +509,7 @@ const PowerPage = () => {
               onChange={(e) => setNInput(e.target.value)}
               disabled={isLoaded}
               placeholder="e.g., 10"
-              className="font-mono bg-gray-900 border border-gray-600 rounded-lg p-3 w-20 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
+              className="font-mono bg-gray-950 border border-gray-600 rounded-lg p-3 w-20 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
             />
           </div>
         </div>
@@ -573,7 +573,7 @@ const PowerPage = () => {
                   <select
                     value={speed}
                     onChange={handleSpeedChange}
-                    className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm cursor-pointer"
+                    className="bg-gray-950 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm cursor-pointer"
                   >
                     <option value={1500}>Slow</option>
                     <option value={1000}>Medium</option>
@@ -582,7 +582,7 @@ const PowerPage = () => {
                   </select>
                 </div>
 
-                <div className="font-mono px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-center min-w-20">
+                <div className="font-mono px-4 py-2 bg-gray-950 border border-gray-600 rounded-lg text-center min-w-20">
                   {currentStep + 1}/{history.length}
                 </div>
               </div>

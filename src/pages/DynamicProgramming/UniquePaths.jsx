@@ -377,7 +377,7 @@ const UniquePathsVisualizer = () => {
             value={mInput}
             onChange={(e) => setMInput(e.target.value)}
             disabled={isLoaded}
-            className="w-32 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
+            className="w-32 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
             placeholder="rows (m)"
           />
           <input
@@ -385,7 +385,7 @@ const UniquePathsVisualizer = () => {
             value={nInput}
             onChange={(e) => setNInput(e.target.value)}
             disabled={isLoaded}
-            className="w-32 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
+            className="w-32 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm"
             placeholder="cols (n)"
           />
 
@@ -432,7 +432,7 @@ const UniquePathsVisualizer = () => {
                 </Tooltip>
               </div>
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow inner">
+              <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200 shadow inner">
                 {formattedStep()}
               </div>
 

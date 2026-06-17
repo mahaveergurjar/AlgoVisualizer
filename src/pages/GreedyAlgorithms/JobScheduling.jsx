@@ -166,7 +166,7 @@ const JobScheduling = () => {
         value={jobsInput}
         onChange={(e) => setJobsInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow min-w-[200px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm"
+        className="flex-grow min-w-[200px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm"
         placeholder="Jobs (e.g. 1,3,50,2,5,20)"
       />
       {!isLoaded && (

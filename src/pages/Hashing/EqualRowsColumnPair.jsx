@@ -398,7 +398,7 @@ const EqualRowsColumnPairs = () => {
             value={gridInput}
             onChange={(e) => setGridInput(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
             placeholder="Enter grid (rows separated by ;, values by comma, e.g., 3,2,1;1,7,6;2,7,7)"
           />
 
@@ -436,7 +436,7 @@ const EqualRowsColumnPairs = () => {
                 </button>
               </div>
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow">
+              <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200 shadow">
                 {formattedStep()}
               </div>
 

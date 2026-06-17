@@ -237,7 +237,7 @@ const ContainerWithMostWater = () => {
           value={heightsInput}
           onChange={(e) => setHeightsInput(e.target.value)}
           disabled={isLoaded}
-          className="flex-1 min-w-[200px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-sky-400 shadow-sm text-sm"
+          className="flex-1 min-w-[200px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-sky-400 shadow-sm text-sm"
           placeholder="Heights (e.g. 1,8,6,2,5,4,8,3,7)"
         />
         {!isLoaded && (

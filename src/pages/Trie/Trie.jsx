@@ -194,7 +194,7 @@ const TriePage = ({ navigate }) => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Enter word"
-                className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none w-44 text-gray-200"
+                className="px-4 py-2 rounded-lg bg-gray-950 border border-gray-700 focus:outline-none w-44 text-gray-200"
               />
               <button
                 onClick={handleInsert}
@@ -206,7 +206,7 @@ const TriePage = ({ navigate }) => {
                 value={searchWord}
                 onChange={(e) => setSearchWord(e.target.value)}
                 placeholder="Search word"
-                className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none w-44 text-gray-200"
+                className="px-4 py-2 rounded-lg bg-gray-950 border border-gray-700 focus:outline-none w-44 text-gray-200"
               />
               <button
                 onClick={handleSearch}

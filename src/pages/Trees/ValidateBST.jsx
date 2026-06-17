@@ -634,7 +634,7 @@ const ValidateBST = () => {
           onChange={(e) => setTreeInput(e.target.value)}
           disabled={isLoaded}
           placeholder="e.g., 5,3,7,2,4,6,8"
-          className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:opacity-50"
+          className="font-mono flex-grow bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:opacity-50"
         />
       </div>
       {!isLoaded && (

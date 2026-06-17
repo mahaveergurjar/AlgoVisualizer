@@ -71,7 +71,7 @@ const Deque = ({ navigate }) => {
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Enter value"
-                className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none w-44 text-gray-200"
+                className="px-4 py-2 rounded-lg bg-gray-950 border border-gray-700 focus:outline-none w-44 text-gray-200"
               />
 
               <button
