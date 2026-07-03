@@ -186,14 +186,14 @@ const ValidAnagramVisualizer = ({ navigate }) => {
           type="text"
           value={string1Input}
           onChange={(e) => setString1Input(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-white font-mono text-xs focus:border-indigo-500 focus:outline-none w-32"
+          className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-white font-mono text-xs focus:border-indigo-500 focus:outline-none w-32"
           placeholder="First string s..."
         />
         <input
           type="text"
           value={string2Input}
           onChange={(e) => setString2Input(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-white font-mono text-xs focus:border-indigo-500 focus:outline-none w-32"
+          className="bg-gray-950 border border-gray-700 rounded-lg px-3 py-1.5 text-white font-mono text-xs focus:border-indigo-500 focus:outline-none w-32"
           placeholder="Second string t..."
         />
         <button
@@ -373,7 +373,7 @@ const ValidAnagramVisualizer = ({ navigate }) => {
                 Object.entries(charMap).map(([char, count]) => {
                   const isActive = char === currentChar;
                   
-                  let blockClass = "bg-gray-900 border-gray-800";
+                  let blockClass = "bg-gray-950 border-gray-800";
                   if (isActive) {
                     blockClass = "bg-indigo-500/20 border-indigo-400 scale-105 shadow-md shadow-indigo-500/10";
                   } else if (count === 0) {

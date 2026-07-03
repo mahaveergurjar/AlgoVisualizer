@@ -38,7 +38,7 @@ const Tooltip = ({ children, content, position = "top" }) => {
       
       {isVisible && (
         <div 
-          className={`absolute z-50 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg border border-gray-700 shadow-sm whitespace-nowrap transition-opacity duration-200 ${positionClasses[position]}`}
+          className={`absolute z-50 px-3 py-2 text-sm font-medium text-white bg-gray-950 rounded-lg border border-gray-700 shadow-sm whitespace-nowrap transition-opacity duration-200 ${positionClasses[position]}`}
           role="tooltip"
         >
           {content}

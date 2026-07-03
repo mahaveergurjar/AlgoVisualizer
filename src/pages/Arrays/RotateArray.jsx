@@ -135,7 +135,7 @@ const RotateArray = () => {
         value={arrayInput} 
         onChange={(e) => setArrayInput(e.target.value)} 
         disabled={isLoaded} 
-        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        className="flex-grow bg-gray-950 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
         placeholder="e.g., 1,2,3,4,5,6,7"
       />
       <input 
@@ -145,7 +145,7 @@ const RotateArray = () => {
         value={kInput} 
         onChange={(e) => setKInput(e.target.value)} 
         disabled={isLoaded} 
-        className="w-full md:w-32 p-3 bg-gray-900 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        className="w-full md:w-32 p-3 bg-gray-950 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
         placeholder="k"
       />
       {!isLoaded && (

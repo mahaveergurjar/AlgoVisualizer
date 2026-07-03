@@ -309,7 +309,7 @@ const NetworkFlow = ({ navigate }) => {
               <div className="font-semibold text-blue-300 mb-1">Edit Edge</div>
               <div className="flex items-center gap-2">
                 <span>u={selectedEdge.u} → v={selectedEdge.v}</span>
-                <input type="number" min="0" className="w-20 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-right"
+                <input type="number" min="0" className="w-20 bg-gray-950 border border-gray-700 rounded px-2 py-1 text-right"
                        value={capacity[selectedEdge.u][selectedEdge.v]}
                        onChange={e => setCap(selectedEdge.u, selectedEdge.v, parseInt(e.target.value, 10))} />
                 <button className="px-2 py-1 bg-gray-700 rounded border border-gray-600" onClick={()=>setSelectedEdge(null)}>Done</button>
@@ -332,7 +332,7 @@ const NetworkFlow = ({ navigate }) => {
                 <button onClick={() => setViewMode("matrix")} className={`px-3 py-2 rounded border ${viewMode==='matrix' ? 'bg-blue-600 text-white border-blue-500' : 'bg-gray-800 text-gray-300 border-gray-700'}`}>Matrix</button>
               </div>
               <label className="block">Algorithm
-                <select className="w-full mt-1 bg-gray-800 border border-gray-700 rounded p-2"
+                <select className="w-full mt-1 bg-gray-950 border border-gray-700 rounded p-2"
                         value={algorithm}
                         onChange={e => { setAlgorithm(e.target.value); setMessage("Algorithm changed. Reset recommended for fair comparison."); }}>
                   <option value="edmondsKarp">Edmonds–Karp (BFS-based)</option>
@@ -340,7 +340,7 @@ const NetworkFlow = ({ navigate }) => {
                 </select>
               </label>
               <label className="block">Preset
-                <select className="w-full mt-1 bg-gray-800 border border-gray-700 rounded p-2"
+                <select className="w-full mt-1 bg-gray-950 border border-gray-700 rounded p-2"
                         value={preset}
                         onChange={e => loadPreset(e.target.value)}>
                   <option value="simple">Simple (max flow 5)</option>
@@ -357,7 +357,7 @@ const NetworkFlow = ({ navigate }) => {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <label className="text-gray-400">Source
-                  <select className="w-full mt-1 bg-gray-800 border border-gray-700 rounded p-1"
+                  <select className="w-full mt-1 bg-gray-950 border border-gray-700 rounded p-1"
                           value={source}
                           onChange={e => setSource(Number(e.target.value))}>
                     {Array.from({ length: nodeCount }, (_, i) => (
@@ -366,7 +366,7 @@ const NetworkFlow = ({ navigate }) => {
                   </select>
                 </label>
                 <label className="text-gray-400">Sink
-                  <select className="w-full mt-1 bg-gray-800 border border-gray-700 rounded p-1"
+                  <select className="w-full mt-1 bg-gray-950 border border-gray-700 rounded p-1"
                           value={sink}
                           onChange={e => setSink(Number(e.target.value))}>
                     {Array.from({ length: nodeCount }, (_, i) => (
@@ -452,7 +452,7 @@ const NetworkFlow = ({ navigate }) => {
                             <input
                               type="number"
                               min="0"
-                              className="w-20 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-right"
+                              className="w-20 bg-gray-950 border border-gray-700 rounded px-2 py-1 text-right"
                               value={capacity[u][v]}
                               onChange={e => setCap(u, v, parseInt(e.target.value, 10))}
                             />

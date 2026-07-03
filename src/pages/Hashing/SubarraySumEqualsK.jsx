@@ -409,7 +409,7 @@ const SubarraySumEqualsK = () => {
             value={numsInput}
             onChange={(e) => setNumsInput(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400 shadow-sm"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400 shadow-sm"
             placeholder="Enter comma-separated numbers (e.g., 1,1,1)"
           />
 
@@ -418,7 +418,7 @@ const SubarraySumEqualsK = () => {
             value={kInput}
             onChange={(e) => setKInput(e.target.value)}
             disabled={isLoaded}
-            className="w-32 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400 shadow-sm"
+            className="w-32 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400 shadow-sm"
             placeholder="Target k"
           />
 
@@ -456,7 +456,7 @@ const SubarraySumEqualsK = () => {
                 </button>
               </div>
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow">
+              <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200 shadow">
                 {formattedStep()}
               </div>
 

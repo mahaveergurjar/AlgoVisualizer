@@ -140,7 +140,7 @@ const LinearSearch = ({ navigate }) => {
       return "bg-gray-800/40 border-gray-700 text-gray-500";
     }
 
-    return "bg-gray-900 border-gray-700 text-gray-300";
+    return "bg-gray-950 border-gray-700 text-gray-300";
   };
 
   const inputSection = (
@@ -152,7 +152,7 @@ const LinearSearch = ({ navigate }) => {
         onChange={(e) => setArrayInput(e.target.value)}
         disabled={isLoaded}
         placeholder="Enter numbers separated by commas..."
-        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-green-500 font-mono shadow-sm"
+        className="flex-grow bg-gray-950 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-green-500 font-mono shadow-sm"
       />
       <input
         id="target-input"
@@ -161,7 +161,7 @@ const LinearSearch = ({ navigate }) => {
         onChange={(e) => setTargetInput(e.target.value)}
         disabled={isLoaded}
         placeholder="Target"
-        className="w-full md:w-24 p-3 bg-gray-900 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-green-500 font-mono shadow-sm"
+        className="w-full md:w-24 p-3 bg-gray-950 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-green-500 font-mono shadow-sm"
       />
       {!isLoaded && (
         <button

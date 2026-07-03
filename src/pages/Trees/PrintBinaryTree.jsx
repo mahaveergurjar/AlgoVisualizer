@@ -472,13 +472,13 @@ const PrintBinaryTreeVisualizer = () => {
           value={treeInput}
           onChange={(e) => setTreeInput(e.target.value)}
           disabled={isLoaded}
-          className="flex-grow p-2.5 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm disabled:opacity-50"
+          className="flex-grow p-2.5 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-blue-400 shadow-sm disabled:opacity-50"
           placeholder="e.g., [1,2,3,null,4]"
         />
         <select
           value={activeLang}
           onChange={(e) => setActiveLang(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-white font-semibold cursor-pointer text-sm"
+          className="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-white font-semibold cursor-pointer text-sm"
         >
           {LANG_TABS.map((lang) => (
             <option key={lang} value={lang}>{lang}</option>
@@ -582,11 +582,11 @@ const PrintBinaryTreeVisualizer = () => {
         <table className="font-mono text-xs border-collapse w-full text-center select-none">
           <thead>
             <tr>
-              <th className="sticky top-0 bg-gray-900 p-2 text-gray-400 border-b border-gray-800">
+              <th className="sticky top-0 bg-gray-950 p-2 text-gray-400 border-b border-gray-800">
                 r \ c
               </th>
               {matrix && matrix[0] && matrix[0].map((_, c) => (
-                <th key={c} className="sticky top-0 bg-gray-900 p-2 text-gray-400 border-b border-gray-800">
+                <th key={c} className="sticky top-0 bg-gray-950 p-2 text-gray-400 border-b border-gray-800">
                   {c}
                 </th>
               ))}
@@ -595,7 +595,7 @@ const PrintBinaryTreeVisualizer = () => {
           <tbody>
             {matrix && matrix.map((row, r) => (
               <tr key={r}>
-                <td className="sticky left-0 bg-gray-900 p-2 text-gray-400 border-r border-gray-800">
+                <td className="sticky left-0 bg-gray-950 p-2 text-gray-400 border-r border-gray-800">
                   {r}
                 </td>
                 {row.map((val, c) => (

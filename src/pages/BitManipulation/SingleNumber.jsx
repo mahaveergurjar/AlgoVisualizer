@@ -202,14 +202,14 @@ const SingleNumber = () => {
         value={numsInput}
         onChange={(e) => setNumsInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow min-w-[200px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
+        className="flex-grow min-w-[200px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
         placeholder="e.g. 2,2,1,3,3"
       />
       <select
         value={bitWidth}
         onChange={(e) => setBitWidth(parseInt(e.target.value))}
         disabled={isLoaded}
-        className="w-24 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
+        className="w-24 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
       >
         <option value={8}>8-bit</option>
         <option value={16}>16-bit</option>
@@ -310,7 +310,7 @@ const SingleNumber = () => {
               <div className="text-2xl font-mono text-cyan-400 mb-2">
                 {before}
               </div>
-              <div className="text-xs font-mono text-gray-300 bg-gray-900 p-2 rounded break-all">
+              <div className="text-xs font-mono text-gray-300 bg-gray-950 p-2 rounded break-all">
                 {binBefore}
               </div>
             </div>
@@ -320,7 +320,7 @@ const SingleNumber = () => {
               <div className="text-2xl font-mono text-amber-400 mb-2">
                 {current !== null ? current : "-"}
               </div>
-              <div className="text-xs font-mono text-gray-300 bg-gray-900 p-2 rounded break-all">
+              <div className="text-xs font-mono text-gray-300 bg-gray-950 p-2 rounded break-all">
                 {binCurrent || "-"}
               </div>
             </div>
@@ -330,7 +330,7 @@ const SingleNumber = () => {
               <div className="text-2xl font-mono text-green-400 mb-2">
                 {after !== null ? after : before}
               </div>
-              <div className="text-xs font-mono text-gray-300 bg-gray-900 p-2 rounded break-all">
+              <div className="text-xs font-mono text-gray-300 bg-gray-950 p-2 rounded break-all">
                 {binAfter || binBefore}
               </div>
             </div>

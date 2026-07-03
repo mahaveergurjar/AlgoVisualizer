@@ -157,7 +157,7 @@ const LongestCommonPrefixVisualizer = ({ navigate }) => {
           type="text"
           value={stringsInput}
           onChange={(e) => setStringsInput(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-blue-500 focus:outline-none w-80"
+          className="bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-blue-500 focus:outline-none w-80"
           placeholder="Enter strings (comma separated)..."
         />
         <button
@@ -292,7 +292,7 @@ const LongestCommonPrefixVisualizer = ({ navigate }) => {
           {/* Current Prefix visual state */}
           <div className="p-4 bg-gray-950/45 rounded-xl border border-gray-800/60">
             <h4 className="text-gray-400 text-xs font-semibold mb-2 uppercase tracking-wide">Current Prefix</h4>
-            <div className="p-4 bg-gray-900 rounded-lg border border-gray-800 font-mono text-3xl text-cyan-300 min-h-[4rem] flex items-center justify-center">
+            <div className="p-4 bg-gray-950 rounded-lg border border-gray-800 font-mono text-3xl text-cyan-300 min-h-[4rem] flex items-center justify-center">
               {prefix !== "" ? `"${prefix}"` : `""`}
             </div>
             {currentString && (

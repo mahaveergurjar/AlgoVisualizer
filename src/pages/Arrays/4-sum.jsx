@@ -422,7 +422,7 @@ const FourSumVisualizer = () => {
           value={numsInput}
           onChange={(e) => setNumsInput(e.target.value)}
           disabled={isLoaded}
-          className="flex-1 min-w-[200px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm text-sm"
+          className="flex-1 min-w-[200px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm text-sm"
           placeholder="Nums e.g. 1,0,-1,0,-2,2"
         />
         <input
@@ -430,7 +430,7 @@ const FourSumVisualizer = () => {
           value={targetInput}
           onChange={(e) => setTargetInput(e.target.value)}
           disabled={isLoaded}
-          className="w-24 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm text-sm"
+          className="w-24 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-400 shadow-sm text-sm"
           placeholder="Target"
         />
         {!isLoaded && (

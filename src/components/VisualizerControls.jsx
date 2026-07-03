@@ -24,14 +24,14 @@ export default function VisualizerControls({
         <button
           onClick={stepBackward}
           disabled={currentStep <= 0}
-          className="p-2.5 rounded-xl bg-gray-800 hover:bg-cyan-600 disabled:opacity-40 transition text-white hover:text-white cursor-pointer"
+          className="p-2.5 rounded-xl bg-gray-950 hover:bg-cyan-600 disabled:opacity-40 transition text-white hover:text-white cursor-pointer"
           title="Step Backward (ArrowLeft)"
         >
           <ArrowLeft size={16} />
         </button>
         <button
           onClick={togglePlay}
-          className="p-2.5 rounded-xl bg-gray-800 hover:bg-cyan-600 transition text-white hover:text-white cursor-pointer"
+          className="p-2.5 rounded-xl bg-gray-950 hover:bg-cyan-600 transition text-white hover:text-white cursor-pointer"
           title="Play / Pause (Spacebar)"
         >
           {isPlaying ? <Pause size={16} /> : <Play size={16} />}
@@ -39,7 +39,7 @@ export default function VisualizerControls({
         <button
           onClick={stepForward}
           disabled={currentStep >= totalSteps - 1}
-          className="p-2.5 rounded-xl bg-gray-800 hover:bg-cyan-600 disabled:opacity-40 transition text-white hover:text-white cursor-pointer"
+          className="p-2.5 rounded-xl bg-gray-950 hover:bg-cyan-600 disabled:opacity-40 transition text-white hover:text-white cursor-pointer"
           title="Step Forward (ArrowRight)"
         >
           <ArrowRight size={16} />

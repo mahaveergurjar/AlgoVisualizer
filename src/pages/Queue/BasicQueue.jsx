@@ -235,7 +235,7 @@ const BasicQueueVisualizer = () => {
             onChange={(e) => setOperationsInput(e.target.value)}
             disabled={isLoaded}
             placeholder="enqueue 5, enqueue 3, dequeue, enqueue 7"
-            className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-rose-500"
+            className="font-mono flex-grow bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-rose-500"
           />
         </div>
         <div className="flex items-center gap-2">

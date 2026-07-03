@@ -512,7 +512,7 @@ const Dijkstra = ({ navigate }) => {
                     }, 50);
                   }
                 }}
-                className="font-mono bg-gray-900 p-2 rounded-lg border-2 border-gray-600 focus:border-orange-500 focus:outline-none transition-colors text-white"
+                className="font-mono bg-gray-950 p-2 rounded-lg border-2 border-gray-600 focus:border-orange-500 focus:outline-none transition-colors text-white"
               >
                 {nodesStr.split(",").map((node) => (
                   <option key={node.trim()} value={node.trim()}>
@@ -534,7 +534,7 @@ const Dijkstra = ({ navigate }) => {
                     }, 50);
                   }
                 }}
-                className="font-mono bg-gray-900 p-2 rounded-lg border-2 border-gray-600 focus:border-orange-500 focus:outline-none transition-colors text-white"
+                className="font-mono bg-gray-950 p-2 rounded-lg border-2 border-gray-600 focus:border-orange-500 focus:outline-none transition-colors text-white"
               >
                 {nodesStr.split(",").map((node) => (
                   <option key={node.trim()} value={node.trim()}>

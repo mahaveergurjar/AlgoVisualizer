@@ -183,7 +183,7 @@ const KthMissingNumber = ({ navigate }) => {
         value={arrayInput}
         onChange={(e) => setArrayInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 font-mono shadow-sm"
+        className="flex-grow bg-gray-950 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-cyan-500 font-mono shadow-sm"
         placeholder="sorted array (comma-separated)"
       />
       <input
@@ -192,7 +192,7 @@ const KthMissingNumber = ({ navigate }) => {
         value={kInput}
         onChange={(e) => setKInput(e.target.value)}
         disabled={isLoaded}
-        className="w-full md:w-24 p-3 bg-gray-900 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-cyan-500 font-mono shadow-sm"
+        className="w-full md:w-24 p-3 bg-gray-950 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-cyan-500 font-mono shadow-sm"
         placeholder="k value"
       />
       {!isLoaded && (

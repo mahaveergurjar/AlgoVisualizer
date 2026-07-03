@@ -197,7 +197,7 @@ const PalindromeCheck = ({ navigate }) => {
           type="text"
           value={inputString}
           onChange={(e) => setInputString(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-green-500 focus:outline-none w-48"
+          className="bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-green-500 focus:outline-none w-48"
           placeholder="Enter a string..."
         />
         <button

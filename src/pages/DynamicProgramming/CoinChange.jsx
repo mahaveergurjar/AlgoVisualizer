@@ -262,7 +262,7 @@ const CoinChangeVisualizer = () => {
             value={coinsInput}
             onChange={(e) => setCoinsInput(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400"
             placeholder="Coins (comma-separated)"
           />
           <input
@@ -270,7 +270,7 @@ const CoinChangeVisualizer = () => {
             value={amountInput}
             onChange={(e) => setAmountInput(e.target.value)}
             disabled={isLoaded}
-            className="w-36 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400"
+            className="w-36 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-amber-400"
             placeholder="Amount"
           />
 
@@ -306,7 +306,7 @@ const CoinChangeVisualizer = () => {
                 </button>
               </div>
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200">
+              <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200">
                 {Math.max(0, currentStep + 1)}/{history.length}
               </div>
 

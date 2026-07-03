@@ -287,7 +287,7 @@ const LRUCacheVisualizer = () => {
           disabled={isLoaded}
           rows={3}
           placeholder="LRUCache(2)\nput(1, 1)\nput(2, 2)\nget(1)"
-          className="font-mono bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none w-full text-sm"
+          className="font-mono bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none w-full text-sm"
         />
       </div>
       {!isLoaded && (
@@ -422,7 +422,7 @@ const LRUCacheVisualizer = () => {
                   Object.entries(cache).map(([key, value]) => (
                     <div
                       key={key}
-                      className={`p-2 rounded-lg bg-gray-900 border shadow-md transform transition-all duration-300 flex items-center gap-2 ${
+                      className={`p-2 rounded-lg bg-gray-950 border shadow-md transform transition-all duration-300 flex items-center gap-2 ${
                         newKey == key || movedKey == key ? "border-orange-400 scale-105" : "border-gray-800"
                       }`}
                     >

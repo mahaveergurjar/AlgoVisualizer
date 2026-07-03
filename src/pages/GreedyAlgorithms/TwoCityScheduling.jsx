@@ -247,7 +247,7 @@ const TwoCityScheduling = () => {
         value={costsInput}
         onChange={(e) => setCostsInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow min-w-[200px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-450 shadow-sm"
+        className="flex-grow min-w-[200px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-green-450 shadow-sm"
         placeholder="e.g. 10,20,30,200,400,50,30,20"
       />
       {!isLoaded && (

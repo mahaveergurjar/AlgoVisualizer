@@ -171,7 +171,7 @@ const NumberOf1Bits = () => {
         disabled={isLoaded}
         min="0"
         max="2147483647"
-        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
+        className="flex-grow min-w-[150px] p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-cyan-400 shadow-sm"
         placeholder="Enter a positive integer..."
       />
       {!isLoaded && (

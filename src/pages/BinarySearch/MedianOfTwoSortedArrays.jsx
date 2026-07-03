@@ -230,7 +230,7 @@ const MedianOfTwoSortedArrays = () => {
                 type="text"
                 value={inputArray1}
                 onChange={handleArray1Change}
-                className="w-full px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-gray-950 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="e.g., 1,3"
               />
             </div>
@@ -242,7 +242,7 @@ const MedianOfTwoSortedArrays = () => {
                 type="text"
                 value={inputArray2}
                 onChange={handleArray2Change}
-                className="w-full px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-gray-950 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="e.g., 2"
               />
             </div>
@@ -309,7 +309,7 @@ const MedianOfTwoSortedArrays = () => {
               <select
                 value={animSpeed}
                 onChange={(e) => setAnimSpeed(Number(e.target.value))}
-                className="px-4 py-2 bg-gray-900/80 border border-gray-600 rounded-lg text-white"
+                className="px-4 py-2 bg-gray-950 border border-gray-600 rounded-lg text-white"
               >
                 <option value={2500}>Slow</option>
                 <option value={1500}>Normal</option>

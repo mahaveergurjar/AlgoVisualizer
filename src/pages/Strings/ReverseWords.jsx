@@ -184,7 +184,7 @@ const ReverseWordsVisualizer = ({ navigate }) => {
           type="text"
           value={stringInput}
           onChange={(e) => setStringInput(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-orange-500 focus:outline-none w-72"
+          className="bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-orange-500 focus:outline-none w-72"
           placeholder="Enter sentence..."
         />
         <button
@@ -301,7 +301,7 @@ const ReverseWordsVisualizer = ({ navigate }) => {
           {/* Loaded sentence info */}
           <div className="p-4 bg-gray-950/45 rounded-xl border border-gray-800/60">
             <h4 className="text-gray-400 text-xs font-semibold mb-2 uppercase tracking-wide">Original Sentence</h4>
-            <div className="p-3 bg-gray-900 rounded-lg border border-gray-800 font-mono text-lg text-white">
+            <div className="p-3 bg-gray-950 rounded-lg border border-gray-800 font-mono text-lg text-white">
               "{loadedString}"
             </div>
           </div>

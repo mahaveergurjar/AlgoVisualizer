@@ -261,7 +261,7 @@ export default function QuestDashboard({ navigate }) {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate("home")}
-            className="p-2 rounded-full hover:bg-gray-900 border border-gray-800 transition text-gray-400 hover:text-white"
+            className="p-2 rounded-full hover:bg-gray-950 border border-gray-800 transition text-gray-400 hover:text-white"
             aria-label="Back to home"
           >
             <ArrowLeft className="h-6 w-6" />
@@ -472,10 +472,10 @@ export default function QuestDashboard({ navigate }) {
                             >
                               {/* Cell Tooltip */}
                               <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/cell:flex flex-col items-center z-50">
-                                <div className="bg-gray-900 border border-gray-800 text-[10px] text-gray-200 px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-2xl">
+                                <div className="bg-gray-950 border border-gray-800 text-[10px] text-gray-200 px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-2xl">
                                   <strong className="text-white">{day.count} solved</strong> on {new Date(day.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                 </div>
-                                <div className="w-2 h-2 bg-gray-900 border-r border-b border-gray-800 transform rotate-45 -mt-1" />
+                                <div className="w-2 h-2 bg-gray-950 border-r border-b border-gray-800 transform rotate-45 -mt-1" />
                               </div>
                             </div>
                           );

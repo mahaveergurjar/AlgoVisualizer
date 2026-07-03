@@ -63,7 +63,7 @@ const SortingVisualizerLayout = ({
               onChange={(e) => setArrayInput(e.target.value)}
               disabled={isLoaded}
               placeholder="e.g., 8,5,2,9,5"
-              className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+              className="font-mono flex-grow bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -78,7 +78,7 @@ const SortingVisualizerLayout = ({
               disabled={isLoaded}
               min="1"
               max="20"
-              className="font-mono w-20 bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+              className="font-mono w-20 bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={generateRandomArray}

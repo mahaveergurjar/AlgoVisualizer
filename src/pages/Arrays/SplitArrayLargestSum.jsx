@@ -156,7 +156,7 @@ const SplitArrayLargestSum = ({ navigate }) => {
         value={arrayInput} 
         onChange={(e) => setArrayInput(e.target.value)} 
         disabled={isLoaded} 
-        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        className="flex-grow bg-gray-950 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
         placeholder="e.g., 7,2,5,10,8"
       />
       <input 
@@ -167,7 +167,7 @@ const SplitArrayLargestSum = ({ navigate }) => {
         value={kInput} 
         onChange={(e) => setKInput(parseInt(e.target.value, 10))} 
         disabled={isLoaded} 
-        className="w-full md:w-24 p-3 bg-gray-900 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
+        className="w-full md:w-24 p-3 bg-gray-950 border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 font-mono shadow-sm"
         placeholder="k"
       />
       {!isLoaded && (

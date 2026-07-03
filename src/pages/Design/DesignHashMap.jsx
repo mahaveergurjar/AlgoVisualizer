@@ -274,7 +274,7 @@ const DesignHashMap = () => {
           onChange={(e) => setOperationsInput(e.target.value)}
           disabled={isLoaded}
           rows={3}
-          className="font-mono bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none w-full text-sm"
+          className="font-mono bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none w-full text-sm"
         />
       </div>
       {!isLoaded && (
@@ -405,7 +405,7 @@ const DesignHashMap = () => {
                 Object.entries(hashMap).map(([k, v]) => (
                   <div
                     key={k}
-                    className={`p-2 rounded-lg bg-gray-900 border shadow-md transform transition-all duration-300 flex items-center gap-2 ${
+                    className={`p-2 rounded-lg bg-gray-950 border shadow-md transform transition-all duration-300 flex items-center gap-2 ${
                       newKey === k ? "border-orange-400 scale-105" : "border-gray-800"
                     }`}
                   >

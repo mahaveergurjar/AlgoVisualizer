@@ -390,7 +390,7 @@ const FruitsIntoBaskets = ({ navigate }) => {
         value={numsInput}
         onChange={(e) => setNumsInput(e.target.value)}
         disabled={isLoaded}
-        className="flex-grow bg-gray-900 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-orange-500 font-mono shadow-sm"
+        className="flex-grow bg-gray-950 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-orange-500 font-mono shadow-sm"
         placeholder="e.g., 2,4,5,2,2,1,3,2,1,1"
       />
       {!isLoaded && (

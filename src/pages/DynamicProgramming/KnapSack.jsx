@@ -382,7 +382,7 @@ const KnapsackVisualizer = () => {
             value={weightsInput}
             onChange={(e) => setWeightsInput(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
             placeholder="weights (comma-separated)"
           />
           <input
@@ -390,7 +390,7 @@ const KnapsackVisualizer = () => {
             value={valuesInput}
             onChange={(e) => setValuesInput(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
             placeholder="values (comma-separated)"
           />
           <input
@@ -398,7 +398,7 @@ const KnapsackVisualizer = () => {
             value={capacityInput}
             onChange={(e) => setCapacityInput(e.target.value)}
             disabled={isLoaded}
-            className="w-36 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
+            className="w-36 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
             placeholder="capacity"
           />
 
@@ -438,7 +438,7 @@ const KnapsackVisualizer = () => {
                 </button>
               </div>
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow inner">
+              <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200 shadow inner">
                 {formattedStep()}
               </div>
 
@@ -540,7 +540,7 @@ const KnapsackVisualizer = () => {
                 <h4 className="text-gray-300 text-sm mb-2 flex items-center gap-2">
                   <Terminal size={14} /> Data Structures
                 </h4>
-                <div className="bg-gray-900 p-3 rounded-lg border border-gray-700">
+                <div className="bg-gray-950 p-3 rounded-lg border border-gray-700">
                   <div className="text-xs text-gray-400 mb-2">DP Table (snapshot)</div>
                   <div className="overflow-auto max-h-40">
                     <table className="font-mono text-xs border-collapse w-full">

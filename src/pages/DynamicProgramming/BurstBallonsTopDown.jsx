@@ -614,7 +614,7 @@ const BurstBalloonsTopDownVisualizer = () => {
   };
 
   return (
-    <div className="px-6 py-8 max-w-7xl mx-auto relative bg-gray-900 text-gray-200">
+    <div className="px-6 py-8 max-w-7xl mx-auto relative bg-gray-950 text-gray-200">
       <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[36rem] h-[36rem] bg-rose-500/8 rounded-full blur-3xl animate-float pointer-events-none" />
       <div className="absolute bottom-12 right-12 w-80 h-80 bg-indigo-500/6 rounded-full blur-3xl animate-float-delayed pointer-events-none" />
 
@@ -637,7 +637,7 @@ const BurstBalloonsTopDownVisualizer = () => {
             value={numsInput}
             onChange={(e) => setNumsInput(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-rose-400 shadow-sm"
             placeholder="nums (comma-separated), e.g., 3,1,5,8"
           />
 
@@ -678,7 +678,7 @@ const BurstBalloonsTopDownVisualizer = () => {
                 </button>
               </div>
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200 shadow-inner">
+              <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200 shadow-inner">
                 {formattedStep()}
               </div>
 
@@ -841,7 +841,7 @@ const BurstBalloonsTopDownVisualizer = () => {
                     <h4 className="text-gray-300 text-sm mb-2 flex items-center gap-2">
                         <Cpu size={14} /> Call Stack
                     </h4>
-                    <div className="bg-gray-900 p-3 rounded-lg border border-gray-700 h-80 overflow-auto flex flex-col-reverse">
+                    <div className="bg-gray-950 p-3 rounded-lg border border-gray-700 h-80 overflow-auto flex flex-col-reverse">
                         {state.callStack && state.callStack.length > 0 ? (
                              [...state.callStack].reverse().map((call, idx) => (
                                 <div key={idx} className={`font-mono text-sm p-2 rounded ${idx === 0 ? 'text-blue-300 bg-blue-500/10' : 'text-gray-400'}`}>

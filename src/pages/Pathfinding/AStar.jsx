@@ -64,7 +64,7 @@ const GridNode = ({
     if (node.isPath) return "bg-blue-400";
     if (node.isVisited) return "bg-cyan-400";
     if (node.isWall) return "bg-gray-700";
-    return "bg-gray-900";
+    return "bg-gray-950";
   };
 
   const getNodeText = () => {
@@ -377,7 +377,7 @@ const AStarVisualizer = ({ navigate }) => {
     if (node.isPath) return "bg-blue-400";
     if (node.isVisited) return "bg-cyan-400";
     if (node.isWall) return "bg-gray-700";
-    return "bg-gray-900";
+    return "bg-gray-950";
   };
 
   const getNodeText = (node) => {
@@ -788,7 +788,7 @@ const AStarVisualizer = ({ navigate }) => {
       {/* Full-Screen Grid Modal */}
       {showGridModal && (
         <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-xl border border-gray-700 w-full h-full max-w-7xl max-h-[90vh] flex flex-col">
+          <div className="bg-gray-950 rounded-xl border border-gray-700 w-full h-full max-w-7xl max-h-[90vh] flex flex-col">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-700">
               <div className="flex items-center gap-3">

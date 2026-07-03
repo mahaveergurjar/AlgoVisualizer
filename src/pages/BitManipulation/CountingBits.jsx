@@ -177,14 +177,14 @@ const CountingBits = () => {
         disabled={isLoaded}
         min="0"
         max="20"
-        className="w-24 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400 shadow-sm text-center"
+        className="w-24 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400 shadow-sm text-center"
         placeholder="n"
       />
       <select
         value={bitWidth}
         onChange={(e) => setBitWidth(parseInt(e.target.value))}
         disabled={isLoaded}
-        className="w-28 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400 shadow-sm"
+        className="w-28 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400 shadow-sm"
       >
         <option value={4}>4-bit</option>
         <option value={8}>8-bit</option>

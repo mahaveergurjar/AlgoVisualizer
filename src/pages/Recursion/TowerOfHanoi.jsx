@@ -219,7 +219,7 @@ const TowerOfHanoiVisualizer = () => {
       <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-4 flex-grow w-full">
           <label htmlFor="disks-input" className="font-medium text-gray-300 font-mono">Number of Disks (1-7):</label>
-          <input id="disks-input" type="number" min="1" max="7" value={disksInput} onChange={(e) => setDisksInput(e.target.value)} disabled={isLoaded} className="font-mono w-24 bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500" />
+          <input id="disks-input" type="number" min="1" max="7" value={disksInput} onChange={(e) => setDisksInput(e.target.value)} disabled={isLoaded} className="font-mono w-24 bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500" />
         </div>
         <div className="flex items-center gap-2">
           {!isLoaded ? (

@@ -266,7 +266,7 @@ const BinarySearchRecursiveVisualizer = () => {
             value={arrayInput} 
             onChange={(e) => setArrayInput(e.target.value)} 
             disabled={isLoaded} 
-            className="font-mono flex-grow bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500 w-full"
+            className="font-mono flex-grow bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500 w-full"
             placeholder="e.g., 1,3,5,7,9,11"
           />
         </div>
@@ -279,7 +279,7 @@ const BinarySearchRecursiveVisualizer = () => {
               value={targetInput} 
               onChange={(e) => setTargetInput(e.target.value)} 
               disabled={isLoaded} 
-              className="font-mono w-32 bg-gray-900 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
+              className="font-mono w-32 bg-gray-950 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="flex items-center gap-2">

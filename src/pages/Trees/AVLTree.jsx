@@ -630,7 +630,7 @@ const AVLTree = () => {
           onChange={(e) => setTreeInput(e.target.value)}
           disabled={isLoaded}
           placeholder="e.g., 1,2,3,4,5,6,7"
-          className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+          className="font-mono flex-grow bg-gray-950 border border-gray-700 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
         />
       </div>
       {!isLoaded && (

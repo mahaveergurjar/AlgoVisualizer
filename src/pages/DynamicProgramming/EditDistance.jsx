@@ -257,7 +257,7 @@ const EditDistanceVisualizer = () => {
             value={string1Input}
             onChange={(e) => setString1Input(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400"
             placeholder="First string"
           />
           <input
@@ -265,7 +265,7 @@ const EditDistanceVisualizer = () => {
             value={string2Input}
             onChange={(e) => setString2Input(e.target.value)}
             disabled={isLoaded}
-            className="flex-1 p-3 rounded-xl bg-gray-900 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400"
+            className="flex-1 p-3 rounded-xl bg-gray-950 border border-gray-700 text-white font-mono focus:ring-2 focus:ring-purple-400"
             placeholder="Second string"
           />
 
@@ -301,7 +301,7 @@ const EditDistanceVisualizer = () => {
                 </button>
               </div>
 
-              <div className="px-4 py-2 font-mono text-sm bg-gray-900 border border-gray-700 rounded-xl text-gray-200">
+              <div className="px-4 py-2 font-mono text-sm bg-gray-950 border border-gray-700 rounded-xl text-gray-200">
                 {Math.max(0, currentStep + 1)}/{history.length}
               </div>
 

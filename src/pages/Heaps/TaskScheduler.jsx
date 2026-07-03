@@ -369,7 +369,7 @@ public:
           onChange={(e) => setTasksInput(e.target.value)}
           disabled={isLoaded}
           placeholder="e.g., A,A,B,C,A"
-          className="font-mono flex-grow bg-gray-900 border border-gray-700 text-white rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full sm:w-auto min-w-[150px] disabled:opacity-75 text-sm"
+          className="font-mono flex-grow bg-gray-950 border border-gray-700 text-white rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full sm:w-auto min-w-[150px] disabled:opacity-75 text-sm"
         />
         <label htmlFor="n-input" className="font-medium text-gray-300 font-mono text-sm whitespace-nowrap">
           N (Cooldown):
@@ -381,7 +381,7 @@ public:
           value={nInput}
           onChange={(e) => setNInput(e.target.value)}
           disabled={isLoaded}
-          className="font-mono bg-gray-900 border border-gray-700 text-white rounded-lg p-2 w-20 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:opacity-75"
+          className="font-mono bg-gray-950 border border-gray-700 text-white rounded-lg p-2 w-20 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:opacity-75"
         />
       </div>
       {!isLoaded && (

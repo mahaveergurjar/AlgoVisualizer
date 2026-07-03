@@ -230,7 +230,7 @@ const StringCompressionVisualizer = ({ navigate }) => {
           type="text"
           value={stringInput}
           onChange={(e) => setStringInput(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-purple-500 focus:outline-none w-56"
+          className="bg-gray-950 border border-gray-700 rounded-lg px-4 py-2 text-white font-mono text-sm focus:border-purple-500 focus:outline-none w-56"
           placeholder="Enter string..."
         />
         <button
@@ -404,7 +404,7 @@ const StringCompressionVisualizer = ({ navigate }) => {
           {/* Result string */}
           <div className="p-4 bg-gray-950/45 rounded-xl border border-gray-800/60">
             <h4 className="text-gray-400 text-xs font-semibold mb-2 uppercase tracking-wide">Compressed Result</h4>
-            <div className="p-3 bg-gray-900 rounded-lg border border-gray-800 font-mono text-xl text-white min-h-[3rem] flex items-center justify-center">
+            <div className="p-3 bg-gray-950 rounded-lg border border-gray-800 font-mono text-xl text-white min-h-[3rem] flex items-center justify-center">
               {result !== "" ? `"${result}"` : '""'}
             </div>
             {finalResult !== null && (
